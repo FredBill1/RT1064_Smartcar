@@ -7,7 +7,7 @@ int main(void);
 
 SerialIO wireless;
 
-int aa, bb, cc;
+double aa, bb, cc;
 
 int main(void) {
     //此处编写用户代码(例如：外设初始化代码等)
@@ -21,10 +21,12 @@ int main(void) {
     while (1) {
         //此处编写需要循环执行的代码
         wireless.getchar();
-        if (wireless.read(aa, bb, cc)) rt_kprintf("%d %d %d\n", aa, bb, cc);
-        else
+        if (wireless.readD(aa, bb, cc)) {
+            rt_kprintf("%d %d %d\n", (int)aa, (int)bb, (int)cc);
+            wireless.putchar('\xff');
+            wireless.writeD(aa, bb, cc);
+        } else
             rt_kputs("error\n");
         gpio_toggle(B9);
-        // rt_thread_mdelay(100);
     }
 }
