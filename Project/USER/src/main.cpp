@@ -20,10 +20,10 @@ int main(void) {
 
     while (1) {
         //此处编写需要循环执行的代码
-        wireless.getchar();
+        wireless.waitHeader();
         if (wireless.readD(aa, bb, cc)) {
             rt_kprintf("%d %d %d\n", (int)aa, (int)bb, (int)cc);
-            wireless.putchar('\xff');
+            wireless.sendHeader();
             wireless.writeD(aa, bb, cc);
         } else
             rt_kputs("error\n");

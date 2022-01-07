@@ -33,4 +33,31 @@ bool SerialIO::getbuff(uint8 *buf, uint32 len, rt_int32_t timeout) {
     return true;
 }
 
-void SerialIO::putbuff(uint8 *buf, uint32 len) { uart_putbuff(uartn, buf, len); }
+void SerialIO::putbuff(const uint8 *buf, uint32 len) {
+    extern LPUART_Type *UARTN[];
+    LPUART_WriteBlocking(UARTN[uartn], buf, len);
+}
+
+const uint8 SerialIO::HEADER[4] = {0x00, 0xff, 0x80, 0x7f};
+void SerialIO::sendHeader() { putbuff(HEADER, 4); }
+
+void SerialIO::waitHeader() {
+    rt_tick_t stamp[4];
+    {
+        rt_tick_t cur = rt_tick_get();
+        for (int i = 0; i < 4; ++i) stamp[i] = cur;
+    }
+    uint8 buf[4];
+    for (int i = 0;; i = (i + 1) & 3) {
+        buf[i] = getchar();
+        stamp[i] = rt_tick_get();
+        if (stamp[(i + 1) & 3] - stamp[i] > TIMEOUT) continue;
+        bool success = true;
+        for (int j = 0; j < 4; ++j)
+            if (buf[(i + j + 1) & 3] != HEADER[j]) {
+                success = false;
+                break;
+            }
+        if (success) return;
+    }
+}

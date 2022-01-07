@@ -18,13 +18,15 @@ class SerialIO : private lpuart_handle_t {
     static void rx_cb(LPUART_Type *base, lpuart_handle_t *handle, status_t status, void *userData);
 
  public:
-    SerialIO(rt_int32_t timeout_ms = 5) : TIMEOUT(rt_tick_from_millisecond(timeout_ms)) {}
+    static const uint8 HEADER[4];
+    SerialIO(rt_int32_t timeout_ms = 100) : TIMEOUT(rt_tick_from_millisecond(timeout_ms)) {}
     void init(const char *mb_name, UARTN_enum uartn, uint32 baud, UARTPIN_enum tx_pin, UARTPIN_enum rx_pin,
               rt_size_t mb_size = 32);
+
     uint8 getchar();
     void putchar(uint8 c);
     bool getbuff(uint8 *buf, uint32 len, rt_int32_t timeout = RT_WAITING_FOREVER);
-    void putbuff(uint8 *buf, uint32 len);
+    void putbuff(const uint8 *buf, uint32 len);
 
     template <typename Data_t, typename T> std::enable_if_t<std::is_arithmetic<T>::value, void> write(T x);
     template <typename Data_t, typename T, typename... U> void write(T x, U... y);
@@ -35,6 +37,9 @@ class SerialIO : private lpuart_handle_t {
     template <typename Data_t, typename T, typename... U> bool read(T &x, U &...y);
     template <typename... Ts> bool readF(Ts &&...ts) { return read<float>(std::forward<Ts>(ts)...); };
     template <typename... Ts> bool readD(Ts &&...ts) { return read<double>(std::forward<Ts>(ts)...); };
+
+    void sendHeader();
+    void waitHeader();
 };
 
 template <typename Data_t, typename T> std::enable_if_t<std::is_arithmetic<T>::value, bool> SerialIO::read(T &x) {
