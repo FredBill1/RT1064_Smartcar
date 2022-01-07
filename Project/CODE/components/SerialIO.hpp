@@ -10,9 +10,6 @@ extern "C" {
 }
 
 class SerialIO : private lpuart_handle_t {
- public:
-    using Data_t = double;
-
  private:
     rt_mailbox_t rx_mb;
     uint8 rx_bf;
@@ -22,7 +19,8 @@ class SerialIO : private lpuart_handle_t {
 
  public:
     SerialIO(rt_int32_t timeout_ms = 5) : TIMEOUT(rt_tick_from_millisecond(timeout_ms)) {}
-    void init(const char *name, UARTN_enum uartn, uint32 baud, UARTPIN_enum tx_pin, UARTPIN_enum rx_pin);
+    void init(const char *mb_name, UARTN_enum uartn, uint32 baud, UARTPIN_enum tx_pin, UARTPIN_enum rx_pin,
+              rt_size_t mb_size = 32);
     uint8 getchar();
     void putchar(uint8 c);
     bool getbuff(uint8 *buf, uint32 len, rt_int32_t timeout = RT_WAITING_FOREVER);

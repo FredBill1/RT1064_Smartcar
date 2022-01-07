@@ -1,8 +1,9 @@
 #include "SerialIO.hpp"
 
-void SerialIO::init(const char *name, UARTN_enum uartn, uint32 baud, UARTPIN_enum tx_pin, UARTPIN_enum rx_pin) {
+void SerialIO::init(const char *mb_name, UARTN_enum uartn, uint32 baud, UARTPIN_enum tx_pin, UARTPIN_enum rx_pin,
+                    rt_size_t mb_size) {
     this->uartn = uartn;
-    rx_mb = rt_mb_create(name, 32, RT_IPC_FLAG_FIFO);
+    rx_mb = rt_mb_create(mb_name, mb_size, RT_IPC_FLAG_FIFO);
     uart_init(uartn, baud, tx_pin, rx_pin);
     uart_set_handle(uartn, this, rx_cb, NULL, 0, &rx_bf, 1);
     uart_rx_irq(uartn, 1);
