@@ -130,7 +130,8 @@
                 "__yield()=",
                 "__vfp_status(x,y)=0"
             ],
-            "intelliSenseMode": "${default}"
+            "intelliSenseMode": "${default}",
+            "cppStandard": "c++17"
         },
         {
             "name": "nor_sdram_zf_dtcm_v6",
