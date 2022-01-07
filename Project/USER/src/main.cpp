@@ -20,8 +20,10 @@ int main(void) {
 
     while (1) {
         //此处编写需要循环执行的代码
-        wireless.read(aa, bb, cc);
-        rt_kprintf("%d %d %d\n", aa, bb, cc);
+        wireless.getchar();
+        if (wireless.read(aa, bb, cc)) rt_kprintf("%d %d %d\n", aa, bb, cc);
+        else
+            rt_kputs("error\n");
         gpio_toggle(B9);
         // rt_thread_mdelay(100);
     }

@@ -22,7 +22,14 @@ uint8 SerialIO::getchar() {
 }
 void SerialIO::putchar(uint8 c) { uart_putchar(uartn, c); }
 
-void SerialIO::getbuff(uint8 *buf, uint32 len) {
-    for (uint32 i = 0; i < len; ++i) buf[i] = getchar();
+bool SerialIO::getbuff(uint8 *buf, uint32 len, rt_int32_t timeout) {
+    rt_ubase_t dat;
+    for (uint32 i = 0; i < len; ++i) {
+        rt_err_t ret = rt_mb_recv(rx_mb, &dat, timeout);
+        if (ret != RT_EOK) return false;
+        buf[i] = (uint8)dat;
+    }
+    return true;
 }
+
 void SerialIO::putbuff(uint8 *buf, uint32 len) { uart_putbuff(uartn, buf, len); }
