@@ -7,6 +7,8 @@ int main(void);
 
 SerialIO wireless;
 
+int aa, bb, cc;
+
 int main(void) {
     //此处编写用户代码(例如：外设初始化代码等)
 
@@ -18,8 +20,8 @@ int main(void) {
 
     while (1) {
         //此处编写需要循环执行的代码
-        char t = wireless.getchar();
-        rt_kprintf("%c\n", t);
+        wireless.read(aa, bb, cc);
+        rt_kprintf("%d %d %d\n", aa, bb, cc);
         gpio_toggle(B9);
         // rt_thread_mdelay(100);
     }
