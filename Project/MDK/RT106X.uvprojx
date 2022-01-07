@@ -1775,9 +1775,9 @@
               <FilePath>..\USER\src\isr.c</FilePath>
             </File>
             <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\USER\src\main.c</FilePath>
+              <FileName>main.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\USER\src\main.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -3971,9 +3971,9 @@
               <FilePath>..\USER\src\isr.c</FilePath>
             </File>
             <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\USER\src\main.c</FilePath>
+              <FileName>main.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\USER\src\main.cpp</FilePath>
             </File>
           </Files>
         </Group>

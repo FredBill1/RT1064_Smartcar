@@ -24,8 +24,10 @@
 //第二步 project  clean  等待下方进度条走完
 
 //下载代码前请根据自己使用的下载器在工程里设置下载器为自己所使用的
-
+extern "C" {
 #include "headfile.h"
+int main(void);
+}
 
 int main(void) {
     //此处编写用户代码(例如：外设初始化代码等)
