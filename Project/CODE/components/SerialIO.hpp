@@ -9,6 +9,9 @@ extern "C" {
 }
 
 class SerialIO : private lpuart_handle_t {
+ public:
+    using Data_t = double;
+
  private:
     rt_mailbox_t rx_mb;
     uint8 rx_bf;
@@ -25,24 +28,28 @@ class SerialIO : private lpuart_handle_t {
     bool getbuff(uint8 *buf, uint32 len, rt_int32_t timeout = RT_WAITING_FOREVER);
     void putbuff(uint8 *buf, uint32 len);
     template <typename T> std::enable_if_t<std::is_arithmetic<T>::value, bool> read(T &x);
-    template <typename T> std::enable_if_t<std::is_arithmetic<T>::value, void> write(T x);
     template <typename T, typename... U> bool read(T &x, U &...y);
+
+    template <typename T> std::enable_if_t<std::is_arithmetic<T>::value, void> write(T x);
     template <typename T, typename... U> void write(T x, U... y);
 };
 
 template <typename T> std::enable_if_t<std::is_arithmetic<T>::value, bool> SerialIO::read(T &x) {
-    double tmp;
-    if (getbuff((uint8 *)&tmp, 8, TIMEOUT)) {
-        x = (T)tmp;
-        return true;
+    uint8 tmp[sizeof(Data_t) + 1], sum = 0;
+    if (getbuff(tmp, sizeof(Data_t) + 1, TIMEOUT)) {
+        for (int i = 0; i < sizeof(Data_t); ++i) sum += tmp[i];
+        if (sum == tmp[sizeof(Data_t)]) {
+            x = (T) * (Data_t *)tmp;
+            return true;
+        }
     }
     return false;
 }
 template <typename T, typename... U> bool SerialIO::read(T &x, U &...y) { return read(x) && read(y...); }
 
 template <typename T> std::enable_if_t<std::is_arithmetic<T>::value, void> SerialIO::write(T x) {
-    double tmp = (double)x;
-    putbuff((uint8 *)&tmp, 8);
+    Data_t tmp = (Data_t)x;
+    putbuff((uint8 *)&tmp, sizeof(Data_t));
 }
 template <typename T, typename... U> void SerialIO::write(T x, U... y) { write(x), write(y...); }
 
