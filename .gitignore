@@ -51,6 +51,7 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
+Project/MDK/.vscode
 Project/MDK/Objects/*
 *.pbi
 *.xcl
