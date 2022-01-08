@@ -1,0 +1,3 @@
+[submodule "Libraries/eigen"]
+	path = Libraries/eigen
+	url = https://gitlab.com/libeigen/eigen.git
