@@ -1804,6 +1804,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\Libraries\rttherad_libraries\bsp\rtconfig.h</FilePath>
             </File>
+            <File>
+              <FileName>PinConfig.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\USER\inc\PinConfig.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2374,6 +2379,106 @@
               <FileType>5</FileType>
               <FilePath>..\CODE\driver\Encoder.hpp</FilePath>
             </File>
+            <File>
+              <FileName>ICM20948.hpp</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CODE\driver\ICM20948.hpp</FilePath>
+            </File>
+            <File>
+              <FileName>ICM20948.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\driver\ICM20948.cpp</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>eMD-SmartMotion-ICM20948-1.1.0-MP</GroupName>
+          <Files>
+            <File>
+              <FileName>Icm20948Augmented.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948Augmented.c</FilePath>
+            </File>
+            <File>
+              <FileName>Icm20948AuxCompassAkm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948AuxCompassAkm.c</FilePath>
+            </File>
+            <File>
+              <FileName>Icm20948AuxTransport.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948AuxTransport.c</FilePath>
+            </File>
+            <File>
+              <FileName>Icm20948DataBaseControl.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948DataBaseControl.c</FilePath>
+            </File>
+            <File>
+              <FileName>Icm20948DataBaseDriver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948DataBaseDriver.c</FilePath>
+            </File>
+            <File>
+              <FileName>Icm20948DataConverter.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948DataConverter.c</FilePath>
+            </File>
+            <File>
+              <FileName>Icm20948Dmp3Driver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948Dmp3Driver.c</FilePath>
+            </File>
+            <File>
+              <FileName>Icm20948LoadFirmware.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948LoadFirmware.c</FilePath>
+            </File>
+            <File>
+              <FileName>Icm20948MPUFifoControl.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948MPUFifoControl.c</FilePath>
+            </File>
+            <File>
+              <FileName>Icm20948SelfTest.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948SelfTest.c</FilePath>
+            </File>
+            <File>
+              <FileName>Icm20948Setup.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948Setup.c</FilePath>
+            </File>
+            <File>
+              <FileName>Icm20948Transport.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948Transport.c</FilePath>
+            </File>
+            <File>
+              <FileName>Ak0991x.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\Ak0991x\Ak0991x.c</FilePath>
+            </File>
+            <File>
+              <FileName>Sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Sensor.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>user_ICM20948</GroupName>
+          <Files>
+            <File>
+              <FileName>system.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CODE\driver\ICM20948\system.c</FilePath>
+            </File>
+            <File>
+              <FileName>dmp_img.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\driver\ICM20948\dmp_img.cpp</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
@@ -2711,7 +2816,7 @@
               <MiscControls>-fno-common  -fdata-sections  -ffreestanding  -fno-builtin  -mthumb -fno-exceptions</MiscControls>
               <Define>CPU_MIMXRT1064DVL6A,SKIP_SYSCLK_INIT,XIP_EXTERNAL_FLASH=1, XIP_BOOT_HEADER_DCD_ENABLE =1, XIP_BOOT_HEADER_ENABLE =1,PRINTF_FLOAT_ENABLE=1, SCANF_FLOAT_ENABLE=1, PRINTF_ADVANCED_ENABLE=1, SCANF_ADVANCED_ENABLE=1,FSL_DRIVER_TRANSFER_DOUBLE_WEAK_IRQ=0,USB_STACK_BM,EIGEN_NO_IO</Define>
               <Undefine></Undefine>
-              <IncludePath>..\CODE;..\USER\inc;..\USER\src;..\..\Libraries\seekfree_libraries;..\..\Libraries\nxp_libraries\CMSIS\Include;..\..\Libraries\nxp_libraries\cmsis_drivers;..\..\Libraries\nxp_libraries\drives;..\..\Libraries\nxp_libraries\startup;..\..\Libraries\nxp_libraries\startup\MDK-ARM;..\..\Libraries\nxp_libraries\utilities;..\..\Libraries\nxp_libraries\utilities\debug_console;..\..\Libraries\nxp_libraries\utilities\str;..\..\Libraries\nxp_libraries\xip;..\..\Libraries\nxp_libraries\deceive;..\..\Libraries\nxp_libraries\components\serial_manager;..\..\Libraries\nxp_libraries\components\uart;..\..\Libraries\nxp_libraries\components\lists;..\..\Libraries\nxp_libraries\components\osa;..\..\Libraries\nxp_libraries\components\serial_manager\usb_cdc_adapter;..\..\Libraries\nxp_libraries\middleware\usb\include;..\..\Libraries\nxp_libraries\middleware\usb\phy;..\..\Libraries\nxp_libraries\middleware\usb\device;..\..\Libraries\nxp_libraries\middleware\sdmmc\inc;..\..\Libraries\nxp_libraries\middleware\sdmmc\port;..\..\Libraries\nxp_libraries\middleware\sdmmc\port\usdhc;..\..\Libraries\nxp_libraries\middleware\sdmmc\port\usdhc\interrupt;..\..\Libraries\nxp_libraries\middleware\sdmmc\src;..\..\Libraries\nxp_libraries\middleware\fatfs\source;..\..\Libraries\nxp_libraries\middleware\fatfs\source\fsl_sd_disk;..\..\Libraries\seekfree_libraries\common;..\..\Libraries\seekfree_libraries\board;..\..\Libraries\seekfree_peripheral;..\..\Libraries\rttherad_libraries\bsp;..\..\Libraries\rttherad_libraries\components\finsh;..\..\Libraries\rttherad_libraries\include;..\..\Libraries\rttherad_libraries\include\libc;..\..\Libraries\rttherad_libraries\components\cplusplus;..\CODE\components;..\..\Libraries\eigen;..\CODE\driver</IncludePath>
+              <IncludePath>..\CODE;..\USER\inc;..\USER\src;..\..\Libraries\seekfree_libraries;..\..\Libraries\nxp_libraries\CMSIS\Include;..\..\Libraries\nxp_libraries\cmsis_drivers;..\..\Libraries\nxp_libraries\drives;..\..\Libraries\nxp_libraries\startup;..\..\Libraries\nxp_libraries\startup\MDK-ARM;..\..\Libraries\nxp_libraries\utilities;..\..\Libraries\nxp_libraries\utilities\debug_console;..\..\Libraries\nxp_libraries\utilities\str;..\..\Libraries\nxp_libraries\xip;..\..\Libraries\nxp_libraries\deceive;..\..\Libraries\nxp_libraries\components\serial_manager;..\..\Libraries\nxp_libraries\components\uart;..\..\Libraries\nxp_libraries\components\lists;..\..\Libraries\nxp_libraries\components\osa;..\..\Libraries\nxp_libraries\components\serial_manager\usb_cdc_adapter;..\..\Libraries\nxp_libraries\middleware\usb\include;..\..\Libraries\nxp_libraries\middleware\usb\phy;..\..\Libraries\nxp_libraries\middleware\usb\device;..\..\Libraries\nxp_libraries\middleware\sdmmc\inc;..\..\Libraries\nxp_libraries\middleware\sdmmc\port;..\..\Libraries\nxp_libraries\middleware\sdmmc\port\usdhc;..\..\Libraries\nxp_libraries\middleware\sdmmc\port\usdhc\interrupt;..\..\Libraries\nxp_libraries\middleware\sdmmc\src;..\..\Libraries\nxp_libraries\middleware\fatfs\source;..\..\Libraries\nxp_libraries\middleware\fatfs\source\fsl_sd_disk;..\..\Libraries\seekfree_libraries\common;..\..\Libraries\seekfree_libraries\board;..\..\Libraries\seekfree_peripheral;..\..\Libraries\rttherad_libraries\bsp;..\..\Libraries\rttherad_libraries\components\finsh;..\..\Libraries\rttherad_libraries\include;..\..\Libraries\rttherad_libraries\include\libc;..\..\Libraries\rttherad_libraries\components\cplusplus;..\CODE\components;..\..\Libraries\eigen;..\CODE\driver;..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -4175,6 +4280,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\Libraries\rttherad_libraries\bsp\rtconfig.h</FilePath>
             </File>
+            <File>
+              <FileName>PinConfig.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\USER\inc\PinConfig.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -4744,6 +4854,106 @@
               <FileName>Encoder.hpp</FileName>
               <FileType>5</FileType>
               <FilePath>..\CODE\driver\Encoder.hpp</FilePath>
+            </File>
+            <File>
+              <FileName>ICM20948.hpp</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CODE\driver\ICM20948.hpp</FilePath>
+            </File>
+            <File>
+              <FileName>ICM20948.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\driver\ICM20948.cpp</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>eMD-SmartMotion-ICM20948-1.1.0-MP</GroupName>
+          <Files>
+            <File>
+              <FileName>Icm20948Augmented.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948Augmented.c</FilePath>
+            </File>
+            <File>
+              <FileName>Icm20948AuxCompassAkm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948AuxCompassAkm.c</FilePath>
+            </File>
+            <File>
+              <FileName>Icm20948AuxTransport.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948AuxTransport.c</FilePath>
+            </File>
+            <File>
+              <FileName>Icm20948DataBaseControl.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948DataBaseControl.c</FilePath>
+            </File>
+            <File>
+              <FileName>Icm20948DataBaseDriver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948DataBaseDriver.c</FilePath>
+            </File>
+            <File>
+              <FileName>Icm20948DataConverter.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948DataConverter.c</FilePath>
+            </File>
+            <File>
+              <FileName>Icm20948Dmp3Driver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948Dmp3Driver.c</FilePath>
+            </File>
+            <File>
+              <FileName>Icm20948LoadFirmware.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948LoadFirmware.c</FilePath>
+            </File>
+            <File>
+              <FileName>Icm20948MPUFifoControl.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948MPUFifoControl.c</FilePath>
+            </File>
+            <File>
+              <FileName>Icm20948SelfTest.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948SelfTest.c</FilePath>
+            </File>
+            <File>
+              <FileName>Icm20948Setup.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948Setup.c</FilePath>
+            </File>
+            <File>
+              <FileName>Icm20948Transport.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948Transport.c</FilePath>
+            </File>
+            <File>
+              <FileName>Ak0991x.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\Ak0991x\Ak0991x.c</FilePath>
+            </File>
+            <File>
+              <FileName>Sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Sensor.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>user_ICM20948</GroupName>
+          <Files>
+            <File>
+              <FileName>system.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CODE\driver\ICM20948\system.c</FilePath>
+            </File>
+            <File>
+              <FileName>dmp_img.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\driver\ICM20948\dmp_img.cpp</FilePath>
             </File>
           </Files>
         </Group>

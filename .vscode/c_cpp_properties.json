@@ -43,9 +43,10 @@
                 "${workspaceFolder}\\Libraries\\rttherad_libraries\\libcpu\\arm\\cortex-m7",
                 "${workspaceFolder}\\Libraries\\rttherad_libraries\\components\\finsh",
                 "${workspaceFolder}\\Libraries\\rttherad_libraries\\components\\cplusplus",
+                "${workspaceFolder}\\Libraries\\eigen",
+                "${workspaceFolder}\\Libraries\\eMD-SmartMotion-ICM20948-1.1.0-MP",
                 "${workspaceFolder}\\Project\\CODE\\components",
-                "${workspaceFolder}\\Project\\CODE\\driver",
-                "${workspaceFolder}\\Libraries\\eigen"
+                "${workspaceFolder}\\Project\\CODE\\driver"
             ],
             "defines": [
                 "CPU_MIMXRT1064DVL6A",
@@ -131,6 +132,7 @@
                 "__wfi()=",
                 "__yield()=",
                 "__vfp_status(x,y)=0",
+                // "systick_delay_us(time)=systick_delay(USEC_TO_COUNT(time, DELAY_CLK))",
                 "EIGEN_NO_IO"
             ],
             "intelliSenseMode": "${default}",
