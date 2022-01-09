@@ -44,6 +44,7 @@
                 "${workspaceFolder}\\Libraries\\rttherad_libraries\\components\\finsh",
                 "${workspaceFolder}\\Libraries\\rttherad_libraries\\components\\cplusplus",
                 "${workspaceFolder}\\Project\\CODE\\components",
+                "${workspaceFolder}\\Project\\CODE\\driver",
                 "${workspaceFolder}\\Libraries\\eigen"
             ],
             "defines": [
