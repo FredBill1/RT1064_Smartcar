@@ -25,7 +25,7 @@ int main(void) {
     gpio_init(B9, GPO, 0, GPIO_PIN_CONFIG);
     rt_thread_mdelay(500);
 
-    // icm20948.setMagnetometerBias(-143, -23, 180);
+    icm20948.setMagnetometerBias(-143, -23, 180);
     icm20948.init();
     icm20948.selftest();
     // icm20948.enableSensor(INV_ICM20948_SENSOR_GEOMAGNETIC_FIELD, 5);
@@ -41,8 +41,9 @@ int main(void) {
         // PRINTF("\n\r");
 
         // PUTT(icm20948._mag);
-        PUTT(icm20948._quat9DOF);
-        PUTV(icm20948._quat9DOFaccuracy);
+        // PUTT(icm20948._quat9DOF);
+        // PUTV(icm20948._quat9DOFaccuracy);
+
         // PUTT(icm20948._quat6DOF);
         // PUTV(icm20948._quat6DOFaccuracy);
         // PUTT(icm20948._mag);

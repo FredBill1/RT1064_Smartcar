@@ -136,7 +136,7 @@ int ICM20948::init() {
     inv_icm20948_set_fsr(this, INV_ICM20948_SENSOR_GYROSCOPE_UNCALIBRATED, (const void*)&cfg_gyr_fsr);
 
     // Set GEOMAGNETIC bias
-    // inv_icm20948_set_bias(this, INV_ICM20948_SENSOR_GEOMAGNETIC_FIELD, biasq16);
+    inv_icm20948_set_bias(this, INV_ICM20948_SENSOR_GEOMAGNETIC_FIELD, biasq16);
 
     // re-initialize base state structure
     inv_icm20948_init_structure(this);
