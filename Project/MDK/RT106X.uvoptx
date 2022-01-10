@@ -395,66 +395,50 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>28</LineNumber>
+          <LineNumber>1070</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>-2147369310</Address>
+          <Address>-2147436908</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\USER\src\main.cpp</Filename>
+          <Filename>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948DataBaseControl.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\RT106X\../USER/src/main.cpp\28</Expression>
+          <Expression>\\RT106X\../../Libraries/eMD-SmartMotion-ICM20948-1.1.0-MP/Invn/Devices/Drivers/ICM20948/Icm20948DataBaseControl.c\1070</Expression>
         </Bp>
         <Bp>
           <Number>1</Number>
           <Type>0</Type>
-          <LineNumber>343</LineNumber>
+          <LineNumber>624</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>1879057656</Address>
+          <Address>-2147422750</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\..\Libraries\nxp_libraries\startup\MDK-ARM\startup_MIMXRT1064.s</Filename>
+          <Filename>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948MPUFifoControl.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\RT106X\../../Libraries/nxp_libraries/startup/MDK-ARM/startup_MIMXRT1064.s\343</Expression>
+          <Expression>\\RT106X\../../Libraries/eMD-SmartMotion-ICM20948-1.1.0-MP/Invn/Devices/Drivers/ICM20948/Icm20948MPUFifoControl.c\624</Expression>
         </Bp>
         <Bp>
           <Number>2</Number>
           <Type>0</Type>
-          <LineNumber>577</LineNumber>
+          <LineNumber>623</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>-2147423318</Address>
+          <Address>-2147422764</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948Setup.c</Filename>
+          <Filename>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948MPUFifoControl.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\RT106X\../../Libraries/eMD-SmartMotion-ICM20948-1.1.0-MP/Invn/Devices/Drivers/ICM20948/Icm20948Setup.c\577</Expression>
-        </Bp>
-        <Bp>
-          <Number>3</Number>
-          <Type>0</Type>
-          <LineNumber>571</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>-2147423348</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948Setup.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\RT106X\../../Libraries/eMD-SmartMotion-ICM20948-1.1.0-MP/Invn/Devices/Drivers/ICM20948/Icm20948Setup.c\571</Expression>
+          <Expression>\\RT106X\../../Libraries/eMD-SmartMotion-ICM20948-1.1.0-MP/Invn/Devices/Drivers/ICM20948/Icm20948MPUFifoControl.c\623</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -497,6 +481,11 @@
           <count>7</count>
           <WinNumber>1</WinNumber>
           <ItemText>vector_size</ItemText>
+        </Ww>
+        <Ww>
+          <count>8</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>(float*)arg</ItemText>
         </Ww>
       </WatchWindow1>
       <MemoryWindow1>
@@ -5301,7 +5290,7 @@
 
   <Group>
     <GroupName>eMD-SmartMotion-ICM20948-1.1.0-MP</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>

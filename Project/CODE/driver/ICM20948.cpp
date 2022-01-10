@@ -9,17 +9,17 @@
 #include "Invn/Devices/SensorTypes.h"
 
 extern "C" {
+#include "fsl_debug_console.h"
 #include "zf_systick.h"
 }
 // clang-format off
-#define DEBUG_LOG(s) rt_kputs(s)
-#define CHECK_RC(s) if (rc) { DEBUG_LOG(s); return rc; }  // clang-format on
+#define CHECK_RC(s) if (rc) { PRINTF(s); return rc; }  // clang-format on
 
-#define GRAVITY_CONST 3.14159265f
+#define GRAVITY_CONST 9.8f
 
 /* FSR configurations */
-static int32_t cfg_acc_fsr = AccelFSR2g;     // Default = +/- 4g. Valid ranges: 2, 4, 8, 16
-static int32_t cfg_gyr_fsr = GyroFSR250dps;  // Default = +/- 2000dps. Valid ranges: 250, 500, 1000, 2000
+static int32_t cfg_acc_fsr = AccelFSR4g;      // Default = +/- 4g. Valid ranges: 2, 4, 8, 16
+static int32_t cfg_gyr_fsr = GyroFSR2000dps;  // Default = +/- 2000dps. Valid ranges: 250, 500, 1000, 2000
 
 static float cfg_mounting_matrix[9]{
     1.f, 0,   0,    //
@@ -27,7 +27,8 @@ static float cfg_mounting_matrix[9]{
     0,   0,   1.f,  //
 };
 
-//  Magnetometer bias
+static int unscaled_bias[THREE_AXES * 2];
+
 static int biasq16[3] = {0};
 
 static uint8_t convert_to_generic_ids[INV_ICM20948_SENSOR_MAX]  //
@@ -90,6 +91,12 @@ ICM20948::ICM20948(SPIN_enum spi_n, SPI_PIN_enum sck, SPI_PIN_enum mosi, SPI_PIN
     inv_icm20948_register_aux_compass(this, INV_ICM20948_COMPASS_ID_AK09916, AK0991x_DEFAULT_I2C_ADDR);
 }
 
+void ICM20948::setMagnetometerBias(float biasX, float biasY, float biasZ) {
+    biasq16[0] = (int)(biasX * (float)(1L << 16));
+    biasq16[1] = (int)(biasY * (float)(1L << 16));
+    biasq16[2] = (int)(biasZ * (float)(1L << 16));
+}
+
 int ICM20948::init() {
     systick_delay_ms(10);
     spi_init(SPI_N, SCK, MOSI, MISO, CS, 3, 10 * 1000 * 1000);
@@ -99,7 +106,7 @@ int ICM20948::init() {
     uint8_t whoami = 0xff;
     do {
         rc = inv_icm20948_get_whoami(this, &whoami);
-        if (rc) rt_kprintf("ICM20948: WHOAMI error");
+        if (rc) rt_kprintf("ICM20948: WHOAMI error\n\r");
     } while (whoami != WHO_AM_I);
 
     // Setup accel and gyro mounting matrix and associated angle for current board
@@ -107,27 +114,29 @@ int ICM20948::init() {
 
     // set default power mode
     rc = inv_icm20948_initialize(this, ICM20948_dmp_img, sizeof(ICM20948_dmp_img));
-    CHECK_RC("ICM20948: DMP init error");
+    CHECK_RC("ICM20948: DMP init error\n\r");
 
     inv_icm20948_register_aux_compass(this, INV_ICM20948_COMPASS_ID_AK09916, AK0991x_DEFAULT_I2C_ADDR);
 
     // Initialize auxiliary sensors
     rc = inv_icm20948_initialize_auxiliary(this);
-    CHECK_RC("ICM20948: Compass not detected");
+    CHECK_RC("ICM20948: Compass not detected\n\r");
 
     // Set full-scale range for sensors
     for (int ii = 0; ii < INV_ICM20948_SENSOR_MAX; ii++)
         inv_icm20948_set_matrix(this, cfg_mounting_matrix, (inv_icm20948_sensor)ii);
 
     //  Smooth accel output
-    base_state.accel_averaging = 5;
+    // base_state.accel_averaging = 5;
+
     inv_icm20948_set_fsr(this, INV_ICM20948_SENSOR_RAW_ACCELEROMETER, (const void*)&cfg_acc_fsr);
     inv_icm20948_set_fsr(this, INV_ICM20948_SENSOR_ACCELEROMETER, (const void*)&cfg_acc_fsr);
     inv_icm20948_set_fsr(this, INV_ICM20948_SENSOR_RAW_GYROSCOPE, (const void*)&cfg_gyr_fsr);
     inv_icm20948_set_fsr(this, INV_ICM20948_SENSOR_GYROSCOPE, (const void*)&cfg_gyr_fsr);
     inv_icm20948_set_fsr(this, INV_ICM20948_SENSOR_GYROSCOPE_UNCALIBRATED, (const void*)&cfg_gyr_fsr);
 
-    inv_icm20948_set_bias(this, INV_ICM20948_SENSOR_GEOMAGNETIC_FIELD, biasq16);
+    // Set GEOMAGNETIC bias
+    // inv_icm20948_set_bias(this, INV_ICM20948_SENSOR_GEOMAGNETIC_FIELD, biasq16);
 
     // re-initialize base state structure
     inv_icm20948_init_structure(this);
@@ -137,14 +146,112 @@ int ICM20948::init() {
     // Now that Icm20948 device was initialized, we can proceed with DMP image loading
     // This step is mandatory as DMP image are not store in non volatile memory
     rc = inv_icm20948_load(this, ICM20948_dmp_img, sizeof(ICM20948_dmp_img));
-    CHECK_RC("Error loading DMP3\n");
+    CHECK_RC("Error loading DMP3\n\r");
 
-    DEBUG_LOG("ICM20948 Init complete.\n");
+    PRINTF("ICM20948 Init complete.\n\r");
 
     return 0;
 }
 
+void inv_icm20948_get_st_bias(struct inv_icm20948* s, int* gyro_bias, int* accel_bias, int* st_bias, int* unscaled) {
+    int axis, axis_sign;
+    int gravity, gravity_scaled;
+    int i, t;
+    int check;
+    int scale;
+
+    /* check bias there ? */
+    check = 0;
+    for (i = 0; i < 3; i++) {
+        if (gyro_bias[i] != 0) check = 1;
+        if (accel_bias[i] != 0) check = 1;
+    }
+
+    /* if no bias, return all 0 */
+    if (check == 0) {
+        for (i = 0; i < 12; i++) st_bias[i] = 0;
+        return;
+    }
+
+    /* dps scaled by 2^16 */
+    scale = 65536 / DEF_SELFTEST_GYRO_SENS;
+
+    /* Gyro normal mode */
+    t = 0;
+    for (i = 0; i < 3; i++) {
+        st_bias[i + t] = gyro_bias[i] * scale;
+        unscaled[i + t] = gyro_bias[i];
+    }
+    axis = 0;
+    axis_sign = 1;
+    if (INV20948_ABS(accel_bias[1]) > INV20948_ABS(accel_bias[0])) axis = 1;
+    if (INV20948_ABS(accel_bias[2]) > INV20948_ABS(accel_bias[axis])) axis = 2;
+    if (accel_bias[axis] < 0) axis_sign = -1;
+
+    /* gee scaled by 2^16 */
+    scale = 65536 / (DEF_ST_SCALE / (DEF_ST_ACCEL_FS_MG / 1000));
+
+    gravity = 32768 / (DEF_ST_ACCEL_FS_MG / 1000) * axis_sign;
+    gravity_scaled = gravity * scale;
+
+    /* Accel normal mode */
+    t += 3;
+    for (i = 0; i < 3; i++) {
+        st_bias[i + t] = accel_bias[i] * scale;
+        unscaled[i + t] = accel_bias[i];
+        if (axis == i) {
+            st_bias[i + t] -= gravity_scaled;
+            unscaled[i + t] -= gravity;
+        }
+    }
+}
+
+int ICM20948::selftest() {
+    static int rc = 0;  // Keep this value as we're only going to do this once.
+    int gyro_bias_regular[THREE_AXES];
+    int accel_bias_regular[THREE_AXES];
+    static int raw_bias[THREE_AXES * 2];
+
+    if (selftest_done == 1) {
+        PRINTF("Self-test has already run. Skipping.\n\r");
+    } else {
+        /*
+         * Perform self-test
+         * For ICM20948 self-test is performed for both RAW_ACC/RAW_GYR
+         */
+        PRINTF("Running self-test...\n\r");
+
+        /* Run the self-test */
+        rc = inv_icm20948_run_selftest(this, gyro_bias_regular, accel_bias_regular);
+        if ((rc & INV_ICM20948_SELF_TEST_OK) == INV_ICM20948_SELF_TEST_OK) {
+            /* On A+G+M self-test success, offset will be kept until reset */
+            selftest_done = 1;
+            offset_done = 0;
+            rc = 0;
+        } else {
+            /* On A|G|M self-test failure, return Error */
+            PRINTF("Self-test failure !\n\r");
+            /* 0 would be considered OK, we want KO */
+            rc = INV_ERROR;
+        }
+
+        /* It's advised to re-init the icm20948 device after self-test for normal use */
+        init();
+        inv_icm20948_get_st_bias(this, gyro_bias_regular, accel_bias_regular, raw_bias, unscaled_bias);
+        PRINTF("GYR bias (FS=250dps) (dps): x=%f, y=%f, z=%f\n\r", (float)(raw_bias[0] / (float)(1 << 16)),
+               (float)(raw_bias[1] / (float)(1 << 16)), (float)(raw_bias[2] / (float)(1 << 16)));
+        PRINTF("ACC bias (FS=2g) (g): x=%f, y=%f, z=%f\n\r", (float)(raw_bias[0 + 3] / (float)(1 << 16)),
+               (float)(raw_bias[1 + 3] / (float)(1 << 16)), (float)(raw_bias[2 + 3] / (float)(1 << 16)));
+    }
+
+    return rc;
+}
+
 int ICM20948::enableSensor(inv_icm20948_sensor sensor, uint32_t period) {
+    if (selftest_done && !offset_done) {  // If we've run selftes and not already set the offset.
+        inv_icm20948_set_offset(this, unscaled_bias);
+        offset_done = 1;
+    }
     return inv_icm20948_enable_sensor(this, sensor, 1) | inv_icm20948_set_sensor_period(this, sensor, period);
 }
 
@@ -153,22 +260,28 @@ int ICM20948::disableSensor(inv_icm20948_sensor sensor) { return inv_icm20948_en
 int ICM20948::enableAllSensors(uint32_t period) {
     int rc;
 
-    rc = enableSensor(INV_ICM20948_SENSOR_GYROSCOPE, period);
-    CHECK_RC("Gyroscope enable failed\n");
+    // rc = enableSensor(INV_ICM20948_SENSOR_GYROSCOPE, period);
+    // CHECK_RC("Gyroscope enable failed\n");
 
-    rc = enableSensor(INV_ICM20948_SENSOR_GAME_ROTATION_VECTOR, period);
-    CHECK_RC("Game Rotation Vector enable failed\n");
+    // rc = enableSensor(INV_ICM20948_SENSOR_GRAVITY, period);
+    // CHECK_RC("Gravity enable failed\n");
 
-    rc = enableSensor(INV_ICM20948_SENSOR_LINEAR_ACCELERATION, period);
-    CHECK_RC("Linear Acceleration enable failed\n");
+    // rc = enableSensor(INV_ICM20948_SENSOR_LINEAR_ACCELERATION, period);
+    // CHECK_RC("Linear Acceleration enable failed\n");
 
-    rc = enableSensor(INV_ICM20948_SENSOR_ROTATION_VECTOR, period);
-    CHECK_RC("Rotation Vector enable failed\n");
+    // rc = enableSensor(INV_ICM20948_SENSOR_GEOMAGNETIC_FIELD, period);
+    // CHECK_RC("Geomagnetic Field enable failed\n");
 
-    rc = enableSensor(INV_ICM20948_SENSOR_GRAVITY, period);
-    CHECK_RC("Gravity enable failed\n");
+    // rc = enableSensor(INV_ICM20948_SENSOR_GAME_ROTATION_VECTOR, period);
+    // CHECK_RC("6DOF enable failed\n");
 
-    DEBUG_LOG("All sensors enabled\n");
+    // rc = enableSensor(INV_ICM20948_SENSOR_ROTATION_VECTOR, period);
+    // CHECK_RC("9DOF enable failed\n\r");
+
+    rc = enableSensor(INV_ICM20948_SENSOR_GEOMAGNETIC_ROTATION_VECTOR, period);
+    CHECK_RC("Geomagnetic ROTATION_VECTOR enable failed\n");
+
+    PRINTF("All sensors enabled\n\r");
     return 0;
 }
 

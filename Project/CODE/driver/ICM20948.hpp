@@ -47,22 +47,24 @@ class ICM20948 : private inv_icm20948_serif, protected inv_icm20948 {
 
  public:
     //  Linear acceleration [x,y,z] in m/s^2
-    volatile float _acc[3];
+    float _acc[3];
     //  Gyroscope readings in degrees-per-second [x,y,z]
-    volatile float _gyro[3];
+    float _gyro[3];
     //  Magnetometer readings [x,y,z] in
-    volatile float _mag[3];
+    float _mag[3];
     //  Gravity vector
-    volatile float _gv[3];
+    float _gv[3];
     //  Quaternions(w,x,y,z) and their accuracy
-    volatile float _quat9DOF[4];
-    volatile float _quat9DOFaccuracy;
-    volatile float _quat6DOF[4];
-    volatile float _quat6DOFaccuracy;
+    float _quat9DOF[4];
+    float _quat9DOFaccuracy;
+    float _quat6DOF[4];
+    float _quat6DOFaccuracy;
 
  public:
     ICM20948(SPIN_enum spi_n, SPI_PIN_enum sck, SPI_PIN_enum mosi, SPI_PIN_enum miso, SPI_PIN_enum cs);
+    void setMagnetometerBias(float biasX, float biasY, float biasZ);
     int init();
+    int selftest();
 
     int enableSensor(inv_icm20948_sensor sensor, uint32_t period);
     int disableSensor(inv_icm20948_sensor sensor);
