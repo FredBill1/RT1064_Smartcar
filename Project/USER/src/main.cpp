@@ -25,7 +25,11 @@ int main(void) {
 
     while (1) {
         //此处编写需要循环执行的代码
-        rt_thread_mdelay(100);
+        icm20948.readSensor();
+        for (int i = 0; i < 4; ++i) { PRINTF("%.10f ", icm20948._quat9DOF[i]); }
+        PRINTF("\n\r");
+        // rt_thread_mdelay(100);
+
         // rt_thread_mdelay(1000);
     }
 }

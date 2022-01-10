@@ -326,7 +326,7 @@
         <sRmem>1</sRmem>
         <sRfunc>1</sRfunc>
         <sRbox>1</sRbox>
-        <tLdApp>0</tLdApp>
+        <tLdApp>1</tLdApp>
         <tGomain>1</tGomain>
         <tRbreak>1</tRbreak>
         <tRwatch>1</tRwatch>
@@ -368,7 +368,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>CMSIS_AGDI</Key>
-          <Name>-X"SEEKFREE CMSIS-DAP V2" -USF-1570696933604 -O710 -S8 -C0 -P00000000 -N00("ARM CoreSight SW-DP") -D00(0BD11477) -L00(0) -TO65554 -TC10000000 -TT10000000 -TP20 -TDS8007 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO11 -FD20000000 -FC8000 -FN1 -FF0MIMXRT1064_QSPI_4KB_SEC.FLM -FS070000000 -FL0400000 -FP0($$Device:MIMXRT1064DVL6A$arm\MIMXRT1064_QSPI_4KB_SEC.FLM)</Name>
+          <Name>-X"SEEKFREE CMSIS-DAP V2" -USF-1570696933604 -O718 -S8 -C0 -P00000000 -N00("ARM CoreSight SW-DP") -D00(0BD11477) -L00(0) -TO65554 -TC10000000 -TT10000000 -TP20 -TDS8007 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO11 -FD20000000 -FC8000 -FN1 -FF0MIMXRT1064_QSPI_4KB_SEC.FLM -FS070000000 -FL0400000 -FP0($$Device:MIMXRT1064DVL6A$arm\MIMXRT1064_QSPI_4KB_SEC.FLM)</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -395,9 +395,25 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
+          <LineNumber>28</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>-2147369310</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>..\USER\src\main.cpp</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\RT106X\../USER/src/main.cpp\28</Expression>
+        </Bp>
+        <Bp>
+          <Number>1</Number>
+          <Type>0</Type>
           <LineNumber>343</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>1879057596</Address>
+          <Address>1879057656</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -407,6 +423,38 @@
           <Filename>..\..\Libraries\nxp_libraries\startup\MDK-ARM\startup_MIMXRT1064.s</Filename>
           <ExecCommand></ExecCommand>
           <Expression>\\RT106X\../../Libraries/nxp_libraries/startup/MDK-ARM/startup_MIMXRT1064.s\343</Expression>
+        </Bp>
+        <Bp>
+          <Number>2</Number>
+          <Type>0</Type>
+          <LineNumber>577</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>-2147423318</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948Setup.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\RT106X\../../Libraries/eMD-SmartMotion-ICM20948-1.1.0-MP/Invn/Devices/Drivers/ICM20948/Icm20948Setup.c\577</Expression>
+        </Bp>
+        <Bp>
+          <Number>3</Number>
+          <Type>0</Type>
+          <LineNumber>571</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>-2147423348</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948Setup.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\RT106X\../../Libraries/eMD-SmartMotion-ICM20948-1.1.0-MP/Invn/Devices/Drivers/ICM20948/Icm20948Setup.c\571</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -3801,7 +3849,7 @@
 
   <Group>
     <GroupName>user_c</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>

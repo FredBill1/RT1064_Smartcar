@@ -5,6 +5,8 @@
 #include "ICM20948/dmp_img.hpp"
 #include "ICM20948/macros.h"
 #include "ICM20948/system.h"
+#include "Invn/Devices/Drivers/ICM20948/Icm20948MPUFifoControl.h"
+#include "Invn/Devices/SensorTypes.h"
 
 extern "C" {
 #include "zf_systick.h"
@@ -13,9 +15,11 @@ extern "C" {
 #define DEBUG_LOG(s) rt_kputs(s)
 #define CHECK_RC(s) if (rc) { DEBUG_LOG(s); return rc; }  // clang-format on
 
+#define GRAVITY_CONST 3.14159265f
+
 /* FSR configurations */
-static int32_t cfg_acc_fsr = 4;    // Default = +/- 4g. Valid ranges: 2, 4, 8, 16
-static int32_t cfg_gyr_fsr = 250;  // Default = +/- 2000dps. Valid ranges: 250, 500, 1000, 2000
+static int32_t cfg_acc_fsr = AccelFSR2g;     // Default = +/- 4g. Valid ranges: 2, 4, 8, 16
+static int32_t cfg_gyr_fsr = GyroFSR250dps;  // Default = +/- 2000dps. Valid ranges: 250, 500, 1000, 2000
 
 static float cfg_mounting_matrix[9]{
     1.f, 0,   0,    //
@@ -25,6 +29,37 @@ static float cfg_mounting_matrix[9]{
 
 //  Magnetometer bias
 static int biasq16[3] = {0};
+
+static uint8_t convert_to_generic_ids[INV_ICM20948_SENSOR_MAX]  //
+    {INV_SENSOR_TYPE_ACCELEROMETER,
+     INV_SENSOR_TYPE_GYROSCOPE,
+     INV_SENSOR_TYPE_RAW_ACCELEROMETER,
+     INV_SENSOR_TYPE_RAW_GYROSCOPE,
+     INV_SENSOR_TYPE_UNCAL_MAGNETOMETER,
+     INV_SENSOR_TYPE_UNCAL_GYROSCOPE,
+     INV_SENSOR_TYPE_BAC,
+     INV_SENSOR_TYPE_STEP_DETECTOR,
+     INV_SENSOR_TYPE_STEP_COUNTER,
+     INV_SENSOR_TYPE_GAME_ROTATION_VECTOR,
+     INV_SENSOR_TYPE_ROTATION_VECTOR,
+     INV_SENSOR_TYPE_GEOMAG_ROTATION_VECTOR,
+     INV_SENSOR_TYPE_MAGNETOMETER,
+     INV_SENSOR_TYPE_SMD,
+     INV_SENSOR_TYPE_PICK_UP_GESTURE,
+     INV_SENSOR_TYPE_TILT_DETECTOR,
+     INV_SENSOR_TYPE_GRAVITY,
+     INV_SENSOR_TYPE_LINEAR_ACCELERATION,
+     INV_SENSOR_TYPE_ORIENTATION,
+     INV_SENSOR_TYPE_B2S};
+
+static uint8_t icm20948_get_grv_accuracy(void) {
+    uint8_t accel_accuracy;
+    uint8_t gyro_accuracy;
+
+    accel_accuracy = (uint8_t)inv_icm20948_get_accel_accuracy();
+    gyro_accuracy = (uint8_t)inv_icm20948_get_gyro_accuracy();
+    return (min(accel_accuracy, gyro_accuracy));
+}
 
 int ICM20948::spi_read(void* context, uint8_t reg, uint8_t* buf, uint32_t len) {
     ICM20948& self = *(ICM20948*)context;
@@ -40,7 +75,7 @@ int ICM20948::spi_write(void* context, uint8_t reg, const uint8_t* buf, uint32_t
     reg &= WRITE_BIT_MASK;
     self._buf[0] = reg;
     memcpy(self._buf + 1, buf, len);
-    spi_mosi(self.SPI_N, self.CS, self._buf, NULL, len + 1, 1);
+    spi_mosi(self.SPI_N, self.CS, self._buf, self._buf, len + 1, 1);
     return 0;
 }
 
@@ -135,4 +170,92 @@ int ICM20948::enableAllSensors(uint32_t period) {
 
     DEBUG_LOG("All sensors enabled\n");
     return 0;
+}
+
+int ICM20948::readSensor() {
+    int rc = inv_icm20948_poll_sensor(this, this, &ICM20948::build_sensor_event_data);  //
+
+    //  Gravity is returned in G's
+    _acc[0] *= GRAVITY_CONST;
+    _acc[1] *= GRAVITY_CONST;
+    _acc[2] *= GRAVITY_CONST;
+
+    return rc;
+}
+void ICM20948::build_sensor_event_data(void* context, enum inv_icm20948_sensor sensortype, uint64_t timestamp,
+                                       const void* data, const void* arg) {
+    ICM20948& self = *(ICM20948*)context;
+    float raw_bias_data[6];
+    // inv_sensor_event_t event;
+    // (void)context;
+    uint8_t sensor_id = convert_to_generic_ids[sensortype];
+
+    // memset((void*)&event, 0, sizeof(event));
+    // event.sensor = sensor_id;
+    // event.timestamp = timestamp;
+    switch (sensor_id) {
+    // case INV_SENSOR_TYPE_UNCAL_GYROSCOPE:
+    //     memcpy(raw_bias_data, data, sizeof(raw_bias_data));
+    //     memcpy(event.data.gyr.vect, &raw_bias_data[0], sizeof(event.data.gyr.vect));
+    //     memcpy(event.data.gyr.bias, &raw_bias_data[3], sizeof(event.data.gyr.bias));
+    //     memcpy(&(event.data.gyr.accuracy_flag), arg, sizeof(event.data.gyr.accuracy_flag));
+    //     break;
+    // case INV_SENSOR_TYPE_UNCAL_MAGNETOMETER:
+    //     memcpy(raw_bias_data, data, sizeof(raw_bias_data));
+    //     memcpy(event.data.mag.vect, &raw_bias_data[0], sizeof(event.data.mag.vect));
+    //     memcpy(event.data.mag.bias, &raw_bias_data[3], sizeof(event.data.mag.bias));
+    //     memcpy(&(event.data.gyr.accuracy_flag), arg, sizeof(event.data.gyr.accuracy_flag));
+    //     break;
+    case INV_SENSOR_TYPE_GYROSCOPE:
+        // memcpy(event.data.gyr.vect, data, sizeof(event.data.gyr.vect));
+        // memcpy(&(event.data.gyr.accuracy_flag), arg, sizeof(event.data.gyr.accuracy_flag));
+        memcpy((void*)self._gyro, data, sizeof(self._gyro));
+        break;
+    case INV_SENSOR_TYPE_GRAVITY:
+        // memcpy(event.data.acc.vect, data, sizeof(event.data.acc.vect));
+        // event.data.acc.accuracy_flag = inv_icm20948_get_accel_accuracy();
+        memcpy((void*)self._gv, data, sizeof(self._gv));
+        break;
+    case INV_SENSOR_TYPE_LINEAR_ACCELERATION:
+    case INV_SENSOR_TYPE_ACCELEROMETER:
+        // memcpy(event.data.acc.vect, data, sizeof(event.data.acc.vect));
+        // memcpy(&(event.data.acc.accuracy_flag), arg, sizeof(event.data.acc.accuracy_flag));
+        memcpy((void*)self._acc, data, sizeof(self._acc));
+        break;
+    case INV_SENSOR_TYPE_MAGNETOMETER:
+        // memcpy(event.data.mag.vect, data, sizeof(event.data.mag.vect));
+        // memcpy(&(event.data.mag.accuracy_flag), arg, sizeof(event.data.mag.accuracy_flag));
+        memcpy((void*)self._mag, data, sizeof(self._mag));
+        break;
+    case INV_SENSOR_TYPE_GEOMAG_ROTATION_VECTOR:
+    case INV_SENSOR_TYPE_ROTATION_VECTOR:
+        // memcpy(&(event.data.quaternion.accuracy), arg, sizeof(event.data.quaternion.accuracy));
+        // memcpy(event.data.quaternion.quat, data, sizeof(event.data.quaternion.quat));
+        memcpy((void*)&self._quat9DOFaccuracy, arg, sizeof(self._quat9DOFaccuracy));
+        memcpy((void*)self._quat9DOF, data, sizeof(self._quat9DOF));
+        break;
+    case INV_SENSOR_TYPE_GAME_ROTATION_VECTOR:
+        // memcpy(event.data.quaternion.quat, data, sizeof(event.data.quaternion.quat));
+        // event.data.quaternion.accuracy_flag = icm20948_get_grv_accuracy();
+        memcpy((void*)self._quat6DOF, data, sizeof(self._quat6DOF));
+        self._quat6DOFaccuracy = icm20948_get_grv_accuracy();
+        break;
+    // case INV_SENSOR_TYPE_BAC: memcpy(&(event.data.bac.event), data, sizeof(event.data.bac.event)); break;
+    // case INV_SENSOR_TYPE_PICK_UP_GESTURE:
+    // case INV_SENSOR_TYPE_TILT_DETECTOR:
+    // case INV_SENSOR_TYPE_STEP_DETECTOR:
+    // case INV_SENSOR_TYPE_SMD: event.data.event = true; break;
+    // case INV_SENSOR_TYPE_B2S:
+    //     event.data.event = true;
+    //     memcpy(&(event.data.b2s.direction), data, sizeof(event.data.b2s.direction));
+    //     break;
+    // case INV_SENSOR_TYPE_STEP_COUNTER: memcpy(&(event.data.step.count), data, sizeof(event.data.step.count)); break;
+    // case INV_SENSOR_TYPE_ORIENTATION:
+    //     // we just want to copy x,y,z from orientation data
+    //     memcpy(&(event.data.orientation), data, 3 * sizeof(float));
+    //     break;
+    // case INV_SENSOR_TYPE_RAW_ACCELEROMETER:
+    // case INV_SENSOR_TYPE_RAW_GYROSCOPE: memcpy(event.data.raw3d.vect, data, sizeof(event.data.raw3d.vect)); break;
+    default: return;
+    }
 }

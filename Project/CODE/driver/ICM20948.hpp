@@ -12,6 +12,27 @@ extern "C" {
 #include "zf_spi.h"
 }
 
+enum OrientationDOF {
+    Orientation6DOF,
+    Orientation9DOF,
+};
+
+// Default = +/- 4g. Valid ranges: 2, 4, 8, 16
+enum AccelerometerFSR {
+    AccelFSR2g = 2,
+    AccelFSR4g = 4,
+    AccelFSR8g = 8,
+    AccelFSR16g = 16,
+};
+
+// Default = +/- 2000dps. Valid ranges: 250, 500, 1000, 2000
+enum GyroscopeFSR {
+    GyroFSR250dps = 250,
+    GyroFSR500dps = 500,
+    GyroFSR1000dps = 1000,
+    GyroFSR2000dps = 2000,
+};
+
 class ICM20948 : private inv_icm20948_serif, protected inv_icm20948 {
  private:
     const SPIN_enum SPI_N;
@@ -21,7 +42,10 @@ class ICM20948 : private inv_icm20948_serif, protected inv_icm20948 {
  protected:
     static int spi_read(void* context, uint8_t reg, uint8_t* buf, uint32_t len);
     static int spi_write(void* context, uint8_t reg, const uint8_t* buf, uint32_t len);
+    static void build_sensor_event_data(void* context, enum inv_icm20948_sensor sensortype, uint64_t timestamp,
+                                        const void* data, const void* arg);
 
+ public:
     //  Linear acceleration [x,y,z] in m/s^2
     volatile float _acc[3];
     //  Gyroscope readings in degrees-per-second [x,y,z]
@@ -43,6 +67,8 @@ class ICM20948 : private inv_icm20948_serif, protected inv_icm20948 {
     int enableSensor(inv_icm20948_sensor sensor, uint32_t period);
     int disableSensor(inv_icm20948_sensor sensor);
     int enableAllSensors(uint32_t period);
+
+    int readSensor();
 };
 
 #endif  // _ICM20948_hpp
