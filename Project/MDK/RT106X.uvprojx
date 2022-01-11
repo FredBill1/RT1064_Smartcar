@@ -1770,14 +1770,14 @@
           <GroupName>user_c</GroupName>
           <Files>
             <File>
-              <FileName>isr.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\USER\src\isr.c</FilePath>
-            </File>
-            <File>
               <FileName>main.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\USER\src\main.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>isr.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\USER\src\isr.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -4246,14 +4246,14 @@
           <GroupName>user_c</GroupName>
           <Files>
             <File>
-              <FileName>isr.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\USER\src\isr.c</FilePath>
-            </File>
-            <File>
               <FileName>main.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\USER\src\main.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>isr.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\USER\src\isr.cpp</FilePath>
             </File>
           </Files>
         </Group>

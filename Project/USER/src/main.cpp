@@ -19,7 +19,7 @@ static uint8 tail[4]{0x00, 0x00, 0x80, 0x7f};
 #define PUTV(x) \
     for (int i = 0; i < sizeof(x); ++i) PUTCHAR(((uint8*)&x)[i])
 rt_timer_t fusionTimer;
-extern "C" void fusionTimerCB(void*) {
+void fusionTimerCB(void*) {
     icm20948.readSensor();
 
     PUTT(icm20948._quat9DOF);
