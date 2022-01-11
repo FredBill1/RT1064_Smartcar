@@ -48,6 +48,12 @@ void GPIO2_Combined_16_31_IRQHandler(void) {
     if (GET_GPIO_FLAG(C16)) {
         CLEAR_GPIO_FLAG(C16);  //清除中断标志位
     }
+    if (GET_GPIO_FLAG(C30)) {
+        CLEAR_GPIO_FLAG(C30);
+        void fusionTimerCB(void*);
+        fusionTimerCB(NULL);
+        // PRINTF("%d\n\r", rt_tick_get());
+    }
     rt_interrupt_leave();
 }
 
@@ -61,6 +67,7 @@ void GPIO2_Combined_0_15_IRQHandler(void) {
         //不用清除标志位，标志位在scc8660_vsync函数内部会清除
         if (CAMERA_COLOR == flexio_camera_type) scc8660_vsync();
     }
+
     rt_interrupt_leave();
 }
 

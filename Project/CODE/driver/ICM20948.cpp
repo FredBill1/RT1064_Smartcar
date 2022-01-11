@@ -1,5 +1,6 @@
 #include "ICM20948.hpp"
 
+#include <rthw.h>
 #include <rtthread.h>
 
 #include "ICM20948/dmp_img.hpp"
@@ -66,7 +67,9 @@ int ICM20948::spi_read(void* context, uint8_t reg, uint8_t* buf, uint32_t len) {
     ICM20948& self = *(ICM20948*)context;
     reg |= READ_BIT_MASK;
     self._buf[0] = reg;
+    rt_base_t level = rt_hw_interrupt_disable();
     spi_mosi(self.SPI_N, self.CS, self._buf, self._buf, len + 1, 1);
+    rt_hw_interrupt_enable(level);
     memcpy(buf, self._buf + 1, len);
     return 0;
 }
@@ -76,7 +79,9 @@ int ICM20948::spi_write(void* context, uint8_t reg, const uint8_t* buf, uint32_t
     reg &= WRITE_BIT_MASK;
     self._buf[0] = reg;
     memcpy(self._buf + 1, buf, len);
+    rt_base_t level = rt_hw_interrupt_disable();
     spi_mosi(self.SPI_N, self.CS, self._buf, self._buf, len + 1, 1);
+    rt_hw_interrupt_enable(level);
     return 0;
 }
 
@@ -99,7 +104,7 @@ void ICM20948::setMagnetometerBias(float biasX, float biasY, float biasZ) {
 
 int ICM20948::init() {
     systick_delay_ms(10);
-    spi_init(SPI_N, SCK, MOSI, MISO, CS, 3, 10 * 1000 * 1000);
+    spi_init(SPI_N, SCK, MOSI, MISO, CS, 3, 7 * 1000 * 1000);
     int rc;
 
     // Check if WHOAMI value corresponds to any value from EXPECTED_WHOAMI array
@@ -247,42 +252,20 @@ int ICM20948::selftest() {
     return rc;
 }
 
-int ICM20948::enableSensor(inv_icm20948_sensor sensor, uint32_t period) {
+int ICM20948::enableSensor(inv_icm20948_sensor sensor) {
     if (selftest_done && !offset_done) {  // If we've run selftes and not already set the offset.
         inv_icm20948_set_offset(this, unscaled_bias);
         offset_done = 1;
     }
-    return inv_icm20948_enable_sensor(this, sensor, 1) | inv_icm20948_set_sensor_period(this, sensor, period);
+    int rc = inv_icm20948_enable_sensor(this, sensor, 1);
+    // rc |= inv_icm20948_set_sensor_period(this, sensor, period);
+    return rc;
 }
 
 int ICM20948::disableSensor(inv_icm20948_sensor sensor) { return inv_icm20948_enable_sensor(this, sensor, 0); }
 
-int ICM20948::enableAllSensors(uint32_t period) {
-    int rc;
-
-    // rc = enableSensor(INV_ICM20948_SENSOR_GYROSCOPE, period);
-    // CHECK_RC("Gyroscope enable failed\n");
-
-    // rc = enableSensor(INV_ICM20948_SENSOR_GRAVITY, period);
-    // CHECK_RC("Gravity enable failed\n");
-
-    // rc = enableSensor(INV_ICM20948_SENSOR_LINEAR_ACCELERATION, period);
-    // CHECK_RC("Linear Acceleration enable failed\n");
-
-    // rc = enableSensor(INV_ICM20948_SENSOR_GEOMAGNETIC_FIELD, period);
-    // CHECK_RC("Geomagnetic Field enable failed\n");
-
-    // rc = enableSensor(INV_ICM20948_SENSOR_GAME_ROTATION_VECTOR, period);
-    // CHECK_RC("6DOF enable failed\n");
-
-    // rc = enableSensor(INV_ICM20948_SENSOR_ROTATION_VECTOR, period);
-    // CHECK_RC("9DOF enable failed\n\r");
-
-    rc = enableSensor(INV_ICM20948_SENSOR_GEOMAGNETIC_ROTATION_VECTOR, period);
-    CHECK_RC("Geomagnetic ROTATION_VECTOR enable failed\n");
-
-    PRINTF("All sensors enabled\n\r");
-    return 0;
+int ICM20948::setSensorPeriod(inv_icm20948_sensor sensor, uint32_t period) {
+    return inv_icm20948_set_sensor_period(this, sensor, period);
 }
 
 int ICM20948::readSensor() {

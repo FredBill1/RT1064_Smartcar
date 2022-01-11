@@ -395,25 +395,25 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>1070</LineNumber>
+          <LineNumber>494</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>-2147436908</Address>
+          <Address>-2147409898</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948DataBaseControl.c</Filename>
+          <Filename>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948Setup.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\RT106X\../../Libraries/eMD-SmartMotion-ICM20948-1.1.0-MP/Invn/Devices/Drivers/ICM20948/Icm20948DataBaseControl.c\1070</Expression>
+          <Expression>\\RT106X\../../Libraries/eMD-SmartMotion-ICM20948-1.1.0-MP/Invn/Devices/Drivers/ICM20948/Icm20948Setup.c\494</Expression>
         </Bp>
         <Bp>
           <Number>1</Number>
           <Type>0</Type>
           <LineNumber>624</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>-2147422750</Address>
+          <Address>-2147421894</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -429,7 +429,7 @@
           <Type>0</Type>
           <LineNumber>623</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>-2147422764</Address>
+          <Address>-2147421908</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -440,52 +440,60 @@
           <ExecCommand></ExecCommand>
           <Expression>\\RT106X\../../Libraries/eMD-SmartMotion-ICM20948-1.1.0-MP/Invn/Devices/Drivers/ICM20948/Icm20948MPUFifoControl.c\623</Expression>
         </Bp>
+        <Bp>
+          <Number>3</Number>
+          <Type>0</Type>
+          <LineNumber>377</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>-2147441720</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948MPUFifoControl.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\RT106X\../../Libraries/eMD-SmartMotion-ICM20948-1.1.0-MP/Invn/Devices/Drivers/ICM20948/Icm20948MPUFifoControl.c\377</Expression>
+        </Bp>
+        <Bp>
+          <Number>4</Number>
+          <Type>0</Type>
+          <LineNumber>377</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>-2147441620</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948MPUFifoControl.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\RT106X\../../Libraries/eMD-SmartMotion-ICM20948-1.1.0-MP/Invn/Devices/Drivers/ICM20948/Icm20948MPUFifoControl.c\377</Expression>
+        </Bp>
+        <Bp>
+          <Number>5</Number>
+          <Type>0</Type>
+          <LineNumber>24</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>-2147450810</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>..\USER\src\main.cpp</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\RT106X\../USER/src/main.cpp\24</Expression>
+        </Bp>
       </Breakpoint>
       <WatchWindow1>
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>test</ItemText>
-        </Ww>
-        <Ww>
-          <count>1</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>angle,0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>2</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>SystemCoreClock,0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>3</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>g_eventTimeMilliseconds,0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>4</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>&amp;__rt_init_rti_board_end</ItemText>
-        </Ww>
-        <Ww>
-          <count>5</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>&amp;__rt_init_rti_end</ItemText>
-        </Ww>
-        <Ww>
-          <count>6</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>sets</ItemText>
-        </Ww>
-        <Ww>
-          <count>7</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>vector_size</ItemText>
-        </Ww>
-        <Ww>
-          <count>8</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>(float*)arg</ItemText>
+          <ItemText>icm20948</ItemText>
         </Ww>
       </WatchWindow1>
       <MemoryWindow1>

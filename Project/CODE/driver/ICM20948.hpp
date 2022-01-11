@@ -66,9 +66,9 @@ class ICM20948 : private inv_icm20948_serif, protected inv_icm20948 {
     int init();
     int selftest();
 
-    int enableSensor(inv_icm20948_sensor sensor, uint32_t period);
+    int enableSensor(inv_icm20948_sensor sensor);
     int disableSensor(inv_icm20948_sensor sensor);
-    int enableAllSensors(uint32_t period);
+    int setSensorPeriod(inv_icm20948_sensor sensor, uint32_t period);
 
     int readSensor();
 };
