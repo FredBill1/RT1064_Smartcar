@@ -37,6 +37,7 @@ class ICM20948 : private inv_icm20948_serif, protected inv_icm20948 {
  private:
     const SPIN_enum SPI_N;
     const SPI_PIN_enum SCK, MOSI, MISO, CS;
+    const PIN_enum INT;
     uint8_t _buf[INV_MAX_SERIAL_WRITE + 1];
 
  protected:
@@ -61,10 +62,11 @@ class ICM20948 : private inv_icm20948_serif, protected inv_icm20948 {
     float _quat6DOFaccuracy;
 
  public:
-    ICM20948(SPIN_enum spi_n, SPI_PIN_enum sck, SPI_PIN_enum mosi, SPI_PIN_enum miso, SPI_PIN_enum cs);
+    ICM20948(SPIN_enum spi_n, SPI_PIN_enum sck, SPI_PIN_enum mosi, SPI_PIN_enum miso, SPI_PIN_enum cs, PIN_enum Int);
     void setMagnetometerBias(float biasX, float biasY, float biasZ);
-    int init();
+    int setup();
     int selftest();
+    void init();
 
     int enableSensor(inv_icm20948_sensor sensor);
     int disableSensor(inv_icm20948_sensor sensor);

@@ -1779,6 +1779,11 @@
               <FileType>8</FileType>
               <FilePath>..\USER\src\isr.cpp</FilePath>
             </File>
+            <File>
+              <FileName>devices.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\USER\src\devices.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1808,6 +1813,11 @@
               <FileName>PinConfig.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\USER\inc\PinConfig.h</FilePath>
+            </File>
+            <File>
+              <FileName>devices.hpp</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\USER\inc\devices.hpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -4255,6 +4265,11 @@
               <FileType>8</FileType>
               <FilePath>..\USER\src\isr.cpp</FilePath>
             </File>
+            <File>
+              <FileName>devices.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\USER\src\devices.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -4284,6 +4299,11 @@
               <FileName>PinConfig.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\USER\inc\PinConfig.h</FilePath>
+            </File>
+            <File>
+              <FileName>devices.hpp</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\USER\inc\devices.hpp</FilePath>
             </File>
           </Files>
         </Group>

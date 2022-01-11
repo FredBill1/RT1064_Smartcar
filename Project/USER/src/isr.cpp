@@ -3,7 +3,7 @@ extern "C" {
 
 #include "headfile.h"
 }  // extern "C"
-
+#include "devices.hpp"
 void CSI_IRQHandler(void) {
     rt_interrupt_enter();
 
@@ -33,8 +33,7 @@ void GPIO2_Combined_16_31_IRQHandler(void) {
     }
     if (GET_GPIO_FLAG(C30)) {
         CLEAR_GPIO_FLAG(C30);
-        void fusionTimerCB(void*);
-        fusionTimerCB(NULL);
+        imu.readSensor();
         // PRINTF("%d\n\r", rt_tick_get());
     }
     rt_interrupt_leave();

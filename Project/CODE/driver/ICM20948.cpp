@@ -11,9 +11,22 @@
 
 extern "C" {
 #include "fsl_debug_console.h"
+#include "zf_gpio.h"
 #include "zf_systick.h"
 }
 // clang-format off
+
+void ICM20948::init(){
+    setMagnetometerBias(-143, -23, 180);
+    setup();
+    selftest();
+    // icm20948.enableSensor(INV_ICM20948_SENSOR_GEOMAGNETIC_FIELD, 5);
+    setSensorPeriod(INV_ICM20948_SENSOR_ROTATION_VECTOR, 20);
+    enableSensor(INV_ICM20948_SENSOR_ROTATION_VECTOR);
+
+    gpio_interrupt_init(INT, RISING, GPIO_INT_CONFIG);
+}
+
 #define CHECK_RC(s) if (rc) { PRINTF(s); return rc; }  // clang-format on
 
 #define GRAVITY_CONST 9.8f
@@ -85,8 +98,9 @@ int ICM20948::spi_write(void* context, uint8_t reg, const uint8_t* buf, uint32_t
     return 0;
 }
 
-ICM20948::ICM20948(SPIN_enum spi_n, SPI_PIN_enum sck, SPI_PIN_enum mosi, SPI_PIN_enum miso, SPI_PIN_enum cs)
-    : SPI_N(spi_n), SCK(sck), MOSI(mosi), MISO(miso), CS(cs) {
+ICM20948::ICM20948(SPIN_enum spi_n, SPI_PIN_enum sck, SPI_PIN_enum mosi, SPI_PIN_enum miso, SPI_PIN_enum cs,
+                   PIN_enum Int)
+    : SPI_N(spi_n), SCK(sck), MOSI(mosi), MISO(miso), CS(cs), INT(Int) {
     context = this;
     read_reg = (decltype(read_reg))&ICM20948::spi_read;
     write_reg = (decltype(write_reg))&ICM20948::spi_write;
@@ -102,7 +116,7 @@ void ICM20948::setMagnetometerBias(float biasX, float biasY, float biasZ) {
     biasq16[2] = (int)(biasZ * (float)(1L << 16));
 }
 
-int ICM20948::init() {
+int ICM20948::setup() {
     systick_delay_ms(10);
     spi_init(SPI_N, SCK, MOSI, MISO, CS, 3, 7 * 1000 * 1000);
     int rc;
