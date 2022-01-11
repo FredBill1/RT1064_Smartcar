@@ -16,7 +16,7 @@ static uint8 tail[4]{0x00, 0x00, 0x80, 0x7f};
 rt_timer_t fusionTimer;
 void fusionTimerCB(void*) {
     float tmp[4];
-    memcpy(tmp, imu._quat9DOF, sizeof(tmp));
+    imu.ROTATION_VECTOR.get(tmp);
     PUTT(tmp);
     PUTT(tail);
 }
@@ -31,12 +31,12 @@ int main(void) {
 
     EnableGlobalIRQ(0);
 
-    fusionTimer =
-        rt_timer_create("fusionTimer", fusionTimerCB, NULL, 20, RT_TIMER_FLAG_PERIODIC | RT_TIMER_FLAG_HARD_TIMER);
-    rt_timer_start(fusionTimer);
-
+    // fusionTimer =
+    //     rt_timer_create("fusionTimer", fusionTimerCB, NULL, 20, RT_TIMER_FLAG_PERIODIC | RT_TIMER_FLAG_SOFT_TIMER);
+    // rt_timer_start(fusionTimer);
     for (;;) {
-        gpio_toggle(B9);
-        rt_thread_mdelay(500);
+        // gpio_toggle(B9);
+        // rt_thread_mdelay(500);
+        fusionTimerCB(NULL);
     }
 }

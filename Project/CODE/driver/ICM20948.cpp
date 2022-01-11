@@ -295,60 +295,27 @@ int ICM20948::readSensor() {
 void ICM20948::build_sensor_event_data(void* context, enum inv_icm20948_sensor sensortype, uint64_t timestamp,
                                        const void* data, const void* arg) {
     ICM20948& self = *(ICM20948*)context;
-    float raw_bias_data[6];
-    // inv_sensor_event_t event;
-    // (void)context;
     uint8_t sensor_id = convert_to_generic_ids[sensortype];
 
-    // memset((void*)&event, 0, sizeof(event));
-    // event.sensor = sensor_id;
-    // event.timestamp = timestamp;
     switch (sensor_id) {
-    // case INV_SENSOR_TYPE_UNCAL_GYROSCOPE:
-    //     memcpy(raw_bias_data, data, sizeof(raw_bias_data));
-    //     memcpy(event.data.gyr.vect, &raw_bias_data[0], sizeof(event.data.gyr.vect));
-    //     memcpy(event.data.gyr.bias, &raw_bias_data[3], sizeof(event.data.gyr.bias));
-    //     memcpy(&(event.data.gyr.accuracy_flag), arg, sizeof(event.data.gyr.accuracy_flag));
-    //     break;
-    // case INV_SENSOR_TYPE_UNCAL_MAGNETOMETER:
-    //     memcpy(raw_bias_data, data, sizeof(raw_bias_data));
-    //     memcpy(event.data.mag.vect, &raw_bias_data[0], sizeof(event.data.mag.vect));
-    //     memcpy(event.data.mag.bias, &raw_bias_data[3], sizeof(event.data.mag.bias));
-    //     memcpy(&(event.data.gyr.accuracy_flag), arg, sizeof(event.data.gyr.accuracy_flag));
-    //     break;
-    case INV_SENSOR_TYPE_GYROSCOPE:
-        // memcpy(event.data.gyr.vect, data, sizeof(event.data.gyr.vect));
-        // memcpy(&(event.data.gyr.accuracy_flag), arg, sizeof(event.data.gyr.accuracy_flag));
-        memcpy((void*)self._gyro, data, sizeof(self._gyro));
-        break;
-    case INV_SENSOR_TYPE_GRAVITY:
-        // memcpy(event.data.acc.vect, data, sizeof(event.data.acc.vect));
-        // event.data.acc.accuracy_flag = inv_icm20948_get_accel_accuracy();
-        memcpy((void*)self._gv, data, sizeof(self._gv));
-        break;
-    case INV_SENSOR_TYPE_LINEAR_ACCELERATION:
-    case INV_SENSOR_TYPE_ACCELEROMETER:
-        // memcpy(event.data.acc.vect, data, sizeof(event.data.acc.vect));
-        // memcpy(&(event.data.acc.accuracy_flag), arg, sizeof(event.data.acc.accuracy_flag));
-        memcpy((void*)self._acc, data, sizeof(self._acc));
-        break;
-    case INV_SENSOR_TYPE_MAGNETOMETER:
-        // memcpy(event.data.mag.vect, data, sizeof(event.data.mag.vect));
-        // memcpy(&(event.data.mag.accuracy_flag), arg, sizeof(event.data.mag.accuracy_flag));
-        memcpy((void*)self._mag, data, sizeof(self._mag));
-        break;
+    case INV_SENSOR_TYPE_UNCAL_GYROSCOPE: self.UNCAL_GYROSCOPE.put(*(VECT_BIAS*)data); break;
+    case INV_SENSOR_TYPE_UNCAL_MAGNETOMETER: self.UNCAL_MAGNETOMETER.put(*(VECT_BIAS*)data); break;
+    case INV_SENSOR_TYPE_GYROSCOPE: self.GYROSCOPE.put(*(VECT3*)data); break;
+    case INV_SENSOR_TYPE_GRAVITY: self.GRAVITY.put(*(VECT3*)data); break;
+    case INV_SENSOR_TYPE_LINEAR_ACCELERATION: self.LINEAR_ACCELERATION.put(*(VECT3*)data); break;
+    case INV_SENSOR_TYPE_ACCELEROMETER: self.ACCELEROMETER.put(*(VECT3*)data); break;
+    case INV_SENSOR_TYPE_MAGNETOMETER: self.MAGNETOMETER.put(*(VECT3*)data); break;
     case INV_SENSOR_TYPE_GEOMAG_ROTATION_VECTOR:
+        // memcpy(&(event.data.quaternion.accuracy), arg, sizeof(event.data.quaternion.accuracy));
+        self.GEOMAG_ROTATION_VECTOR.put(*(VECT4*)data);
+        break;
     case INV_SENSOR_TYPE_ROTATION_VECTOR:
         // memcpy(&(event.data.quaternion.accuracy), arg, sizeof(event.data.quaternion.accuracy));
-        // memcpy(event.data.quaternion.quat, data, sizeof(event.data.quaternion.quat));
-        memcpy((void*)&self._quat9DOFaccuracy, arg, sizeof(self._quat9DOFaccuracy));
-        memcpy((void*)self._quat9DOF, data, sizeof(self._quat9DOF));
+        self.ROTATION_VECTOR.put(*(VECT4*)data);
         break;
     case INV_SENSOR_TYPE_GAME_ROTATION_VECTOR:
-        // memcpy(event.data.quaternion.quat, data, sizeof(event.data.quaternion.quat));
         // event.data.quaternion.accuracy_flag = icm20948_get_grv_accuracy();
-        memcpy((void*)self._quat6DOF, data, sizeof(self._quat6DOF));
-        self._quat6DOFaccuracy = icm20948_get_grv_accuracy();
+        self.GAME_ROTATION_VECTOR.put(*(VECT4*)data);
         break;
     // case INV_SENSOR_TYPE_BAC: memcpy(&(event.data.bac.event), data, sizeof(event.data.bac.event)); break;
     // case INV_SENSOR_TYPE_PICK_UP_GESTURE:

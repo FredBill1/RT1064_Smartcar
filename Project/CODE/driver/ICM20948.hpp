@@ -12,6 +12,8 @@ extern "C" {
 #include "zf_spi.h"
 }
 
+#include "utils/MQueue.hpp"
+
 enum OrientationDOF {
     Orientation6DOF,
     Orientation9DOF,
@@ -60,6 +62,28 @@ class ICM20948 : private inv_icm20948_serif, protected inv_icm20948 {
     float _quat9DOFaccuracy;
     float _quat6DOF[4];
     float _quat6DOFaccuracy;
+
+    using VECT3 = float[3];
+    using VECT4 = float[4];
+    struct VECT_BIAS {
+        VECT3 vect; /**< x,y,z vector data */
+        VECT3 bias; /**< x,y,z bias vector data (for uncal sensor variant) */
+    };
+    struct QUAT_ACCURACY {
+        VECT4 quat;     /**< w,x,y,z quaternion data */
+        float accuracy; /**< quaternion accuracy */
+    };
+
+    SensorDataBuf<VECT_BIAS> UNCAL_GYROSCOPE;
+    SensorDataBuf<VECT_BIAS> UNCAL_MAGNETOMETER;
+    SensorDataBuf<VECT3> GYROSCOPE;
+    SensorDataBuf<VECT3> GRAVITY;
+    SensorDataBuf<VECT3> LINEAR_ACCELERATION;
+    SensorDataBuf<VECT3> ACCELEROMETER;
+    SensorDataBuf<VECT3> MAGNETOMETER;
+    SensorDataBuf<VECT4> GEOMAG_ROTATION_VECTOR;
+    SensorDataBuf<VECT4> ROTATION_VECTOR;
+    SensorDataBuf<VECT4> GAME_ROTATION_VECTOR;
 
  public:
     ICM20948(SPIN_enum spi_n, SPI_PIN_enum sck, SPI_PIN_enum mosi, SPI_PIN_enum miso, SPI_PIN_enum cs, PIN_enum Int);
