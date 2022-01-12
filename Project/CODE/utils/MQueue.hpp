@@ -4,14 +4,27 @@
 // 感觉RTT官方库里的实现有点问题，所以自己写一个；大部分代码应该差不多
 #include <rtthread.h>
 
-template <typename T, int N> class MQueue {
+class MQueue {
  private:
     rt_messagequeue mID;
-    char mPool[(sizeof(void*) + RT_ALIGN(sizeof(T), RT_ALIGN_SIZE)) * N];
+    void* Pool;
+
+ protected:
+    void* tmp;
+    const size_t Data_sz;
 
  public:
-    MQueue(const char* name = "mq") { rt_mq_init(&mID, name, mPool, sizeof(T), sizeof(mPool), RT_IPC_FLAG_FIFO); };
-    ~MQueue() { rt_mq_detach(&mID); };
+    MQueue(size_t data_sz, size_t data_cnt, const char* name = "mq") : Data_sz(data_sz) {
+        size_t pool_sz = (sizeof(void*) + RT_ALIGN(data_sz, RT_ALIGN_SIZE)) * data_cnt;
+        Pool = rt_malloc(pool_sz);
+        tmp = rt_malloc(data_sz);
+        rt_mq_init(&mID, name, Pool, Data_sz, pool_sz, RT_IPC_FLAG_FIFO);
+    }
+    virtual ~MQueue() {
+        rt_free(Pool);
+        rt_free(tmp);
+        rt_mq_detach(&mID);
+    }
 
     /**
      * @brief 向队尾插入数据
@@ -21,8 +34,8 @@ template <typename T, int N> class MQueue {
      * @return true         失败，例如队列已满或超时
      * @return false        成功
      */
-    bool pushback(const T& data, int32_t timeout_tick = 0) {
-        return rt_mq_send_wait(&mID, &data, sizeof(data), timeout_tick) != RT_EOK;
+    bool pushback(const void* data, int32_t timeout_tick = 0) {
+        return rt_mq_send_wait(&mID, data, Data_sz, timeout_tick) != RT_EOK;
     };
 
     /**
@@ -32,7 +45,7 @@ template <typename T, int N> class MQueue {
      * @return true     失败，如队列已满
      * @return false    成功
      */
-    bool pushfront(const T& data) { return rt_mq_urgent(&mID, &data, sizeof(data)) != RT_EOK; };
+    bool pushfront(const void* data) { return rt_mq_urgent(&mID, data, Data_sz) != RT_EOK; };
 
     /**
      * @brief 取出队首数据
@@ -42,8 +55,8 @@ template <typename T, int N> class MQueue {
      * @return true         失败，如超时
      * @return false        成功
      */
-    bool popfront(T& data, int32_t timeout_tick = -1) {
-        return rt_mq_recv(&mID, &data, sizeof(data), (timeout_tick < 0) ? -1 : timeout_tick) != RT_EOK;
+    bool popfront(void* data, int32_t timeout_tick = -1) {
+        return rt_mq_recv(&mID, data, Data_sz, (timeout_tick < 0) ? -1 : timeout_tick) != RT_EOK;
     };
 
     /**
@@ -51,11 +64,8 @@ template <typename T, int N> class MQueue {
      *
      * @param data 要放入的数据
      */
-    void put(const T& data) {
-        while (pushback(data)) {
-            T tmp;
-            popfront(tmp, 0);
-        }
+    void put(const void* data) {
+        while (pushback(data)) popfront(tmp, 0);
     };
 
     /**
@@ -63,21 +73,7 @@ template <typename T, int N> class MQueue {
      *
      * @param data 按引用原地取出数据
      */
-    void get(T& data) { popfront(data); };
-};
-
-template <typename T> class SensorDataBuf {
- private:
-    MQueue<T, 1> mq;
-
- public:
-    void put(const T& data) {
-        while (mq.pushback(data)) {
-            T tmp;
-            mq.popfront(tmp, 0);
-        }
-    }
-    void get(T& data) { mq.popfront(data); }
+    void get(void* data) { popfront(data); };
 };
 
 #endif  // _MQueue_hpp

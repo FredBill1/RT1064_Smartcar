@@ -74,16 +74,16 @@ class ICM20948 : private inv_icm20948_serif, protected inv_icm20948 {
         float accuracy; /**< quaternion accuracy */
     };
 
-    SensorDataBuf<VECT_BIAS> UNCAL_GYROSCOPE;
-    SensorDataBuf<VECT_BIAS> UNCAL_MAGNETOMETER;
-    SensorDataBuf<VECT3> GYROSCOPE;
-    SensorDataBuf<VECT3> GRAVITY;
-    SensorDataBuf<VECT3> LINEAR_ACCELERATION;
-    SensorDataBuf<VECT3> ACCELEROMETER;
-    SensorDataBuf<VECT3> MAGNETOMETER;
-    SensorDataBuf<VECT4> GEOMAG_ROTATION_VECTOR;
-    SensorDataBuf<VECT4> ROTATION_VECTOR;
-    SensorDataBuf<VECT4> GAME_ROTATION_VECTOR;
+    // SensorDataBuf<VECT_BIAS> UNCAL_GYROSCOPE;
+    // SensorDataBuf<VECT_BIAS> UNCAL_MAGNETOMETER;
+    // SensorDataBuf<VECT3> GYROSCOPE;
+    // SensorDataBuf<VECT3> GRAVITY;
+    // SensorDataBuf<VECT3> LINEAR_ACCELERATION;
+    // SensorDataBuf<VECT3> ACCELEROMETER;
+    // SensorDataBuf<VECT3> MAGNETOMETER;
+    // SensorDataBuf<VECT4> GEOMAG_ROTATION_VECTOR;
+    // SensorDataBuf<VECT4> ROTATION_VECTOR;
+    // SensorDataBuf<VECT4> GAME_ROTATION_VECTOR;
 
  public:
     ICM20948(SPIN_enum spi_n, SPI_PIN_enum sck, SPI_PIN_enum mosi, SPI_PIN_enum miso, SPI_PIN_enum cs, PIN_enum Int);
