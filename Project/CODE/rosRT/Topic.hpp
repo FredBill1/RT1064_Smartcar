@@ -18,6 +18,7 @@ class Topic : private MQueue {
     }
     void subscribe(Callback_t cb) { _CB.push_back(cb); }
     void publish(const void *data) { put(data); }
+    using MQueue::data_size;
 
  private:
     Topic() = delete;

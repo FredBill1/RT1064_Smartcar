@@ -74,6 +74,13 @@ class MQueue {
      * @param data 按引用原地取出数据
      */
     void get(void* data) { popfront(data); };
+
+    /**
+     * @brief 获取数据所占字节数
+     *
+     * @return size_t 数据所占字节数
+     */
+    size_t data_size() const { return Data_sz; }
 };
 
 #endif  // _MQueue_hpp
