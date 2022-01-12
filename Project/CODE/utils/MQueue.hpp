@@ -22,6 +22,14 @@ template <typename T, int N> class MQueue {
         return rt_mq_recv(&mID, &data, sizeof(data), (millisec < 0) ? -1 : rt_tick_from_millisecond(millisec)) !=
                RT_EOK;
     };
+
+    void put(const T& data) {
+        while (pushback(data)) {
+            T tmp;
+            popfront(tmp, 0);
+        }
+    };
+    void get(T& data) { popfront(data); };
 };
 
 template <typename T> class SensorDataBuf {
@@ -30,9 +38,10 @@ template <typename T> class SensorDataBuf {
 
  public:
     void put(const T& data) {
-        T tmp;
-        mq.popfront(tmp, 0);
-        mq.pushfront(data);
+        while (mq.pushback(data)) {
+            T tmp;
+            mq.popfront(tmp, 0);
+        }
     }
     void get(T& data) { mq.popfront(data); }
 };
