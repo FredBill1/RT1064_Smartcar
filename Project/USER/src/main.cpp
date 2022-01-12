@@ -8,7 +8,7 @@ int main(void);
 #include "devices.hpp"
 #include "rosRT/Topic.hpp"
 
-rosRT::Topic topic_test(sizeof(int), 3);
+rosRT::TopicT<int> topic_test(3);
 
 static uint8 tail[4]{0x00, 0x00, 0x80, 0x7f};
 
@@ -27,13 +27,13 @@ void fusionTimerCB(void*) {
 int ttt = 0;
 void pub(void*) {
     PRINTF("%d: pub  data: %d\r\n", rt_tick_get(), ++ttt);
-    topic_test.publish(&ttt);
+    topic_test.publish(ttt);
 }
 
-void sub1(const void* data) { PRINTF("%d: sub1 data:%d\r\n", rt_tick_get(), *(int*)data); }
-auto sub2 = [](const void* data) -> void { PRINTF("%d: sub2 data:%d\r\n", rt_tick_get(), *(int*)data); };
+void sub1(const int& data) { PRINTF("%d: sub1 data:%d\r\n", rt_tick_get(), data); }
+auto sub2 = [](const int& data) -> void { PRINTF("%d: sub2 data:%d\r\n", rt_tick_get(), data); };
 struct {
-    void operator()(const void* data) { PRINTF("%d: sub3 data:%d\r\n", rt_tick_get(), *(int*)data); }
+    void operator()(const int& data) { PRINTF("%d: sub3 data:%d\r\n", rt_tick_get(), data); }
 } sub3;
 
 int main(void) {

@@ -33,6 +33,19 @@ class Topic : private MQueue {
     }
 };
 
+template <typename T> class TopicT : public Topic {
+ public:
+    using Data_t = T;
+    using Callback_t = std::function<void(const T &)>;
+    TopicT(size_t data_cnt, rt_uint32_t stack_size = 2048, rt_uint8_t priority = (RT_THREAD_PRIORITY_MAX * 2) / 3,
+           rt_uint32_t tick = 20, const char *name = "topic")
+        : Topic(sizeof(T), data_cnt, stack_size, priority, tick, name) {}
+    void publish(const T &data) { Topic::publish(&data); }
+    void subscribe(Callback_t cb) {
+        Topic::subscribe([cb](const void *data) { cb(*(T *)data); });
+    }
+};
+
 };  // namespace rosRT
 
 #endif  // _rosRT_Topic_hpp
