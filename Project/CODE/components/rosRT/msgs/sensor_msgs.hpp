@@ -6,6 +6,11 @@
 namespace rosRT {
 namespace msgs {
 
+struct VectBias {
+    Vector3 vect;
+    Vector3 bias;
+};
+
 struct Imu {
     Header header;
     Quaternion orientation;
