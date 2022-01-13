@@ -66,7 +66,7 @@ BreakAfterJavaFieldAnnotations: false
 BreakStringLiterals: true
 
 # ColumnLimit:     80
-ColumnLimit:     120
+ColumnLimit:     130
 
 CommentPragmas:  '^ IWYU pragma:'
 CompactNamespaces: false

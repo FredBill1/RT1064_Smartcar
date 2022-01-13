@@ -17,12 +17,23 @@ void fusionTimerCB(void*) {
 }
 
 void printImu(const rosRT::msgs::QuaternionStamped& data) {
-    auto time = rt_tick_get_millisecond();
-    wireless.writeV(data.quaternion.x, data.quaternion.y, data.quaternion.z, data.quaternion.w, data.header.stamp,
-                    time);
+    wireless.writeV(data.quaternion.x, data.quaternion.y, data.quaternion.z, data.quaternion.w, data.header.stamp);
     wireless.sendTail();
 }
-auto sub = rosRT::Subscriber::create<rosRT::msgs::QuaternionStamped>("imu/9DOF_orientation", 1, printImu);
+auto orientation = rosRT::Subscriber::create<rosRT::msgs::QuaternionStamped>("imu/9DOF_orientation", 1, printImu);
+
+// void printMag(const rosRT::msgs::VectBias& data) {
+//     wireless.writeV(data.vect.x, data.vect.y, data.vect.z, data.bias.x, data.bias.y, data.bias.z);
+//     wireless.sendTail();
+// }
+// auto uncal_mag = rosRT::Subscriber::create<rosRT::msgs::VectBias>("imu/uncal_mag", 1, printMag);
+
+// void printRPY(const rosRT::msgs::Vector3Stamped& data) {
+//     wireless.writeV(data.vector.x, data.vector.y, data.vector.z, data.header.stamp);
+//     wireless.sendTail();
+// }
+// auto rpy_orientation = rosRT::Subscriber::create<rosRT::msgs::Vector3Stamped>("imu/rpy_orientation", 1, printRPY);
+
 int main(void) {
     gpio_init(B9, GPO, 0, GPIO_PIN_CONFIG);
     rt_thread_mdelay(500);
@@ -30,8 +41,7 @@ int main(void) {
     initDevices();
     EnableGlobalIRQ(0);
 
-    fusionTimer =
-        rt_timer_create("fusionTimer", fusionTimerCB, NULL, 20, RT_TIMER_FLAG_PERIODIC | RT_TIMER_FLAG_HARD_TIMER);
+    fusionTimer = rt_timer_create("fusionTimer", fusionTimerCB, NULL, 20, RT_TIMER_FLAG_PERIODIC | RT_TIMER_FLAG_HARD_TIMER);
     rt_timer_start(fusionTimer);
 
     for (;;) {

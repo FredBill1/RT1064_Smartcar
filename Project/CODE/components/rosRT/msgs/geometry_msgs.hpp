@@ -18,6 +18,17 @@ struct QuaternionStamped {
     Quaternion quaternion;
 };
 
+struct Vector3 {
+    float x;
+    float y;
+    float z;
+};
+
+struct Vector3Stamped {
+    Header header;
+    Vector3 vector;
+};
+
 struct Transform {
     Vector3 translation;
     Quaternion rotation;
@@ -36,17 +47,6 @@ struct Twist {
 struct TwistStamped {
     Header header;
     Twist twist;
-};
-
-struct Vector3 {
-    float x;
-    float y;
-    float z;
-};
-
-struct Vector3Stamped {
-    Header header;
-    Vector3 vector;
 };
 
 }  // namespace msgs
