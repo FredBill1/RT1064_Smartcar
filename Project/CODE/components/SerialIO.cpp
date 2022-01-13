@@ -51,7 +51,7 @@ void SerialIO::waitHeader() {
     for (int i = 0;; i = (i + 1) & 3) {
         buf[i] = getchar();
         stamp[i] = rt_tick_get();
-        if (stamp[(i + 1) & 3] - stamp[i] > TIMEOUT) continue;
+        if (stamp[(i + 1) & 3] - stamp[i] > (TIMEOUT << 2)) continue;
         bool success = true;
         for (int j = 0; j < 4; ++j)
             if (buf[(i + j + 1) & 3] != HEADER[j]) {
