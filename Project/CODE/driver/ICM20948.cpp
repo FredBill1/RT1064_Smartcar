@@ -294,46 +294,18 @@ int ICM20948::readSensor() {
 }
 void ICM20948::build_sensor_event_data(void* context, enum inv_icm20948_sensor sensortype, uint64_t timestamp,
                                        const void* data, const void* arg) {
-    // ICM20948& self = *(ICM20948*)context;
-    // uint8_t sensor_id = convert_to_generic_ids[sensortype];
-
-    // switch (sensor_id) {
-    // case INV_SENSOR_TYPE_UNCAL_GYROSCOPE: self.UNCAL_GYROSCOPE.put(*(VECT_BIAS*)data); break;
-    // case INV_SENSOR_TYPE_UNCAL_MAGNETOMETER: self.UNCAL_MAGNETOMETER.put(*(VECT_BIAS*)data); break;
-    // case INV_SENSOR_TYPE_GYROSCOPE: self.GYROSCOPE.put(*(VECT3*)data); break;
-    // case INV_SENSOR_TYPE_GRAVITY: self.GRAVITY.put(*(VECT3*)data); break;
-    // case INV_SENSOR_TYPE_LINEAR_ACCELERATION: self.LINEAR_ACCELERATION.put(*(VECT3*)data); break;
-    // case INV_SENSOR_TYPE_ACCELEROMETER: self.ACCELEROMETER.put(*(VECT3*)data); break;
-    // case INV_SENSOR_TYPE_MAGNETOMETER: self.MAGNETOMETER.put(*(VECT3*)data); break;
-    // case INV_SENSOR_TYPE_GEOMAG_ROTATION_VECTOR:
-    //     // memcpy(&(event.data.quaternion.accuracy), arg, sizeof(event.data.quaternion.accuracy));
-    //     self.GEOMAG_ROTATION_VECTOR.put(*(VECT4*)data);
-    //     break;
-    // case INV_SENSOR_TYPE_ROTATION_VECTOR:
-    //     // memcpy(&(event.data.quaternion.accuracy), arg, sizeof(event.data.quaternion.accuracy));
-    //     self.ROTATION_VECTOR.put(*(VECT4*)data);
-    //     break;
-    // case INV_SENSOR_TYPE_GAME_ROTATION_VECTOR:
-    //     // event.data.quaternion.accuracy_flag = icm20948_get_grv_accuracy();
-    //     self.GAME_ROTATION_VECTOR.put(*(VECT4*)data);
-    //     break;
-    // // case INV_SENSOR_TYPE_BAC: memcpy(&(event.data.bac.event), data, sizeof(event.data.bac.event)); break;
-    // // case INV_SENSOR_TYPE_PICK_UP_GESTURE:
-    // // case INV_SENSOR_TYPE_TILT_DETECTOR:
-    // // case INV_SENSOR_TYPE_STEP_DETECTOR:
-    // // case INV_SENSOR_TYPE_SMD: event.data.event = true; break;
-    // // case INV_SENSOR_TYPE_B2S:
-    // //     event.data.event = true;
-    // //     memcpy(&(event.data.b2s.direction), data, sizeof(event.data.b2s.direction));
-    // //     break;
-    // // case INV_SENSOR_TYPE_STEP_COUNTER: memcpy(&(event.data.step.count), data, sizeof(event.data.step.count));
-    // break;
-    // // case INV_SENSOR_TYPE_ORIENTATION:
-    // //     // we just want to copy x,y,z from orientation data
-    // //     memcpy(&(event.data.orientation), data, 3 * sizeof(float));
-    // //     break;
-    // // case INV_SENSOR_TYPE_RAW_ACCELEROMETER:
-    // // case INV_SENSOR_TYPE_RAW_GYROSCOPE: memcpy(event.data.raw3d.vect, data, sizeof(event.data.raw3d.vect)); break;
-    // default: return;
-    // }
+    ((ICM20948*)context)->build_sensor_event_data(sensortype, timestamp, data, arg);
+}
+void ICM20948::build_sensor_event_data(enum inv_icm20948_sensor sensortype, uint64_t timestamp, const void* data,
+                                       const void* arg) {
+    uint8_t sensor_id = convert_to_generic_ids[sensortype];
+    uint32_t stamp = timestamp / 1000;
+    using namespace rosRT::msgs;
+    switch (sensor_id) {
+    case INV_SENSOR_TYPE_ROTATION_VECTOR:
+        _msg_buf.quaternion_stamped.header.stamp = stamp;
+        memcpy(&_msg_buf.quaternion_stamped.quaternion, data, sizeof(float) * 4);
+        _pub_9DOF_orientation.publish(&_msg_buf.quaternion_stamped);
+        break;
+    }
 }

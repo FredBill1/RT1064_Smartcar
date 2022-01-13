@@ -11,7 +11,8 @@
 extern "C" {
 #include "zf_spi.h"
 }
-
+#include "rosRT/msgs/sensor_msgs.hpp"
+#include "rosRT/rosRT.hpp"
 #include "utils/MQueue.hpp"
 
 enum OrientationDOF {
@@ -47,6 +48,23 @@ class ICM20948 : private inv_icm20948_serif, protected inv_icm20948 {
     static int spi_write(void* context, uint8_t reg, const uint8_t* buf, uint32_t len);
     static void build_sensor_event_data(void* context, enum inv_icm20948_sensor sensortype, uint64_t timestamp,
                                         const void* data, const void* arg);
+    void build_sensor_event_data(enum inv_icm20948_sensor sensortype, uint64_t timestamp, const void* data,
+                                 const void* arg);
+
+    union {
+        rosRT::msgs::QuaternionStamped quaternion_stamped;
+    } _msg_buf;
+
+    rosRT::Publisher _pub_uncal_gyro{"imu/uncal_gyro", sizeof(int), 1};
+    rosRT::Publisher _pub_uncal_mag{"imu/uncal_mag", sizeof(int), 1};
+    rosRT::Publisher _pub_gyro{"imu/gyro", sizeof(int), 1};
+    rosRT::Publisher _pub_gravity{"imu/gravity", sizeof(int), 1};
+    rosRT::Publisher _pub_linear_accel{"imu/linear_accel", sizeof(int), 1};
+    rosRT::Publisher _pub_accel{"imu/accel", sizeof(int), 1};
+    rosRT::Publisher _pub_mag{"imu/accel", sizeof(int), 1};
+    rosRT::Publisher _pub_mag_orientation{"imu/mag_orientation", sizeof(int), 1};
+    rosRT::Publisher _pub_6DOF_orientation{"imu/6DOF_orientation", sizeof(rosRT::msgs::QuaternionStamped), 1};
+    rosRT::Publisher _pub_9DOF_orientation{"imu/9DOF_orientation", sizeof(rosRT::msgs::QuaternionStamped), 1};
 
  public:
     //  Linear acceleration [x,y,z] in m/s^2

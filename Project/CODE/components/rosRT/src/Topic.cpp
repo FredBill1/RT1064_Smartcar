@@ -1,4 +1,4 @@
-#include "Topic.hpp"
+#include "../Topic.hpp"
 
 #include <algorithm>
 #include <cstring>
