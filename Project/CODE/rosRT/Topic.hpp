@@ -1,10 +1,8 @@
 #ifndef _rosRT_Topic_hpp
 #define _rosRT_Topic_hpp
 
-#include <algorithm>
-#include <cstring>
+
 #include <functional>
-#include <utility>
 #include <vector>
 
 #include "Mutex.h"

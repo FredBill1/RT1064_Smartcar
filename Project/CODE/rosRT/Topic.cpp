@@ -1,5 +1,9 @@
 #include "Topic.hpp"
 
+#include <algorithm>
+#include <cstring>
+#include <utility>
+
 namespace rosRT {
 
 static uint8_t TopicManager_buf[sizeof(TopicManager)];
