@@ -8,12 +8,6 @@ int main(void);
 #include "devices.hpp"
 #include "rosRT/Topic.hpp"
 
-static uint8 tail[4]{0x00, 0x00, 0x80, 0x7f};
-
-#define PUTT(x) \
-    for (int i = 0; i < sizeof(x); ++i) wireless.putchar(((uint8*)x)[i])
-#define PUTV(x) \
-    for (int i = 0; i < sizeof(x); ++i) wireless.putchar(((uint8*)&x)[i])
 rt_timer_t fusionTimer;
 void fusionTimerCB(void*) {
     // float tmp[4];
@@ -47,7 +41,7 @@ int main(void) {
 
     gpio_init(B9, GPO, 0, GPIO_PIN_CONFIG);
     rt_thread_mdelay(500);
-
+    wireless.init("Wireless", UART8_CONFIG);
     // initDevices();
     EnableGlobalIRQ(0);
     pub2 = new rosRT::Publisher("test", sizeof(int), 3);
@@ -64,6 +58,8 @@ int main(void) {
         gpio_toggle(B9);
         PRINTF("%d: main\r\n", rt_tick_get());
         rt_thread_mdelay(500);
+        wireless.writeV(10, 20, 30);
+        wireless.sendTail();
         // fusionTimerCB(NULL);
     }
 }

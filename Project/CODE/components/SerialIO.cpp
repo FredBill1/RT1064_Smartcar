@@ -61,3 +61,5 @@ void SerialIO::waitHeader() {
         if (success) return;
     }
 }
+
+void SerialIO::sendTail() { putchar(0x00), putchar(0x00), putchar(0x80), putchar(0x7f); }

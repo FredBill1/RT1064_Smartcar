@@ -38,8 +38,12 @@ class SerialIO : private lpuart_handle_t {
     template <typename... Ts> bool readF(Ts &&...ts) { return read<float>(std::forward<Ts>(ts)...); };
     template <typename... Ts> bool readD(Ts &&...ts) { return read<double>(std::forward<Ts>(ts)...); };
 
+    template <typename T> std::enable_if_t<std::is_arithmetic<T>::value, void> writeV(const T x);
+    template <typename T, typename... U> void writeV(const T x, const U... y);
+
     void sendHeader();
     void waitHeader();
+    void sendTail();
 };
 
 template <typename Data_t, typename T> std::enable_if_t<std::is_arithmetic<T>::value, bool> SerialIO::read(T &x) {
@@ -67,5 +71,11 @@ template <typename Data_t, typename T> std::enable_if_t<std::is_arithmetic<T>::v
 template <typename Data_t, typename T, typename... U> void SerialIO::write(T x, U... y) {
     write<Data_t>(x), write<Data_t>(y...);
 }
+
+template <typename T> std::enable_if_t<std::is_arithmetic<T>::value, void> SerialIO::writeV(const T x) {
+    float t = (float)x;
+    putbuff((const uint8 *)&t, 4);
+}
+template <typename T, typename... U> void SerialIO::writeV(const T x, const U... y) { writeV(x), writeV(y...); }
 
 #endif  // _SerialIO_hpp
