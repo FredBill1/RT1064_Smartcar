@@ -268,7 +268,7 @@ int ICM20948::selftest() {
         }
 
         /* It's advised to re-init the icm20948 device after self-test for normal use */
-        init();
+        setup();
         inv_icm20948_get_st_bias(this, gyro_bias_regular, accel_bias_regular, raw_bias, unscaled_bias);
         PRINTF("GYR bias (FS=250dps) (dps): x=%f, y=%f, z=%f\n\r", (float)(raw_bias[0] / (float)(1 << 16)),
                (float)(raw_bias[1] / (float)(1 << 16)), (float)(raw_bias[2] / (float)(1 << 16)));
