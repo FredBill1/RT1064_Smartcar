@@ -8,6 +8,7 @@ class MQueue {
  private:
     rt_messagequeue mID;
     void* Pool;
+    MQueue(const MQueue&) = delete;
 
  protected:
     void* tmp;
