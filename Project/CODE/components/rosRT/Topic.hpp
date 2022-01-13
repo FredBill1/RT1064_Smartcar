@@ -1,7 +1,6 @@
 #ifndef _rosRT_Topic_hpp
 #define _rosRT_Topic_hpp
 
-
 #include <functional>
 #include <vector>
 
@@ -27,6 +26,13 @@ class Subscriber : public TopicBase {
  public:
     Subscriber(const char *topic, size_t data_sz, size_t queue_sz, Callback_t callback, rt_uint32_t stack_size = 2048,
                rt_uint8_t priority = (RT_THREAD_PRIORITY_MAX * 2) / 3, rt_uint32_t tick = 20);
+    template <typename T>
+    static Subscriber create(const char *topic, size_t queue_sz, std::function<void(const T &)> callback,
+                             rt_uint32_t stack_size = 2048, rt_uint8_t priority = (RT_THREAD_PRIORITY_MAX * 2) / 3,
+                             rt_uint32_t tick = 20) {
+        return {topic,      sizeof(T), queue_sz, [callback](const void *data) { callback(*(const T *)data); },
+                stack_size, priority,  tick};
+    }
     virtual ~Subscriber();
 };
 
@@ -43,6 +49,11 @@ class Publisher : public TopicBase {
  public:
     Publisher(const char *topic, size_t data_sz, size_t queue_sz, rt_uint32_t stack_size = 2048,
               rt_uint8_t priority = (RT_THREAD_PRIORITY_MAX * 2) / 3, rt_uint32_t tick = 20);
+    template <typename T>
+    static Publisher create(const char *topic, size_t queue_sz, rt_uint32_t stack_size = 2048,
+                            rt_uint8_t priority = (RT_THREAD_PRIORITY_MAX * 2) / 3, rt_uint32_t tick = 20) {
+        return {topic, sizeof(T), queue_sz, stack_size, priority, tick};
+    }
     virtual ~Publisher();
     void publish(const void *data);
 };
