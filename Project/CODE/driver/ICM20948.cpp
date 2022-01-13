@@ -18,7 +18,8 @@ extern "C" {
 void ICM20948::init() {
     setMagnetometerBias(-143, -23, 180);
     setup();
-    selftest();
+    while (selftest()) setup();
+    PRINTF("ICM20948: Init complete.\r\n");
 
     // clang-format off
     enableSetSensor(INV_ICM20948_SENSOR_GYROSCOPE,                   20 ); // мсбщрг 1~225Hz
@@ -130,6 +131,7 @@ void ICM20948::setMagnetometerBias(float biasX, float biasY, float biasZ) {
 }
 
 int ICM20948::setup() {
+    PRINTF("ICM20948: Running setup\r\n");
     systick_delay_ms(10);
     spi_init(SPI_N, SCK, MOSI, MISO, CS, 3, 7 * 1000 * 1000);
     int rc;
@@ -138,7 +140,7 @@ int ICM20948::setup() {
     uint8_t whoami = 0xff;
     do {
         rc = inv_icm20948_get_whoami(this, &whoami);
-        if (rc) rt_kprintf("ICM20948: WHOAMI error\n\r");
+        if (rc) rt_kprintf("ICM20948: WHOAMI error\r\n");
     } while (whoami != WHO_AM_I);
 
     // Setup accel and gyro mounting matrix and associated angle for current board
@@ -146,13 +148,13 @@ int ICM20948::setup() {
 
     // set default power mode
     rc = inv_icm20948_initialize(this, ICM20948_dmp_img, sizeof(ICM20948_dmp_img));
-    CHECK_RC("ICM20948: DMP init error\n\r");
+    CHECK_RC("ICM20948: DMP init error\r\n");
 
     inv_icm20948_register_aux_compass(this, INV_ICM20948_COMPASS_ID_AK09916, AK0991x_DEFAULT_I2C_ADDR);
 
     // Initialize auxiliary sensors
     rc = inv_icm20948_initialize_auxiliary(this);
-    CHECK_RC("ICM20948: Compass not detected\n\r");
+    CHECK_RC("ICM20948: Compass not detected\r\n");
 
     // Set full-scale range for sensors
     for (int ii = 0; ii < INV_ICM20948_SENSOR_MAX; ii++)
@@ -178,9 +180,7 @@ int ICM20948::setup() {
     // Now that Icm20948 device was initialized, we can proceed with DMP image loading
     // This step is mandatory as DMP image are not store in non volatile memory
     rc = inv_icm20948_load(this, ICM20948_dmp_img, sizeof(ICM20948_dmp_img));
-    CHECK_RC("Error loading DMP3\n\r");
-
-    PRINTF("ICM20948 Init complete.\n\r");
+    CHECK_RC("ICM20948: Error loading DMP3\r\n");
 
     return 0;
 }
@@ -239,44 +239,43 @@ void inv_icm20948_get_st_bias(struct inv_icm20948* s, int* gyro_bias, int* accel
 }
 
 int ICM20948::selftest() {
-    static int rc = 0;  // Keep this value as we're only going to do this once.
     int gyro_bias_regular[THREE_AXES];
     int accel_bias_regular[THREE_AXES];
     static int raw_bias[THREE_AXES * 2];
 
     if (selftest_done == 1) {
-        PRINTF("Self-test has already run. Skipping.\n\r");
-    } else {
-        /*
-         * Perform self-test
-         * For ICM20948 self-test is performed for both RAW_ACC/RAW_GYR
-         */
-        PRINTF("Running self-test...\n\r");
-
-        /* Run the self-test */
-        rc = inv_icm20948_run_selftest(this, gyro_bias_regular, accel_bias_regular);
-        if ((rc & INV_ICM20948_SELF_TEST_OK) == INV_ICM20948_SELF_TEST_OK) {
-            /* On A+G+M self-test success, offset will be kept until reset */
-            selftest_done = 1;
-            offset_done = 0;
-            rc = 0;
-        } else {
-            /* On A|G|M self-test failure, return Error */
-            PRINTF("Self-test failure !\n\r");
-            /* 0 would be considered OK, we want KO */
-            rc = INV_ERROR;
-        }
-
-        /* It's advised to re-init the icm20948 device after self-test for normal use */
-        setup();
-        inv_icm20948_get_st_bias(this, gyro_bias_regular, accel_bias_regular, raw_bias, unscaled_bias);
-        PRINTF("GYR bias (FS=250dps) (dps): x=%f, y=%f, z=%f\n\r", (float)(raw_bias[0] / (float)(1 << 16)),
-               (float)(raw_bias[1] / (float)(1 << 16)), (float)(raw_bias[2] / (float)(1 << 16)));
-        PRINTF("ACC bias (FS=2g) (g): x=%f, y=%f, z=%f\n\r", (float)(raw_bias[0 + 3] / (float)(1 << 16)),
-               (float)(raw_bias[1 + 3] / (float)(1 << 16)), (float)(raw_bias[2 + 3] / (float)(1 << 16)));
+        PRINTF("ICM20948: Self-test has already run. Skipping.\r\n");
+        return 0;
     }
+    /*
+     * Perform self-test
+     * For ICM20948 self-test is performed for both RAW_ACC/RAW_GYR
+     */
+    PRINTF("ICM20948: Running self-test...\r\n");
 
-    return rc;
+    /* Run the self-test */
+    int rc = inv_icm20948_run_selftest(this, gyro_bias_regular, accel_bias_regular);
+    if (!(rc & INV_ICM20948_GYR_SELF_TEST_OK)) PRINTF("ICM20948: Gyro self-test failed\r\n");
+    if (!(rc & INV_ICM20948_ACC_SELF_TEST_OK)) PRINTF("ICM20948: Accel self-test failed\r\n");
+    if (!(rc & INV_ICM20948_MAG_SELF_TEST_OK)) PRINTF("ICM20948: Mag self-test failed\r\n");
+    if ((rc & INV_ICM20948_SELF_TEST_OK) != INV_ICM20948_SELF_TEST_OK) {
+        PRINTF("ICM20948: Self-test failure !\r\n");
+        return -1;
+    }
+    PRINTF("ICM20948: Self-test passed!\r\n");
+    selftest_done = 1;
+    offset_done = 0;
+
+    /* It's advised to re-init the icm20948 device after self-test for normal use */
+    setup();
+
+    inv_icm20948_get_st_bias(this, gyro_bias_regular, accel_bias_regular, raw_bias, unscaled_bias);
+    PRINTF("ICM20948: GYR bias (FS=250dps) (dps): x=%f, y=%f, z=%f\r\n", (float)(raw_bias[0] / (float)(1 << 16)),
+           (float)(raw_bias[1] / (float)(1 << 16)), (float)(raw_bias[2] / (float)(1 << 16)));
+    PRINTF("ICM20948: ACC bias (FS=2g) (g): x=%f, y=%f, z=%f\r\n", (float)(raw_bias[0 + 3] / (float)(1 << 16)),
+           (float)(raw_bias[1 + 3] / (float)(1 << 16)), (float)(raw_bias[2 + 3] / (float)(1 << 16)));
+
+    return 0;
 }
 
 int ICM20948::enableSensor(inv_icm20948_sensor sensor) {
