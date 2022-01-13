@@ -2497,12 +2497,12 @@
             <File>
               <FileName>Topic.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\CODE\rosRT\Topic.cpp</FilePath>
+              <FilePath>..\CODE\components\rosRT\Topic.cpp</FilePath>
             </File>
             <File>
               <FileName>Topic.hpp</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CODE\rosRT\Topic.hpp</FilePath>
+              <FilePath>..\CODE\components\rosRT\Topic.hpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -4998,12 +4998,12 @@
             <File>
               <FileName>Topic.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\CODE\rosRT\Topic.cpp</FilePath>
+              <FilePath>..\CODE\components\rosRT\Topic.cpp</FilePath>
             </File>
             <File>
               <FileName>Topic.hpp</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CODE\rosRT\Topic.hpp</FilePath>
+              <FilePath>..\CODE\components\rosRT\Topic.hpp</FilePath>
             </File>
           </Files>
         </Group>
