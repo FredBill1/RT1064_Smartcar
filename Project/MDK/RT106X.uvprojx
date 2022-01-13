@@ -2491,6 +2491,21 @@
             </File>
           </Files>
         </Group>
+        <Group>
+          <GroupName>rosRT</GroupName>
+          <Files>
+            <File>
+              <FileName>Topic.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\rosRT\Topic.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>Topic.hpp</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CODE\rosRT\Topic.hpp</FilePath>
+            </File>
+          </Files>
+        </Group>
       </Groups>
     </Target>
     <Target>
@@ -4974,6 +4989,21 @@
               <FileName>dmp_img.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\driver\ICM20948\dmp_img.cpp</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>rosRT</GroupName>
+          <Files>
+            <File>
+              <FileName>Topic.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\rosRT\Topic.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>Topic.hpp</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CODE\rosRT\Topic.hpp</FilePath>
             </File>
           </Files>
         </Group>

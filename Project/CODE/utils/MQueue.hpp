@@ -14,8 +14,8 @@ class MQueue {
     const size_t Data_sz;
 
  public:
-    MQueue(size_t data_sz, size_t data_cnt, const char* name = "mq") : Data_sz(data_sz) {
-        size_t pool_sz = (sizeof(void*) + RT_ALIGN(data_sz, RT_ALIGN_SIZE)) * data_cnt;
+    MQueue(size_t data_sz, size_t queue_sz, const char* name = "mq") : Data_sz(data_sz) {
+        size_t pool_sz = (sizeof(void*) + RT_ALIGN(data_sz, RT_ALIGN_SIZE)) * queue_sz;
         Pool = rt_malloc(pool_sz);
         tmp = rt_malloc(data_sz);
         rt_mq_init(&mID, name, Pool, Data_sz, pool_sz, RT_IPC_FLAG_FIFO);
