@@ -18,17 +18,17 @@ void fusionTimerCB(void*) {
 
 void printImu(const void* data) {
     const rosRT::msgs::QuaternionStamped& dat = *(rosRT::msgs::QuaternionStamped*)data;
-    auto time = systick_getval_us() / 1000;
+    auto time = rt_tick_get_millisecond();
     wireless.writeV(dat.quaternion.x, dat.quaternion.y, dat.quaternion.z, dat.quaternion.w, dat.header.stamp, time);
     wireless.sendTail();
 }
 
+rosRT::Subscriber sub("imu/9DOF_orientation", sizeof(rosRT::msgs::QuaternionStamped), 1, printImu);
 int main(void) {
     gpio_init(B9, GPO, 0, GPIO_PIN_CONFIG);
     rt_thread_mdelay(500);
 
     initDevices();
-    rosRT::Subscriber sub("imu/9DOF_orientation", sizeof(rosRT::msgs::QuaternionStamped), 1, printImu);
     EnableGlobalIRQ(0);
 
     fusionTimer =
