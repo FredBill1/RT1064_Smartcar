@@ -133,7 +133,9 @@
                 "__yield()=",
                 "__vfp_status(x,y)=0",
                 // "systick_delay_us(time)=systick_delay(USEC_TO_COUNT(time, DELAY_CLK))",
-                "EIGEN_NO_IO"
+                "EIGEN_NO_IO",
+                "EIGEN_NO_DEBUG",
+                "NDEBUG"
             ],
             "intelliSenseMode": "${default}",
             "cppStandard": "c++17"
