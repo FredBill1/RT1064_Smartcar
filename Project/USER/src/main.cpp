@@ -9,42 +9,13 @@ int main(void);
 #include "rosRT/Topic.hpp"
 
 rt_timer_t fusionTimer;
-void fusionTimerCB(void*) {
-    // float tmp[4];
-    // imu.ROTATION_VECTOR.get(tmp);
-    // PUTT(tmp);
-    // PUTT(tail);
-}
+void fusionTimerCB(void*) {}
 
-void printImu(const rosRT::msgs::QuaternionStamped& data) {
+void rotCB(const rosRT::msgs::QuaternionStamped& data) {
     wireless.writeV(data.quaternion.x, data.quaternion.y, data.quaternion.z, data.quaternion.w, data.header.stamp);
     wireless.sendTail();
 }
-auto orientation = rosRT::Subscriber::create<rosRT::msgs::QuaternionStamped>("imu/9DOF_orientation", 1, printImu);
-
-// void printMag(const rosRT::msgs::VectBias& data) {
-//     wireless.writeV(data.vect.x, data.vect.y, data.vect.z, data.bias.x, data.bias.y, data.bias.z);
-//     wireless.sendTail();
-// }
-// auto uncal_mag = rosRT::Subscriber::create<rosRT::msgs::VectBias>("imu/uncal_mag", 1, printMag);
-
-// void printRPY(const rosRT::msgs::Vector3Stamped& data) {
-//     wireless.writeV(data.vector.x, data.vector.y, data.vector.z, data.header.stamp);
-//     wireless.sendTail();
-// }
-// auto rpy_orientation = rosRT::Subscriber::create<rosRT::msgs::Vector3Stamped>("imu/rpy_orientation", 1, printRPY);
-
-// void printMag(const rosRT::msgs::Vector3Stamped& data) {
-//     wireless.writeV(data.vector.x, data.vector.y, data.vector.z, data.header.stamp);
-//     wireless.sendTail();
-// }
-// auto mag = rosRT::Subscriber::create<rosRT::msgs::Vector3Stamped>("imu/mag", 1, printMag);
-
-// void printMagRot(const rosRT::msgs::QuaternionStamped& data) {
-//     wireless.writeV(data.quaternion.x, data.quaternion.y, data.quaternion.z, data.quaternion.w, data.header.stamp);
-//     wireless.sendTail();
-// }
-// auto mag_rot = rosRT::Subscriber::create<rosRT::msgs::QuaternionStamped>("imu/mag_orientation", 1, printMagRot);
+auto rot = rosRT::Subscriber::create<rosRT::msgs::QuaternionStamped>("imu/6DOF_orientation", 1, rotCB);
 
 int main(void) {
     gpio_init(B9, GPO, 0, GPIO_PIN_CONFIG);

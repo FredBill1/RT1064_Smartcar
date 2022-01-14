@@ -36,12 +36,12 @@ void ICM20948::init() {
     // clang-format off
     enableSetSensor(INV_ICM20948_SENSOR_GYROSCOPE,                   20 ); // 陀螺仪 1~225Hz
     enableSetSensor(INV_ICM20948_SENSOR_LINEAR_ACCELERATION,         20 ); // 线加速度 50~255Hz (基于6DOF位姿和加速度计)
-    enableSetSensor(INV_ICM20948_SENSOR_ROTATION_VECTOR,             20 ); // 9DOF位姿 50~255Hz
+    enableSetSensor(INV_ICM20948_SENSOR_GAME_ROTATION_VECTOR,        20 ); // 6DOF位姿 50~255Hz
+    // enableSetSensor(INV_ICM20948_SENSOR_ROTATION_VECTOR,             20 ); // 9DOF位姿 50~255Hz
     // enableSetSensor(INV_ICM20948_SENSOR_GEOMAGNETIC_ROTATION_VECTOR, 20); // 地磁位姿 1~255Hz
     // enableSetSensor(INV_ICM20948_SENSOR_GRAVITY,                     20 ); // 重力 50~255Hz (基于6DOF位姿)
     // enableSetSensor(INV_ICM20948_SENSOR_ACCELEROMETER,               100); // 加速度计 1~225Hz
     // enableSetSensor(INV_ICM20948_SENSOR_GEOMAGNETIC_FIELD,           100); // 磁场 1~70Hz
-    // enableSetSensor(INV_ICM20948_SENSOR_GAME_ROTATION_VECTOR,        20 ); // 6DOF位姿 50~255Hz
     // enableSetSensor(INV_ICM20948_SENSOR_ORIENTATION,                 20 ); // 9DOF RPY 50~255Hz (基于9DOF位姿)
     // enableSetSensor(INV_ICM20948_SENSOR_MAGNETIC_FIELD_UNCALIBRATED, 100); // 未校准磁场 1~255Hz
     // enableSetSensor(INV_ICM20948_SENSOR_GYROSCOPE_UNCALIBRATED,      100); // 未校准陀螺仪 1~255Hz
@@ -357,7 +357,7 @@ void ICM20948::build_sensor_event_data(enum inv_icm20948_sensor sensortype, uint
         _msg_buf.quaternion_stamped.header.stamp = stamp;
         buf = (float64*)&_msg_buf.quaternion_stamped.quaternion;
         for (int i = 0; i < 4; ++i) buf[i] = dat[i];
-        _pub_9DOF_orientation.publish(&_msg_buf.quaternion_stamped);
+        _pub_6DOF_orientation.publish(&_msg_buf.quaternion_stamped);
         break;
     case INV_SENSOR_TYPE_ORIENTATION:  // 9DOF RPY
         _msg_buf.vector3_stamped.header.stamp = stamp;
