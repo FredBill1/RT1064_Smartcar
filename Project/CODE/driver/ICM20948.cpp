@@ -16,8 +16,17 @@ extern "C" {
 }
 
 void ICM20948::init() {
-    setMagnetometerBias(-143, -23, 180);
+    // setMagnetometerBias(-143, -23, 180);
+
+    systick_delay_ms(10);
+    spi_init(SPI_N, SCK, MOSI, MISO, CS, 3, 7 * 1000 * 1000);
+
+    inv_icm20948_reset_states(this, this);
+    inv_icm20948_register_aux_compass(this, INV_ICM20948_COMPASS_ID_AK09916, AK0991x_DEFAULT_I2C_ADDR);
+
     setup();
+    inv_icm20948_load(this, ICM20948_dmp_img, sizeof(ICM20948_dmp_img));
+
     while (selftest()) setup();
     PRINTF("ICM20948: Init complete.\r\n");
 
@@ -25,7 +34,7 @@ void ICM20948::init() {
     enableSetSensor(INV_ICM20948_SENSOR_GYROSCOPE,                   20 ); // 陀螺仪 1~225Hz
     enableSetSensor(INV_ICM20948_SENSOR_LINEAR_ACCELERATION,         20 ); // 线加速度 50~255Hz (基于6DOF位姿和加速度计)
     enableSetSensor(INV_ICM20948_SENSOR_ROTATION_VECTOR,             20 ); // 9DOF位姿 50~255Hz
-    // enableSetSensor(INV_ICM20948_SENSOR_GEOMAGNETIC_ROTATION_VECTOR, 100); // 地磁位姿 1~255Hz
+    // enableSetSensor(INV_ICM20948_SENSOR_GEOMAGNETIC_ROTATION_VECTOR, 20); // 地磁位姿 1~255Hz
     // enableSetSensor(INV_ICM20948_SENSOR_GRAVITY,                     20 ); // 重力 50~255Hz (基于6DOF位姿)
     // enableSetSensor(INV_ICM20948_SENSOR_ACCELEROMETER,               100); // 加速度计 1~225Hz
     // enableSetSensor(INV_ICM20948_SENSOR_GEOMAGNETIC_FIELD,           100); // 磁场 1~70Hz
@@ -120,8 +129,6 @@ ICM20948::ICM20948(SPIN_enum spi_n, SPI_PIN_enum sck, SPI_PIN_enum mosi, SPI_PIN
     write_reg = (decltype(write_reg))&ICM20948::spi_write;
     max_read = max_write = 1024 * 16;
     is_spi = true;
-    inv_icm20948_reset_states(this, this);
-    inv_icm20948_register_aux_compass(this, INV_ICM20948_COMPASS_ID_AK09916, AK0991x_DEFAULT_I2C_ADDR);
 }
 
 void ICM20948::setMagnetometerBias(float biasX, float biasY, float biasZ) {
@@ -132,8 +139,7 @@ void ICM20948::setMagnetometerBias(float biasX, float biasY, float biasZ) {
 
 int ICM20948::setup() {
     PRINTF("ICM20948: Running setup\r\n");
-    systick_delay_ms(10);
-    spi_init(SPI_N, SCK, MOSI, MISO, CS, 3, 7 * 1000 * 1000);
+
     int rc;
 
     // Check if WHOAMI value corresponds to any value from EXPECTED_WHOAMI array
@@ -170,7 +176,7 @@ int ICM20948::setup() {
     inv_icm20948_set_fsr(this, INV_ICM20948_SENSOR_GYROSCOPE_UNCALIBRATED, (const void*)&cfg_gyr_fsr);
 
     // Set GEOMAGNETIC bias
-    inv_icm20948_set_bias(this, INV_ICM20948_SENSOR_GEOMAGNETIC_FIELD, biasq16);
+    // inv_icm20948_set_bias(this, INV_ICM20948_SENSOR_GEOMAGNETIC_FIELD, biasq16);
 
     // re-initialize base state structure
     inv_icm20948_init_structure(this);
