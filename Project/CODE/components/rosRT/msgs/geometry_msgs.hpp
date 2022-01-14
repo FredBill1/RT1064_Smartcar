@@ -7,10 +7,10 @@ namespace rosRT {
 namespace msgs {
 
 struct Quaternion {
-    float x;
-    float y;
-    float z;
-    float w;
+    float64 x;
+    float64 y;
+    float64 z;
+    float64 w;
 };
 
 struct QuaternionStamped {
@@ -19,9 +19,9 @@ struct QuaternionStamped {
 };
 
 struct Vector3 {
-    float x;
-    float y;
-    float z;
+    float64 x;
+    float64 y;
+    float64 z;
 };
 
 struct Vector3Stamped {

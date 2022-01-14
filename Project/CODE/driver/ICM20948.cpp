@@ -309,59 +309,72 @@ void ICM20948::build_sensor_event_data(enum inv_icm20948_sensor sensortype, uint
                                        const void* arg) {
     uint8_t sensor_id = convert_to_generic_ids[sensortype];
     uint32_t stamp = timestamp / 1000;
+    float* dat = (float*)data;
     using namespace rosRT::msgs;
+    float64* buf;
     switch (sensor_id) {
     case INV_SENSOR_TYPE_UNCAL_GYROSCOPE:  // 未校准陀螺仪
-        memcpy(&_msg_buf.vectbias, data, sizeof(float) * 6);
+        buf = (float64*)&_msg_buf.vectbias;
+        for (int i = 0; i < 6; ++i) buf[i] = dat[i];
         _pub_uncal_gyro.publish(&_msg_buf.vectbias);
         break;
     case INV_SENSOR_TYPE_UNCAL_MAGNETOMETER:  // 未校准磁场
-        memcpy(&_msg_buf.vectbias, data, sizeof(float) * 6);
+        buf = (float64*)&_msg_buf.vectbias;
+        for (int i = 0; i < 6; ++i) buf[i] = dat[i];
         _pub_uncal_mag.publish(&_msg_buf.vectbias);
         break;
     case INV_SENSOR_TYPE_GYROSCOPE:  // 陀螺仪
         _msg_buf.vector3_stamped.header.stamp = stamp;
-        memcpy(&_msg_buf.vector3_stamped.vector, data, sizeof(float) * 3);
+        buf = (float64*)&_msg_buf.vector3_stamped.vector;
+        for (int i = 0; i < 3; ++i) buf[i] = dat[i];
         _pub_gyro.publish(&_msg_buf.vector3_stamped);
         break;
     case INV_SENSOR_TYPE_GRAVITY:  // 重力
         _msg_buf.vector3_stamped.header.stamp = stamp;
-        memcpy(&_msg_buf.vector3_stamped.vector, data, sizeof(float) * 3);
+        buf = (float64*)&_msg_buf.vector3_stamped.vector;
+        for (int i = 0; i < 3; ++i) buf[i] = dat[i];
         _pub_gravity.publish(&_msg_buf.vector3_stamped);
         break;
     case INV_SENSOR_TYPE_LINEAR_ACCELERATION:  // 线加速度
         _msg_buf.vector3_stamped.header.stamp = stamp;
-        memcpy(&_msg_buf.vector3_stamped.vector, data, sizeof(float) * 3);
+        buf = (float64*)&_msg_buf.vector3_stamped.vector;
+        for (int i = 0; i < 3; ++i) buf[i] = dat[i];
         _pub_linear_accel.publish(&_msg_buf.vector3_stamped);
         break;
     case INV_SENSOR_TYPE_ACCELEROMETER:  // 加速度计
         _msg_buf.vector3_stamped.header.stamp = stamp;
-        memcpy(&_msg_buf.vector3_stamped.vector, data, sizeof(float) * 3);
+        buf = (float64*)&_msg_buf.vector3_stamped.vector;
+        for (int i = 0; i < 3; ++i) buf[i] = dat[i];
         _pub_accel.publish(&_msg_buf.vector3_stamped);
         break;
     case INV_SENSOR_TYPE_MAGNETOMETER:  // 磁场
         _msg_buf.vector3_stamped.header.stamp = stamp;
-        memcpy(&_msg_buf.vector3_stamped.vector, data, sizeof(float) * 3);
+        buf = (float64*)&_msg_buf.vector3_stamped.vector;
+        for (int i = 0; i < 3; ++i) buf[i] = dat[i];
         _pub_mag.publish(&_msg_buf.vector3_stamped);
         break;
     case INV_SENSOR_TYPE_GEOMAG_ROTATION_VECTOR:  // 地磁位姿
         _msg_buf.quaternion_stamped.header.stamp = stamp;
-        memcpy(&_msg_buf.quaternion_stamped, data, sizeof(float) * 4);
+        buf = (float64*)&_msg_buf.quaternion_stamped.quaternion;
+        for (int i = 0; i < 4; ++i) buf[i] = dat[i];
         _pub_mag_orientation.publish(&_msg_buf.quaternion_stamped);
         break;
     case INV_SENSOR_TYPE_ROTATION_VECTOR:  // 6DOF位姿
         _msg_buf.quaternion_stamped.header.stamp = stamp;
-        memcpy(&_msg_buf.quaternion_stamped.quaternion, data, sizeof(float) * 4);
+        buf = (float64*)&_msg_buf.quaternion_stamped.quaternion;
+        for (int i = 0; i < 4; ++i) buf[i] = dat[i];
         _pub_9DOF_orientation.publish(&_msg_buf.quaternion_stamped);
         break;
     case INV_SENSOR_TYPE_GAME_ROTATION_VECTOR:  // 9DOF位姿
         _msg_buf.quaternion_stamped.header.stamp = stamp;
-        memcpy(&_msg_buf.quaternion_stamped, data, sizeof(float) * 4);
+        buf = (float64*)&_msg_buf.quaternion_stamped.quaternion;
+        for (int i = 0; i < 4; ++i) buf[i] = dat[i];
         _pub_9DOF_orientation.publish(&_msg_buf.quaternion_stamped);
         break;
     case INV_SENSOR_TYPE_ORIENTATION:  // 9DOF RPY
         _msg_buf.vector3_stamped.header.stamp = stamp;
-        memcpy(&_msg_buf.vector3_stamped.vector, data, sizeof(float) * 3);
+        buf = (float64*)&_msg_buf.vector3_stamped.vector;
+        for (int i = 0; i < 3; ++i) buf[i] = dat[i];
         _pub_rpy_orientation.publish(&_msg_buf.vector3_stamped);
         break;
     }
