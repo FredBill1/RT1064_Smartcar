@@ -2399,6 +2399,16 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\driver\ICM20948.cpp</FilePath>
             </File>
+            <File>
+              <FileName>IPS.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\driver\IPS.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>IPS.hpp</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CODE\driver\IPS.hpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -4899,6 +4909,16 @@
               <FileName>ICM20948.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\driver\ICM20948.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>IPS.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\driver\IPS.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>IPS.hpp</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CODE\driver\IPS.hpp</FilePath>
             </File>
           </Files>
         </Group>

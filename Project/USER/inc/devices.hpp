@@ -3,6 +3,7 @@
 
 #include "Encoder.hpp"
 #include "ICM20948.hpp"
+#include "IPS.hpp"
 #include "SerialIO.hpp"
 
 //
@@ -15,5 +16,7 @@ extern SerialIO uart5;
 extern SerialIO wireless;
 
 extern ICM20948 imu;
+
+extern IPS ips;
 
 #endif  // _devices_hpp

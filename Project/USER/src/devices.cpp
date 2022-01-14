@@ -7,6 +7,7 @@ SerialIO uart5(100);
 SerialIO wireless(100);
 
 ICM20948 imu(ICM20948_CONFIG);
+IPS ips;
 
 void initDevices() {
     uart2.init("UART2", UART2_CONFIG);
