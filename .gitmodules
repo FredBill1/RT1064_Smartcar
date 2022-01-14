@@ -1,3 +1,6 @@
 [submodule "Libraries/eigen"]
 	path = Libraries/eigen
 	url = https://gitlab.com/libeigen/eigen.git
+[submodule "Libraries/kalman"]
+	path = Libraries/kalman
+	url = git@github.com:mherb/kalman.git
