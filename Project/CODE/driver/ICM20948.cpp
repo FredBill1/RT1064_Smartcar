@@ -16,8 +16,6 @@ extern "C" {
 }
 
 void ICM20948::init() {
-    // setMagnetometerBias(-143, -23, 180);
-
     systick_delay_ms(10);
     spi_init(SPI_N, SCK, MOSI, MISO, CS, 3, 7 * 1000 * 1000);
 
@@ -66,8 +64,6 @@ static float cfg_mounting_matrix[9]{
 };
 
 static int unscaled_bias[THREE_AXES * 2];
-
-static int biasq16[3] = {0};
 
 static uint8_t convert_to_generic_ids[INV_ICM20948_SENSOR_MAX]  //
     {INV_SENSOR_TYPE_ACCELEROMETER,
@@ -131,12 +127,6 @@ ICM20948::ICM20948(SPIN_enum spi_n, SPI_PIN_enum sck, SPI_PIN_enum mosi, SPI_PIN
     is_spi = true;
 }
 
-void ICM20948::setMagnetometerBias(float biasX, float biasY, float biasZ) {
-    biasq16[0] = (int)(biasX * (float)(1L << 16));
-    biasq16[1] = (int)(biasY * (float)(1L << 16));
-    biasq16[2] = (int)(biasZ * (float)(1L << 16));
-}
-
 int ICM20948::setup() {
     PRINTF("ICM20948: Running setup\r\n");
 
@@ -166,27 +156,14 @@ int ICM20948::setup() {
     for (int ii = 0; ii < INV_ICM20948_SENSOR_MAX; ii++)
         inv_icm20948_set_matrix(this, cfg_mounting_matrix, (inv_icm20948_sensor)ii);
 
-    //  Smooth accel output
-    // base_state.accel_averaging = 5;
-
     inv_icm20948_set_fsr(this, INV_ICM20948_SENSOR_RAW_ACCELEROMETER, (const void*)&cfg_acc_fsr);
     inv_icm20948_set_fsr(this, INV_ICM20948_SENSOR_ACCELEROMETER, (const void*)&cfg_acc_fsr);
     inv_icm20948_set_fsr(this, INV_ICM20948_SENSOR_RAW_GYROSCOPE, (const void*)&cfg_gyr_fsr);
     inv_icm20948_set_fsr(this, INV_ICM20948_SENSOR_GYROSCOPE, (const void*)&cfg_gyr_fsr);
     inv_icm20948_set_fsr(this, INV_ICM20948_SENSOR_GYROSCOPE_UNCALIBRATED, (const void*)&cfg_gyr_fsr);
 
-    // Set GEOMAGNETIC bias
-    // inv_icm20948_set_bias(this, INV_ICM20948_SENSOR_GEOMAGNETIC_FIELD, biasq16);
-
     // re-initialize base state structure
     inv_icm20948_init_structure(this);
-
-    // we should be good to go !
-
-    // Now that Icm20948 device was initialized, we can proceed with DMP image loading
-    // This step is mandatory as DMP image are not store in non volatile memory
-    rc = inv_icm20948_load(this, ICM20948_dmp_img, sizeof(ICM20948_dmp_img));
-    CHECK_RC("ICM20948: Error loading DMP3\r\n");
 
     return 0;
 }

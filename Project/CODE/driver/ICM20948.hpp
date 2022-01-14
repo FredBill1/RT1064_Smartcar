@@ -71,12 +71,12 @@ class ICM20948 : private inv_icm20948_serif, protected inv_icm20948 {
     rosRT::Publisher _pub_9DOF_orientation {"imu/9DOF_orientation", sizeof(rosRT::msgs::QuaternionStamped), 1}; // 9DOFÎ»×Ë
     rosRT::Publisher _pub_mag_orientation  {"imu/mag_orientation",  sizeof(rosRT::msgs::QuaternionStamped), 1}; // µØ´ÅÎ»×Ë
     //clang-format on
+    
+    int setup();
+    int selftest();
 
  public:
     ICM20948(SPIN_enum spi_n, SPI_PIN_enum sck, SPI_PIN_enum mosi, SPI_PIN_enum miso, SPI_PIN_enum cs, PIN_enum Int);
-    void setMagnetometerBias(float biasX, float biasY, float biasZ);
-    int setup();
-    int selftest();
     void init();
 
     int enableSensor(inv_icm20948_sensor sensor);
