@@ -25,13 +25,21 @@ void IPS::flush() {
     }
 }
 
+void IPS::nextLine() {
+    for (int j = _j; j < M; ++j) _buf[_i][j] = ' ';
+    if (++_i == N) _i = 0;
+    _j = 0;
+}
+
 void IPS::putchar(char c) {
-    if (c == '\n') ++_i, _j = 0;
-    else if (c == '\r')
-        _j = 0;
-    else {
+    if (c == '\n') {
+        if (!_ret) nextLine();
+        _ret = false;
+    } else if (c != '\r') {
         _buf[_i][_j++] = c;
-        if (_j == M) _j = 0, ++_i;
+        if (_j == M) nextLine(), _ret = true;
+        else
+            _ret = false;
     }
     if (_i == N) _i = 0;
 }
@@ -51,4 +59,5 @@ void IPS::printf(const char* fmt, ...) {
     va_end(args2);
     printStr(buf);
     delete[] buf;
+    flush();
 }

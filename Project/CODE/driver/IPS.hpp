@@ -5,8 +5,9 @@ class IPS {
  protected:
     static const int N = 8, M = 30;
     char _buf[N][M];
-    bool _refresh = false;
+    bool _ret = false;
     unsigned char _i = 0, _j = 0;
+    void nextLine();
 
  public:
     enum Color {
