@@ -15,6 +15,11 @@ extern "C" {
 #include "zf_systick.h"
 }
 
+#include "IPS.hpp"
+extern IPS ips;
+#undef PRINTF
+#define PRINTF ips.printf
+
 void ICM20948::init() {
     systick_delay_ms(10);
     spi_init(SPI_N, SCK, MOSI, MISO, CS, 3, 7 * 1000 * 1000);
@@ -253,10 +258,10 @@ int ICM20948::selftest() {
     setup();
 
     inv_icm20948_get_st_bias(this, gyro_bias_regular, accel_bias_regular, raw_bias, unscaled_bias);
-    PRINTF("ICM20948: GYR bias (FS=250dps) (dps): x=%f, y=%f, z=%f\r\n", (float)(raw_bias[0] / (float)(1 << 16)),
-           (float)(raw_bias[1] / (float)(1 << 16)), (float)(raw_bias[2] / (float)(1 << 16)));
-    PRINTF("ICM20948: ACC bias (FS=2g) (g): x=%f, y=%f, z=%f\r\n", (float)(raw_bias[0 + 3] / (float)(1 << 16)),
-           (float)(raw_bias[1 + 3] / (float)(1 << 16)), (float)(raw_bias[2 + 3] / (float)(1 << 16)));
+    // PRINTF("ICM20948: GYR bias (FS=250dps) (dps): x=%f, y=%f, z=%f\r\n", (float)(raw_bias[0] / (float)(1 << 16)),
+    //        (float)(raw_bias[1] / (float)(1 << 16)), (float)(raw_bias[2] / (float)(1 << 16)));
+    // PRINTF("ICM20948: ACC bias (FS=2g) (g): x=%f, y=%f, z=%f\r\n", (float)(raw_bias[0 + 3] / (float)(1 << 16)),
+    //        (float)(raw_bias[1 + 3] / (float)(1 << 16)), (float)(raw_bias[2 + 3] / (float)(1 << 16)));
 
     return 0;
 }

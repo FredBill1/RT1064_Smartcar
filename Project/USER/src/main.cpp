@@ -50,19 +50,14 @@ int main(void) {
     gpio_init(B9, GPO, 0, GPIO_PIN_CONFIG);
     rt_thread_mdelay(500);
 
-    // initDevices();
+    initDevices();
     EnableGlobalIRQ(0);
-    ips.init();
-    for (int i = 0; i < 9; ++i)
-        for (int j = 0; j < 30; ++j) ips.showChar(i, j, (i + j) % 26 + 'a');
 
     fusionTimer = rt_timer_create("fusionTimer", fusionTimerCB, NULL, 20, RT_TIMER_FLAG_PERIODIC | RT_TIMER_FLAG_HARD_TIMER);
     rt_timer_start(fusionTimer);
 
     for (;;) {
         gpio_toggle(B9);
-        ips.printf("testfjhfhfjfjfjhfjhfjhfjhfg str %f\n", sqrt(rt_tick_get_millisecond()));
-        ips.flush();
         rt_thread_mdelay(500);
         // fusionTimerCB(NULL);
     }
