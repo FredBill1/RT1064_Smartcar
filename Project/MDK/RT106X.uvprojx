@@ -2516,6 +2516,16 @@
             </File>
           </Files>
         </Group>
+        <Group>
+          <GroupName>pose_kailman</GroupName>
+          <Files>
+            <File>
+              <FileName>pose_kalman_test.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\pose_kalman\src\pose_kalman_test.cpp</FilePath>
+            </File>
+          </Files>
+        </Group>
       </Groups>
     </Target>
     <Target>
@@ -5024,6 +5034,16 @@
               <FileName>Topic.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\components\rosRT\src\Topic.cpp</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>pose_kailman</GroupName>
+          <Files>
+            <File>
+              <FileName>pose_kalman_test.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\pose_kalman\src\pose_kalman_test.cpp</FilePath>
             </File>
           </Files>
         </Group>
