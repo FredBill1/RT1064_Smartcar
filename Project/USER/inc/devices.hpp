@@ -4,6 +4,7 @@
 #include "Encoder.hpp"
 #include "ICM20948.hpp"
 #include "IPS.hpp"
+#include "MotorDRV.hpp"
 #include "SerialIO.hpp"
 
 //
@@ -18,5 +19,7 @@ extern SerialIO wireless;
 extern ICM20948 imu;
 
 extern IPS ips;
+
+extern MotorDRV motorDrvL1, motorDrvL2, motorDrvR1, motorDrvR2;
 
 #endif  // _devices_hpp

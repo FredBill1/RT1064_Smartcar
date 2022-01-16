@@ -17,9 +17,13 @@ void rotCB(const rosRT::msgs::QuaternionStamped& data) {
 }
 auto rot = rosRT::Subscriber::create<rosRT::msgs::QuaternionStamped>("imu/6DOF_orientation", 1, rotCB);
 
-namespace testtest {
-void pose_kalman_test(void*);
-}
+#define DIR_1 D0
+#define DIR_2 D1
+#define PWM_1 PWM2_MODULE3_CHA_D2
+#define PWM_2 PWM2_MODULE3_CHB_D3
+
+uint8 dir;
+int32 duty;
 
 int main(void) {
     gpio_init(B9, GPO, 0, GPIO_PIN_CONFIG);
@@ -32,12 +36,11 @@ int main(void) {
     fusionTimer = rt_timer_create("fusionTimer", fusionTimerCB, NULL, 20, RT_TIMER_FLAG_PERIODIC | RT_TIMER_FLAG_HARD_TIMER);
     rt_timer_start(fusionTimer);
 
-    rtthread::Thread thread(testtest::pose_kalman_test, NULL, 20480, RT_THREAD_PRIORITY_MAX - 1, 20, "pose_kalman_test");
-    thread.start();
+    motorDrvL2.setPWM(-5000);
 
     for (;;) {
-        gpio_toggle(B9);
-        rt_thread_mdelay(500);
+        // gpio_toggle(B9);
+        // rt_thread_mdelay(500);
         // fusionTimerCB(NULL);
     }
 }

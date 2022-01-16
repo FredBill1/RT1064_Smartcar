@@ -5254,7 +5254,7 @@
 
   <Group>
     <GroupName>user_driver</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -5330,6 +5330,30 @@
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
+    <File>
+      <GroupNumber>23</GroupNumber>
+      <FileNumber>384</FileNumber>
+      <FileType>8</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\CODE\driver\MotorDRV.cpp</PathWithFileName>
+      <FilenameWithoutPath>MotorDRV.cpp</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>23</GroupNumber>
+      <FileNumber>385</FileNumber>
+      <FileType>5</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\CODE\driver\MotorDRV.hpp</PathWithFileName>
+      <FilenameWithoutPath>MotorDRV.hpp</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
   </Group>
 
   <Group>
@@ -5340,7 +5364,7 @@
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>24</GroupNumber>
-      <FileNumber>384</FileNumber>
+      <FileNumber>386</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -5352,7 +5376,7 @@
     </File>
     <File>
       <GroupNumber>24</GroupNumber>
-      <FileNumber>385</FileNumber>
+      <FileNumber>387</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -5364,7 +5388,7 @@
     </File>
     <File>
       <GroupNumber>24</GroupNumber>
-      <FileNumber>386</FileNumber>
+      <FileNumber>388</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -5376,7 +5400,7 @@
     </File>
     <File>
       <GroupNumber>24</GroupNumber>
-      <FileNumber>387</FileNumber>
+      <FileNumber>389</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -5388,7 +5412,7 @@
     </File>
     <File>
       <GroupNumber>24</GroupNumber>
-      <FileNumber>388</FileNumber>
+      <FileNumber>390</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -5400,7 +5424,7 @@
     </File>
     <File>
       <GroupNumber>24</GroupNumber>
-      <FileNumber>389</FileNumber>
+      <FileNumber>391</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -5412,7 +5436,7 @@
     </File>
     <File>
       <GroupNumber>24</GroupNumber>
-      <FileNumber>390</FileNumber>
+      <FileNumber>392</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -5424,7 +5448,7 @@
     </File>
     <File>
       <GroupNumber>24</GroupNumber>
-      <FileNumber>391</FileNumber>
+      <FileNumber>393</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -5436,7 +5460,7 @@
     </File>
     <File>
       <GroupNumber>24</GroupNumber>
-      <FileNumber>392</FileNumber>
+      <FileNumber>394</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -5448,7 +5472,7 @@
     </File>
     <File>
       <GroupNumber>24</GroupNumber>
-      <FileNumber>393</FileNumber>
+      <FileNumber>395</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -5460,7 +5484,7 @@
     </File>
     <File>
       <GroupNumber>24</GroupNumber>
-      <FileNumber>394</FileNumber>
+      <FileNumber>396</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -5472,7 +5496,7 @@
     </File>
     <File>
       <GroupNumber>24</GroupNumber>
-      <FileNumber>395</FileNumber>
+      <FileNumber>397</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -5484,7 +5508,7 @@
     </File>
     <File>
       <GroupNumber>24</GroupNumber>
-      <FileNumber>396</FileNumber>
+      <FileNumber>398</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -5496,7 +5520,7 @@
     </File>
     <File>
       <GroupNumber>24</GroupNumber>
-      <FileNumber>397</FileNumber>
+      <FileNumber>399</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -5516,7 +5540,7 @@
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>25</GroupNumber>
-      <FileNumber>398</FileNumber>
+      <FileNumber>400</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -5528,7 +5552,7 @@
     </File>
     <File>
       <GroupNumber>25</GroupNumber>
-      <FileNumber>399</FileNumber>
+      <FileNumber>401</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -5548,7 +5572,7 @@
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>26</GroupNumber>
-      <FileNumber>400</FileNumber>
+      <FileNumber>402</FileNumber>
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -5560,7 +5584,7 @@
     </File>
     <File>
       <GroupNumber>26</GroupNumber>
-      <FileNumber>401</FileNumber>
+      <FileNumber>403</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -5580,7 +5604,7 @@
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>27</GroupNumber>
-      <FileNumber>402</FileNumber>
+      <FileNumber>404</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
