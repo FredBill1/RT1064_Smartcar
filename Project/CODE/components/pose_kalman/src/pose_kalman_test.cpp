@@ -40,7 +40,7 @@ void pose_kalman_test(void*) {
     ekf.init(x);
     ukf.init(x);
     for (;;) {
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 1000; i++) {
             u.vX() = 1;
             u.vY() = 1;
             u.vYaw() = 1;
@@ -57,16 +57,14 @@ void pose_kalman_test(void*) {
                 // x_ekf = ekf.update(imuM, imu);
                 x_ukf = ukf.update(imuM, imu);
             }
-            PRINTF("pre %.5f %.5f %.5f %.5f %.5f %.5f %.5f %.5f %.5f\n\r", x_pred.x(), x_pred.y(), x_pred.ox(), x_pred.oy(),
-                   x_pred.vX(), x_pred.vY(), x_pred.vYaw(), x_pred.aX(), x_pred.aY());
+            // PRINTF("pre %.5f %.5f %.5f %.5f %.5f %.5f %.5f %.5f %.5f\n\r", x_pred.x(), x_pred.y(), x_pred.ox(), x_pred.oy(),
+            //        x_pred.vX(), x_pred.vY(), x_pred.vYaw(), x_pred.aX(), x_pred.aY());
             // PRINTF("ekf %.5f %.5f %.5f %.5f %.5f %.5f %.5f %.5f %.5f\n\r", x_ekf.x(), x_ekf.y(), x_ekf.ox(), x_ekf.oy(),
             //        x_ekf.vX(), x_ekf.vY(), x_ekf.vYaw(), x_ekf.aX(), x_ekf.aY());
-            PRINTF("ukf %.5f %.5f %.5f %.5f %.5f %.5f %.5f %.5f %.5f\n\r", x_ukf.x(), x_ukf.y(), x_ukf.ox(), x_ukf.oy(),
-                   x_ukf.vX(), x_ukf.vY(), x_ukf.vYaw(), x_ukf.aX(), x_ukf.aY());
-
-            PRINTF("%d\n\r", i);
+            // PRINTF("ukf %.5f %.5f %.5f %.5f %.5f %.5f %.5f %.5f %.5f\n\r", x_ukf.x(), x_ukf.y(), x_ukf.ox(), x_ukf.oy(),
+            //        x_ukf.vX(), x_ukf.vY(), x_ukf.vYaw(), x_ukf.aX(), x_ukf.aY());
         }
-        rt_thread_mdelay(100);
+        PRINTF("%d\n\r", rt_tick_get_millisecond());
     }
 }
 }  // namespace testtest

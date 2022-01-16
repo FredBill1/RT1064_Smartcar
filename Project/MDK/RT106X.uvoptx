@@ -397,7 +397,7 @@
           <Type>0</Type>
           <LineNumber>494</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>-2147438162</Address>
+          <Address>-2147174808</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -413,7 +413,7 @@
           <Type>0</Type>
           <LineNumber>624</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>-2147439152</Address>
+          <Address>-2147182000</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -429,7 +429,7 @@
           <Type>0</Type>
           <LineNumber>623</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>-2147439160</Address>
+          <Address>-2147182062</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -445,7 +445,7 @@
           <Type>0</Type>
           <LineNumber>377</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>-2147439952</Address>
+          <Address>-2147193344</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -455,22 +455,6 @@
           <Filename>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948MPUFifoControl.c</Filename>
           <ExecCommand></ExecCommand>
           <Expression>\\RT106X\../../Libraries/eMD-SmartMotion-ICM20948-1.1.0-MP/Invn/Devices/Drivers/ICM20948/Icm20948MPUFifoControl.c\377</Expression>
-        </Bp>
-        <Bp>
-          <Number>4</Number>
-          <Type>0</Type>
-          <LineNumber>47</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>-2147413246</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\USER\src\main.cpp</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\RT106X\../USER/src/main.cpp\47</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>

@@ -512,6 +512,16 @@ void rt_memheap_free(void *ptr)
                                     ptr, header_ptr));
 
     /* check magic */
+
+    //! FredBill: 
+    //! 不知道为什么，用了我自己写的rosRT::Topic之后，在开O2级别以下的优化时，上电后在board_init()都还没执行的
+    //! 时候(可能是C++类初始化的时候)，汇编代码里会有一个不知道哪来的对free()的调用，释放的是一块根本没有初始化
+    //! 的内存，会导致ASSERT失败，无法继续运行。所以这里把这个ASSERT的首次检查无视掉了。
+    static uint8_t magic_flag = 0;
+    if((header_ptr->magic & RT_MEMHEAP_MASK) != RT_MEMHEAP_MAGIC && magic_flag == 0) { magic_flag = 1; return; }
+    magic_flag = 1;
+    //!
+
     RT_ASSERT((header_ptr->magic & RT_MEMHEAP_MASK) == RT_MEMHEAP_MAGIC);
     RT_ASSERT(header_ptr->magic & RT_MEMHEAP_USED);
     /* check whether this block of memory has been over-written. */

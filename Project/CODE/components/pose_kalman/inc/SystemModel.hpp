@@ -87,8 +87,8 @@ class SystemModel : public Kalman::LinearizedSystemModel<State<T>, Control<T>, C
         res.ox() = cos(res_yaw);
         res.oy() = sin(res_yaw);
 
-        res.vX() = u.vX() * cos(res_yaw) - u.vY() * sin(res_yaw);
-        res.vY() = u.vY() * cos(res_yaw) + u.vX() * sin(res_yaw);
+        res.vX() = u.vX() * res.ox() - u.vY() * res.oy();
+        res.vY() = u.vY() * res.ox() + u.vX() * res.oy();
 
         res.x() = x.x() + (x.vX() + res.vX()) / 2 * u.dt();
         res.y() = x.y() + (x.vY() + res.vY()) / 2 * u.dt();
