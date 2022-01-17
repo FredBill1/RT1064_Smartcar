@@ -16,6 +16,7 @@ MotorDRV motorDrvR2(MOTORDRV_R2_CONFIG);
 
 void initDevices() {
     ips.init();
+
     uart2.init("UART2", UART2_CONFIG);
     uart3.init("UART3", UART3_CONFIG);
     uart4.init("UART4", UART4_CONFIG);

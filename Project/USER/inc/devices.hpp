@@ -22,4 +22,6 @@ extern IPS ips;
 
 extern MotorDRV motorDrvL1, motorDrvL2, motorDrvR1, motorDrvR2;
 
+void initDevices();
+
 #endif  // _devices_hpp

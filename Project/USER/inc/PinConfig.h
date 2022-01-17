@@ -22,6 +22,4 @@
 #define MOTORDRV_R1_CONFIG D14, PWM1_MODULE0_CHA_D12, false
 #define MOTORDRV_R2_CONFIG D15, PWM1_MODULE0_CHB_D13, false
 
-void initDevices();
-
 #endif  // _PinConfig_h
