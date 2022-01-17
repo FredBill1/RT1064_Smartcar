@@ -4,7 +4,7 @@ SerialIO uart2(100);
 SerialIO uart3(100);
 SerialIO uart4(100);
 SerialIO uart5(100);
-SerialIO wireless(100);
+SerialIO wireless(500);
 
 ICM20948 imu(ICM20948_CONFIG);
 IPS ips;
