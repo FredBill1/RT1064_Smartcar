@@ -2536,6 +2536,21 @@
             </File>
           </Files>
         </Group>
+        <Group>
+          <GroupName>user_nodes</GroupName>
+          <Files>
+            <File>
+              <FileName>nodes.hpp</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CODE\nodes\nodes.hpp</FilePath>
+            </File>
+            <File>
+              <FileName>wireless.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\wireless.cpp</FilePath>
+            </File>
+          </Files>
+        </Group>
       </Groups>
     </Target>
     <Target>
@@ -5133,6 +5148,21 @@
               <FileName>pose_kalman_test.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\components\pose_kalman\src\pose_kalman_test.cpp</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>user_nodes</GroupName>
+          <Files>
+            <File>
+              <FileName>nodes.hpp</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CODE\nodes\nodes.hpp</FilePath>
+            </File>
+            <File>
+              <FileName>wireless.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\wireless.cpp</FilePath>
             </File>
           </Files>
         </Group>

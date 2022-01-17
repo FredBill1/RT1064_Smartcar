@@ -7,6 +7,7 @@ int main(void);
 
 #include "Thread.h"
 #include "devices.hpp"
+#include "nodes/nodes.hpp"
 #include "rosRT/Topic.hpp"
 rt_timer_t fusionTimer;
 void fusionTimerCB(void*) {}
@@ -27,6 +28,7 @@ int main(void) {
     rt_thread_mdelay(500);
 
     initDevices();
+    wirelessThread.start();
     EnableGlobalIRQ(0);
     // testtest::pose_kalman_test(NULL);
 
@@ -36,11 +38,11 @@ int main(void) {
     // motorDrvL2.setPWM(-5000);
     int duty;
     for (;;) {
-        wireless.waitHeader();
-        if (!wireless.readF(duty)) { ips.printf("Failed to read\n"); }
-        ips.printf("%d\n", duty);
-        // gpio_toggle(B9);
-        // rt_thread_mdelay(500);
-        // fusionTimerCB(NULL);
+        // wireless.waitHeader();
+        // if (!wireless.readF(duty)) { ips.printf("Failed to read\n"); }
+        // ips.printf("%d\n", duty);
+        gpio_toggle(B9);
+        rt_thread_mdelay(500);
+        fusionTimerCB(NULL);
     }
 }
