@@ -9,8 +9,6 @@ int main(void);
 #include "devices.hpp"
 #include "nodes/nodes.hpp"
 #include "rosRT/Topic.hpp"
-rt_timer_t fusionTimer;
-void fusionTimerCB(void*) {}
 
 void rotCB(const rosRT::msgs::QuaternionStamped& data) {
     wireless.writeV(data.quaternion.x, data.quaternion.y, data.quaternion.z, data.quaternion.w, data.header.stamp);
@@ -32,9 +30,6 @@ int main(void) {
     EnableGlobalIRQ(0);
     // testtest::pose_kalman_test(NULL);
 
-    fusionTimer = rt_timer_create("fusionTimer", fusionTimerCB, NULL, 20, RT_TIMER_FLAG_PERIODIC | RT_TIMER_FLAG_HARD_TIMER);
-    rt_timer_start(fusionTimer);
-
     // motorDrvL2.setPWM(-5000);
     int duty;
     for (;;) {
@@ -43,6 +38,5 @@ int main(void) {
         // ips.printf("%d\n", duty);
         gpio_toggle(B9);
         rt_thread_mdelay(500);
-        fusionTimerCB(NULL);
     }
 }
