@@ -7,7 +7,7 @@
 namespace imgProc {
 namespace apriltag {
 
-void threshold(uint8_t* src, QuadImg& dst);
+void threshold(uint8_t* src, QuadImg_t& dst);
 
 }  // namespace apriltag
 }  // namespace imgProc

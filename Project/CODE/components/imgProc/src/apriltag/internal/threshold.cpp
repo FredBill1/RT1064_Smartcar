@@ -1,11 +1,12 @@
-#include "apriltag/internal/StaticBuffer.hpp"
 #include "apriltag/internal/threshold.hpp"
+
+#include "apriltag/internal/StaticBuffer.hpp"
 #include "apriltag/internal/utility.hpp"
 
 namespace imgProc {
 namespace apriltag {
 
-void threshold(uint8_t* src, QuadImg& dst) {
+void threshold(uint8_t* src, QuadImg_t& dst) {
     auto& im_max = staticBuffer.threshold.im_max;
     auto& im_min = staticBuffer.threshold.im_min;
     auto& im_max2 = staticBuffer.threshold.im_max2;

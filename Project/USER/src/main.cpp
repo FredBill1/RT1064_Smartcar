@@ -12,7 +12,7 @@ int main(void);
 
 //
 #include "apriltag/internal/threshold.hpp"
-AT_SDRAM_SECTION_ALIGN(imgProc::apriltag::QuadImg binary, 64);
+AT_SDRAM_SECTION_ALIGN(imgProc::apriltag::QuadImg_t binary, 64);
 
 void rotCB(const rosRT::msgs::QuaternionStamped& data) {
     wireless.writeV(data.quaternion.x, data.quaternion.y, data.quaternion.z, data.quaternion.w, data.header.stamp);

@@ -6,7 +6,7 @@
 namespace imgProc {
 namespace apriltag {
 
-template <typename T, int_fast32_t Size> class Uinonfind {
+template <typename T, int_fast32_t Size> class Unionfind {
  public:
     using data_t = T;
     static constexpr int_fast32_t size = Size;
