@@ -5673,8 +5673,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CODE\components\imgProc\src\apriltag\internal\thresholding.cpp</PathWithFileName>
-      <FilenameWithoutPath>thresholding.cpp</FilenameWithoutPath>
+      <PathWithFileName>..\CODE\components\imgProc\src\apriltag\internal\threshold.cpp</PathWithFileName>
+      <FilenameWithoutPath>threshold.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

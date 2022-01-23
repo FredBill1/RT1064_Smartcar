@@ -11,7 +11,7 @@ int main(void);
 #include "rosRT/Topic.hpp"
 
 //
-#include "apriltag/internal/thresholding.hpp"
+#include "apriltag/internal/threshold.hpp"
 AT_SDRAM_SECTION_ALIGN(imgProc::apriltag::QuadImg binary, 64);
 
 void rotCB(const rosRT::msgs::QuaternionStamped& data) {

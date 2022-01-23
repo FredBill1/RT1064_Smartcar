@@ -2560,9 +2560,9 @@
               <FilePath>..\CODE\components\imgProc\src\apriltag\internal\StaticBuffer.cpp</FilePath>
             </File>
             <File>
-              <FileName>thresholding.cpp</FileName>
+              <FileName>threshold.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\CODE\components\imgProc\src\apriltag\internal\thresholding.cpp</FilePath>
+              <FilePath>..\CODE\components\imgProc\src\apriltag\internal\threshold.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -5190,9 +5190,9 @@
               <FilePath>..\CODE\components\imgProc\src\apriltag\internal\StaticBuffer.cpp</FilePath>
             </File>
             <File>
-              <FileName>thresholding.cpp</FileName>
+              <FileName>threshold.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\CODE\components\imgProc\src\apriltag\internal\thresholding.cpp</FilePath>
+              <FilePath>..\CODE\components\imgProc\src\apriltag\internal\threshold.cpp</FilePath>
             </File>
           </Files>
         </Group>
