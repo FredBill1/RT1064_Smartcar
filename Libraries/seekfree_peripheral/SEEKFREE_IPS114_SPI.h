@@ -122,5 +122,6 @@ void ips114_displayimage8660_zoom(uint16 *p, uint16 width, uint16 height, uint16
 void ips114_displayimage8660_zoom1(uint8 *p, uint16 width, uint16 height, uint16 start_x, uint16 start_y, uint16 dis_width, uint16 dis_height);
 void ips114_displayimage7725(uint8 *p, uint16 width, uint16 height);
 void ips114_display_chinese(uint16 x, uint16 y, uint8 size, const uint8 *p, uint8 number, uint16 color);
-
+void ips114_set_region(uint16 x1,uint16 y1,uint16 x2,uint16 y2);
+void ips114_writedata_16bit(uint16 dat);
 #endif
