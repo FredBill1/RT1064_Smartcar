@@ -555,7 +555,7 @@ void ips114_displayimage032(uint8 *p, uint16 width, uint16 height)
     {
         for(i=0;i<coord_x;i++)
         {
-            temp = *(p+j*width+i*width/coord_x);//读取像素点
+            temp = *(p+j*height/coord_y*width+i*width/coord_x);//读取像素点
             color=(0x001f&((temp)>>3))<<11;
             color=color|(((0x003f)&((temp)>>2))<<5);
             color=color|(0x001f&((temp)>>3));

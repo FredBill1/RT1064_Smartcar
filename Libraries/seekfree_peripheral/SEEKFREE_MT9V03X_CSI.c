@@ -31,6 +31,8 @@
  ********************************************************************************************************************/
 
 
+#include <rtthread.h>
+
 #include "fsl_common.h"
 #include "fsl_gpio.h"
 #include "fsl_csi.h"
@@ -45,8 +47,8 @@
 
 
 //图像缓冲区  如果用户需要访问图像数据 最好通过mt9v03x_csi_image来访问数据，最好不要直接访问缓冲区
-AT_DTCM_SECTION_ALIGN(uint8 mt9v03x_csi1_image[MT9V03X_CSI_H][MT9V03X_CSI_W], 64);
-AT_DTCM_SECTION_ALIGN(uint8 mt9v03x_csi2_image[MT9V03X_CSI_H][MT9V03X_CSI_W], 64);
+AT_SDRAM_SECTION_ALIGN(uint8 mt9v03x_csi1_image[MT9V03X_CSI_H][MT9V03X_CSI_W], 64);
+AT_SDRAM_SECTION_ALIGN(uint8 mt9v03x_csi2_image[MT9V03X_CSI_H][MT9V03X_CSI_W], 64);
 
 //用户访问图像数据直接访问这个指针变量就可以
 //访问方式非常简单，可以直接使用下标的方式访问
@@ -54,15 +56,14 @@ AT_DTCM_SECTION_ALIGN(uint8 mt9v03x_csi2_image[MT9V03X_CSI_H][MT9V03X_CSI_W], 64
 uint8 (*mt9v03x_csi_image)[MT9V03X_CSI_W];
 
 
-
-
-
+struct rt_mailbox mt9v03x_csi_mb;
+uint8 *mt9v03x_csi_mb_buf[2];
 
 
 //需要配置到摄像头的数据
 int16 MT9V03X_CFG_CSI[CONFIG_FINISH][2]=
 {
-    {AUTO_EXP,          0},   //自动曝光设置      范围1-63 0为关闭 如果自动曝光开启  EXP_TIME命令设置的数据将会变为最大曝光时间，也就是自动曝光时间的上限
+    {AUTO_EXP,          63},  //自动曝光设置      范围1-63 0为关闭 如果自动曝光开启  EXP_TIME命令设置的数据将会变为最大曝光时间，也就是自动曝光时间的上限
                               //一般情况是不需要开启这个功能，因为比赛场地光线一般都比较均匀，如果遇到光线非常不均匀的情况可以尝试设置该值，增加图像稳定性
     {EXP_TIME,          800}, //曝光时间          摄像头收到后会自动计算出最大曝光时间，如果设置过大则设置为计算出来的最大曝光值
     {FPS,               50},  //图像帧率          摄像头收到后会自动计算出最大FPS，如果过大则设置为计算出来的最大FPS
@@ -132,19 +133,29 @@ void csi_isr(CSI_Type *base, csi_handle_t *handle, status_t status, void *userDa
 {
     if(csi_get_full_buffer(&csi_handle,&fullCameraBufferAddr))
     {
-        csi_add_empty_buffer(&csi_handle,(uint8 *)fullCameraBufferAddr);
-        if(fullCameraBufferAddr == (uint32)mt9v03x_csi1_image[0])
-        {
-            mt9v03x_csi_image = mt9v03x_csi1_image;//image_csi1采集完成
-        }
-        else if(fullCameraBufferAddr == (uint32)mt9v03x_csi2_image[0])
-        {
-            mt9v03x_csi_image = mt9v03x_csi2_image;//image_csi2采集完成
-        }
-        mt9v03x_csi_finish_flag = 1;//采集完成标志位置一
+        rt_mb_send(&mt9v03x_csi_mb, (rt_ubase_t)fullCameraBufferAddr);
+        // csi_add_empty_buffer(&csi_handle,(uint8 *)fullCameraBufferAddr);
+        // if(fullCameraBufferAddr == (uint32)mt9v03x_csi1_image[0])
+        // {
+        //     mt9v03x_csi_image = mt9v03x_csi1_image;//image_csi1采集完成
+        // }
+        // else if(fullCameraBufferAddr == (uint32)mt9v03x_csi2_image[0])
+        // {
+        //     mt9v03x_csi_image = mt9v03x_csi2_image;//image_csi2采集完成
+        // }
+        // mt9v03x_csi_finish_flag = 1;//采集完成标志位置一
     }
 }
 
+u8_image_ptr mt9v03x_csi_image_take() {
+    u8_image_ptr ptr;
+    rt_mb_recv(&mt9v03x_csi_mb, (rt_ubase_t *)&ptr, RT_WAITING_FOREVER);
+    return ptr;
+}
+
+void mt9v03x_csi_image_release(u8_image_ptr ptr) {
+    csi_add_empty_buffer(&csi_handle, (uint8 *)ptr);
+}
 
 
 //-------------------------------------------------------------------------------------------------------------------
@@ -173,6 +184,7 @@ void mt9v03x_csi_init(void)
     //获取配置便于查看配置是否正确
     get_config(MT9V03X_CSI_COF_UART,GET_CFG_CSI);
 
+    rt_mb_init(&mt9v03x_csi_mb, "mt9v03x_csi_mb", mt9v03x_csi_mb_buf, sizeof(mt9v03x_csi_mb_buf) / 4, RT_IPC_FLAG_FIFO);
     
     //CSI 采集初始化
     csi_init(MT9V03X_CSI_W, MT9V03X_CSI_H, &csi_handle, csi_isr, MT9V03X_CSI_VSYNC_PIN, MT9V03X_CSI_PCLK_PIN);

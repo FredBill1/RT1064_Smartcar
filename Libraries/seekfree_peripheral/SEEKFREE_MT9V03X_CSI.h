@@ -40,8 +40,8 @@
 #include "zf_uart.h"
 
 //配置摄像头参数
-#define MT9V03X_CSI_W               188             //图像宽度  范围1-752      RT105X RT106X 采集时列宽度必须为4的倍数
-#define MT9V03X_CSI_H               120             //图像高度	范围1-480
+#define MT9V03X_CSI_W               752             //图像宽度  范围1-752      RT105X RT106X 采集时列宽度必须为4的倍数
+#define MT9V03X_CSI_H               480             //图像高度	范围1-480
 
 
 
@@ -60,12 +60,16 @@
 
                             
 
+typedef uint8 (*u8_image_ptr)[MT9V03X_CSI_W];
+
 extern uint8 mt9v03x_csi_finish_flag;               //一场图像采集完成标志位
 extern uint8 (*mt9v03x_csi_image)[MT9V03X_CSI_W];          //图像数据
 
 void mt9v03x_csi_init(void);
 void csi_seekfree_sendimg_03x(UARTN_enum uartn, uint8 *image, uint16 width, uint16 height);
 
+u8_image_ptr mt9v03x_csi_image_take();
+void mt9v03x_csi_image_release(u8_image_ptr ptr);
 
 
 
