@@ -9,7 +9,7 @@ namespace imgProc {
 namespace apriltag {
 
 using QuadImg_t = imgProc::QuadImg<N, M>;
-using Unionfind_t = Unionfind<int_fast32_t, N * M>;
+using Unionfind_t = Unionfind<int32_t, N * M>;
 
 }  // namespace apriltag
 }  // namespace imgProc
