@@ -40,8 +40,8 @@
 #include "zf_uart.h"
 
 //配置摄像头参数
-#define MT9V03X_CSI_W               752             //图像宽度  范围1-752      RT105X RT106X 采集时列宽度必须为4的倍数
-#define MT9V03X_CSI_H               480             //图像高度	范围1-480
+#define MT9V03X_CSI_W               188             //图像宽度  范围1-752      RT105X RT106X 采集时列宽度必须为4的倍数
+#define MT9V03X_CSI_H               120             //图像高度	范围1-480
 
 
 

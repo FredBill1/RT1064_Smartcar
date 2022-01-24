@@ -2564,6 +2564,21 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\components\imgProc\src\apriltag\internal\threshold.cpp</FilePath>
             </File>
+            <File>
+              <FileName>segmentation.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\apriltag\internal\segmentation.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>Hashmap.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\apriltag\internal\Hashmap.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>UnionBuffer.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\apriltag\internal\UnionBuffer.cpp</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
@@ -5193,6 +5208,21 @@
               <FileName>threshold.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\components\imgProc\src\apriltag\internal\threshold.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>segmentation.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\apriltag\internal\segmentation.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>Hashmap.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\apriltag\internal\Hashmap.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>UnionBuffer.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\apriltag\internal\UnionBuffer.cpp</FilePath>
             </File>
           </Files>
         </Group>

@@ -9,14 +9,13 @@ namespace apriltag {
 template <typename T, int_fast32_t Size> class Unionfind {
  public:
     using data_t = T;
-    static constexpr int_fast32_t size = Size;
 
  protected:
-    data_t fa[Size];
+    data_t fa[Size], sz[Size];
 
  public:
     inline void reset() {
-        for (int_fast32_t i = 0; i < Size; ++i) fa[i] = i;
+        for (int_fast32_t i = 0; i < Size; ++i) sz[i] = 1, fa[i] = i;
     }
     inline data_t find(data_t x) {
         data_t t = x;
@@ -28,8 +27,13 @@ template <typename T, int_fast32_t Size> class Unionfind {
         }
         return x;
     }
-    inline void merge(data_t x, data_t y) { fa[find(x)] = find(y); }
+    inline void merge(data_t x, data_t y) {
+        data_t xr = find(x), yr = find(y);
+        fa[xr] = yr;
+        sz[yr] += sz[xr];
+    }
     inline data_t operator[](data_t x) { return find(x); }
+    inline data_t size(data_t x) { return sz[find(x)]; }
 };
 
 }  // namespace apriltag

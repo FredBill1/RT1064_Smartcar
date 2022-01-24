@@ -30,7 +30,7 @@ template <int_fast32_t Height, int_fast32_t Width> class BinaryImg {
 
 template <int_fast32_t Height, int_fast32_t Width> class QuadImg {
  public:
-    static constexpr int_fast32_t N = Height, M = Width;
+    static constexpr int_fast32_t N = Height, M = Width, Plot_sz = 3;
 
  protected:
     using data_t = uint_fast8_t;
@@ -44,6 +44,11 @@ template <int_fast32_t Height, int_fast32_t Width> class QuadImg {
         int_fast32_t I = idx(i, j) / SZ, J = idx(i, j) & (SZ - 1);
         data[I] &= ~(data_t(3) << J);
         data[I] |= data_t(v) << J;
+    }
+    inline void plot(int_fast32_t i, int_fast32_t j) {
+        for (int_fast32_t u = (i - Plot_sz >= 0 ? i - Plot_sz : 0); u < (i + Plot_sz < N ? i + Plot_sz : N - 1); ++u)
+            for (int_fast32_t v = (j - Plot_sz >= 0 ? j - Plot_sz : 0); v < (j + Plot_sz < M ? j + Plot_sz : M - 1); ++v)
+                set(u, v, 2);
     }
 };
 

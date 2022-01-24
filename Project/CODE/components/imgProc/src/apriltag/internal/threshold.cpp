@@ -1,6 +1,7 @@
 #include "apriltag/internal/threshold.hpp"
 
 #include "apriltag/internal/StaticBuffer.hpp"
+#include "apriltag/internal/UnionBuffer.hpp"
 #include "apriltag/internal/utility.hpp"
 
 namespace imgProc {

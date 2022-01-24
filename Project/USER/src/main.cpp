@@ -11,6 +11,7 @@ int main(void);
 #include "rosRT/Topic.hpp"
 
 //
+#include "apriltag/internal/segmentation.hpp"
 #include "apriltag/internal/threshold.hpp"
 AT_SDRAM_SECTION_ALIGN(imgProc::apriltag::QuadImg_t binary, 64);
 
@@ -21,13 +22,21 @@ void rotCB(const rosRT::msgs::QuaternionStamped& data) {
 auto rot = rosRT::Subscriber::create<rosRT::msgs::QuaternionStamped>("imu/6DOF_orientation", 1, rotCB);
 
 void imgThreadEntry(void*) {
+    using namespace imgProc;
+    using namespace imgProc::apriltag;
     for (;;) {
         auto p = mt9v03x_csi_image_take();
+        // ips114_displayimage032(p[0], MT9V03X_CSI_W, MT9V03X_CSI_H);  //ÏÔÊ¾ÉãÏñÍ·Í¼Ïñ
         imgProc::apriltag::threshold(p[0], binary);
+        unionfind_connected(binary);
+        auto clusters = gradient_clusters(binary);
+        if (staticBuffer.overflow()) rt_kprintf("overflowed\r\n");
+        for (auto& cluster : *clusters) {
+            for (auto& p : *cluster) binary.plot(p.y / 2, p.x / 2);
+        }
+        ips << binary;
         // ips114_displayimage032(p[0], MT9V03X_CSI_W, MT9V03X_CSI_H);  //ÏÔÊ¾ÉãÏñÍ·Í¼Ïñ
         mt9v03x_csi_image_release(p);
-        ips << binary;
-
         // rt_thread_mdelay(100);
     }
 }

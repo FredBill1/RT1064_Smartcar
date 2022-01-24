@@ -45,7 +45,14 @@ template <int_fast32_t height, int_fast32_t width> IPS& operator<<(IPS& ips, con
     for (int32 j = 0; j < coord_y; j++) {
         for (int32 i = 0; i < coord_x; i++) {
             uint8_t cur = img(j * height / coord_y, i * width / coord_x);
-            ips114_writedata_16bit(cur == 0 ? 0 : (cur == 1 ? 0x7BEF : 0xFFFF));
+            uint16_t color;
+            switch (cur) {
+            case 0: color = IPS::Black; break;
+            case 1: color = IPS::Gray; break;
+            case 2: color = IPS::Red; break;
+            default: color = IPS::White; break;
+            }
+            ips114_writedata_16bit(color);
         }
     }
     return ips;

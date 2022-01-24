@@ -6,7 +6,9 @@
 namespace imgProc {
 namespace apriltag {
 
-void unionfind_connected(Unionfind_t& uf, const QuadImg_t& img);
+void unionfind_connected(const QuadImg_t& img);
+
+clusters_t* gradient_clusters(const QuadImg_t& img);
 
 }  // namespace apriltag
 }  // namespace imgProc
