@@ -6,14 +6,14 @@
 namespace imgProc {
 namespace apriltag {
 
-union StaticBuffer {
+union UnionBuffer {
     struct threshold {
         uint8_t im_max[TN][TM], im_min[TN][TM];
         uint8_t im_max2[TN][TM], im_min2[TN][TM];
     } threshold;
 };
 
-extern StaticBuffer staticBuffer;
+extern UnionBuffer unionBuffer;
 
 }  // namespace apriltag
 }  // namespace imgProc
