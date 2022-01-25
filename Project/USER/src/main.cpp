@@ -11,8 +11,12 @@ int main(void);
 #include "rosRT/Topic.hpp"
 
 //
+#include "apriltag/apriltag.hpp"
+#include "apriltag/internal/UnionBuffer.hpp"
+#include "apriltag/internal/fit_quad.hpp"
 #include "apriltag/internal/segmentation.hpp"
 #include "apriltag/internal/threshold.hpp"
+#include "apriltag/tag25h9.hpp"
 AT_SDRAM_SECTION_ALIGN(imgProc::apriltag::QuadImg_t binary, 64);
 
 void rotCB(const rosRT::msgs::QuaternionStamped& data) {
@@ -28,14 +32,31 @@ void imgThreadEntry(void*) {
         auto p = mt9v03x_csi_image_take();
         // ips114_displayimage032(p[0], MT9V03X_CSI_W, MT9V03X_CSI_H);  //ÏÔÊ¾ÉãÏñÍ·Í¼Ïñ
         imgProc::apriltag::threshold(p[0], binary);
+
         unionfind_connected(binary);
+
+        // show_unionfind();
+
         auto clusters = gradient_clusters(binary);
-        if (staticBuffer.overflow()) rt_kprintf("overflowed\r\n");
-        for (auto& cluster : *clusters) {
-            for (auto& p : *cluster) binary.plot(p.y / 2, p.x / 2);
+
+        // ips << binary;
+        // show_clusters(*clusters);
+
+        auto tf = tag25h9_create();
+        auto quads = fit_quads(*clusters, tf, p[0]);
+
+        // ips114_displayimage032(p[0], MT9V03X_CSI_W, MT9V03X_CSI_H);  //ÏÔÊ¾ÉãÏñÍ·Í¼Ïñ
+        for (auto& quad : *quads) {
+            for (int i = 0; i < 4; ++i) binary.plot(quad.p[i][1], quad.p[i][0]);
         }
         ips << binary;
-        // ips114_displayimage032(p[0], MT9V03X_CSI_W, MT9V03X_CSI_H);  //ÏÔÊ¾ÉãÏñÍ·Í¼Ïñ
+
+        rt_kprintf("%d\r\n", std::distance(quads->begin(), quads->end()));
+
+        // if (staticBuffer.overflow()) rt_kprintf("overflowed\r\n");
+        // else
+        //     rt_kprintf("used: %dB %dKB %dMB\r\n", staticBuffer.usage(), staticBuffer.usage() >> 10, staticBuffer.usage() >>
+        //     20);
         mt9v03x_csi_image_release(p);
         // rt_thread_mdelay(100);
     }
@@ -58,8 +79,6 @@ int main(void) {
 
     ips114_showstr(0, 1, "      OK...     ");
     systick_delay_ms(500);
-
-    usb_cdc_init();
 
     // initDevices();
     // wirelessThread.start();

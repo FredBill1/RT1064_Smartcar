@@ -16,6 +16,8 @@ template <typename T, typename U> inline void chkmin(T& x, U y) {
 template <typename T, typename U> inline constexpr auto min(T x, U y) -> decltype(x + y) { return x < y ? x : y; }
 template <typename T, typename U> inline constexpr auto max(T x, U y) -> decltype(x + y) { return x > y ? x : y; }
 
+template <typename T> inline constexpr T sq(T x) { return x * x; }
+
 }  // namespace imgProc
 
 #endif  // _imgProc_utility_hpp

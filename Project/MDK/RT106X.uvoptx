@@ -397,7 +397,7 @@
           <Type>0</Type>
           <LineNumber>494</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>-2147174808</Address>
+          <Address>-2147342962</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -413,7 +413,7 @@
           <Type>0</Type>
           <LineNumber>624</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>-2147182000</Address>
+          <Address>-2147343952</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -429,7 +429,7 @@
           <Type>0</Type>
           <LineNumber>623</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>-2147182062</Address>
+          <Address>-2147343960</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -445,7 +445,7 @@
           <Type>0</Type>
           <LineNumber>377</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>-2147193344</Address>
+          <Address>-2147344728</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -5711,6 +5711,30 @@
       <bDave2>0</bDave2>
       <PathWithFileName>..\CODE\components\imgProc\src\apriltag\internal\UnionBuffer.cpp</PathWithFileName>
       <FilenameWithoutPath>UnionBuffer.cpp</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>29</GroupNumber>
+      <FileNumber>412</FileNumber>
+      <FileType>8</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\CODE\components\imgProc\src\tag25h9.cpp</PathWithFileName>
+      <FilenameWithoutPath>tag25h9.cpp</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>29</GroupNumber>
+      <FileNumber>413</FileNumber>
+      <FileType>8</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\CODE\components\imgProc\src\apriltag\internal\fit_quad.cpp</PathWithFileName>
+      <FilenameWithoutPath>fit_quad.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

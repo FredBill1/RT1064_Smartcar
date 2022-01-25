@@ -2579,6 +2579,16 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\components\imgProc\src\apriltag\internal\UnionBuffer.cpp</FilePath>
             </File>
+            <File>
+              <FileName>tag25h9.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\tag25h9.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>fit_quad.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\apriltag\internal\fit_quad.cpp</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
@@ -5223,6 +5233,16 @@
               <FileName>UnionBuffer.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\components\imgProc\src\apriltag\internal\UnionBuffer.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>tag25h9.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\tag25h9.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>fit_quad.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\apriltag\internal\fit_quad.cpp</FilePath>
             </File>
           </Files>
         </Group>

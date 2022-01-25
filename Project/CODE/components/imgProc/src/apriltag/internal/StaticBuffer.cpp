@@ -14,6 +14,10 @@ void* StaticBuffer::allocate(int32_t size) {
     i += size;
     return res;
 }
+void StaticBuffer::pop(int32_t size) {
+    if (_overflow) return;
+    i -= size;
+}
 
 AT_SDRAM_SECTION_ALIGN(static uint8_t buffer[STATICBUFFER_SIZE], 64);
 StaticBuffer staticBuffer(buffer, sizeof(buffer));
