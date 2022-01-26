@@ -9,6 +9,7 @@
 #include "apriltag/config.hpp"
 #include "apriltag/internal/StaticBuffer.hpp"
 #include "apriltag/internal/utility.hpp"
+#include "apriltag/visualization.hpp"
 
 namespace imgProc {
 namespace apriltag {

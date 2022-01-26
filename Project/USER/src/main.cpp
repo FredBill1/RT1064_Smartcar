@@ -17,6 +17,8 @@ int main(void);
 #include "apriltag/internal/segmentation.hpp"
 #include "apriltag/internal/threshold.hpp"
 #include "apriltag/tag25h9.hpp"
+#include "apriltag/visualization.hpp"
+
 AT_SDRAM_SECTION_ALIGN(imgProc::apriltag::QuadImg_t binary, 64);
 
 void rotCB(const rosRT::msgs::QuaternionStamped& data) {
@@ -39,17 +41,14 @@ void imgThreadEntry(void*) {
 
         auto clusters = gradient_clusters(binary);
 
-        // ips << binary;
-        // show_clusters(*clusters);
+        ips << binary;
 
         auto tf = tag25h9_create();
         auto quads = fit_quads(*clusters, tf, p[0]);
+        show_clusters(*clusters);
 
         // ips114_displayimage032(p[0], MT9V03X_CSI_W, MT9V03X_CSI_H);  //ÏÔÊ¾ÉãÏñÍ·Í¼Ïñ
-        for (auto& quad : *quads) {
-            for (int i = 0; i < 4; ++i) binary.plot(quad.p[i][1], quad.p[i][0]);
-        }
-        ips << binary;
+        show_quads(*quads);
 
         rt_kprintf("%d\r\n", std::distance(quads->begin(), quads->end()));
 
@@ -57,6 +56,8 @@ void imgThreadEntry(void*) {
         // else
         //     rt_kprintf("used: %dB %dKB %dMB\r\n", staticBuffer.usage(), staticBuffer.usage() >> 10, staticBuffer.usage() >>
         //     20);
+        while (gpio_get(C4))
+            ;
         mt9v03x_csi_image_release(p);
         // rt_thread_mdelay(100);
     }

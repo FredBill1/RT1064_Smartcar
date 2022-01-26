@@ -5721,8 +5721,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CODE\components\imgProc\src\tag25h9.cpp</PathWithFileName>
-      <FilenameWithoutPath>tag25h9.cpp</FilenameWithoutPath>
+      <PathWithFileName>..\CODE\components\imgProc\src\apriltag\internal\fit_quad.cpp</PathWithFileName>
+      <FilenameWithoutPath>fit_quad.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -5733,8 +5733,20 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CODE\components\imgProc\src\apriltag\internal\fit_quad.cpp</PathWithFileName>
-      <FilenameWithoutPath>fit_quad.cpp</FilenameWithoutPath>
+      <PathWithFileName>..\CODE\components\imgProc\src\apriltag\visualization.cpp</PathWithFileName>
+      <FilenameWithoutPath>visualization.cpp</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>29</GroupNumber>
+      <FileNumber>414</FileNumber>
+      <FileType>8</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\CODE\components\imgProc\src\apriltag\tag25h9.cpp</PathWithFileName>
+      <FilenameWithoutPath>tag25h9.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

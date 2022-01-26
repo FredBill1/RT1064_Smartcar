@@ -8,10 +8,7 @@
 #include "apriltag/internal/StaticBuffer.hpp"
 #include "apriltag/internal/UnionBuffer.hpp"
 #include "apriltag/internal/utility.hpp"
-
-extern "C" {
-#include "SEEKFREE_IPS114_SPI.h"
-}
+#include "apriltag/visualization.hpp"
 
 namespace imgProc {
 namespace apriltag {
@@ -75,30 +72,6 @@ clusters_t* gradient_clusters(const QuadImg_t& img) {
     clusters_t* clusters = new (staticBuffer.allocate(sizeof(clusters_t))) clusters_t(clusters_alloc_t{staticBuffer});
     dict.for_each([clusters](List_pt_t*& list) { clusters->push_front(list); });
     return clusters;
-}
-
-void show_unionfind() {
-    ips114_set_region(0, 0, M - 1, N - 1);
-    for (int i = 0; i < N; ++i)
-        for (int j = 0; j < M; ++j) {
-            uint64_t cur = unionBuffer.segmentation.uf[i * M + j];
-            cur *= int(1e9 + 7);
-            cur &= 0xFFFF;
-            ips114_writedata_16bit(cur);
-        }
-}
-
-void show_clusters(const clusters_t& clusters) {
-    uint64_t cur = 2333;
-    for (auto& cluster : clusters) {
-        cur *= int(1e9 + 7);
-        cur &= 0xFFFF;
-        for (auto& p : *cluster) {
-            int i = p.y / 2, j = p.x / 2;
-            ips114_set_region(max(0, j - 2), max(0, i - 2), min(M - 1, j + 2), min(N - 1, i + 2));
-            rep(u, max(0, j - 2), min(M - 1, j + 2)) rep(v, max(0, i - 2), min(N - 1, i + 2)) ips114_writedata_16bit(cur);
-        }
-    }
 }
 
 }  // namespace apriltag
