@@ -24,6 +24,8 @@ constexpr int_fast32_t CLUSTER_MIN_SIZE = 25;
 constexpr int_fast32_t max_nmaxima = 10;  // how many corner candidates to consider when segmenting a group of pixels into a quad.
 constexpr float max_line_fit_mse = 10.0f;
 constexpr float cos_critical_rad = 0.98480775301220802032;
+constexpr float decode_sharpening = 0.25;
+constexpr float quad_decimate = 1;
 
 }  // namespace apriltag
 }  // namespace imgProc

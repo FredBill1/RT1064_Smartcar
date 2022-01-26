@@ -2599,6 +2599,21 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\components\imgProc\src\apriltag\internal\Graymodel.cpp</FilePath>
             </File>
+            <File>
+              <FileName>decode_quad.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\apriltag\internal\decode_quad.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>Quick_decode.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\apriltag\internal\Quick_decode.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>apriltag.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\apriltag\apriltag.cpp</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
@@ -5263,6 +5278,21 @@
               <FileName>Graymodel.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\components\imgProc\src\apriltag\internal\Graymodel.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>decode_quad.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\apriltag\internal\decode_quad.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>Quick_decode.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\apriltag\internal\Quick_decode.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>apriltag.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\apriltag\apriltag.cpp</FilePath>
             </File>
           </Files>
         </Group>

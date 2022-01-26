@@ -31,7 +31,9 @@ struct apriltag_family {
     // some detector implementations may preprocess codes in order to
     // accelerate decoding.  They put their data here. (Do not use the
     // same apriltag_family instance in more than one implementation)
-    // void *impl;
+    void *impl;
+
+    void init(int maxhamming);
 };
 
 struct quad {
@@ -42,6 +44,7 @@ struct quad {
     // H: tag coordinates ([-1,1] at the black corners) to pixels
     // Hinv: pixels to tag
     // matd_t *H, *Hinv;
+    double H[3][3], Hinv[3][3];
 };
 
 struct pt {

@@ -12,7 +12,9 @@ int main(void);
 
 //
 #include "apriltag/apriltag.hpp"
+#include "apriltag/internal/Quick_decode.hpp"
 #include "apriltag/internal/UnionBuffer.hpp"
+#include "apriltag/internal/decode_quad.hpp"
 #include "apriltag/internal/fit_quad.hpp"
 #include "apriltag/internal/segmentation.hpp"
 #include "apriltag/internal/threshold.hpp"
@@ -44,19 +46,22 @@ void imgThreadEntry(void*) {
         ips << binary;
 
         auto tf = tag25h9_create();
+        tf.init(0);
         auto quads = fit_quads(*clusters, tf, p[0], true);
         show_clusters(*clusters);
 
         // ips114_displayimage032(p[0], MT9V03X_CSI_W, MT9V03X_CSI_H);  //ÏÔÊ¾ÉãÏñÍ·Í¼Ïñ
         show_quads(*quads);
 
-        rt_kprintf("%d\r\n", std::distance(quads->begin(), quads->end()));
+        // rt_kprintf("%d\r\n", std::distance(quads->begin(), quads->end()));
+        decode_quads(tf, p[0], *quads);
+        rt_kprintf("\n");
 
         // if (staticBuffer.overflow()) rt_kprintf("overflowed\r\n");
         // else
         //     rt_kprintf("used: %dB %dKB %dMB\r\n", staticBuffer.usage(), staticBuffer.usage() >> 10, staticBuffer.usage() >>
         //     20);
-        while (gpio_get(C4))
+        while (!gpio_get(C4))
             ;
         mt9v03x_csi_image_release(p);
         // rt_thread_mdelay(100);
