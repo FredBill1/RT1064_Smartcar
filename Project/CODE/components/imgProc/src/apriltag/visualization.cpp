@@ -30,16 +30,19 @@ void show_unionfind() {
         }
 }
 
+void show_cluster(const List_pt_t& cluster, uint16_t color, int32_t delay) {
+    for (auto& p : cluster) {
+        plot(p.y / 2, p.x / 2, color);
+        if (delay) rt_thread_mdelay(delay);
+    }
+}
+
 void show_clusters(const clusters_t& clusters) {
     uint64_t cur = 2333;
     for (auto& cluster : clusters) {
         cur *= int(1e9 + 7);
         cur &= 0xFFFF;
-        for (auto& p : *cluster) {
-            int i = p.y / 2, j = p.x / 2;
-            plot(i, j, cur);
-            // rt_thread_mdelay(1);
-        }
+        show_cluster(*cluster, cur);
     }
 }
 
