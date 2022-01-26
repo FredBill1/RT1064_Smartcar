@@ -2594,6 +2594,11 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\components\imgProc\src\apriltag\tag25h9.cpp</FilePath>
             </File>
+            <File>
+              <FileName>Graymodel.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\apriltag\internal\Graymodel.cpp</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
@@ -5253,6 +5258,11 @@
               <FileName>tag25h9.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\components\imgProc\src\apriltag\tag25h9.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>Graymodel.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\apriltag\internal\Graymodel.cpp</FilePath>
             </File>
           </Files>
         </Group>
