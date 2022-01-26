@@ -44,7 +44,7 @@ void imgThreadEntry(void*) {
         ips << binary;
 
         auto tf = tag25h9_create();
-        auto quads = fit_quads(*clusters, tf, p[0]);
+        auto quads = fit_quads(*clusters, tf, p[0], true);
         show_clusters(*clusters);
 
         // ips114_displayimage032(p[0], MT9V03X_CSI_W, MT9V03X_CSI_H);  //ÏÔÊ¾ÉãÏñÍ·Í¼Ïñ

@@ -25,6 +25,8 @@ inline line_fit_pt* compute_lfps(int_fast32_t sz, const List_pt_t& cluster, cons
     int_fast32_t i = -1;
     for (const auto& p : cluster) {
         if (++i > 0) rt_memcpy(lfps + i, lfps + (i - 1), sizeof(line_fit_pt));
+        else
+            rt_memset(lfps, 0, sizeof(line_fit_pt));
         double delta = 0.5, x = p.x * .5 + delta, y = p.y * .5 + delta, W = 1;
         int_fast32_t ix = x, iy = y;
         if (ix > 0 && ix + 1 < M && iy > 0 && iy + 1 < N) {
@@ -262,11 +264,13 @@ finish:
     return res;
 }
 
-quads_t* fit_quads(clusters_t& clusters, apriltag_family& tf, uint8_t* im) {
+quads_t* fit_quads(clusters_t& clusters, apriltag_family& tf, uint8_t* im, bool clear) {
     quads_t* quads = new (staticBuffer.allocate(sizeof(quads_t))) quads_t(quads_alloc_t{staticBuffer});
     quad quad;
     for (auto& cluster : clusters)
         if (fit_quad(*cluster, tf, quad, im)) quads->push_front(quad);
+        else if (clear)
+            cluster->clear();
     return quads;
 }
 
