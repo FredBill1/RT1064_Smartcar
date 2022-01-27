@@ -8,7 +8,7 @@ void CSI_IRQHandler(void) {
     rt_interrupt_enter();
 
     CSI_DriverIRQHandler();  //调用SDK自带的中断函数 这个函数最后会调用我们设置的回调函数
-    __DSB();                 //数据同步隔离
+    // __DSB();                 //数据同步隔离
     rt_interrupt_leave();
 }
 

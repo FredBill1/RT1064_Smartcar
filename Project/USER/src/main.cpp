@@ -35,6 +35,7 @@ void imgThreadEntry(void*) {
     using namespace imgProc::apriltag;
     AT_SDRAM_SECTION_ALIGN(static uint8_t p[N][M], 64);
     auto pre_tick = rt_tick_get_millisecond();
+    int ttt = 0;
     for (;;) {
         mt9v03x_csi_image_take(p[0]);
         threshold(p[0], binary);
@@ -64,9 +65,12 @@ void imgThreadEntry(void*) {
             }
         }
         // PRINTF("\r\n");
-        auto cur_tick = rt_tick_get_millisecond();
-        PRINTF("%d\r\n", cur_tick - pre_tick);
-        pre_tick = cur_tick;
+        if (++ttt == 100) {
+            ttt = 0;
+            auto cur_tick = rt_tick_get_millisecond();
+            PRINTF("%d\r\n", cur_tick - pre_tick);
+            pre_tick = cur_tick;
+        }
         // if (staticBuffer.overflow()) PRINTF("overflowed\r\n");
         // else
         //     PRINTF("used: %dB %dKB %dMB\r\n", staticBuffer.usage(), staticBuffer.usage() >> 10, staticBuffer.usage() >>
