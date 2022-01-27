@@ -286,8 +286,8 @@ detections_t *decode_quads(const apriltag_family &family, uint8_t *im, quads_t &
         quick_decode_entry entry;
         float decision_margin = decode_quad(family, im, quad, entry);
         if (decision_margin >= 0 && entry.hamming < 255) {  //
-            detections->emplace_front();
-            auto &det = detections->front();
+            detections->push_front(new (staticBuffer.allocate(sizeof(apriltag_detection))) apriltag_detection);
+            auto &det = *detections->front();
             det.family = &family;
             det.id = entry.id;
             det.hamming = entry.hamming;

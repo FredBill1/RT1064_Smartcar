@@ -56,8 +56,9 @@ void imgThreadEntry(void*) {
         // rt_kprintf("%d\r\n", std::distance(quads->begin(), quads->end()));
         auto& detections = *decode_quads(tf, p[0], *quads);
         rt_kprintf("cnt: %d\r\n", std::distance(detections.begin(), detections.end()));
-        for (auto& det : detections) {
+        for (auto det_p : detections) {
             while (gpio_get(C4)) {}
+            auto& det = *det_p;
             PRINTF("id: %d\r\nhanmming: %d, decision_margin: %f\r\n", det.id, det.hamming, det.decision_margin);
             uint64_t color = 2333;
             PRINTF("center: x=%f y=%f\r\n", det.c[0], det.c[1]);

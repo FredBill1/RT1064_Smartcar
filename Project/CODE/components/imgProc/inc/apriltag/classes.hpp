@@ -28,8 +28,8 @@ using clusters_t = std::forward_list<List_pt_t*, clusters_alloc_t>;
 using quads_alloc_t = StaticAllocator<quad>;
 using quads_t = std::forward_list<quad, quads_alloc_t>;
 
-using detections_alloc_t = StaticAllocator<apriltag_detection>;
-using detections_t = std::forward_list<apriltag_detection, detections_alloc_t>;
+using detections_alloc_t = StaticAllocator<apriltag_detection*>;
+using detections_t = std::forward_list<apriltag_detection*, detections_alloc_t>;
 
 }  // namespace apriltag
 }  // namespace imgProc
