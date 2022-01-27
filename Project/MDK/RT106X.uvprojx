@@ -2614,6 +2614,11 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\components\imgProc\src\apriltag\apriltag.cpp</FilePath>
             </File>
+            <File>
+              <FileName>reconcile_detections.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\apriltag\internal\reconcile_detections.cpp</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
@@ -5293,6 +5298,11 @@
               <FileName>apriltag.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\components\imgProc\src\apriltag\apriltag.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>reconcile_detections.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\apriltag\internal\reconcile_detections.cpp</FilePath>
             </File>
           </Files>
         </Group>

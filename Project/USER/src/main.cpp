@@ -16,6 +16,7 @@ int main(void);
 #include "apriltag/internal/UnionBuffer.hpp"
 #include "apriltag/internal/decode_quad.hpp"
 #include "apriltag/internal/fit_quad.hpp"
+#include "apriltag/internal/reconcile_detections.hpp"
 #include "apriltag/internal/segmentation.hpp"
 #include "apriltag/internal/threshold.hpp"
 #include "apriltag/tag25h9.hpp"
@@ -55,6 +56,9 @@ void imgThreadEntry(void*) {
 
         // rt_kprintf("%d\r\n", std::distance(quads->begin(), quads->end()));
         auto& detections = *decode_quads(tf, p[0], *quads);
+
+        reconcile_detections(detections);
+
         rt_kprintf("cnt: %d\r\n", std::distance(detections.begin(), detections.end()));
         for (auto det_p : detections) {
             while (gpio_get(C4)) {}
