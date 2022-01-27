@@ -34,10 +34,11 @@ void imgThreadEntry(void*) {
     using namespace imgProc;
     using namespace imgProc::apriltag;
     AT_SDRAM_NONCACHE_SECTION_ALIGN(static uint8_t p[N][M], 64);
+    auto pre = rt_tick_get_millisecond();
     for (;;) {
         mt9v03x_csi_image_take(p[0]);
         threshold(p[0], binary);
-        ips << binary;
+        // ips << binary;
         unionfind_connected(binary);
         // show_unionfind();
         auto clusters = gradient_clusters(binary);
@@ -67,6 +68,10 @@ void imgThreadEntry(void*) {
             }
         }
         PRINTF("\r\n");
+
+        auto cur = rt_tick_get_millisecond();
+        PRINTF("time:%d\r\n\r\n", cur - pre);
+        pre = cur;
         // if (staticBuffer.overflow()) PRINTF("overflowed\r\n");
         // else
         //     PRINTF("used: %dB %dKB %dMB\r\n", staticBuffer.usage(), staticBuffer.usage() >> 10, staticBuffer.usage() >>

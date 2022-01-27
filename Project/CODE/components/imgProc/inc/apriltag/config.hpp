@@ -9,12 +9,12 @@ namespace apriltag {
 constexpr int_fast32_t N = 480;  // image height
 constexpr int_fast32_t M = 752;  // image width
 
-constexpr int_fast32_t quad_decimate = 4;
+constexpr int_fast32_t quad_decimate = 2;
 
 constexpr int_fast32_t STATICBUFFER_SIZE = 1024 * 1024 * 10;
 
 // Thresholding
-constexpr int_fast32_t TILESZ = 4;
+constexpr int_fast32_t TILESZ = 8;
 constexpr int_fast32_t TN = N / TILESZ / quad_decimate, TM = M / TILESZ / quad_decimate;
 constexpr int_fast32_t THRESH_MIN_DIFF = 5;
 
