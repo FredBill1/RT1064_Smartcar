@@ -33,35 +33,24 @@ auto rot = rosRT::Subscriber::create<rosRT::msgs::QuaternionStamped>("imu/6DOF_o
 void imgThreadEntry(void*) {
     using namespace imgProc;
     using namespace imgProc::apriltag;
+    AT_SDRAM_SECTION_ALIGN(static uint8_t p[N][M], 64);
     for (;;) {
-        auto p = mt9v03x_csi_image_take();
-        // ips114_displayimage032(p[0], MT9V03X_CSI_W, MT9V03X_CSI_H);  //ÏÔÊ¾ÉãÏñÍ·Í¼Ïñ
-        imgProc::apriltag::threshold(p[0], binary);
-
+        mt9v03x_csi_image_take(p[0]);
+        threshold(p[0], binary);
         unionfind_connected(binary);
-
         // show_unionfind();
-
         auto clusters = gradient_clusters(binary);
-
-        ips << binary;
-
         auto tf = tag25h9_create();
         tf.init(1);
         auto quads = fit_quads(*clusters, tf, p[0], true);
         // show_clusters(*clusters);
-
-        // ips114_displayimage032(p[0], MT9V03X_CSI_W, MT9V03X_CSI_H);  //ÏÔÊ¾ÉãÏñÍ·Í¼Ïñ
         // show_quads(*quads);
-
         // rt_kprintf("%d\r\n", std::distance(quads->begin(), quads->end()));
         auto& detections = *decode_quads(tf, p[0], *quads);
-
         reconcile_detections(detections);
-
+        ips114_displayimage032(p[0], MT9V03X_CSI_W, MT9V03X_CSI_H);  //ÏÔÊ¾ÉãÏñÍ·Í¼Ïñ
         rt_kprintf("cnt: %d\r\n", std::distance(detections.begin(), detections.end()));
         for (auto det_p : detections) {
-            while (gpio_get(C4)) {}
             auto& det = *det_p;
             PRINTF("id: %d\r\nhanmming: %d, decision_margin: %f\r\n", det.id, det.hamming, det.decision_margin);
             uint64_t color = 2333;
@@ -72,18 +61,14 @@ void imgThreadEntry(void*) {
                 PRINTF("p%d: x=%f y=%f\r\n", i, det.p[i][0], det.p[i][1]);
                 plot(det.p[i][1], det.p[i][0], color & 0xFFFF);
             }
-            while (!gpio_get(C4)) {}
-            rt_thread_mdelay(100);
         }
         PRINTF("\r\n");
 
-        // if (staticBuffer.overflow()) rt_kprintf("overflowed\r\n");
-        // else
-        //     rt_kprintf("used: %dB %dKB %dMB\r\n", staticBuffer.usage(), staticBuffer.usage() >> 10, staticBuffer.usage() >>
-        //     20);
-        while (gpio_get(C4)) {}
-        while (!gpio_get(C4)) {}
-        mt9v03x_csi_image_release(p);
+        if (staticBuffer.overflow()) rt_kprintf("overflowed\r\n");
+        else
+            rt_kprintf("used: %dB %dKB %dMB\r\n", staticBuffer.usage(), staticBuffer.usage() >> 10, staticBuffer.usage() >> 20);
+        // while (gpio_get(C4)) {}
+        // while (!gpio_get(C4)) {}
         // rt_thread_mdelay(100);
     }
 }

@@ -66,7 +66,7 @@ int16 MT9V03X_CFG_CSI[CONFIG_FINISH][2]=
     {AUTO_EXP,          63},  //自动曝光设置      范围1-63 0为关闭 如果自动曝光开启  EXP_TIME命令设置的数据将会变为最大曝光时间，也就是自动曝光时间的上限
                               //一般情况是不需要开启这个功能，因为比赛场地光线一般都比较均匀，如果遇到光线非常不均匀的情况可以尝试设置该值，增加图像稳定性
     {EXP_TIME,          800}, //曝光时间          摄像头收到后会自动计算出最大曝光时间，如果设置过大则设置为计算出来的最大曝光值
-    {FPS,               50},  //图像帧率          摄像头收到后会自动计算出最大FPS，如果过大则设置为计算出来的最大FPS
+    {FPS,               30},  //图像帧率          摄像头收到后会自动计算出最大FPS，如果过大则设置为计算出来的最大FPS
     {SET_COL,           MT9V03X_CSI_W}, //图像列数量        范围1-752     K60采集不允许超过188
     {SET_ROW,           MT9V03X_CSI_H}, //图像行数量        范围1-480
     {LR_OFFSET,         0},   //图像左右偏移量    正值 右偏移   负值 左偏移  列为188 376 752时无法设置偏移    摄像头收偏移数据后会自动计算最大偏移，如果超出则设置计算出来的最大偏移
@@ -147,13 +147,10 @@ void csi_isr(CSI_Type *base, csi_handle_t *handle, status_t status, void *userDa
     }
 }
 
-u8_image_ptr mt9v03x_csi_image_take() {
+void mt9v03x_csi_image_take(uint8_t *buf) {
     u8_image_ptr ptr;
     rt_mb_recv(&mt9v03x_csi_mb, (rt_ubase_t *)&ptr, RT_WAITING_FOREVER);
-    return ptr;
-}
-
-void mt9v03x_csi_image_release(u8_image_ptr ptr) {
+    rt_memcpy(buf, ptr[0], MT9V03X_CSI_H * MT9V03X_CSI_W);
     csi_add_empty_buffer(&csi_handle, (uint8 *)ptr);
 }
 
