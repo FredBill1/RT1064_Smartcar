@@ -62,8 +62,11 @@ inline void homography_compute2(double dst[3][3], double c[4][4]) {
         for (int i = col + 1; i < 8; i++) { sum += A[col * 9 + i] * A[i * 9 + 8]; }
         A[col * 9 + 8] = (A[col * 9 + 8] - sum) / A[col * 9 + col];
     }
-    dst[0][0] = A[8], dst[0][1] = A[17], dst[0][2] = A[26], dst[1][0] = A[35], dst[1][1] = A[44], dst[1][2] = A[53],
+    // clang-format off
+    dst[0][0] = A[8 ], dst[0][1] = A[17], dst[0][2] = A[26];
+    dst[1][0] = A[35], dst[1][1] = A[44], dst[1][2] = A[53];
     dst[2][0] = A[62], dst[2][1] = A[71], dst[2][2] = 1;
+    // clang-format on
 }
 
 inline void refine_edges(uint8_t *im_orig, quad *quad) {
@@ -273,7 +276,9 @@ float decode_quad(const apriltag_family &family, uint8_t *im, quad &quad, quick_
     return min(white_score / white_score_count, black_score / black_score_count);
 }
 
-void decode_quads(const apriltag_family &family, uint8_t *im, quads_t &quads) {
+detections_t *decode_quads(const apriltag_family &family, uint8_t *im, quads_t &quads) {
+    detections_t *detections = new (staticBuffer.allocate(sizeof(detections_t))) detections_t(detections_alloc_t{staticBuffer});
+
     for (auto &quad : quads) {
         refine_edges(im, &quad);
         quad_update_homographies(quad);
@@ -281,9 +286,27 @@ void decode_quads(const apriltag_family &family, uint8_t *im, quads_t &quads) {
         quick_decode_entry entry;
         float decision_margin = decode_quad(family, im, quad, entry);
         if (decision_margin >= 0 && entry.hamming < 255) {  //
-            rt_kprintf("id: %d\r\n", entry.id);
+            detections->emplace_front();
+            auto &det = detections->front();
+            det.family = &family;
+            det.id = entry.id;
+            det.hamming = entry.hamming;
+            det.decision_margin = decision_margin;
+
+            double theta = entry.rotation * (EIGEN_PI / 2.0), c = std::cos(theta), s = std::sin(theta);
+            Eigen::Matrix3d R{{c, -s, 0}, {s, c, 0}, {0, 0, 1}};
+            Eigen::Map<Eigen::Matrix3d>(det.H[0]).noalias() = R * Eigen::Map<Eigen::Matrix3d>(quad.H[0]);
+            homography_project(det.H, 0, 0, &det.c[0], &det.c[1]);
+
+            for (int i = 0; i < 4; i++) {
+                int tcx = (i == 1 || i == 2) ? 1 : -1;
+                int tcy = (i < 2) ? 1 : -1;
+                homography_project(det.H, tcx, tcy, &det.p[i][0], &det.p[i][1]);
+            }
         }
     }
+
+    return detections;
 }
 
 }  // namespace apriltag

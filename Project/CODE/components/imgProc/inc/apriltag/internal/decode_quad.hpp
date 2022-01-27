@@ -5,7 +5,7 @@
 
 namespace imgProc {
 namespace apriltag {
-void decode_quads(const apriltag_family &family, uint8_t *im, quads_t &quads);
+detections_t *decode_quads(const apriltag_family &family, uint8_t *im, quads_t &quads);
 }  // namespace apriltag
 }  // namespace imgProc
 

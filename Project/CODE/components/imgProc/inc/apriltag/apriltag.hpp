@@ -54,6 +54,42 @@ struct pt {
     float slope;
 };
 
+struct apriltag_detection {
+    // a pointer for convenience. not freed by apriltag_detection_destroy.
+    const apriltag_family *family;
+
+    // The decoded ID of the tag
+    int id;
+
+    // How many error bits were corrected? Note: accepting large numbers of
+    // corrected errors leads to greatly increased false positive rates.
+    // NOTE: As of this implementation, the detector cannot detect tags with
+    // a hamming distance greater than 2.
+    int hamming;
+
+    // A measure of the quality of the binary decoding process: the
+    // average difference between the intensity of a data bit versus
+    // the decision threshold. Higher numbers roughly indicate better
+    // decodes. This is a reasonable measure of detection accuracy
+    // only for very small tags-- not effective for larger tags (where
+    // we could have sampled anywhere within a bit cell and still
+    // gotten a good detection.)
+    float decision_margin;
+
+    // The 3x3 homography matrix describing the projection from an
+    // "ideal" tag (with corners at (-1,1), (1,1), (1,-1), and (-1,
+    // -1)) to pixels in the image. This matrix will be freed by
+    // apriltag_detection_destroy.
+    double H[3][3];
+
+    // The center of the detection in image pixel coordinates.
+    double c[2];
+
+    // The corners of the tag in image pixel coordinates. These always
+    // wrap counter-clock wise around the tag.
+    double p[4][2];
+};
+
 }  // namespace apriltag
 }  // namespace imgProc
 
