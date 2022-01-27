@@ -55,9 +55,7 @@ AT_SDRAM_SECTION_ALIGN(uint8 mt9v03x_csi2_image[MT9V03X_CSI_H][MT9V03X_CSI_W], 6
 //例如访问第10行 50列的点，mt9v03x_csi_image[10][50]就可以了
 uint8 (*mt9v03x_csi_image)[MT9V03X_CSI_W];
 
-
-struct rt_mailbox mt9v03x_csi_mb;
-uint8 *mt9v03x_csi_mb_buf[2];
+static struct rt_semaphore mt9v03x_csi_sem;
 
 
 //需要配置到摄像头的数据
@@ -131,27 +129,15 @@ uint8 mt9v03x_csi_finish_flag;  //图像采集完成的标志位
 
 void csi_isr(CSI_Type *base, csi_handle_t *handle, status_t status, void *userData)
 {
-    if(csi_get_full_buffer(&csi_handle,&fullCameraBufferAddr))
-    {
-        rt_mb_send(&mt9v03x_csi_mb, (rt_ubase_t)fullCameraBufferAddr);
-        // csi_add_empty_buffer(&csi_handle,(uint8 *)fullCameraBufferAddr);
-        // if(fullCameraBufferAddr == (uint32)mt9v03x_csi1_image[0])
-        // {
-        //     mt9v03x_csi_image = mt9v03x_csi1_image;//image_csi1采集完成
-        // }
-        // else if(fullCameraBufferAddr == (uint32)mt9v03x_csi2_image[0])
-        // {
-        //     mt9v03x_csi_image = mt9v03x_csi2_image;//image_csi2采集完成
-        // }
-        // mt9v03x_csi_finish_flag = 1;//采集完成标志位置一
-    }
+    rt_sem_release(&mt9v03x_csi_sem);
 }
 
 void mt9v03x_csi_image_take(uint8_t *buf) {
-    u8_image_ptr ptr;
-    rt_mb_recv(&mt9v03x_csi_mb, (rt_ubase_t *)&ptr, RT_WAITING_FOREVER);
-    rt_memcpy(buf, ptr[0], MT9V03X_CSI_H * MT9V03X_CSI_W);
-    csi_add_empty_buffer(&csi_handle, (uint8 *)ptr);
+    do {
+        rt_sem_take(&mt9v03x_csi_sem, RT_WAITING_FOREVER);
+    } while(!csi_get_full_buffer(&csi_handle, &fullCameraBufferAddr));
+    rt_memcpy(buf, (uint8 *)fullCameraBufferAddr, MT9V03X_CSI_H * MT9V03X_CSI_W);
+    csi_add_empty_buffer(&csi_handle, (uint8 *)fullCameraBufferAddr);
 }
 
 
@@ -181,8 +167,8 @@ void mt9v03x_csi_init(void)
     //获取配置便于查看配置是否正确
     get_config(MT9V03X_CSI_COF_UART,GET_CFG_CSI);
 
-    rt_mb_init(&mt9v03x_csi_mb, "mt9v03x_csi_mb", mt9v03x_csi_mb_buf, sizeof(mt9v03x_csi_mb_buf) / 4, RT_IPC_FLAG_FIFO);
-    
+    rt_sem_init(&mt9v03x_csi_sem, "mt9v03x_csi_sem", 0, RT_IPC_FLAG_FIFO);
+
     //CSI 采集初始化
     csi_init(MT9V03X_CSI_W, MT9V03X_CSI_H, &csi_handle, csi_isr, MT9V03X_CSI_VSYNC_PIN, MT9V03X_CSI_PCLK_PIN);
     csi_add_empty_buffer(&csi_handle, mt9v03x_csi1_image[0]);

@@ -34,6 +34,7 @@ void imgThreadEntry(void*) {
     using namespace imgProc;
     using namespace imgProc::apriltag;
     AT_SDRAM_SECTION_ALIGN(static uint8_t p[N][M], 64);
+    auto pre_tick = rt_tick_get_millisecond();
     for (;;) {
         mt9v03x_csi_image_take(p[0]);
         threshold(p[0], binary);
@@ -45,28 +46,31 @@ void imgThreadEntry(void*) {
         auto quads = fit_quads(*clusters, tf, p[0], true);
         // show_clusters(*clusters);
         // show_quads(*quads);
-        // rt_kprintf("%d\r\n", std::distance(quads->begin(), quads->end()));
+        // PRINTF("%d\r\n", std::distance(quads->begin(), quads->end()));
         auto& detections = *decode_quads(tf, p[0], *quads);
         reconcile_detections(detections);
-        ips114_displayimage032(p[0], MT9V03X_CSI_W, MT9V03X_CSI_H);  //ÏÔÊ¾ÉãÏñÍ·Í¼Ïñ
-        rt_kprintf("cnt: %d\r\n", std::distance(detections.begin(), detections.end()));
+        // ips114_displayimage032(p[0], MT9V03X_CSI_W, MT9V03X_CSI_H);  //ÏÔÊ¾ÉãÏñÍ·Í¼Ïñ
+        // PRINTF("cnt: %d\r\n", std::distance(detections.begin(), detections.end()));
         for (auto det_p : detections) {
             auto& det = *det_p;
-            PRINTF("id: %d\r\nhanmming: %d, decision_margin: %f\r\n", det.id, det.hamming, det.decision_margin);
+            // PRINTF("id: %d\r\nhanmming: %d, decision_margin: %f\r\n", det.id, det.hamming, det.decision_margin);
             uint64_t color = 2333;
-            PRINTF("center: x=%f y=%f\r\n", det.c[0], det.c[1]);
+            // PRINTF("center: x=%f y=%f\r\n", det.c[0], det.c[1]);
             plot(det.c[1], det.c[0], color & 0xFFFF);
             for (int i = 0; i < 4; i++) {
                 color *= int(1e9 + 7);
-                PRINTF("p%d: x=%f y=%f\r\n", i, det.p[i][0], det.p[i][1]);
+                // PRINTF("p%d: x=%f y=%f\r\n", i, det.p[i][0], det.p[i][1]);
                 plot(det.p[i][1], det.p[i][0], color & 0xFFFF);
             }
         }
-        PRINTF("\r\n");
-
-        if (staticBuffer.overflow()) rt_kprintf("overflowed\r\n");
-        else
-            rt_kprintf("used: %dB %dKB %dMB\r\n", staticBuffer.usage(), staticBuffer.usage() >> 10, staticBuffer.usage() >> 20);
+        // PRINTF("\r\n");
+        auto cur_tick = rt_tick_get_millisecond();
+        PRINTF("%d\r\n", cur_tick - pre_tick);
+        pre_tick = cur_tick;
+        // if (staticBuffer.overflow()) PRINTF("overflowed\r\n");
+        // else
+        //     PRINTF("used: %dB %dKB %dMB\r\n", staticBuffer.usage(), staticBuffer.usage() >> 10, staticBuffer.usage() >>
+        //     20);
         // while (gpio_get(C4)) {}
         // while (!gpio_get(C4)) {}
         // rt_thread_mdelay(100);

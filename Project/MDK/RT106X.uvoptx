@@ -397,7 +397,7 @@
           <Type>0</Type>
           <LineNumber>494</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>-2147342962</Address>
+          <Address>-2147333898</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -413,7 +413,7 @@
           <Type>0</Type>
           <LineNumber>624</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>-2147343952</Address>
+          <Address>-2147334888</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -429,7 +429,7 @@
           <Type>0</Type>
           <LineNumber>623</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>-2147343960</Address>
+          <Address>-2147334896</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -445,7 +445,7 @@
           <Type>0</Type>
           <LineNumber>377</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>-2147344728</Address>
+          <Address>-2147335664</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -482,6 +482,11 @@
           <count>4</count>
           <WinNumber>1</WinNumber>
           <ItemText>_topics</ItemText>
+        </Ww>
+        <Ww>
+          <count>5</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>csi_handle</ItemText>
         </Ww>
       </WatchWindow1>
       <MemoryWindow1>
