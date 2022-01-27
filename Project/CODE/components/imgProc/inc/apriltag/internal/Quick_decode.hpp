@@ -19,7 +19,7 @@ struct quick_decode {
     int nentries;
     struct quick_decode_entry* entries;
     quick_decode() = delete;
-    static void init(apriltag_family& family, int maxhamming);
+    static void init(apriltag_family& family, int maxhamming, bool static_allocate = false);
     static void codeword(const apriltag_family& tf, uint64_t rcode, quick_decode_entry& entry);
 
  private:

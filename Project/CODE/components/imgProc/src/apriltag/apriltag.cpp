@@ -5,7 +5,7 @@
 namespace imgProc {
 namespace apriltag {
 
-void apriltag_family::init(int maxhamming) { quick_decode::init(*this, maxhamming); }
+void apriltag_family::init(int maxhamming, bool static_allocate) { quick_decode::init(*this, maxhamming, static_allocate); }
 
 }  // namespace apriltag
 }  // namespace imgProc

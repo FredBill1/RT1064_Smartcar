@@ -16,8 +16,10 @@ void quick_decode::add(uint64_t code, int id, int hamming) {
     entries[bucket].hamming = hamming;
 }
 
-void quick_decode::init(apriltag_family& family, int maxhamming) {
-    quick_decode* qd = (quick_decode*)staticBuffer.allocate(sizeof(quick_decode));
+void quick_decode::init(apriltag_family& family, int maxhamming, bool static_allocate) {
+    quick_decode* qd =
+        (quick_decode*)(static_allocate ? (staticBuffer.allocate(sizeof(quick_decode))) : rt_malloc(sizeof(quick_decode)));
+
     rt_memset(qd, 0, sizeof(quick_decode));
     int capacity = family.ncodes;
     int nbits = family.nbits;

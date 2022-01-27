@@ -33,7 +33,7 @@ struct apriltag_family {
     // same apriltag_family instance in more than one implementation)
     void *impl;
 
-    void init(int maxhamming);
+    void init(int maxhamming, bool static_allocate = false);
 };
 
 struct quad {

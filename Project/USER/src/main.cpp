@@ -34,6 +34,8 @@ void imgThreadEntry(void*) {
     using namespace imgProc;
     using namespace imgProc::apriltag;
     AT_SDRAM_NONCACHE_SECTION_ALIGN(static uint8_t p[N][M], 64);
+    auto tf = tag25h9_create();
+    tf.init(1);
     auto pre = rt_tick_get_millisecond();
     for (;;) {
         mt9v03x_csi_image_take(p[0]);
@@ -43,8 +45,7 @@ void imgThreadEntry(void*) {
         // show_unionfind();
         auto clusters = gradient_clusters(binary);
         // show_clusters(*clusters);
-        auto tf = tag25h9_create();
-        tf.init(1);
+
         auto quads = fit_quads(*clusters, tf, p[0], true);
 
         // show_clusters(*clusters);
