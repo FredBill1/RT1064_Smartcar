@@ -29,9 +29,9 @@ inline line_fit_pt* compute_lfps(int_fast32_t sz, const List_pt_t& cluster, cons
             rt_memset(lfps, 0, sizeof(line_fit_pt));
         double delta = 0.5, x = p.x * .5 + delta, y = p.y * .5 + delta, W = 1;
         int_fast32_t ix = x, iy = y;
-        if (ix > 0 && ix + 1 < M && iy > 0 && iy + 1 < N) {
-            int_fast32_t grad_x = (int_fast32_t)im[iy * M + ix + 1] - im[iy * M + ix - 1],
-                         grad_y = (int_fast32_t)im[(iy + 1) * M + ix] - im[(iy - 1) * M + ix];
+        if (ix > 0 && ix + 1 < M / quad_decimate && iy > 0 && iy + 1 < N / quad_decimate) {
+            int_fast32_t grad_x = (int_fast32_t)im[(iy * M + ix + 1) * quad_decimate] - im[(iy * M + ix - 1) * quad_decimate],
+                         grad_y = (int_fast32_t)im[((iy + 1) * M + ix) * quad_decimate] - im[((iy - 1) * M + ix) * quad_decimate];
             W = std::sqrt(grad_x * grad_x + grad_y * grad_y) + 1;
         }
         double fx = x, fy = y;
@@ -170,7 +170,7 @@ bool fit_quad(List_pt_t& cluster, apriltag_family& tf, quad& quad, uint8_t* im) 
     if (sz < 24) return false;
     int_fast32_t xmax = 0, xmin = std::numeric_limits<int_fast32_t>::max(), ymax = 0, ymin = xmin;
     for (auto& p : cluster) chkmax(xmax, p.x), chkmin(xmin, p.x), chkmax(ymax, p.y), chkmin(ymin, p.y);
-    if ((xmax - xmin) * (ymax - ymin) < tf.width_at_border) return false;
+    if ((xmax - xmin) * (ymax - ymin) < max(tf.width_at_border / quad_decimate, 3)) return false;
     float cx = (xmin + xmax) * 0.5 + 0.05118, cy = (ymin + ymax) * 0.5 + -0.028581;
     float dot = 0;
     for (auto& p : cluster) {
@@ -241,7 +241,7 @@ bool fit_quad(List_pt_t& cluster, apriltag_family& tf, quad& quad, uint8_t* im) 
         }
         p = (length[0] + length[1] + length[2]) / 2;
         area += std::sqrt(p * (p - length[0]) * (p - length[1]) * (p - length[2]));
-        if (area < 0.95 * sq(tf.width_at_border)) {
+        if (area < 0.95 * sq(max(tf.width_at_border / quad_decimate, 3))) {
             res = false;
             goto finish;
         }
@@ -267,10 +267,14 @@ finish:
 quads_t* fit_quads(clusters_t& clusters, apriltag_family& tf, uint8_t* im, bool clear) {
     quads_t* quads = new (staticBuffer.allocate(sizeof(quads_t))) quads_t(quads_alloc_t{staticBuffer});
     quad quad;
-    for (auto& cluster : clusters)
-        if (fit_quad(*cluster, tf, quad, im)) quads->push_front(quad);
-        else if (clear)
+    for (auto& cluster : clusters) {
+        if (fit_quad(*cluster, tf, quad, im)) {
+            if (quad_decimate > 1) rep(i, 0, 4) rep(j, 0, 2) quad.p[i][j] = (quad.p[i][j] - 0.5) * quad_decimate + 0.5;
+            quads->push_front(quad);
+
+        } else if (clear)
             cluster->clear();
+    }
     return quads;
 }
 

@@ -33,44 +33,40 @@ auto rot = rosRT::Subscriber::create<rosRT::msgs::QuaternionStamped>("imu/6DOF_o
 void imgThreadEntry(void*) {
     using namespace imgProc;
     using namespace imgProc::apriltag;
-    AT_SDRAM_SECTION_ALIGN(static uint8_t p[N][M], 64);
-    auto pre_tick = rt_tick_get_millisecond();
-    int ttt = 0;
+    AT_SDRAM_NONCACHE_SECTION_ALIGN(static uint8_t p[N][M], 64);
     for (;;) {
         mt9v03x_csi_image_take(p[0]);
         threshold(p[0], binary);
+        ips << binary;
         unionfind_connected(binary);
         // show_unionfind();
         auto clusters = gradient_clusters(binary);
+        // show_clusters(*clusters);
         auto tf = tag25h9_create();
         tf.init(1);
         auto quads = fit_quads(*clusters, tf, p[0], true);
+
         // show_clusters(*clusters);
         // show_quads(*quads);
         // PRINTF("%d\r\n", std::distance(quads->begin(), quads->end()));
+
         auto& detections = *decode_quads(tf, p[0], *quads);
         reconcile_detections(detections);
         // ips114_displayimage032(p[0], MT9V03X_CSI_W, MT9V03X_CSI_H);  //œ‘ æ…„œÒÕ∑ÕºœÒ
         // PRINTF("cnt: %d\r\n", std::distance(detections.begin(), detections.end()));
         for (auto det_p : detections) {
             auto& det = *det_p;
-            // PRINTF("id: %d\r\nhanmming: %d, decision_margin: %f\r\n", det.id, det.hamming, det.decision_margin);
+            PRINTF("id: %d\r\nhanmming: %d, decision_margin: %f\r\n", det.id, det.hamming, det.decision_margin);
             uint64_t color = 2333;
             // PRINTF("center: x=%f y=%f\r\n", det.c[0], det.c[1]);
             plot(det.c[1], det.c[0], color & 0xFFFF);
             for (int i = 0; i < 4; i++) {
                 color *= int(1e9 + 7);
-                // PRINTF("p%d: x=%f y=%f\r\n", i, det.p[i][0], det.p[i][1]);
+                PRINTF("p%d: x=%f y=%f\r\n", i, det.p[i][0], det.p[i][1]);
                 plot(det.p[i][1], det.p[i][0], color & 0xFFFF);
             }
         }
-        // PRINTF("\r\n");
-        if (++ttt == 100) {
-            ttt = 0;
-            auto cur_tick = rt_tick_get_millisecond();
-            PRINTF("%d\r\n", cur_tick - pre_tick);
-            pre_tick = cur_tick;
-        }
+        PRINTF("\r\n");
         // if (staticBuffer.overflow()) PRINTF("overflowed\r\n");
         // else
         //     PRINTF("used: %dB %dKB %dMB\r\n", staticBuffer.usage(), staticBuffer.usage() >> 10, staticBuffer.usage() >>

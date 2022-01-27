@@ -14,16 +14,17 @@ namespace apriltag {
 
 void plot(int_fast32_t i, int_fast32_t j, uint16_t color) {
     if (!(0 <= i && i < N && 0 <= j && j < M)) return;
-    auto il = max(0, i - 2), ir = min(N - 1, i + 2), jl = max(0, j - 2), jr = min(M - 1, j + 2);
+    i /= quad_decimate, j /= quad_decimate;
+    auto il = max(0, i - 2), ir = min(N / quad_decimate - 1, i + 2), jl = max(0, j - 2), jr = min(M / quad_decimate - 1, j + 2);
     ips114_set_region(jl, il, jr, ir);
     req(u, il, ir) req(v, jl, jr) ips114_writedata_16bit(color);
 }
 
 void show_unionfind() {
-    ips114_set_region(0, 0, M - 1, N - 1);
-    for (int i = 0; i < N; ++i)
-        for (int j = 0; j < M; ++j) {
-            uint64_t cur = unionBuffer.segmentation.uf[i * M + j];
+    ips114_set_region(0, 0, M / quad_decimate - 1, N / quad_decimate - 1);
+    for (int i = 0; i < (N / quad_decimate); ++i)
+        for (int j = 0; j < (M / quad_decimate); ++j) {
+            uint64_t cur = unionBuffer.segmentation.uf[i * (M / quad_decimate) + j];
             cur *= int(1e9 + 7);
             cur &= 0xFFFF;
             ips114_writedata_16bit(cur);

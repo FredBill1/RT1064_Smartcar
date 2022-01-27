@@ -16,7 +16,7 @@ void threshold(uint8_t* src, QuadImg_t& dst) {
     rep(i, 0, TN) rep(j, 0, TM) {
         im_max[i][j] = 0, im_min[i][j] = 255;
         rep(u, 0, TILESZ) rep(v, 0, TILESZ) {
-            uint8_t val = src[(i * TILESZ + u) * M + j * TILESZ + v];
+            uint8_t val = src[((i * TILESZ + u) * M + j * TILESZ + v) * quad_decimate];
             chkmax(im_max[i][j], val), chkmin(im_min[i][j], val);
         }
     }
@@ -32,8 +32,8 @@ void threshold(uint8_t* src, QuadImg_t& dst) {
             rep(u, 0, TILESZ) rep(v, 0, TILESZ) dst.set(i * TILESZ + u, j * TILESZ + v, 1);
         else {
             int_fast16_t thresh = ((int_fast16_t)im_max2[i][j] + im_min2[i][j]) >> 1;
-            rep(u, 0, TILESZ) rep(v, 0, TILESZ)
-                dst.set(i * TILESZ + u, j * TILESZ + v, src[(i * TILESZ + u) * M + j * TILESZ + v] > thresh ? 3 : 0);
+            rep(u, 0, TILESZ) rep(v, 0, TILESZ) dst.set(
+                i * TILESZ + u, j * TILESZ + v, src[((i * TILESZ + u) * M + j * TILESZ + v) * quad_decimate] > thresh ? 3 : 0);
         }
     }
 }

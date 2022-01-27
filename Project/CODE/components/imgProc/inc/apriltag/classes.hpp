@@ -14,8 +14,8 @@
 namespace imgProc {
 namespace apriltag {
 
-using QuadImg_t = imgProc::QuadImg<N, M>;
-using Unionfind_t = Unionfind<int32_t, N * M>;
+using QuadImg_t = imgProc::QuadImg<N / quad_decimate, M / quad_decimate>;
+using Unionfind_t = Unionfind<int32_t, N * M / (quad_decimate * quad_decimate)>;
 
 using ID_t = uint32_t;
 
