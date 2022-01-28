@@ -293,7 +293,14 @@ detections_t *decode_quads(const apriltag_family &family, uint8_t *im, quads_t &
             det.hamming = entry.hamming;
             det.decision_margin = decision_margin;
 
-            double theta = entry.rotation * (EIGEN_PI / 2.0), c = std::cos(theta), s = std::sin(theta);
+            // double theta = entry.rotation * (EIGEN_PI / 2.0), c = std::cos(theta), s = std::sin(theta);
+            double c, s;
+            switch (entry.rotation) {
+            case 0: c = 1, s = 0; break;
+            case 1: c = 0, s = 1; break;
+            case 2: c = -1, s = 0; break;
+            default: c = 0, s = -1; break;
+            }
             Eigen::Matrix3d R{{c, -s, 0}, {s, c, 0}, {0, 0, 1}};
             Eigen::Map<Eigen::Matrix3d>(det.H[0]).noalias() = R * Eigen::Map<Eigen::Matrix3d>(quad.H[0]);
             homography_project(det.H, 0, 0, &det.c[0], &det.c[1]);
