@@ -58,7 +58,7 @@ void show_unionfind() {
 
 void show_cluster(const List_pt_t& cluster, uint16_t color, int32_t delay) {
     for (auto& p : cluster) {
-        plot(p.y / 2, p.x / 2, color);
+        plot(p.y, p.x, color);
         if (delay) rt_thread_mdelay(delay);
     }
 }
