@@ -11,7 +11,8 @@ template <typename T, int_fast32_t Size> class Unionfind {
     using data_t = T;
 
  protected:
-    data_t fa[Size], sz[Size];
+    data_t fa[Size];
+    int32_t sz[Size];
 
  public:
     inline void reset() {
@@ -30,11 +31,12 @@ template <typename T, int_fast32_t Size> class Unionfind {
     }
     inline void merge(data_t x, data_t y) {
         data_t xr = find(x), yr = find(y);
+        if (xr == yr) return;
         fa[xr] = yr;
         sz[yr] += sz[xr];
     }
     inline data_t operator[](data_t x) { return find(x); }
-    inline data_t size(data_t x) { return sz[find(x)]; }
+    inline int32_t size(data_t x) { return sz[find(x)]; }
 };
 
 }  // namespace apriltag
