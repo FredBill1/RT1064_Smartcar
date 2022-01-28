@@ -2549,6 +2549,11 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\wireless.cpp</FilePath>
             </File>
+            <File>
+              <FileName>apriltagDetect.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\apriltagDetect.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -5243,6 +5248,11 @@
               <FileName>wireless.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\wireless.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>apriltagDetect.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\apriltagDetect.cpp</FilePath>
             </File>
           </Files>
         </Group>

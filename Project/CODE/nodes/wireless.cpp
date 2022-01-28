@@ -3,7 +3,7 @@
 
 inline void SystemReset() { NVIC_SystemReset(); }
 
-void wirelessThreadEntry(void*) {
+static void wirelessThreadEntry(void*) {
     wireless.waitHeader();
     uint8 op = wireless.getchar();
     switch (op) {

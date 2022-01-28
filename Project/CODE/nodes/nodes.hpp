@@ -5,4 +5,6 @@
 
 extern rtthread::Thread wirelessThread;
 
+extern rtthread::Thread apriltagDetectThread;
+
 #endif  // _nodes_hpp
