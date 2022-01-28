@@ -2624,6 +2624,11 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\components\imgProc\src\apriltag\internal\homography.cpp</FilePath>
             </File>
+            <File>
+              <FileName>apriltag_pose.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\apriltag\apriltag_pose.cpp</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
@@ -5382,6 +5387,11 @@
               <FileName>homography.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\components\imgProc\src\apriltag\internal\homography.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>apriltag_pose.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\apriltag\apriltag_pose.cpp</FilePath>
             </File>
           </Files>
         </Group>

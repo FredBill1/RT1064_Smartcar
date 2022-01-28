@@ -2,6 +2,8 @@
 
 #include <cmath>
 
+#include "Eigen/Eigen"
+
 namespace imgProc {
 namespace apriltag {
 
@@ -68,6 +70,48 @@ void homography_project(const double H[3][3], double x, double y, double *ox, do
     double zz = H[2][0] * x + H[2][1] * y + H[2][2];
     *ox = xx / zz;
     *oy = yy / zz;
+}
+
+void homography_to_pose(const double H[3][3], double fx, double fy, double cx, double cy, double R[3][3], double t[3]) {
+    using namespace Eigen;
+    Matrix3d _R;
+    _R(2, 0) = H[2][0];
+    _R(2, 1) = H[2][1];
+    t[2] = H[2][2];
+    _R(0, 0) = (H[0][0] - cx * _R(2, 0)) / fx;
+    _R(0, 1) = (H[0][1] - cx * _R(2, 1)) / fx;
+    t[0] = (H[0][2] - cx * t[2]) / fx;
+    _R(1, 0) = (H[1][0] - cy * _R(2, 0)) / fy;
+    _R(1, 1) = (H[1][1] - cy * _R(2, 1)) / fy;
+    t[1] = (H[1][2] - cy * t[2]) / fy;
+
+    // compute the scale by requiring that the rotation columns are unit length
+    // (Use geometric average of the two length vectors we have)
+    double length1 = std::sqrt(_R(0, 0) * _R(0, 0) + _R(1, 0) * _R(1, 0) + _R(2, 0) * _R(2, 0));
+    double length2 = std::sqrt(_R(0, 1) * _R(0, 1) + _R(1, 1) * _R(1, 1) + _R(2, 1) * _R(2, 1));
+    double s = 1.0 / std::sqrt(length1 * length2);
+
+    // get sign of S by requiring the tag to be in front the camera;
+    // we assume camera looks in the -Z direction.
+    if (t[2] > 0) s = -s;
+
+    _R(2, 0) *= s;
+    _R(2, 1) *= s;
+    t[2] *= s;
+    _R(0, 0) *= s;
+    _R(0, 1) *= s;
+    t[0] *= s;
+    _R(1, 0) *= s;
+    _R(1, 1) *= s;
+    t[1] *= s;
+
+    // now recover [_R(0,2) _R(1,2) _R(2,2)] by noting that it is the cross product of the other two columns.
+    _R(0, 2) = _R(1, 0) * _R(2, 1) - _R(2, 0) * _R(1, 1);
+    _R(1, 2) = _R(2, 0) * _R(0, 1) - _R(0, 0) * _R(2, 1);
+    _R(2, 2) = _R(0, 0) * _R(1, 1) - _R(1, 0) * _R(0, 1);
+
+    JacobiSVD<Matrix3d> svd(_R, ComputeThinU | ComputeThinV);
+    Map<Matrix3d>(R[0], 3, 3).noalias() = svd.matrixU() * svd.matrixV().transpose();
 }
 
 }  // namespace apriltag
