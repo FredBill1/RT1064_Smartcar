@@ -1,7 +1,7 @@
 #ifndef _apriltag_segmentation_hpp
 #define _apriltag_segmentation_hpp
 
-#include "apriltag/classes.hpp"
+#include "apriltag/apriltag.hpp"
 
 namespace imgProc {
 namespace apriltag {

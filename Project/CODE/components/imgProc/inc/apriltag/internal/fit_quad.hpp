@@ -2,7 +2,6 @@
 #define _apriltag_fit_quad_hpp
 
 #include "apriltag/apriltag.hpp"
-#include "apriltag/classes.hpp"
 
 namespace imgProc {
 namespace apriltag {

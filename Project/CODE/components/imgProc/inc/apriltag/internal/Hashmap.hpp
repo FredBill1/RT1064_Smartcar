@@ -6,7 +6,7 @@
 #include <functional>
 #include <utility>
 
-#include "apriltag/classes.hpp"
+#include "apriltag/apriltag.hpp"
 #include "apriltag/config.hpp"
 
 namespace imgProc {

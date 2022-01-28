@@ -1,7 +1,7 @@
 #ifndef _threshold_hpp
 #define _threshold_hpp
 
-#include "apriltag/classes.hpp"
+#include "apriltag/apriltag.hpp"
 #include "apriltag/config.hpp"
 
 namespace imgProc {

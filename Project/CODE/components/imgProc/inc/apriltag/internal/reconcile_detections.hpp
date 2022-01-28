@@ -1,7 +1,7 @@
 #ifndef _apriltag_reconcile_detections_hpp
 #define _apriltag_reconcile_detections_hpp
 
-#include "apriltag/classes.hpp"
+#include "apriltag/apriltag.hpp"
 
 namespace imgProc {
 namespace apriltag {

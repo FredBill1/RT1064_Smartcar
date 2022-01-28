@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-#include "apriltag/classes.hpp"
+#include "apriltag/apriltag.hpp"
 #include "apriltag/config.hpp"
 #include "apriltag/internal/Hashmap.hpp"
 

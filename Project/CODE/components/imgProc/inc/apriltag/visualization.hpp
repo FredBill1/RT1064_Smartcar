@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-#include "apriltag/classes.hpp"
+#include "apriltag/apriltag.hpp"
 
 namespace imgProc {
 namespace apriltag {
