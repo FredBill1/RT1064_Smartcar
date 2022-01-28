@@ -18,6 +18,7 @@ template <typename T, int_fast32_t Size> class Unionfind {
         for (int_fast32_t i = 0; i < Size; ++i) sz[i] = 1, fa[i] = i;
     }
     inline data_t find(data_t x) {
+        if (fa[x] == x) return x;
         data_t t = x;
         while (t != fa[t]) t = fa[t];
         while (x != fa[x]) {
