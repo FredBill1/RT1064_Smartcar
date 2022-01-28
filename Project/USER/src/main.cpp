@@ -14,13 +14,6 @@ int main(void);
 //
 #include "apriltag/apriltag.hpp"
 #include "apriltag/apriltag_pose.hpp"
-#include "apriltag/internal/Quick_decode.hpp"
-#include "apriltag/internal/UnionBuffer.hpp"
-#include "apriltag/internal/decode_quad.hpp"
-#include "apriltag/internal/fit_quad.hpp"
-#include "apriltag/internal/reconcile_detections.hpp"
-#include "apriltag/internal/segmentation.hpp"
-#include "apriltag/internal/threshold.hpp"
 #include "apriltag/tag25h9.hpp"
 #include "apriltag/visualization.hpp"
 
@@ -32,8 +25,7 @@ auto rot = rosRT::Subscriber::create<rosRT::msgs::QuaternionStamped>("imu/6DOF_o
 
 void imgThreadEntry(void*) {
     using namespace imgProc::apriltag;
-    AT_SDRAM_NONCACHE_SECTION_ALIGN(static uint8_t p[N][M], 64);
-    AT_SDRAM_SECTION_ALIGN(static QuadImg_t binary, 64);
+    AT_SDRAM_NONCACHE_SECTION_ALIGN(static uint8_t img[N * M], 64);
     auto tf = tag25h9_create();
     tf.init(1);
     auto pre = rt_tick_get_millisecond();
@@ -41,28 +33,12 @@ void imgThreadEntry(void*) {
     apriltag_pose solution;
     gpio_init(D4, GPI, 0, GPIO_PIN_CONFIG);
     gpio_init(D27, GPI, 0, GPIO_PIN_CONFIG);
+    gpio_init(C4, GPI, 0, GPIO_PIN_CONFIG);
     for (;;) {
-        mt9v03x_csi_image_take(p[0]);
-        // show_grayscale(p[0]);
-        threshold(p[0], binary);
-        show_threshim(binary);
-        unionfind_connected(binary);
-        // show_unionfind();
-        auto clusters = gradient_clusters(binary);
-        // show_clusters(*clusters);
+        mt9v03x_csi_image_take(img);
+        auto dets = apriltag_detect(tf, img);
 
-        auto quads = fit_quads(*clusters, tf, p[0], true);
-
-        // show_clusters(*clusters);
-        // show_quads(*quads);
-        // PRINTF("%d\r\n", std::distance(quads->begin(), quads->end()));
-
-        auto& detections = *decode_quads(tf, p[0], *quads);
-        reconcile_detections(detections);
-        // ips114_displayimage032(p[0], MT9V03X_CSI_W, MT9V03X_CSI_H);  //ÏÔÊ¾ÉãÏñÍ·Í¼Ïñ
-        // PRINTF("cnt: %d\r\n", std::distance(detections.begin(), detections.end()));
-
-        for (auto det_p : detections) {
+        for (auto det_p : dets) {
             auto& det = *det_p;
             // PRINTF("id: %d\r\nhanmming: %d, decision_margin: %f\r\n", det.id, det.hamming, det.decision_margin);
             uint64_t color = 2333;
@@ -85,18 +61,7 @@ void imgThreadEntry(void*) {
         }
 
         PRINTF("\r\n");
-
-        auto cur = rt_tick_get_millisecond();
-        // PRINTF("time:%d\r\n\r\n", cur - pre);
-        pre = cur;
-        // if (staticBuffer.overflow()) PRINTF("overflowed\r\n");
-        // else
-        //     PRINTF("used: %dB %dKB %dMB\r\n", staticBuffer.usage(), staticBuffer.usage() >> 10, staticBuffer.usage() >>
-        //     20);
-        // while (gpio_get(C4)) {}
-        // while (!gpio_get(C4)) {}
         while (gpio_get(D4) && gpio_get(C4)) {}
-        // rt_thread_mdelay(100);
     }
 }
 

@@ -115,6 +115,8 @@ using quads_t = std::forward_list<quad, quads_alloc_t>;
 using detections_alloc_t = StaticAllocator<apriltag_detection *>;
 using detections_t = std::forward_list<apriltag_detection *, detections_alloc_t>;
 
+detections_t &apriltag_detect(apriltag_family &tf, uint8_t *img);
+
 }  // namespace apriltag
 }  // namespace imgProc
 

@@ -52,7 +52,6 @@ inline ID_t hashPt2(uint64_t x, uint64_t y) { return (((x << 32) + y) * 26544357
 clusters_t* gradient_clusters(const QuadImg_t& img) {
     Unionfind_t& uf = unionBuffer.segmentation.uf;
     constexpr int_fast32_t dxy[][2]{{1, 0}, {0, 1}, {-1, 1}, {1, 1}};
-    staticBuffer.reset();
     Hashmap& dict = Hashmap::create(unionBuffer.segmentation.hashmapbuf, staticBuffer);
     rep(y, 1, (N / quad_decimate) - 1) rep(x, 1, (M / quad_decimate) - 1) {
         const auto v0 = img(y, x);
