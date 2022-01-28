@@ -39,8 +39,9 @@ void imgThreadEntry(void*) {
     auto pre = rt_tick_get_millisecond();
     for (;;) {
         mt9v03x_csi_image_take(p[0]);
+        show_grayscale(p[0]);
         threshold(p[0], binary);
-        // ips << binary;
+        // show_threshim(binary);
         unionfind_connected(binary);
         // show_unionfind();
         auto clusters = gradient_clusters(binary);

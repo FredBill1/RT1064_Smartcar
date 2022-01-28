@@ -12,19 +12,44 @@ extern "C" {
 namespace imgProc {
 namespace apriltag {
 
-void plot(int_fast32_t i, int_fast32_t j, uint16_t color) {
+void show_grayscale(const uint8_t* img) {
+    ips114_set_region(0, 0, M / 4 - 1, N / 4 - 1);
+    rep(i, 0, N / 4) rep(j, 0, M / 4) {
+        uint16_t cur = img[(i * M + j) * 4];
+        uint16_t color = (0x001f & ((cur) >> 3)) << 11;
+        color = color | (((0x003f) & ((cur) >> 2)) << 5);
+        color = color | (0x001f & ((cur) >> 3));
+        ips114_writedata_16bit(color);
+    }
+}
+
+void show_threshim(const QuadImg_t& img) {
+    ips114_set_region(0, 0, M / 4 - 1, N / 4 - 1);
+    rep(i, 0, N / 4) rep(j, 0, M / 4) {
+        uint16_t color;
+        switch (img(i * 2, j * 2)) {
+        case 0: color = BLACK; break;
+        case 1: color = GRAY; break;
+        case 2: color = RED; break;
+        default: color = WHITE; break;
+        }
+        ips114_writedata_16bit(color);
+    }
+}
+
+void plot(int_fast32_t i, int_fast32_t j, uint16_t color, int_fast32_t size) {
     if (!(0 <= i && i < N && 0 <= j && j < M)) return;
-    i /= quad_decimate, j /= quad_decimate;
-    auto il = max(0, i - 2), ir = min(N / quad_decimate - 1, i + 2), jl = max(0, j - 2), jr = min(M / quad_decimate - 1, j + 2);
+    i /= 4, j /= 4;
+    auto il = max(0, i - size), ir = min(N / 4 - 1, i + size), jl = max(0, j - size), jr = min(M / 4 - 1, j + size);
     ips114_set_region(jl, il, jr, ir);
     req(u, il, ir) req(v, jl, jr) ips114_writedata_16bit(color);
 }
 
 void show_unionfind() {
-    ips114_set_region(0, 0, M / quad_decimate - 1, N / quad_decimate - 1);
-    for (int i = 0; i < (N / quad_decimate); ++i)
-        for (int j = 0; j < (M / quad_decimate); ++j) {
-            uint64_t cur = unionBuffer.segmentation.uf[i * (M / quad_decimate) + j];
+    ips114_set_region(0, 0, M / 4 - 1, N / 4 - 1);
+    for (int i = 0; i < (N / 4); ++i)
+        for (int j = 0; j < (M / 4); ++j) {
+            uint64_t cur = unionBuffer.segmentation.uf[(i * (M / quad_decimate) + j) * 2];
             cur *= int(1e9 + 7);
             cur &= 0xFFFF;
             ips114_writedata_16bit(cur);

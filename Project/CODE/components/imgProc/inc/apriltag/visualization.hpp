@@ -8,7 +8,11 @@
 namespace imgProc {
 namespace apriltag {
 
-void plot(int_fast32_t i, int_fast32_t j, uint16_t color = 0xF800);
+void show_grayscale(const uint8_t* img);
+
+void show_threshim(const QuadImg_t& img);
+
+void plot(int_fast32_t i, int_fast32_t j, uint16_t color = 0xF800, int_fast32_t size = 2);
 
 void show_unionfind();
 
