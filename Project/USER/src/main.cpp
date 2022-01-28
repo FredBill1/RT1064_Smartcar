@@ -39,11 +39,13 @@ void imgThreadEntry(void*) {
     auto pre = rt_tick_get_millisecond();
     apriltag_detection_info info{nullptr, 10, 652.3019409179688, 653.458251953125, 312.8074714771901, 230.0874313802706};
     apriltag_pose solution;
+    gpio_init(D4, GPI, 0, GPIO_PIN_CONFIG);
+    gpio_init(D27, GPI, 0, GPIO_PIN_CONFIG);
     for (;;) {
         mt9v03x_csi_image_take(p[0]);
-        show_grayscale(p[0]);
+        // show_grayscale(p[0]);
         threshold(p[0], binary);
-        // show_threshim(binary);
+        show_threshim(binary);
         unionfind_connected(binary);
         // show_unionfind();
         auto clusters = gradient_clusters(binary);
@@ -59,6 +61,7 @@ void imgThreadEntry(void*) {
         reconcile_detections(detections);
         // ips114_displayimage032(p[0], MT9V03X_CSI_W, MT9V03X_CSI_H);  //œ‘ æ…„œÒÕ∑ÕºœÒ
         // PRINTF("cnt: %d\r\n", std::distance(detections.begin(), detections.end()));
+
         for (auto det_p : detections) {
             auto& det = *det_p;
             // PRINTF("id: %d\r\nhanmming: %d, decision_margin: %f\r\n", det.id, det.hamming, det.decision_margin);
@@ -80,7 +83,8 @@ void imgThreadEntry(void*) {
             // wireless.sendTail();
             PRINTF("x:%f y:%f z:%f\r\n", solution.t[0], solution.t[1], solution.t[2]);
         }
-        // PRINTF("\r\n");
+
+        PRINTF("\r\n");
 
         auto cur = rt_tick_get_millisecond();
         // PRINTF("time:%d\r\n\r\n", cur - pre);
@@ -91,6 +95,7 @@ void imgThreadEntry(void*) {
         //     20);
         // while (gpio_get(C4)) {}
         // while (!gpio_get(C4)) {}
+        while (gpio_get(D4) && gpio_get(C4)) {}
         // rt_thread_mdelay(100);
     }
 }
