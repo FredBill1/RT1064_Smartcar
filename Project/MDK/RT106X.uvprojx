@@ -2619,6 +2619,11 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\components\imgProc\src\apriltag\internal\reconcile_detections.cpp</FilePath>
             </File>
+            <File>
+              <FileName>homography.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\apriltag\internal\homography.cpp</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
@@ -5372,6 +5377,11 @@
               <FileName>reconcile_detections.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\components\imgProc\src\apriltag\internal\reconcile_detections.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>homography.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\apriltag\internal\homography.cpp</FilePath>
             </File>
           </Files>
         </Group>

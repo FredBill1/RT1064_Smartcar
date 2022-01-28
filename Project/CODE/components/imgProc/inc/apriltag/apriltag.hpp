@@ -44,7 +44,8 @@ struct quad {
     // H: tag coordinates ([-1,1] at the black corners) to pixels
     // Hinv: pixels to tag
     // matd_t *H, *Hinv;
-    double H[3][3], Hinv[3][3];
+    double H[3][3];
+    // double Hinv[3][3];
 };
 
 struct pt {
