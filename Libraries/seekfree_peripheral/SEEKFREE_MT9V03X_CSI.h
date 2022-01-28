@@ -68,7 +68,8 @@ extern uint8 (*mt9v03x_csi_image)[MT9V03X_CSI_W];          //Í¼ÏñÊý¾Ý
 void mt9v03x_csi_init(void);
 void csi_seekfree_sendimg_03x(UARTN_enum uartn, uint8 *image, uint16 width, uint16 height);
 
-void mt9v03x_csi_image_take(uint8_t *buf);
+uint8_t *mt9v03x_csi_image_take();
+void mt9v03x_csi_image_release();
 
 
 

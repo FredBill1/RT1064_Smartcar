@@ -132,14 +132,17 @@ void csi_isr(CSI_Type *base, csi_handle_t *handle, status_t status, void *userDa
     rt_sem_release(&mt9v03x_csi_sem);
 }
 
-void mt9v03x_csi_image_take(uint8_t *buf) {
+uint8_t *mt9v03x_csi_image_take() {
+    AT_SDRAM_NONCACHE_SECTION_ALIGN(static uint8_t buf[MT9V03X_CSI_H * MT9V03X_CSI_W], 64);
     do {
         rt_sem_take(&mt9v03x_csi_sem, RT_WAITING_FOREVER);
     } while(!csi_get_full_buffer(&csi_handle, &fullCameraBufferAddr));
-    rt_memcpy(buf, (uint8 *)fullCameraBufferAddr, MT9V03X_CSI_H * MT9V03X_CSI_W);
-    csi_add_empty_buffer(&csi_handle, (uint8 *)fullCameraBufferAddr);
+    rt_memcpy(buf, (uint8_t *)fullCameraBufferAddr, MT9V03X_CSI_H * MT9V03X_CSI_W);
+    return buf;
 }
-
+void mt9v03x_csi_image_release() {
+    csi_add_empty_buffer(&csi_handle, (uint8_t *)fullCameraBufferAddr);
+}
 
 //-------------------------------------------------------------------------------------------------------------------
 //  @brief      MT9V03X摄像头初始化 使用CSI接口

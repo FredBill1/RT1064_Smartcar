@@ -15,7 +15,6 @@ extern "C" {
 
 static void apriltagDetectThreadEntry(void*) {
     using namespace imgProc::apriltag;
-    AT_SDRAM_NONCACHE_SECTION_ALIGN(static uint8_t img[N * M], 64);
     auto tf = tag25h9_create();
     tf.init(1);
     auto pre = rt_tick_get_millisecond();
@@ -25,7 +24,7 @@ static void apriltagDetectThreadEntry(void*) {
     gpio_init(D27, GPI, 0, GPIO_PIN_CONFIG);
     gpio_init(C4, GPI, 0, GPIO_PIN_CONFIG);
     for (;;) {
-        mt9v03x_csi_image_take(img);
+        auto img = mt9v03x_csi_image_take();
         auto dets = apriltag_detect(tf, img);
 
         for (auto det_p : dets) {
@@ -52,6 +51,7 @@ static void apriltagDetectThreadEntry(void*) {
 
         PRINTF("\r\n");
         while (gpio_get(D4) && gpio_get(C4)) {}
+        mt9v03x_csi_image_release();
     }
 }
 
