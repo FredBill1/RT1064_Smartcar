@@ -106,7 +106,7 @@ int main(void) {
     EnableGlobalIRQ(0);
     // testtest::pose_kalman_test(NULL);
 
-    rtthread::Thread imgThread(imgThreadEntry, NULL, 4096, RT_THREAD_PRIORITY_MAX - 1, 20, "imgThread");
+    rtthread::Thread imgThread(imgThreadEntry, NULL, 4096, 1, 1000, "imgThread");
     imgThread.start();
 
     for (;;) {
