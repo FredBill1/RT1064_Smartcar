@@ -27,7 +27,7 @@ constexpr int_fast32_t max_nmaxima = 10;  // how many corner candidates to consi
 constexpr float max_line_fit_mse = 10.0f;
 constexpr float cos_critical_rad = 0.98480775301220802032;
 constexpr float decode_sharpening = 0.25;
-
+constexpr float min_decision_margin = 50.0;
 }  // namespace apriltag
 }  // namespace imgProc
 
