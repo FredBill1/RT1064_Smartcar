@@ -11,12 +11,6 @@ int main(void);
 #include "nodes/nodes.hpp"
 #include "rosRT/Topic.hpp"
 
-//
-#include "apriltag/apriltag.hpp"
-#include "apriltag/apriltag_pose.hpp"
-#include "apriltag/tag25h9.hpp"
-#include "apriltag/visualization.hpp"
-
 void rotCB(const rosRT::msgs::QuaternionStamped& data) {
     wireless.writeV(data.quaternion.x, data.quaternion.y, data.quaternion.z, data.quaternion.w, data.header.stamp);
     wireless.sendTail();
