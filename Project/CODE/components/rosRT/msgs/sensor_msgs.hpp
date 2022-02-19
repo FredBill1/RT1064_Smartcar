@@ -14,11 +14,11 @@ struct VectBias {
 struct Imu {
     Header header;
     Quaternion orientation;
-    float64 orientation_covariance[9];
+    float_t orientation_covariance[9];
     Vector3 angular_velocity;
-    float64 angular_velocity_covariance[9];
+    float_t angular_velocity_covariance[9];
     Vector3 linear_acceleration;
-    float64 linear_acceleration_covariance[9];
+    float_t linear_acceleration_covariance[9];
 };
 
 }  // namespace msgs
