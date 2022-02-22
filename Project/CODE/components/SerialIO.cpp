@@ -1,65 +1,77 @@
 #include "SerialIO.hpp"
 
-void SerialIO::init(const char *mb_name, UARTN_enum uartn, uint32 baud, UARTPIN_enum tx_pin, UARTPIN_enum rx_pin,
-                    rt_size_t mb_size) {
-    this->uartn = uartn;
-    rx_mb = rt_mb_create(mb_name, mb_size, RT_IPC_FLAG_FIFO);
-    uart_init(uartn, baud, tx_pin, rx_pin);
-    uart_set_handle(uartn, this, rx_cb, NULL, 0, &rx_bf, 1);
-    uart_rx_irq(uartn, 1);
+SerialIO::SerialIO(UARTN_enum uartn, uint32_t baud, UARTPIN_enum tx_pin, UARTPIN_enum rx_pin, uint32_t rx_sz, uint32_t tx_sz,
+                   uint32_t timeout_ms)
+    : _uartn(uartn), _baud(baud), _tx_pin(tx_pin), _rx_pin(rx_pin), timeout(timeout_ms), txXfer(nullptr) {
+    char name[] = "UART_rx";
+    name[4] = '0' + (int)uartn;
+    rx_mb.init(name, rx_sz);
+    name[5] = 't';
+    tx_mb.init(name, tx_sz);
+    tx_sem.init(name, 1);
 }
 
-void SerialIO::rx_cb(LPUART_Type *base, lpuart_handle_t *handle, status_t status, void *userData) {
-    SerialIO &self = *(SerialIO *)handle;
-    if (status == kStatus_LPUART_RxIdle) rt_mb_send(self.rx_mb, self.rx_bf);
-    self.rxDataSize = 1;
-    self.rxData = &self.rx_bf;
+void SerialIO::init() {
+    uart_init(_uartn, _baud, _tx_pin, _rx_pin);
+    LPUART_TransferCreateHandle(UARTN[_uartn], &handle, xferCB, this);
+    resetRxData();
+    LPUART_EnableInterrupts(UARTN[_uartn], kLPUART_RxDataRegFullInterruptEnable);
 }
 
-uint8 SerialIO::getchar() {
-    rt_ubase_t dat;
-    rt_mb_recv(rx_mb, &dat, RT_WAITING_FOREVER);
-    return (uint8)dat;
-}
-void SerialIO::putchar(uint8 c) { uart_putchar(uartn, c); }
-
-bool SerialIO::getbuff(uint8 *buf, uint32 len, rt_int32_t timeout) {
-    rt_ubase_t dat;
-    for (uint32 i = 0; i < len; ++i) {
-        rt_err_t ret = rt_mb_recv(rx_mb, &dat, timeout);
-        if (ret != RT_EOK) return false;
-        buf[i] = (uint8)dat;
-    }
+bool SerialIO::trySendNewData(bool needSem) {
+    if (needSem && !tx_sem.wait(0)) return false;
+    rt_ubase_t p;
+    if (!tx_mb.get_nowait(p)) return false;
+    txXfer = (TxXfer *)p;
+    LPUART_TransferSendNonBlocking(UARTN[_uartn], &handle, (lpuart_transfer_t *)txXfer);
     return true;
 }
 
-void SerialIO::putbuff(const uint8 *buf, uint32 len) {
-    extern LPUART_Type *UARTN[];
-    LPUART_WriteBlocking(UARTN[uartn], buf, len);
+void SerialIO::xferCB(status_t status) {
+    if (status == kStatus_LPUART_RxIdle) {
+        rx_mb.instant_put(rx_bf);
+        resetRxData();
+    } else if (status == kStatus_LPUART_TxIdle) {
+        txXfer->setTxFin();
+        if (!trySendNewData(false)) tx_sem.release();
+    }
 }
 
-const uint8 SerialIO::HEADER[4] = {0x00, 0xff, 0x80, 0x7f};
-void SerialIO::sendHeader() { putbuff(HEADER, 4); }
+void SerialIO::send(TxXfer &xfer) {
+    tx_mb.instant_put((rt_ubase_t)&xfer);
+    trySendNewData(true);
+}
 
-void SerialIO::waitHeader() {
-    rt_tick_t stamp[4];
-    {
-        rt_tick_t cur = rt_tick_get();
-        for (int i = 0; i < 4; ++i) stamp[i] = cur;
-    }
-    uint8 buf[4];
+bool SerialIO::getchar(uint8_t &data) {
+    rt_ubase_t tmp;
+    if (!rx_mb.get(tmp, timeout)) return false;
+    data = tmp;
+    return true;
+}
+
+bool SerialIO::getbuf(uint8_t *buf, size_t cnt) {
+    for (int i = 0; i < cnt; ++i)
+        if (!getchar(buf[i])) return false;
+    return true;
+}
+
+bool SerialIO::waitHeaderUtil() {
+    static_assert(HeaderSize == 4);
+    uint8_t buf[4] = {1, 1, 1, 1};
     for (int i = 0;; i = (i + 1) & 3) {
-        buf[i] = getchar();
-        stamp[i] = rt_tick_get();
-        if (stamp[i] - stamp[(i + 1) & 3] > (TIMEOUT << 2)) continue;
+        if (!getchar(buf[i])) return false;
         bool success = true;
-        for (int j = 0; j < 4; ++j)
+        for (int j = 0; j < 4; ++j) {
             if (buf[(i + j + 1) & 3] != HEADER[j]) {
                 success = false;
                 break;
             }
-        if (success) return;
+        }
+        if (success) return true;
     }
 }
 
-void SerialIO::sendTail() { putchar(0x00), putchar(0x00), putchar(0x80), putchar(0x7f); }
+void SerialIO::waitHeader() {
+    while (!waitHeaderUtil())
+        ;
+}

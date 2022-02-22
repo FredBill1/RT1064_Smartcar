@@ -4,10 +4,16 @@
 inline void SystemReset() { NVIC_SystemReset(); }
 
 static void wirelessThreadEntry(void*) {
-    wireless.waitHeader();
-    uint8 op = wireless.getchar();
-    switch (op) {
-    case 0: SystemReset(); break;
+    SerialIO::TxUtil<float, 3> data("recvTest");
+    for (;;) {
+        wireless.waitHeader();
+        int arr[3];
+        if (wireless.getArr<float, 3>(arr)) {
+            if (data.txFinished()) {
+                data.setArr(arr);
+                wireless.send(data);
+            }
+        }
     }
 }
 
