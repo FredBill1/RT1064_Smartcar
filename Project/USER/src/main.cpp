@@ -12,7 +12,7 @@ int main(void);
 #include "rosRT/Topic.hpp"
 
 void rotCB(const rosRT::msgs::QuaternionStamped& data) {
-    static SerialIO::TxUtil<float, 4> txUtil("imu6DOF");
+    static SerialIO::TxUtil<float, 4, true> txUtil("imu6DOF", 0);
     if (txUtil.txFinished()) {
         txUtil.setAll(data.quaternion.x, data.quaternion.y, data.quaternion.z, data.quaternion.w);
         wireless.send(txUtil);

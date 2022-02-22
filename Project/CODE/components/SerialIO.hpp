@@ -32,15 +32,25 @@ class SerialIO {
         void setTxFin() { sem.release(); }
     };
 
-    template <typename T, int cnt, int extra_bytes = 0, bool checkSum = true> class TxUtil : public TxXfer {
+    template <typename T, int cnt, bool withID = false, bool checkSum = true> class TxUtil : public TxXfer {
      private:
-        uint8_t _data[HeaderSize + extra_bytes + cnt * (sizeof(T) + checkSum)];
+        uint8_t _data[HeaderSize + withID + cnt * (sizeof(T) + checkSum)];
 
      public:
-        TxUtil(const char *name = "xfer") : TxXfer(_data, sizeof(_data), name) { applyHeader(_data); }
+        TxUtil(const char *name) : TxXfer(_data, sizeof(_data), name) {
+            static_assert(!withID, "if `withID` is set `true`, you should specify the `id` using the other ctor");
+            applyHeader(_data);
+        }
+        TxUtil(const char *name, uint8_t id) : TxXfer(_data, sizeof(_data), name) {
+            static_assert(
+                withID,
+                "if `withID` is set `false`, you should not specify the `id` using this ctor, use the other ctor instead");
+            _data[HeaderSize] = id;
+            applyHeader(_data);
+        }
         void set(int i, T val) {
             uint8_t *buf = (uint8_t *)&val;
-            int I = HeaderSize + extra_bytes + i * (sizeof(T) + checkSum);
+            int I = HeaderSize + withID + i * (sizeof(T) + checkSum);
             uint8_t &sum = _data[I + sizeof(T)];
             if constexpr (checkSum) sum = 0;
             for (int j = 0; j < sizeof(T); ++j) {
@@ -57,7 +67,6 @@ class SerialIO {
             for (int i = 0; i < cnt; ++i) set(i, arr[i]);
         }
         uint8_t *ptr() { return _data; }
-        uint8_t *extra_data() { return _data + HeaderSize; }
         static constexpr size_t size() { return sizeof(_data); }
     };
 
