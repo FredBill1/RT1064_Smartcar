@@ -27,6 +27,4 @@ void initDevices() {
     motorDrvL2.init();
     motorDrvR1.init();
     motorDrvR2.init();
-
-    // imu.init();
 }

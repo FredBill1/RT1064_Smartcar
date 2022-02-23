@@ -6,6 +6,7 @@
 #include "ICM20948/dmp_img.hpp"
 #include "ICM20948/macros.h"
 #include "ICM20948/system.h"
+#include "ICM20948CFG.hpp"
 #include "Invn/Devices/Drivers/ICM20948/Icm20948MPUFifoControl.h"
 #include "Invn/Devices/SensorTypes.h"
 
@@ -20,7 +21,54 @@ extern IPS ips;
 #undef PRINTF
 #define PRINTF ips.printf
 
+#define CHECK_RC(s) \
+    if (rc) {       \
+        PRINTF(s);  \
+        return rc;  \
+    }  // clang-format on
+
+static float cfg_mounting_matrix[9]{
+    1.f, 0,   0,    //
+    0,   1.f, 0,    //
+    0,   0,   1.f,  //
+};
+
+static int unscaled_bias[THREE_AXES * 2];
+
+void ICM20948::initPubs() {
+    // clang-format off
+    if constexpr (use_uncal_mag       ) _pub_uncal_mag       .initialize("imu/uncal_mag",        sizeof(rosRT::msgs::VectBias         ), 1);
+    if constexpr (use_uncal_gyro      ) _pub_uncal_gyro      .initialize("imu/uncal_gyro",       sizeof(rosRT::msgs::VectBias         ), 1);
+    if constexpr (use_accel           ) _pub_accel           .initialize("imu/accel",            sizeof(rosRT::msgs::Vector3Stamped   ), 1);
+    if constexpr (use_gyro            ) _pub_gyro            .initialize("imu/gyro",             sizeof(rosRT::msgs::Vector3Stamped   ), 1);
+    if constexpr (use_mag             ) _pub_mag             .initialize("imu/mag",              sizeof(rosRT::msgs::Vector3Stamped   ), 1);
+    if constexpr (use_gravity         ) _pub_gravity         .initialize("imu/gravity",          sizeof(rosRT::msgs::Vector3Stamped   ), 1);
+    if constexpr (use_linear_accel    ) _pub_linear_accel    .initialize("imu/linear_accel",     sizeof(rosRT::msgs::Vector3Stamped   ), 1);
+    if constexpr (use_rpy_orientation ) _pub_rpy_orientation .initialize("imu/rpy_orientation",  sizeof(rosRT::msgs::Vector3Stamped   ), 1);
+    if constexpr (use_6DOF_orientation) _pub_6DOF_orientation.initialize("imu/6DOF_orientation", sizeof(rosRT::msgs::QuaternionStamped), 1);
+    if constexpr (use_9DOF_orientation) _pub_9DOF_orientation.initialize("imu/9DOF_orientation", sizeof(rosRT::msgs::QuaternionStamped), 1);
+    if constexpr (use_mag_orientation ) _pub_mag_orientation .initialize("imu/mag_orientation",  sizeof(rosRT::msgs::QuaternionStamped), 1);
+    // clang-format on
+}
+
+void ICM20948::enableSetSensors() {
+    // clang-format off
+    if constexpr (use_uncal_mag       ) enableSetSensor(INV_ICM20948_SENSOR_MAGNETIC_FIELD_UNCALIBRATED, period_uncal_mag       );
+    if constexpr (use_uncal_gyro      ) enableSetSensor(INV_ICM20948_SENSOR_GYROSCOPE_UNCALIBRATED,      period_uncal_gyro      );
+    if constexpr (use_accel           ) enableSetSensor(INV_ICM20948_SENSOR_ACCELEROMETER,               period_accel           );
+    if constexpr (use_gyro            ) enableSetSensor(INV_ICM20948_SENSOR_GYROSCOPE,                   period_gyro            );
+    if constexpr (use_mag             ) enableSetSensor(INV_ICM20948_SENSOR_GEOMAGNETIC_FIELD,           period_mag             );
+    if constexpr (use_gravity         ) enableSetSensor(INV_ICM20948_SENSOR_GRAVITY,                     period_gravity         );
+    if constexpr (use_linear_accel    ) enableSetSensor(INV_ICM20948_SENSOR_LINEAR_ACCELERATION,         period_linear_accel    );
+    if constexpr (use_rpy_orientation ) enableSetSensor(INV_ICM20948_SENSOR_ORIENTATION,                 period_rpy_orientation );
+    if constexpr (use_6DOF_orientation) enableSetSensor(INV_ICM20948_SENSOR_GAME_ROTATION_VECTOR,        period_6DOF_orientation);
+    if constexpr (use_9DOF_orientation) enableSetSensor(INV_ICM20948_SENSOR_ROTATION_VECTOR,             period_9DOF_orientation);
+    if constexpr (use_mag_orientation ) enableSetSensor(INV_ICM20948_SENSOR_GEOMAGNETIC_ROTATION_VECTOR, period_mag_orientation );
+    // clang-format on
+}
+
 void ICM20948::init() {
+    initPubs();
     systick_delay_ms(10);
     spi_init(SPI_N, SCK, MOSI, MISO, CS, 3, 7 * 1000 * 1000);
 
@@ -33,42 +81,10 @@ void ICM20948::init() {
     while (selftest()) setup();
     PRINTF("ICM20948: Init complete.\r\n");
 
-    // clang-format off
-    enableSetSensor(INV_ICM20948_SENSOR_GYROSCOPE,                   20 ); // 陀螺仪 1~225Hz
-    enableSetSensor(INV_ICM20948_SENSOR_LINEAR_ACCELERATION,         20 ); // 线加速度 50~255Hz (基于6DOF位姿和加速度计)
-    enableSetSensor(INV_ICM20948_SENSOR_GAME_ROTATION_VECTOR,        20 ); // 6DOF位姿 50~255Hz
-    // enableSetSensor(INV_ICM20948_SENSOR_ROTATION_VECTOR,             20 ); // 9DOF位姿 50~255Hz
-    // enableSetSensor(INV_ICM20948_SENSOR_GEOMAGNETIC_ROTATION_VECTOR, 20); // 地磁位姿 1~255Hz
-    // enableSetSensor(INV_ICM20948_SENSOR_GRAVITY,                     20 ); // 重力 50~255Hz (基于6DOF位姿)
-    // enableSetSensor(INV_ICM20948_SENSOR_ACCELEROMETER,               100); // 加速度计 1~225Hz
-    // enableSetSensor(INV_ICM20948_SENSOR_GEOMAGNETIC_FIELD,           100); // 磁场 1~70Hz
-    // enableSetSensor(INV_ICM20948_SENSOR_ORIENTATION,                 20 ); // 9DOF RPY 50~255Hz (基于9DOF位姿)
-    // enableSetSensor(INV_ICM20948_SENSOR_MAGNETIC_FIELD_UNCALIBRATED, 100); // 未校准磁场 1~255Hz
-    // enableSetSensor(INV_ICM20948_SENSOR_GYROSCOPE_UNCALIBRATED,      100); // 未校准陀螺仪 1~255Hz
-    //clang-format on
+    enableSetSensors();
 
     gpio_interrupt_init(INT, RISING, GPIO_INT_CONFIG);
 }
-
-#define CHECK_RC(s) \
-    if (rc) {       \
-        PRINTF(s);  \
-        return rc;  \
-    }  // clang-format on
-
-#define GRAVITY_CONST 9.8f
-
-/* FSR configurations */
-static int32_t cfg_acc_fsr = AccelFSR4g;      // Default = +/- 4g. Valid ranges: 2, 4, 8, 16
-static int32_t cfg_gyr_fsr = GyroFSR2000dps;  // Default = +/- 2000dps. Valid ranges: 250, 500, 1000, 2000
-
-static float cfg_mounting_matrix[9]{
-    1.f, 0,   0,    //
-    0,   1.f, 0,    //
-    0,   0,   1.f,  //
-};
-
-static int unscaled_bias[THREE_AXES * 2];
 
 static uint8_t convert_to_generic_ids[INV_ICM20948_SENSOR_MAX]  //
     {INV_SENSOR_TYPE_ACCELEROMETER,
@@ -295,6 +311,11 @@ void ICM20948::build_sensor_event_data(void* context, enum inv_icm20948_sensor s
 }
 void ICM20948::build_sensor_event_data(enum inv_icm20948_sensor sensortype, uint64_t timestamp, const void* data,
                                        const void* arg) {
+    static union {
+        rosRT::msgs::Vector3Stamped vector3_stamped;
+        rosRT::msgs::VectBias vectbias;
+        rosRT::msgs::QuaternionStamped quaternion_stamped;
+    } msg_buf;
     uint8_t sensor_id = convert_to_generic_ids[sensortype];
     uint32_t stamp = timestamp / 1000;
     float* dat = (float*)data;
@@ -302,68 +323,68 @@ void ICM20948::build_sensor_event_data(enum inv_icm20948_sensor sensortype, uint
     float_t* buf;
     switch (sensor_id) {
     case INV_SENSOR_TYPE_UNCAL_GYROSCOPE:  // 未校准陀螺仪
-        buf = (float_t*)&_msg_buf.vectbias;
+        buf = (float_t*)&msg_buf.vectbias;
         for (int i = 0; i < 6; ++i) buf[i] = dat[i];
-        _pub_uncal_gyro.publish(&_msg_buf.vectbias);
+        _pub_uncal_gyro.instance().publish(&msg_buf.vectbias);
         break;
     case INV_SENSOR_TYPE_UNCAL_MAGNETOMETER:  // 未校准磁场
-        buf = (float_t*)&_msg_buf.vectbias;
+        buf = (float_t*)&msg_buf.vectbias;
         for (int i = 0; i < 6; ++i) buf[i] = dat[i];
-        _pub_uncal_mag.publish(&_msg_buf.vectbias);
+        _pub_uncal_mag.instance().publish(&msg_buf.vectbias);
         break;
     case INV_SENSOR_TYPE_GYROSCOPE:  // 陀螺仪
-        _msg_buf.vector3_stamped.header.stamp = stamp;
-        buf = (float_t*)&_msg_buf.vector3_stamped.vector;
+        msg_buf.vector3_stamped.header.stamp = stamp;
+        buf = (float_t*)&msg_buf.vector3_stamped.vector;
         for (int i = 0; i < 3; ++i) buf[i] = dat[i];
-        _pub_gyro.publish(&_msg_buf.vector3_stamped);
+        _pub_gyro.instance().publish(&msg_buf.vector3_stamped);
         break;
     case INV_SENSOR_TYPE_GRAVITY:  // 重力
-        _msg_buf.vector3_stamped.header.stamp = stamp;
-        buf = (float_t*)&_msg_buf.vector3_stamped.vector;
+        msg_buf.vector3_stamped.header.stamp = stamp;
+        buf = (float_t*)&msg_buf.vector3_stamped.vector;
         for (int i = 0; i < 3; ++i) buf[i] = dat[i];
-        _pub_gravity.publish(&_msg_buf.vector3_stamped);
+        _pub_gravity.instance().publish(&msg_buf.vector3_stamped);
         break;
     case INV_SENSOR_TYPE_LINEAR_ACCELERATION:  // 线加速度
-        _msg_buf.vector3_stamped.header.stamp = stamp;
-        buf = (float_t*)&_msg_buf.vector3_stamped.vector;
+        msg_buf.vector3_stamped.header.stamp = stamp;
+        buf = (float_t*)&msg_buf.vector3_stamped.vector;
         for (int i = 0; i < 3; ++i) buf[i] = dat[i];
-        _pub_linear_accel.publish(&_msg_buf.vector3_stamped);
+        _pub_linear_accel.instance().publish(&msg_buf.vector3_stamped);
         break;
     case INV_SENSOR_TYPE_ACCELEROMETER:  // 加速度计
-        _msg_buf.vector3_stamped.header.stamp = stamp;
-        buf = (float_t*)&_msg_buf.vector3_stamped.vector;
+        msg_buf.vector3_stamped.header.stamp = stamp;
+        buf = (float_t*)&msg_buf.vector3_stamped.vector;
         for (int i = 0; i < 3; ++i) buf[i] = dat[i];
-        _pub_accel.publish(&_msg_buf.vector3_stamped);
+        _pub_accel.instance().publish(&msg_buf.vector3_stamped);
         break;
     case INV_SENSOR_TYPE_MAGNETOMETER:  // 磁场
-        _msg_buf.vector3_stamped.header.stamp = stamp;
-        buf = (float_t*)&_msg_buf.vector3_stamped.vector;
+        msg_buf.vector3_stamped.header.stamp = stamp;
+        buf = (float_t*)&msg_buf.vector3_stamped.vector;
         for (int i = 0; i < 3; ++i) buf[i] = dat[i];
-        _pub_mag.publish(&_msg_buf.vector3_stamped);
+        _pub_mag.instance().publish(&msg_buf.vector3_stamped);
         break;
     case INV_SENSOR_TYPE_GEOMAG_ROTATION_VECTOR:  // 地磁位姿
-        _msg_buf.quaternion_stamped.header.stamp = stamp;
-        buf = (float_t*)&_msg_buf.quaternion_stamped.quaternion;
+        msg_buf.quaternion_stamped.header.stamp = stamp;
+        buf = (float_t*)&msg_buf.quaternion_stamped.quaternion;
         for (int i = 0; i < 4; ++i) buf[i] = dat[i];
-        _pub_mag_orientation.publish(&_msg_buf.quaternion_stamped);
+        _pub_mag_orientation.instance().publish(&msg_buf.quaternion_stamped);
         break;
     case INV_SENSOR_TYPE_ROTATION_VECTOR:  // 6DOF位姿
-        _msg_buf.quaternion_stamped.header.stamp = stamp;
-        buf = (float_t*)&_msg_buf.quaternion_stamped.quaternion;
+        msg_buf.quaternion_stamped.header.stamp = stamp;
+        buf = (float_t*)&msg_buf.quaternion_stamped.quaternion;
         for (int i = 0; i < 4; ++i) buf[i] = dat[i];
-        _pub_9DOF_orientation.publish(&_msg_buf.quaternion_stamped);
+        _pub_9DOF_orientation.instance().publish(&msg_buf.quaternion_stamped);
         break;
     case INV_SENSOR_TYPE_GAME_ROTATION_VECTOR:  // 9DOF位姿
-        _msg_buf.quaternion_stamped.header.stamp = stamp;
-        buf = (float_t*)&_msg_buf.quaternion_stamped.quaternion;
+        msg_buf.quaternion_stamped.header.stamp = stamp;
+        buf = (float_t*)&msg_buf.quaternion_stamped.quaternion;
         for (int i = 0; i < 4; ++i) buf[i] = dat[i];
-        _pub_6DOF_orientation.publish(&_msg_buf.quaternion_stamped);
+        _pub_6DOF_orientation.instance().publish(&msg_buf.quaternion_stamped);
         break;
     case INV_SENSOR_TYPE_ORIENTATION:  // 9DOF RPY
-        _msg_buf.vector3_stamped.header.stamp = stamp;
-        buf = (float_t*)&_msg_buf.vector3_stamped.vector;
+        msg_buf.vector3_stamped.header.stamp = stamp;
+        buf = (float_t*)&msg_buf.vector3_stamped.vector;
         for (int i = 0; i < 3; ++i) buf[i] = dat[i];
-        _pub_rpy_orientation.publish(&_msg_buf.vector3_stamped);
+        _pub_rpy_orientation.instance().publish(&msg_buf.vector3_stamped);
         break;
     }
 }
