@@ -24,9 +24,11 @@ class SerialIO {
 
      public:
         TxXfer(TxXfer &&) = delete;
-        TxXfer(uint8_t *data, size_t size, const char *name = "xfer") : sem(name, 1) {
+        TxXfer(const char *name) : sem(name, 1) {}
+        TxXfer(void *data, size_t size, const char *name = "xfer") : TxXfer(name) { setData(data, size); }
+        void setData(void *data, size_t size) {
             dataSize = size;
-            this->data = data;
+            this->data = (uint8_t *)data;
         }
         bool txFinished() { return sem.wait(0); }
         void setTxFin() { sem.release(); }
@@ -67,6 +69,7 @@ class SerialIO {
             for (int i = 0; i < cnt; ++i) set(i, arr[i]);
         }
         uint8_t *ptr() { return _data; }
+        uint8_t *Data() { return _data + HeaderSize + withID; }
         static constexpr size_t size() { return sizeof(_data); }
     };
 
