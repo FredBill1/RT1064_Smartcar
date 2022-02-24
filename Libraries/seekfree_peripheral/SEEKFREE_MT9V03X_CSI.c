@@ -31,6 +31,7 @@
  ********************************************************************************************************************/
 
 
+#include <rthw.h>
 #include <rtthread.h>
 
 #include "fsl_common.h"
@@ -133,13 +134,18 @@ void csi_isr(CSI_Type *base, csi_handle_t *handle, status_t status, void *userDa
 }
 
 uint8_t *mt9v03x_csi_image_take() {
-    do {
+    for (;;) {
         rt_sem_take(&mt9v03x_csi_sem, RT_WAITING_FOREVER);
-    } while(!csi_get_full_buffer(&csi_handle, &fullCameraBufferAddr));
-    return (uint8_t *)fullCameraBufferAddr;
+        rt_base_t level = rt_hw_interrupt_disable();
+        uint8_t res = csi_get_full_buffer(&csi_handle, &fullCameraBufferAddr);
+        rt_hw_interrupt_enable(level);
+        if (res) return (uint8_t *)fullCameraBufferAddr;
+    }
 }
 void mt9v03x_csi_image_release() {
+    rt_base_t level = rt_hw_interrupt_disable();
     csi_add_empty_buffer(&csi_handle, (uint8_t *)fullCameraBufferAddr);
+    rt_hw_interrupt_enable(level);
 }
 
 //-------------------------------------------------------------------------------------------------------------------
