@@ -30,7 +30,7 @@ class SerialIO {
             dataSize = size;
             this->data = (uint8_t *)data;
         }
-        bool txFinished() { return sem.wait(0); }
+        bool txFinished(int32_t timeout_ms = 0) { return sem.wait(timeout_ms); }
         void setTxFin() { sem.release(); }
     };
 
