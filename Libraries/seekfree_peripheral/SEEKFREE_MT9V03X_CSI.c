@@ -47,8 +47,8 @@
 
 
 //图像缓冲区  如果用户需要访问图像数据 最好通过mt9v03x_csi_image来访问数据，最好不要直接访问缓冲区
-AT_SDRAM_SECTION_ALIGN(uint8 mt9v03x_csi1_image[MT9V03X_CSI_H][MT9V03X_CSI_W], 64);
-AT_SDRAM_SECTION_ALIGN(uint8 mt9v03x_csi2_image[MT9V03X_CSI_H][MT9V03X_CSI_W], 64);
+AT_SDRAM_NONCACHE_SECTION_ALIGN(uint8 mt9v03x_csi1_image[MT9V03X_CSI_H][MT9V03X_CSI_W], 64);
+AT_SDRAM_NONCACHE_SECTION_ALIGN(uint8 mt9v03x_csi2_image[MT9V03X_CSI_H][MT9V03X_CSI_W], 64);
 
 //用户访问图像数据直接访问这个指针变量就可以
 //访问方式非常简单，可以直接使用下标的方式访问
@@ -133,12 +133,10 @@ void csi_isr(CSI_Type *base, csi_handle_t *handle, status_t status, void *userDa
 }
 
 uint8_t *mt9v03x_csi_image_take() {
-    AT_SDRAM_NONCACHE_SECTION_ALIGN(static uint8_t buf[MT9V03X_CSI_H * MT9V03X_CSI_W], 64);
     do {
         rt_sem_take(&mt9v03x_csi_sem, RT_WAITING_FOREVER);
     } while(!csi_get_full_buffer(&csi_handle, &fullCameraBufferAddr));
-    rt_memcpy(buf, (uint8_t *)fullCameraBufferAddr, MT9V03X_CSI_H * MT9V03X_CSI_W);
-    return buf;
+    return (uint8_t *)fullCameraBufferAddr;
 }
 void mt9v03x_csi_image_release() {
     csi_add_empty_buffer(&csi_handle, (uint8_t *)fullCameraBufferAddr);
