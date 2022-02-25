@@ -2540,11 +2540,6 @@
           <GroupName>user_nodes</GroupName>
           <Files>
             <File>
-              <FileName>nodes.hpp</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\CODE\nodes\nodes.hpp</FilePath>
-            </File>
-            <File>
               <FileName>wireless.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\wireless.cpp</FilePath>
@@ -2553,6 +2548,11 @@
               <FileName>apriltagDetect.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\apriltagDetect.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>imgUSBXfer.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\imgUSBXfer.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -5240,11 +5240,6 @@
           <GroupName>user_nodes</GroupName>
           <Files>
             <File>
-              <FileName>nodes.hpp</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\CODE\nodes\nodes.hpp</FilePath>
-            </File>
-            <File>
               <FileName>wireless.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\wireless.cpp</FilePath>
@@ -5253,6 +5248,11 @@
               <FileName>apriltagDetect.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\apriltagDetect.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>imgUSBXfer.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\imgUSBXfer.cpp</FilePath>
             </File>
           </Files>
         </Group>

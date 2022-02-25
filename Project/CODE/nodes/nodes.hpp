@@ -7,4 +7,6 @@ extern rtthread::Thread wirelessThread;
 
 extern rtthread::Thread apriltagDetectThread;
 
+extern rtthread::Thread imgUSBXferThread;
+
 #endif  // _nodes_hpp

@@ -30,21 +30,9 @@ void imuLinAccCB(const rosRT::msgs::Vector3Stamped& data) {
 }
 auto imuLinAccSub = rosRT::Subscriber::create<rosRT::msgs::Vector3Stamped>("imu/linear_accel", 1, imuLinAccCB);
 
-void camEntry(void*) {
-    using namespace imgProc::apriltag;
-    AT_SDRAM_NONCACHE_SECTION_ALIGN(static uint8_t buf[N * M + 4], 64);
-    buf[0] = 0x00, buf[1] = 0xff, buf[2] = 0x80, buf[3] = 0x7f;
-    for (;;) {
-        uint8_t* img = mt9v03x_csi_image_take();
-        rt_memcpy(buf + 4, img, N * M + 4);
-        show_grayscale(buf);
-        usb_cdc_send_buff(buf, N * M + 4);
-        mt9v03x_csi_image_release();
-    }
-}
-
 int main(void) {
     gpio_init(B9, GPO, 0, GPIO_PIN_CONFIG);
+    gpio_init(C4, GPI, 0, GPIO_PIN_CONFIG);
     rt_thread_mdelay(500);
 
     // wireless.init("Wireless", UART8_CONFIG);
@@ -55,8 +43,7 @@ int main(void) {
     usb_cdc_init();
     EnableGlobalIRQ(0);
 
-    rtthread::Thread camthread(camEntry, NULL, 512, 3, 100, "cam");
-    camthread.start();
+    imgUSBXferThread.start();
 
     // testtest::pose_kalman_test(NULL);
     // apriltagDetectThread.start();

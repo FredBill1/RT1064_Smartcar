@@ -5630,18 +5630,6 @@
     <File>
       <GroupNumber>28</GroupNumber>
       <FileNumber>405</FileNumber>
-      <FileType>5</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>..\CODE\nodes\nodes.hpp</PathWithFileName>
-      <FilenameWithoutPath>nodes.hpp</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>28</GroupNumber>
-      <FileNumber>406</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -5653,13 +5641,25 @@
     </File>
     <File>
       <GroupNumber>28</GroupNumber>
-      <FileNumber>407</FileNumber>
+      <FileNumber>406</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\CODE\nodes\apriltagDetect.cpp</PathWithFileName>
       <FilenameWithoutPath>apriltagDetect.cpp</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>28</GroupNumber>
+      <FileNumber>407</FileNumber>
+      <FileType>8</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\CODE\nodes\imgUSBXfer.cpp</PathWithFileName>
+      <FilenameWithoutPath>imgUSBXfer.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
