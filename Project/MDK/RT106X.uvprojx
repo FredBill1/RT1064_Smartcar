@@ -2515,11 +2515,6 @@
           <GroupName>rosRT</GroupName>
           <Files>
             <File>
-              <FileName>Topic.hpp</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\CODE\components\rosRT\Topic.hpp</FilePath>
-            </File>
-            <File>
               <FileName>Topic.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\components\rosRT\src\Topic.cpp</FilePath>
@@ -2553,6 +2548,11 @@
               <FileName>imgUSBXfer.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\imgUSBXfer.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>imuEcho.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\imuEcho.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -5146,11 +5146,6 @@
           <GroupName>rosRT</GroupName>
           <Files>
             <File>
-              <FileName>Topic.hpp</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\CODE\components\rosRT\Topic.hpp</FilePath>
-            </File>
-            <File>
               <FileName>Topic.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\components\rosRT\src\Topic.cpp</FilePath>
@@ -5253,6 +5248,11 @@
               <FileName>imgUSBXfer.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\imgUSBXfer.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>imuEcho.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\imuEcho.cpp</FilePath>
             </File>
           </Files>
         </Group>
