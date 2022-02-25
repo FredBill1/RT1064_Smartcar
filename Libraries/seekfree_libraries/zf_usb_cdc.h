@@ -22,11 +22,12 @@
 
 #include "common.h"
 
+extern vuint8 usb_cdc_connected;
 
 void  usb_cdc_init(void);
 uint8 usb_check_busy(void);
-void  usb_cdc_send_char(uint8 dat);
-void  usb_cdc_send_str(const int8 *str);
-void  usb_cdc_send_buff(uint8 *p, uint32 length);
+size_t usb_cdc_send_char(uint8 dat);
+size_t usb_cdc_send_str(const int8 *str);
+size_t usb_cdc_send_buff(uint8 *p, uint32 length);
 
 #endif

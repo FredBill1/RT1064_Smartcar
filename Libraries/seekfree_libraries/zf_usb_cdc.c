@@ -31,7 +31,9 @@
 #include "zf_usb_cdc.h"
 
 
+#include <rtthread.h>
 
+vuint8 usb_cdc_connected = 0;
 
 /*******************************************************************************
 * Definitions
@@ -111,9 +113,6 @@ usb_status_t USB_DeviceCallback(usb_device_handle handle, uint32_t event, void *
 
 
 usb_cdc_vcom_struct_t s_cdcVcom;
-
-uint8 usb_cdc_com_open_flag;
-uint8 usb_cdc_com_first_flag;
 
 /* Line coding of cdc device */
 USB_DMA_INIT_DATA_ALIGN(USB_DATA_ALIGN_SIZE) static uint8_t s_lineCoding[LINE_CODING_SIZE] = {
@@ -202,6 +201,7 @@ void USB_DeviceIsrEnable(void)
 
 usb_status_t USB_DeviceCdcVcomCallback(class_handle_t handle, uint32_t event, void *param)
 {
+    static uint8_t first_connect = 0;
     uint32_t len;
     uint8_t *uartBitmap;
     usb_device_cdc_acm_request_param_struct_t *acmReqParam;
@@ -399,26 +399,21 @@ usb_status_t USB_DeviceCdcVcomCallback(class_handle_t handle, uint32_t event, vo
             if (acmInfo->dteStatus & USB_DEVICE_CDC_CONTROL_SIG_BITMAP_CARRIER_ACTIVATION)
             {
                 /*  To do: CARRIER_ACTIVATED */
-				usb_cdc_com_open_flag = 0;
+
             }
             else
             {
                 /* To do: CARRIER_DEACTIVATED */
-				if(usb_cdc_com_first_flag)
-				{
-					usb_cdc_com_open_flag = 1;
-				}
-				else
-				{
-					usb_cdc_com_first_flag = 1;
-				}
             }
             if (acmInfo->dteStatus & USB_DEVICE_CDC_CONTROL_SIG_BITMAP_DTE_PRESENCE)
             {
                 /* DTE_ACTIVATED */
                 if (1 == s_cdcVcom.attach)
                 {
+                    rt_kprintf("USB: Connected\r\n");
                     s_cdcVcom.startTransactions = 1;
+                    first_connect = 1;
+                    usb_cdc_connected = 1;
 #if defined(FSL_FEATURE_USB_KHCI_KEEP_ALIVE_ENABLED) && (FSL_FEATURE_USB_KHCI_KEEP_ALIVE_ENABLED > 0U) && \
     defined(USB_DEVICE_CONFIG_KEEP_ALIVE_MODE) && (USB_DEVICE_CONFIG_KEEP_ALIVE_MODE > 0U) &&             \
     defined(FSL_FEATURE_USB_KHCI_USB_RAM) && (FSL_FEATURE_USB_KHCI_USB_RAM > 0U)
@@ -434,7 +429,9 @@ usb_status_t USB_DeviceCdcVcomCallback(class_handle_t handle, uint32_t event, vo
                 /* DTE_DEACTIVATED */
                 if (1 == s_cdcVcom.attach)
                 {
+                    if (first_connect) rt_kprintf("USB: Disconnected\r\n");
                     s_cdcVcom.startTransactions = 0;
+                    usb_cdc_connected = 0;
                 }
             }
         }
@@ -590,20 +587,9 @@ uint8 usb_check_busy(void)
 //  @return     void                
 //  Sample usage:                   usb_cdc_send_char(0xA5);//发送0xA5
 //-------------------------------------------------------------------------------------------------------------------
-void usb_cdc_send_char(uint8 dat)
+size_t usb_cdc_send_char(uint8 dat)
 {
-	uint16 delay_num=0;
-	
-	if(usb_cdc_com_open_flag)
-	{
-		while(usb_check_busy())//正在忙
-		{
-			systick_delay_us(10);
-			if(5000 <= delay_num++)usb_cdc_com_open_flag = 0;
-			if(!usb_cdc_com_open_flag) return;//串口已关闭
-		}
-		USB_DeviceCdcAcmSend(s_cdcVcom.cdcAcmHandle, USB_CDC_VCOM_BULK_IN_ENDPOINT, &dat, 1);
-	}
+    return usb_cdc_send_buff(&dat, 1);
 }
 
 //-------------------------------------------------------------------------------------------------------------------
@@ -612,20 +598,9 @@ void usb_cdc_send_char(uint8 dat)
 //  @return     void                
 //  Sample usage:                   usb_cdc_send_str("this is test\n");//发送this is test字符串并回车
 //-------------------------------------------------------------------------------------------------------------------
-void usb_cdc_send_str(const int8 *str)
+size_t usb_cdc_send_str(const int8 *str)
 {
-	uint16 delay_num=0;
-	
-	if(usb_cdc_com_open_flag)
-	{
-		while(usb_check_busy())//正在忙
-		{
-			systick_delay_us(10);
-			if(5000 <= delay_num++)usb_cdc_com_open_flag = 0;
-			if(!usb_cdc_com_open_flag) return;//串口已关闭
-		}
-		USB_DeviceCdcAcmSend(s_cdcVcom.cdcAcmHandle, USB_CDC_VCOM_BULK_IN_ENDPOINT, (uint8 *)str, strlen(str));
-	}
+    return usb_cdc_send_buff((uint8 *)str, strlen(str));
 }
 
 //-------------------------------------------------------------------------------------------------------------------
@@ -635,33 +610,14 @@ void usb_cdc_send_str(const int8 *str)
 //  @return     void                
 //  Sample usage:                   uint8 test[4]; usb_cdc_send_buff(test,4);//发送test数组
 //-------------------------------------------------------------------------------------------------------------------
-void usb_cdc_send_buff(uint8 *p, uint32 length)
+size_t usb_cdc_send_buff(uint8 *p, uint32 length)
 {
-	uint16 delay_num=0;
-	
-	while(length)
-	{
-		if(!usb_cdc_com_open_flag) 		return;//串口已关闭
-		while(usb_check_busy())//正在忙
-		{
-			systick_delay_us(10);
-			if(10000 <= delay_num++)
-			{
-				usb_cdc_com_open_flag = 0;
-			}
-			if(!usb_cdc_com_open_flag) return;//串口已关闭
-		}
-		if(length>512)
-		{
-			USB_DeviceCdcAcmSend(s_cdcVcom.cdcAcmHandle, USB_CDC_VCOM_BULK_IN_ENDPOINT, p, 512);
-			p += 512;
-			length -= 512;
-		}
-		else
-		{
-			USB_DeviceCdcAcmSend(s_cdcVcom.cdcAcmHandle, USB_CDC_VCOM_BULK_IN_ENDPOINT, p, length);
-			length = 0;
-		}
-		
+	while(length) {
+		while(usb_cdc_connected && usb_check_busy()) rt_thread_mdelay(1);
+        if (!usb_cdc_connected) break;
+        uint32 cur = length > 512 ? 512 : length;
+        if(USB_DeviceCdcAcmSend(s_cdcVcom.cdcAcmHandle, USB_CDC_VCOM_BULK_IN_ENDPOINT, p, cur) != kStatus_USB_Success) break;
+        p += cur, length -= cur;
 	}
+    return length;
 }

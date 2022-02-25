@@ -32,11 +32,13 @@ auto imuLinAccSub = rosRT::Subscriber::create<rosRT::msgs::Vector3Stamped>("imu/
 
 void camEntry(void*) {
     using namespace imgProc::apriltag;
-    static SerialIO::TxUtil<uint8_t, N * M, false, false> txUtil("cam");
+    AT_SDRAM_NONCACHE_SECTION_ALIGN(static uint8_t buf[N * M + 4], 64);
+    buf[0] = 0x00, buf[1] = 0xff, buf[2] = 0x80, buf[3] = 0x7f;
     for (;;) {
         uint8_t* img = mt9v03x_csi_image_take();
-        if (txUtil.txFinished()) rt_memcpy(txUtil.Data(), img, N * M), wireless.send(txUtil), rt_kprintf("frame\r\n");
-        show_grayscale(img);
+        rt_memcpy(buf + 4, img, N * M + 4);
+        show_grayscale(buf);
+        usb_cdc_send_buff(buf, N * M + 4);
         mt9v03x_csi_image_release();
     }
 }
@@ -50,9 +52,10 @@ int main(void) {
     wirelessThread.start();
     // imu.init();
     mt9v03x_csi_init();
+    usb_cdc_init();
     EnableGlobalIRQ(0);
 
-    rtthread::Thread camthread(camEntry, NULL, 2048, 3, 100, "cam");
+    rtthread::Thread camthread(camEntry, NULL, 512, 3, 100, "cam");
     camthread.start();
 
     // testtest::pose_kalman_test(NULL);
