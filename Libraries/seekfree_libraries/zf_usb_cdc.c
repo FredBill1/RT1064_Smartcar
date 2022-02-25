@@ -615,9 +615,10 @@ size_t usb_cdc_send_buff(uint8 *p, uint32 length)
 	while(length) {
 		while(usb_cdc_connected && usb_check_busy()) rt_thread_mdelay(1);
         if (!usb_cdc_connected) break;
-        uint32 cur = length > 512 ? 512 : length;
+        uint32 cur = length > HS_CDC_VCOM_BULK_OUT_PACKET_SIZE ? HS_CDC_VCOM_BULK_OUT_PACKET_SIZE : length;
         if(USB_DeviceCdcAcmSend(s_cdcVcom.cdcAcmHandle, USB_CDC_VCOM_BULK_IN_ENDPOINT, p, cur) != kStatus_USB_Success) break;
         p += cur, length -= cur;
 	}
+    while(usb_cdc_connected && usb_check_busy()) rt_thread_mdelay(1);
     return length;
 }
