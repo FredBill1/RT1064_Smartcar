@@ -7,6 +7,7 @@ int main(void);
 #include <limits>
 
 #include "Thread.h"
+#include "apriltag/visualization.hpp"
 #include "devices.hpp"
 #include "nodes/nodes.hpp"
 #include "rosRT/Topic.hpp"
@@ -29,6 +30,17 @@ void imuLinAccCB(const rosRT::msgs::Vector3Stamped& data) {
 }
 auto imuLinAccSub = rosRT::Subscriber::create<rosRT::msgs::Vector3Stamped>("imu/linear_accel", 1, imuLinAccCB);
 
+void camEntry(void*) {
+    using namespace imgProc::apriltag;
+    static SerialIO::TxUtil<uint8_t, N * M, false, false> txUtil("cam");
+    for (;;) {
+        uint8_t* img = mt9v03x_csi_image_take();
+        if (txUtil.txFinished()) rt_memcpy(txUtil.Data(), img, N * M), wireless.send(txUtil), rt_kprintf("frame\r\n");
+        show_grayscale(img);
+        mt9v03x_csi_image_release();
+    }
+}
+
 int main(void) {
     gpio_init(B9, GPO, 0, GPIO_PIN_CONFIG);
     rt_thread_mdelay(500);
@@ -36,8 +48,13 @@ int main(void) {
     // wireless.init("Wireless", UART8_CONFIG);
     initDevices();
     wirelessThread.start();
-    imu.init();
+    // imu.init();
+    mt9v03x_csi_init();
     EnableGlobalIRQ(0);
+
+    rtthread::Thread camthread(camEntry, NULL, 2048, 3, 100, "cam");
+    camthread.start();
+
     // testtest::pose_kalman_test(NULL);
     // apriltagDetectThread.start();
     for (;;) {
