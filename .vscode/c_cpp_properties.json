@@ -137,7 +137,8 @@
                 // "systick_delay_us(time)=systick_delay(USEC_TO_COUNT(time, DELAY_CLK))",
                 "EIGEN_NO_IO",
                 "EIGEN_NO_DEBUG",
-                "NDEBUG"
+                "NDEBUG",
+                "M_PI=3.14"
             ],
             "intelliSenseMode": "${default}",
             "cppStandard": "c++17"
