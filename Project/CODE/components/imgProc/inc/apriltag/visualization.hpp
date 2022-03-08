@@ -19,7 +19,11 @@ void plotImg(uint8_t* img, int_fast32_t i, int_fast32_t j, uint16_t color, int_f
 void lineImg(uint8_t* img, int_fast32_t i0, int_fast32_t j0, int_fast32_t i1, int_fast32_t j1, uint16_t color,
              int_fast32_t size = 1);
 
-void plot_tag_det(uint8_t* img, apriltag_detection& det, uint16_t color);
+void plotChar(uint8_t* img, int_fast32_t i, int_fast32_t j, char dat);
+
+void plotInt(uint8_t* img, int_fast32_t i, int_fast32_t j, int32_t dat, int_fast32_t len = 2, bool atCenter = false);
+
+void plot_tag_det(uint8_t* img, apriltag_detection& det);
 
 void show_plot_grayscale(const uint8_t* img);
 

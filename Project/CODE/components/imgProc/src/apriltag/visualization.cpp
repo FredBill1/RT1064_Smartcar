@@ -59,8 +59,9 @@ void plotImg(uint8_t* img, int_fast32_t i, int_fast32_t j, uint16_t color, int_f
     if (!(0 <= i && i < N && 0 <= j && j < M)) return;
     constexpr int_fast32_t mask = ~3;
     i &= mask, j &= mask;
-    for (int_fast32_t u = max(0, i - size * 4); u < min(i + size * 4, N); u += 4)
-        for (int_fast32_t v = max(0, j - size * 4); v < min(j + size * 4, M); v += 4) {
+    int_fast32_t ur = min(N - 1, i + size * 4), vr = min(M - 1, j + size * 4);
+    for (int_fast32_t u = max(0, i - size * 4); u <= ur; u += 4)
+        for (int_fast32_t v = max(0, j - size * 4); v <= vr; v += 4) {
             rep(t, 0, 4) imgIdx(img, u, v + t) = HEADER[t];
             imgIdx(img, u + 1, v) = color >> 8;
             imgIdx(img, u + 1, v + 1) = color;
@@ -79,13 +80,11 @@ void lineImg(uint8_t* img, int_fast32_t i0, int_fast32_t j0, int_fast32_t i1, in
     }
 }
 
-void plot_tag_det(uint8_t* img, apriltag_detection& det, uint16_t color) {
-    plotImg(img, det.c[1], det.c[0], color);
+void plot_tag_det(uint8_t* img, apriltag_detection& det) {
+    uint16_t color = det.id * 233;
+    plotInt(img, det.c[1], det.c[0], det.id, 2, true);
     for (int i = 0; i < 4; i++) lineImg(img, det.p[(i + 1) & 3][1], det.p[(i + 1) & 3][0], det.p[i][1], det.p[i][0], color);
-    for (int i = 0; i < 4; i++) {
-        color *= int(1e9 + 7);
-        plotImg(img, det.p[i][1], det.p[i][0], color);
-    }
+    plotImg(img, det.p[0][1], det.p[0][0], color * 233, 2);
 }
 
 void show_plot_grayscale(const uint8_t* img) {
@@ -102,6 +101,25 @@ void show_plot_grayscale(const uint8_t* img) {
         }
         ips114_writedata_16bit(color);
     }
+}
+
+void plotChar(uint8_t* img, int_fast32_t i, int_fast32_t j, char dat) {
+    dat -= 32;
+    rep(di, 0, 16) {
+        auto tmp = tft_ascii[dat][di];
+        rep(dj, 0, 8) {
+            uint16_t color = ((tmp >> dj) & 1) ? IPS114_PENCOLOR : IPS114_BGCOLOR;
+            plotImg(img, i + (di << 2), j + (dj << 2), color, 0);
+        }
+    }
+}
+
+void plotInt(uint8_t* img, int_fast32_t i, int_fast32_t j, int32_t dat, int_fast32_t len, bool atCenter) {
+    if (len <= 0) return;
+    if (atCenter) j -= len * 8 << 1, i -= 16 << 1;
+    if (dat < 0) plotChar(img, i, j, '-'), j += 8 << 2, dat = -dat, --len;
+    j += len * 8 << 2;
+    while (len--) j -= 8 << 2, plotChar(img, i, j, '0' + (dat % 10)), dat /= 10;
 }
 
 void show_unionfind() {
