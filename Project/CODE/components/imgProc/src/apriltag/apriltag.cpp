@@ -34,7 +34,8 @@ detections_t &apriltag_detect(apriltag_family &tf, uint8_t *img) {
     auto &clusters = *gradient_clusters(threshim);
     // show_clusters(clusters);
 
-    auto &quads = *fit_quads(clusters, tf, img, true);
+    auto &quads = *fit_quads(clusters, tf, img, false);  // whether to clear the false results, for visualization purposes
+    // auto &quads = *fit_quads(clusters, tf, img, true);
     // show_clusters(clusters);
     // show_quads(quads);
 
