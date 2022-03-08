@@ -24,4 +24,4 @@ static void imgUSBXferEntry(void*) {
     }
 }
 
-rtthread::Thread imgUSBXferThread(imgUSBXferEntry, NULL, 512, 1, 1000, "imgUSBXfer");
+// rtthread::Thread imgUSBXferThread(imgUSBXferEntry, NULL, 512, 1, 1000, "imgUSBXfer");

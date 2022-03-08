@@ -24,7 +24,7 @@ detections_t &apriltag_detect(apriltag_family &tf, uint8_t *img) {
 
     staticBuffer.reset();
 
-    show_grayscale(img);
+    // show_grayscale(img);
     threshold(img, threshim);
     // show_threshim(threshim);
 

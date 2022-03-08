@@ -17,13 +17,13 @@ int main(void) {
     wirelessThread.start();
     // imu.init();
     mt9v03x_csi_init();
-    usb_cdc_init();
+    // usb_cdc_init();
     EnableGlobalIRQ(0);
 
-    imgUSBXferThread.start();
+    // imgUSBXferThread.start();
 
     // testtest::pose_kalman_test(NULL);
-    // apriltagDetectThread.start();
+    apriltagDetectThread.start();
     for (;;) {
         gpio_toggle(B9);
         rt_thread_mdelay(500);
