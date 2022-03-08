@@ -20,8 +20,6 @@ namespace apriltag {
 void apriltag_family::init(int maxhamming, bool static_allocate) { quick_decode::init(*this, maxhamming, static_allocate); }
 
 detections_t &apriltag_detect(apriltag_family &tf, uint8_t *img, apriltag_detect_visualize_flag visualize_flag) {
-    AT_SDRAM_SECTION_ALIGN(static QuadImg_t threshim, 64);
-
     staticBuffer.reset();
 
     // show_grayscale(img);
@@ -32,12 +30,14 @@ detections_t &apriltag_detect(apriltag_family &tf, uint8_t *img, apriltag_detect
     if (visualize_flag == apriltag_detect_visualize_flag::unionfind) show_unionfind();
 
     auto &clusters = *gradient_clusters(threshim);
-    if (visualize_flag == apriltag_detect_visualize_flag::clusters) show_clusters(clusters);
+    if (visualize_flag == apriltag_detect_visualize_flag::clusters) show_clustersImg(img, clusters);
 
-    auto &quads = *fit_quads(clusters, tf, img, visualize_flag == apriltag_detect_visualize_flag::quads);
-    if (visualize_flag == apriltag_detect_visualize_flag::quads) {
-        show_clusters(clusters);
-        show_quads(quads);
+    auto &quads = *fit_quads(
+        clusters, tf, img,
+        visualize_flag == apriltag_detect_visualize_flag::quads || visualize_flag == apriltag_detect_visualize_flag::decode);
+    if (visualize_flag == apriltag_detect_visualize_flag::quads || visualize_flag == apriltag_detect_visualize_flag::decode) {
+        show_clustersImg(img, clusters);
+        show_quadsImg(img, quads);
     }
 
     auto &detections = *decode_quads(tf, img, quads, visualize_flag == apriltag_detect_visualize_flag::decode);

@@ -23,6 +23,7 @@ union UnionBuffer {
 };
 
 extern UnionBuffer unionBuffer;
+extern QuadImg_t threshim;
 
 }  // namespace apriltag
 }  // namespace imgProc
