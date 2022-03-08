@@ -16,6 +16,9 @@ void plot(int_fast32_t i, int_fast32_t j, uint16_t color = 0xF800, int_fast32_t 
 
 void plotImg(uint8_t* img, int_fast32_t i, int_fast32_t j, uint16_t color, int_fast32_t size = 2);
 
+void lineImg(uint8_t* img, int_fast32_t x0, int_fast32_t y0, int_fast32_t x1, int_fast32_t y1, uint16_t color,
+             int_fast32_t size = 1);
+
 void show_plot_grayscale(const uint8_t* img);
 
 void show_unionfind();

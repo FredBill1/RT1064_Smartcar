@@ -67,6 +67,17 @@ void plotImg(uint8_t* img, int_fast32_t i, int_fast32_t j, uint16_t color, int_f
         }
 }
 
+void lineImg(uint8_t* img, int_fast32_t x0, int_fast32_t y0, int_fast32_t x1, int_fast32_t y1, uint16_t color,
+             int_fast32_t size) {
+    int_fast32_t dx = abs(x1 - x0), sx = x0 < x1 ? 1 : -1, dy = -abs(y1 - y0), sy = y0 < y1 ? 1 : -1, err = dx + dy;
+    for (;;) {
+        plotImg(img, x0, y0, color, size);
+        if (x0 == x1 && y0 == y1) break;
+        int_fast32_t e2 = 2 * err;
+        if (e2 >= dy) err += dy, x0 += sx;
+        if (e2 <= dx) err += dx, y0 += sy;
+    }
+}
 void show_plot_grayscale(const uint8_t* img) {
     ips114_set_region(0, 0, M / 4 - 1, N / 4 - 1);
     rep(i, 0, N / 4) rep(j, 0, M / 4) {

@@ -28,6 +28,8 @@ static void apriltagDetectThreadEntry(void*) {
             auto& det = *det_p;
             uint64_t color = 2333;
             plotImg(img, det.c[1], det.c[0], color & 0xFFFF);
+            for (int i = 0; i < 4; i++)
+                lineImg(img, det.p[(i + 1) & 3][1], det.p[(i + 1) & 3][0], det.p[i][1], det.p[i][0], color & 0xFFFF);
             for (int i = 0; i < 4; i++) {
                 color *= int(1e9 + 7);
                 plotImg(img, det.p[i][1], det.p[i][0], color & 0xFFFF);
