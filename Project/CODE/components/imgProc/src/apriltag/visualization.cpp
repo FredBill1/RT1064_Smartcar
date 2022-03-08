@@ -67,15 +67,15 @@ void plotImg(uint8_t* img, int_fast32_t i, int_fast32_t j, uint16_t color, int_f
         }
 }
 
-void lineImg(uint8_t* img, int_fast32_t x0, int_fast32_t y0, int_fast32_t x1, int_fast32_t y1, uint16_t color,
+void lineImg(uint8_t* img, int_fast32_t i0, int_fast32_t j0, int_fast32_t i1, int_fast32_t j1, uint16_t color,
              int_fast32_t size) {
-    int_fast32_t dx = abs(x1 - x0), sx = x0 < x1 ? 1 : -1, dy = -abs(y1 - y0), sy = y0 < y1 ? 1 : -1, err = dx + dy;
+    int_fast32_t dx = abs(i1 - i0), sx = i0 < i1 ? 1 : -1, dy = -abs(j1 - j0), sy = j0 < j1 ? 1 : -1, err = dx + dy;
     for (;;) {
-        plotImg(img, x0, y0, color, size);
-        if (x0 == x1 && y0 == y1) break;
+        plotImg(img, i0, j0, color, size);
+        if (i0 == i1 && j0 == j1) break;
         int_fast32_t e2 = 2 * err;
-        if (e2 >= dy) err += dy, x0 += sx;
-        if (e2 <= dx) err += dx, y0 += sy;
+        if (e2 >= dy) err += dy, i0 += sx;
+        if (e2 <= dx) err += dx, j0 += sy;
     }
 }
 
