@@ -16,20 +16,19 @@ extern "C" {
 
 static void apriltagDetectThreadEntry(void*) {
     using namespace imgProc::apriltag;
-    auto tf = tag25h9_create();
+    apriltag_family tf = tag25h9_create();
     tf.init(1);
     apriltag_detection_info info{nullptr, tagsize, fx, fy, cx, cy};
     apriltag_pose solution;
     for (;;) {
-        auto img = mt9v03x_csi_image_take();
-        auto dets = apriltag_detect(tf, img);
+        uint8_t* img = mt9v03x_csi_image_take();
+        detections_t& dets = apriltag_detect(tf, img);
 
-        for (auto det_p : dets) {
-            auto& det = *det_p;
+        for (apriltag_detection* det_p : dets) {
+            apriltag_detection& det = *det_p;
             plot_tag_det(img, det);
             info.det = det_p;
             estimate_pose_for_tag_homography(info, solution);
-            PRINTF("x:%f y:%f z:%f\r\n", solution.t[0], solution.t[1], solution.t[2]);
         }
         show_plot_grayscale(img);
         mt9v03x_csi_image_release();
