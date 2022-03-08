@@ -48,8 +48,8 @@
 
 
 //图像缓冲区  如果用户需要访问图像数据 最好通过mt9v03x_csi_image来访问数据，最好不要直接访问缓冲区
-AT_SDRAM_NONCACHE_SECTION_ALIGN(uint8 mt9v03x_csi1_image[MT9V03X_CSI_H][MT9V03X_CSI_W], 64);
-AT_SDRAM_NONCACHE_SECTION_ALIGN(uint8 mt9v03x_csi2_image[MT9V03X_CSI_H][MT9V03X_CSI_W], 64);
+AT_SDRAM_NONCACHE_SECTION_ALIGN(uint8 mt9v03x_csi_buf[2][MT9V03X_CSI_H * MT9V03X_CSI_W], 64);
+AT_DTCM_SECTION_ALIGN(uint8 mt9v03x_csi_res[MT9V03X_CSI_H * MT9V03X_CSI_W], 64);
 
 //用户访问图像数据直接访问这个指针变量就可以
 //访问方式非常简单，可以直接使用下标的方式访问
@@ -139,7 +139,10 @@ uint8_t *mt9v03x_csi_image_take() {
         rt_base_t level = rt_hw_interrupt_disable();
         uint8_t res = csi_get_full_buffer(&csi_handle, &fullCameraBufferAddr);
         rt_hw_interrupt_enable(level);
-        if (res) return (uint8_t *)fullCameraBufferAddr;
+        if (res) {
+            rt_memcpy(mt9v03x_csi_res, (void *)fullCameraBufferAddr, MT9V03X_CSI_W * MT9V03X_CSI_H);
+            return mt9v03x_csi_res;
+        }
     }
 }
 void mt9v03x_csi_image_release() {
@@ -177,12 +180,14 @@ void mt9v03x_csi_init(void)
     rt_sem_init(&mt9v03x_csi_sem, "mt9v03x_csi_sem", 0, RT_IPC_FLAG_FIFO);
 
     //CSI 采集初始化
+    rt_base_t level = rt_hw_interrupt_disable();
     csi_init(MT9V03X_CSI_W, MT9V03X_CSI_H, &csi_handle, csi_isr, MT9V03X_CSI_VSYNC_PIN, MT9V03X_CSI_PCLK_PIN);
-    csi_add_empty_buffer(&csi_handle, mt9v03x_csi1_image[0]);
-    csi_add_empty_buffer(&csi_handle, mt9v03x_csi2_image[0]);
+    csi_add_empty_buffer(&csi_handle, mt9v03x_csi_buf[0]);
+    csi_add_empty_buffer(&csi_handle, mt9v03x_csi_buf[1]);
     csi_start(&csi_handle);
-    mt9v03x_csi_image = mt9v03x_csi1_image;//设置初值
-    EnableGlobalIRQ(0);
+    rt_hw_interrupt_enable(level);
+    // mt9v03x_csi_image = mt9v03x_csi_buf[0];//设置初值
+    // EnableGlobalIRQ(0);
 }
 
 
