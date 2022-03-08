@@ -115,7 +115,10 @@ using quads_t = std::forward_list<quad, quads_alloc_t>;
 using detections_alloc_t = StaticAllocator<apriltag_detection *>;
 using detections_t = std::forward_list<apriltag_detection *, detections_alloc_t>;
 
-detections_t &apriltag_detect(apriltag_family &tf, uint8_t *img);
+enum class apriltag_detect_visualize_flag { None, threshim, unionfind, clusters, quads, decode };
+
+detections_t &apriltag_detect(apriltag_family &tf, uint8_t *img,
+                              apriltag_detect_visualize_flag visualize_flag = apriltag_detect_visualize_flag::None);
 
 }  // namespace apriltag
 }  // namespace imgProc

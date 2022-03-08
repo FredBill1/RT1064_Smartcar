@@ -10,6 +10,7 @@
 #include "apriltag/internal/Quick_decode.hpp"
 #include "apriltag/internal/homography.hpp"
 #include "apriltag/internal/utility.hpp"
+#include "apriltag/visualization.hpp"
 namespace imgProc {
 namespace apriltag {
 
@@ -212,7 +213,7 @@ float decode_quad(const apriltag_family &family, uint8_t *im, quad &quad, quick_
     return min(white_score / white_score_count, black_score / black_score_count);
 }
 
-detections_t *decode_quads(const apriltag_family &family, uint8_t *im, quads_t &quads) {
+detections_t *decode_quads(const apriltag_family &family, uint8_t *im, quads_t &quads, bool debug) {
     detections_t *detections = new (staticBuffer.allocate(sizeof(detections_t))) detections_t(detections_alloc_t{staticBuffer});
 
     for (auto &quad : quads) {
@@ -221,6 +222,10 @@ detections_t *decode_quads(const apriltag_family &family, uint8_t *im, quads_t &
 
         quick_decode_entry entry;
         float decision_margin = decode_quad(family, im, quad, entry);
+        if (debug) {
+            plotInt(im, quad.p[0][1], quad.p[0][0], decision_margin, 3, true);
+            plotInt(im, quad.p[1][1], quad.p[1][0], entry.hamming, 3, true);
+        }
         if (decision_margin >= min_decision_margin && entry.hamming < 255) {  //
             detections->push_front(new (staticBuffer.allocate(sizeof(apriltag_detection))) apriltag_detection);
             auto &det = *detections->front();
@@ -228,6 +233,7 @@ detections_t *decode_quads(const apriltag_family &family, uint8_t *im, quads_t &
             det.id = entry.id;
             det.hamming = entry.hamming;
             det.decision_margin = decision_margin;
+            if (debug) plotInt(im, quad.p[2][1], quad.p[2][0], det.id, 2, true);
 
             // double theta = entry.rotation * (EIGEN_PI / 2.0), c = std::cos(theta), s = std::sin(theta);
             double c, s;
