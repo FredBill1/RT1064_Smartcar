@@ -19,6 +19,8 @@ void plotImg(uint8_t* img, int_fast32_t i, int_fast32_t j, uint16_t color, int_f
 void lineImg(uint8_t* img, int_fast32_t x0, int_fast32_t y0, int_fast32_t x1, int_fast32_t y1, uint16_t color,
              int_fast32_t size = 1);
 
+void plot_tag_det(uint8_t* img, apriltag_detection& det, uint16_t color);
+
 void show_plot_grayscale(const uint8_t* img);
 
 void show_unionfind();

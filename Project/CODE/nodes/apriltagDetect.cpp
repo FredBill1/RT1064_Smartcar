@@ -27,13 +27,7 @@ static void apriltagDetectThreadEntry(void*) {
         for (auto det_p : dets) {
             auto& det = *det_p;
             uint64_t color = 2333;
-            plotImg(img, det.c[1], det.c[0], color & 0xFFFF);
-            for (int i = 0; i < 4; i++)
-                lineImg(img, det.p[(i + 1) & 3][1], det.p[(i + 1) & 3][0], det.p[i][1], det.p[i][0], color & 0xFFFF);
-            for (int i = 0; i < 4; i++) {
-                color *= int(1e9 + 7);
-                plotImg(img, det.p[i][1], det.p[i][0], color & 0xFFFF);
-            }
+            plot_tag_det(img, det, color);
             info.det = det_p;
             estimate_pose_for_tag_homography(info, solution);
             PRINTF("x:%f y:%f z:%f\r\n", solution.t[0], solution.t[1], solution.t[2]);

@@ -78,6 +78,16 @@ void lineImg(uint8_t* img, int_fast32_t x0, int_fast32_t y0, int_fast32_t x1, in
         if (e2 <= dx) err += dx, y0 += sy;
     }
 }
+
+void plot_tag_det(uint8_t* img, apriltag_detection& det, uint16_t color) {
+    plotImg(img, det.c[1], det.c[0], color);
+    for (int i = 0; i < 4; i++) lineImg(img, det.p[(i + 1) & 3][1], det.p[(i + 1) & 3][0], det.p[i][1], det.p[i][0], color);
+    for (int i = 0; i < 4; i++) {
+        color *= int(1e9 + 7);
+        plotImg(img, det.p[i][1], det.p[i][0], color);
+    }
+}
+
 void show_plot_grayscale(const uint8_t* img) {
     ips114_set_region(0, 0, M / 4 - 1, N / 4 - 1);
     rep(i, 0, N / 4) rep(j, 0, M / 4) {
