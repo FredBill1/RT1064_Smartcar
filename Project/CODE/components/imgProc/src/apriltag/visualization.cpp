@@ -140,6 +140,13 @@ void show_cluster(const List_pt_t& cluster, uint16_t color, int32_t delay) {
     }
 }
 
+void show_clusterImg(uint8_t* img, const List_pt_t& cluster, uint16_t color, int32_t delay) {
+    for (auto& p : cluster) {
+        plotImg(img, p.y, p.x, color);
+        if (delay) rt_thread_mdelay(delay);
+    }
+}
+
 void show_clusters(const clusters_t& clusters) {
     uint64_t cur = 2333;
     for (auto& cluster : clusters) {
@@ -148,10 +155,20 @@ void show_clusters(const clusters_t& clusters) {
         show_cluster(*cluster, cur);
     }
 }
+void show_clustersImg(uint8_t* img, const clusters_t& clusters) {
+    uint64_t cur = 2333;
+    for (auto& cluster : clusters) {
+        cur *= int(1e9 + 7);
+        cur &= 0xFFFF;
+        show_clusterImg(img, *cluster, cur);
+    }
+}
 
 void show_quads(quads_t& quads) {
     for (auto& quad : quads) rep(i, 0, 4) plot(quad.p[i][1], quad.p[i][0]);
 }
-
+void show_quadsImg(uint8_t* img, quads_t& quads) {
+    for (auto& quad : quads) rep(i, 0, 4) plotImg(img, quad.p[i][1], quad.p[i][0]);
+}
 }  // namespace apriltag
 }  // namespace imgProc
