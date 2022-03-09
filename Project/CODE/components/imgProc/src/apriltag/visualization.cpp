@@ -6,7 +6,7 @@ extern "C" {
 #include "SEEKFREE_IPS114_SPI.h"
 }
 #include "apriltag/config.hpp"
-#include "apriltag/internal/UnionBuffer.hpp"
+#include "apriltag/internal/globalVariables.hpp"
 #include "apriltag/internal/utility.hpp"
 
 namespace imgProc {

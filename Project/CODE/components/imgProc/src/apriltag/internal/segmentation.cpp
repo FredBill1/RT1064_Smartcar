@@ -6,7 +6,7 @@
 
 #include "apriltag/internal/Hashmap.hpp"
 #include "apriltag/internal/StaticBuffer.hpp"
-#include "apriltag/internal/UnionBuffer.hpp"
+#include "apriltag/internal/globalVariables.hpp"
 #include "apriltag/internal/utility.hpp"
 #include "apriltag/visualization.hpp"
 

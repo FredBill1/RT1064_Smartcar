@@ -2580,11 +2580,6 @@
               <FilePath>..\CODE\components\imgProc\src\apriltag\internal\Hashmap.cpp</FilePath>
             </File>
             <File>
-              <FileName>UnionBuffer.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\CODE\components\imgProc\src\apriltag\internal\UnionBuffer.cpp</FilePath>
-            </File>
-            <File>
               <FileName>fit_quad.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\components\imgProc\src\apriltag\internal\fit_quad.cpp</FilePath>
@@ -2638,6 +2633,11 @@
               <FileName>fmath.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\components\imgProc\src\apriltag\fmath.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>globalVariables.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\apriltag\internal\globalVariables.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -5379,11 +5379,6 @@
               <FilePath>..\CODE\components\imgProc\src\apriltag\internal\Hashmap.cpp</FilePath>
             </File>
             <File>
-              <FileName>UnionBuffer.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\CODE\components\imgProc\src\apriltag\internal\UnionBuffer.cpp</FilePath>
-            </File>
-            <File>
               <FileName>fit_quad.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\components\imgProc\src\apriltag\internal\fit_quad.cpp</FilePath>
@@ -5437,6 +5432,11 @@
               <FileName>fmath.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\components\imgProc\src\apriltag\fmath.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>globalVariables.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\apriltag\internal\globalVariables.cpp</FilePath>
             </File>
           </Files>
         </Group>

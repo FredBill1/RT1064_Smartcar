@@ -5726,18 +5726,6 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CODE\components\imgProc\src\apriltag\internal\UnionBuffer.cpp</PathWithFileName>
-      <FilenameWithoutPath>UnionBuffer.cpp</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>29</GroupNumber>
-      <FileNumber>413</FileNumber>
-      <FileType>8</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
       <PathWithFileName>..\CODE\components\imgProc\src\apriltag\internal\fit_quad.cpp</PathWithFileName>
       <FilenameWithoutPath>fit_quad.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
@@ -5745,7 +5733,7 @@
     </File>
     <File>
       <GroupNumber>29</GroupNumber>
-      <FileNumber>414</FileNumber>
+      <FileNumber>413</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -5757,7 +5745,7 @@
     </File>
     <File>
       <GroupNumber>29</GroupNumber>
-      <FileNumber>415</FileNumber>
+      <FileNumber>414</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -5769,7 +5757,7 @@
     </File>
     <File>
       <GroupNumber>29</GroupNumber>
-      <FileNumber>416</FileNumber>
+      <FileNumber>415</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -5781,7 +5769,7 @@
     </File>
     <File>
       <GroupNumber>29</GroupNumber>
-      <FileNumber>417</FileNumber>
+      <FileNumber>416</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -5793,7 +5781,7 @@
     </File>
     <File>
       <GroupNumber>29</GroupNumber>
-      <FileNumber>418</FileNumber>
+      <FileNumber>417</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -5805,7 +5793,7 @@
     </File>
     <File>
       <GroupNumber>29</GroupNumber>
-      <FileNumber>419</FileNumber>
+      <FileNumber>418</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -5817,7 +5805,7 @@
     </File>
     <File>
       <GroupNumber>29</GroupNumber>
-      <FileNumber>420</FileNumber>
+      <FileNumber>419</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -5829,7 +5817,7 @@
     </File>
     <File>
       <GroupNumber>29</GroupNumber>
-      <FileNumber>421</FileNumber>
+      <FileNumber>420</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -5841,7 +5829,7 @@
     </File>
     <File>
       <GroupNumber>29</GroupNumber>
-      <FileNumber>422</FileNumber>
+      <FileNumber>421</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -5853,13 +5841,25 @@
     </File>
     <File>
       <GroupNumber>29</GroupNumber>
-      <FileNumber>423</FileNumber>
+      <FileNumber>422</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\CODE\components\imgProc\src\apriltag\fmath.cpp</PathWithFileName>
       <FilenameWithoutPath>fmath.cpp</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>29</GroupNumber>
+      <FileNumber>423</FileNumber>
+      <FileType>8</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\CODE\components\imgProc\src\apriltag\internal\globalVariables.cpp</PathWithFileName>
+      <FilenameWithoutPath>globalVariables.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

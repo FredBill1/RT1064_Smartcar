@@ -1,5 +1,4 @@
-#include "apriltag/internal/UnionBuffer.hpp"
-
+#include "apriltag/internal/globalVariables.hpp"
 #include "common/common.h"
 
 namespace imgProc {

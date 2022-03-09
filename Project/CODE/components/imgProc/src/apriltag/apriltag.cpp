@@ -1,12 +1,10 @@
 #include "apriltag/apriltag.hpp"
 
-
-
 #include "apriltag/internal/Quick_decode.hpp"
 #include "apriltag/internal/StaticBuffer.hpp"
-#include "apriltag/internal/UnionBuffer.hpp"
 #include "apriltag/internal/decode_quad.hpp"
 #include "apriltag/internal/fit_quad.hpp"
+#include "apriltag/internal/globalVariables.hpp"
 #include "apriltag/internal/reconcile_detections.hpp"
 #include "apriltag/internal/segmentation.hpp"
 #include "apriltag/internal/threshold.hpp"

@@ -1,5 +1,5 @@
-#ifndef _apriltag_UnionBuffer_hpp
-#define _apriltag_UnionBuffer_hpp
+#ifndef _apriltag_globalVariables_hpp
+#define _apriltag_globalVariables_hpp
 
 #include <cstdint>
 
@@ -21,4 +21,4 @@ extern uint8_t hashmapbuf[sizeof(Hashmap)];
 
 }  // namespace apriltag
 }  // namespace imgProc
-#endif  // _apriltag_UnionBuffer_hpp
+#endif  // _apriltag_globalVariables_hpp
