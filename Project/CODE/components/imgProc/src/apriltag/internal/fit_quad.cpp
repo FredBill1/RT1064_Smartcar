@@ -15,9 +15,9 @@ namespace imgProc {
 namespace apriltag {
 
 struct line_fit_pt {
-    double Mx, My;
-    double Mxx, Myy, Mxy;
-    double W;  // total weight
+    float_t Mx, My;
+    float_t Mxx, Myy, Mxy;
+    float_t W;  // total weight
 };
 
 inline line_fit_pt* compute_lfps(int_fast32_t sz, const List_pt_t& cluster, const uint8_t* im) {
@@ -27,14 +27,14 @@ inline line_fit_pt* compute_lfps(int_fast32_t sz, const List_pt_t& cluster, cons
         if (++i > 0) rt_memcpy(lfps + i, lfps + (i - 1), sizeof(line_fit_pt));
         else
             rt_memset(lfps, 0, sizeof(line_fit_pt));
-        double delta = 0.5, x = p.x * .5 + delta, y = p.y * .5 + delta, W = 1;
+        float_t delta = 0.5, x = p.x * .5 + delta, y = p.y * .5 + delta, W = 1;
         int_fast32_t ix = x, iy = y;
         if (ix > 0 && ix + 1 < M / quad_decimate && iy > 0 && iy + 1 < N / quad_decimate) {
             int_fast32_t grad_x = (int_fast32_t)im[(iy * M + ix + 1) * quad_decimate] - im[(iy * M + ix - 1) * quad_decimate],
                          grad_y = (int_fast32_t)im[((iy + 1) * M + ix) * quad_decimate] - im[((iy - 1) * M + ix) * quad_decimate];
             W = std::sqrt(grad_x * grad_x + grad_y * grad_y) + 1;
         }
-        double fx = x, fy = y;
+        float_t fx = x, fy = y;
         lfps[i].Mx += W * fx;
         lfps[i].My += W * fy;
         lfps[i].Mxx += W * fx * fx;
@@ -45,9 +45,9 @@ inline line_fit_pt* compute_lfps(int_fast32_t sz, const List_pt_t& cluster, cons
     return lfps;
 }
 
-static void fit_line(line_fit_pt* lfps, int_fast32_t sz, int_fast32_t i0, int_fast32_t i1, double* lineparm, double* err,
-                     double* mse) {
-    double Mx, My, Mxx, Myy, Mxy, W;
+static void fit_line(line_fit_pt* lfps, int_fast32_t sz, int_fast32_t i0, int_fast32_t i1, float_t* lineparm, float_t* err,
+                     float_t* mse) {
+    float_t Mx, My, Mxx, Myy, Mxy, W;
     int_fast32_t N;
     if (i0 < i1) {
         N = i1 - i0 + 1, Mx = lfps[i1].Mx, My = lfps[i1].My, Mxx = lfps[i1].Mxx, Mxy = lfps[i1].Mxy, Myy = lfps[i1].Myy,
@@ -61,17 +61,17 @@ static void fit_line(line_fit_pt* lfps, int_fast32_t sz, int_fast32_t i0, int_fa
         Mx += lfps[i1].Mx, My += lfps[i1].My, Mxx += lfps[i1].Mxx, Mxy += lfps[i1].Mxy, Myy += lfps[i1].Myy, W += lfps[i1].W;
         N = sz - i0 + i1 + 1;
     }
-    double Ex = Mx / W, Ey = My / W, Cxx = Mxx / W - Ex * Ex, Cxy = Mxy / W - Ex * Ey, Cyy = Myy / W - Ey * Ey,
-           eig_small = 0.5 * (Cxx + Cyy - std::sqrt((Cxx - Cyy) * (Cxx - Cyy) + 4 * Cxy * Cxy));
+    float_t Ex = Mx / W, Ey = My / W, Cxx = Mxx / W - Ex * Ex, Cxy = Mxy / W - Ex * Ey, Cyy = Myy / W - Ey * Ey,
+            eig_small = 0.5 * (Cxx + Cyy - std::sqrt((Cxx - Cyy) * (Cxx - Cyy) + 4 * Cxy * Cxy));
     if (lineparm) {
         lineparm[0] = Ex;
         lineparm[1] = Ey;
-        double eig = 0.5 * (Cxx + Cyy + std::sqrt((Cxx - Cyy) * (Cxx - Cyy) + 4 * Cxy * Cxy)), nx1 = Cxx - eig, ny1 = Cxy,
-               M1 = nx1 * nx1 + ny1 * ny1, nx2 = Cxy, ny2 = Cyy - eig, M2 = nx2 * nx2 + ny2 * ny2, nx, ny, M;
+        float_t eig = 0.5 * (Cxx + Cyy + std::sqrt((Cxx - Cyy) * (Cxx - Cyy) + 4 * Cxy * Cxy)), nx1 = Cxx - eig, ny1 = Cxy,
+                M1 = nx1 * nx1 + ny1 * ny1, nx2 = Cxy, ny2 = Cyy - eig, M2 = nx2 * nx2 + ny2 * ny2, nx, ny, M;
         if (M1 > M2) nx = nx1, ny = ny1, M = M1;
         else
             nx = nx2, ny = ny2, M = M2;
-        double length = std::sqrt(M);
+        float_t length = std::sqrt(M);
         lineparm[2] = nx / length, lineparm[3] = ny / length;
     }
     if (err) *err = N * eig_small;
@@ -83,13 +83,13 @@ inline bool quad_segment_maxima(int_fast32_t sz, List_pt_t& cluster, line_fit_pt
     if (ksz < 2) return false;
 
     int_fast32_t* maxima = (int_fast32_t*)staticBuffer.allocate(sizeof(int_fast32_t) * sz);
-    double* maxima_errs = (double*)staticBuffer.allocate(sizeof(double) * sz);
+    float_t* maxima_errs = (float_t*)staticBuffer.allocate(sizeof(float_t) * sz);
     int_fast32_t nmaxima = 0;
 
-    double* errs = (double*)staticBuffer.allocate(sizeof(double) * sz);
+    float_t* errs = (float_t*)staticBuffer.allocate(sizeof(float_t) * sz);
     rep(i, 0, sz) fit_line(lfps, sz, (i + sz - ksz) % sz, (i + ksz) % sz, NULL, &errs[i], NULL);
     {
-        double* y = (double*)staticBuffer.allocate(sizeof(double) * sz);
+        float_t* y = (float_t*)staticBuffer.allocate(sizeof(float_t) * sz);
         // constexpr int_fast32_t fsz = 17;  // cutoff = 0.05, sigma = 3
         // constexpr float f[fsz]{0.02856549993F, 0.06572853029F, 0.1353352815F, 0.2493522018F,  0.4111122787F, 0.6065306664F,
         //                        0.800737381F,   0.9459594488F,  1.0F,          0.9459594488F,  0.800737381F,  0.6065306664F,
@@ -97,12 +97,12 @@ inline bool quad_segment_maxima(int_fast32_t sz, List_pt_t& cluster, line_fit_pt
         constexpr int_fast32_t fsz = 7;  // cutoff = 0.05, sigma = 1
         constexpr float f[fsz]{0.01110899635F, 0.1353352815F, 0.6065306664F, 1.0F, 0.6065306664F, 0.1353352815F, 0.01110899635F};
         rep(iy, 0, sz) {
-            double acc = 0;
+            float_t acc = 0;
             rep(i, 0, fsz) acc += errs[(iy + i - fsz / 2 + sz) % sz] * f[i];
             y[iy] = acc;
         }
-        rt_memcpy(errs, y, sizeof(double) * sz);
-        staticBuffer.pop(sizeof(double) * sz);  // double y[sz];
+        rt_memcpy(errs, y, sizeof(float_t) * sz);
+        staticBuffer.pop(sizeof(float_t) * sz);  // float_t y[sz];
     }
 
     rep(i, 0, sz) if (errs[i] > errs[(i + 1) % sz] && errs[i] > errs[(i + sz - 1) % sz]) {
@@ -110,29 +110,29 @@ inline bool quad_segment_maxima(int_fast32_t sz, List_pt_t& cluster, line_fit_pt
         maxima_errs[nmaxima] = errs[i];
         ++nmaxima;
     }
-    staticBuffer.pop(sizeof(double) * sz);  // double errs[sz];
+    staticBuffer.pop(sizeof(float_t) * sz);  // float_t errs[sz];
     if (nmaxima < 4) {
-        staticBuffer.pop(sizeof(double) * sz);        // double maxima_errs[sz];
+        staticBuffer.pop(sizeof(float_t) * sz);       // float_t maxima_errs[sz];
         staticBuffer.pop(sizeof(int_fast32_t) * sz);  // int_fast32_t maxima[sz]
         return false;
     }
 
     if (nmaxima > max_nmaxima) {
-        double* maxima_errs_copy = (double*)staticBuffer.allocate(sizeof(double) * (max_nmaxima + 1));
+        float_t* maxima_errs_copy = (float_t*)staticBuffer.allocate(sizeof(float_t) * (max_nmaxima + 1));
         std::partial_sort_copy(maxima_errs, maxima_errs + nmaxima, maxima_errs_copy, maxima_errs_copy + (max_nmaxima + 1),
-                               [](double a, double b) { return a > b; });
-        double maxima_thresh = maxima_errs_copy[max_nmaxima];
-        staticBuffer.pop(sizeof(double) * (max_nmaxima + 1));  // double maxima_errs_copy[max_nmaxima + 1];
+                               [](float_t a, float_t b) { return a > b; });
+        float_t maxima_thresh = maxima_errs_copy[max_nmaxima];
+        staticBuffer.pop(sizeof(float_t) * (max_nmaxima + 1));  // float_t maxima_errs_copy[max_nmaxima + 1];
         int_fast32_t out = 0;
         rep(in, 0, nmaxima) if (maxima_errs[in] > maxima_thresh) maxima[out++] = maxima[in];
         nmaxima = out;
     }
-    staticBuffer.pop(sizeof(double) * sz);  // double maxima_errs[sz];
+    staticBuffer.pop(sizeof(float_t) * sz);  // float_t maxima_errs[sz];
 
     int best_indices[4];
-    double best_error = HUGE_VALF;
-    double err01, err12, err23, err30, mse01, mse12, mse23, mse30, params01[4], params12[4], params23[4], params30[4];
-    constexpr double max_dot = cos_critical_rad;
+    float_t best_error = HUGE_VALF;
+    float_t err01, err12, err23, err30, mse01, mse12, mse23, mse30, params01[4], params12[4], params23[4], params30[4];
+    constexpr float_t max_dot = cos_critical_rad;
     for (int m0 = 0; m0 < nmaxima - 3; m0++) {
         int i0 = maxima[m0];
         for (int m1 = m0 + 1; m1 < nmaxima - 2; m1++) {
@@ -143,7 +143,7 @@ inline bool quad_segment_maxima(int_fast32_t sz, List_pt_t& cluster, line_fit_pt
                 int i2 = maxima[m2];
                 fit_line(lfps, sz, i1, i2, params12, &err12, &mse12);
                 if (mse12 > max_line_fit_mse) continue;
-                double dot = params01[2] * params12[2] + params01[3] * params12[3];
+                float_t dot = params01[2] * params12[2] + params01[3] * params12[3];
                 if (std::abs(dot) > max_dot) continue;
                 for (int m3 = m2 + 1; m3 < nmaxima; m3++) {
                     int i3 = maxima[m3];
@@ -151,7 +151,7 @@ inline bool quad_segment_maxima(int_fast32_t sz, List_pt_t& cluster, line_fit_pt
                     if (mse23 > max_line_fit_mse) continue;
                     fit_line(lfps, sz, i3, i0, params30, &err30, &mse30);
                     if (mse30 > max_line_fit_mse) continue;
-                    double err = err01 + err12 + err23 + err30;
+                    float_t err = err01 + err12 + err23 + err30;
                     if (err < best_error)
                         best_error = err, best_indices[0] = i0, best_indices[1] = i1, best_indices[2] = i2, best_indices[3] = i3;
                 }
@@ -198,11 +198,11 @@ bool fit_quad(List_pt_t& cluster, apriltag_family& tf, quad& quad, uint8_t* im) 
     int indices[4];
     if (!quad_segment_maxima(sz, cluster, lfps, indices)) return false;
 
-    double lines[4][4];
+    float_t lines[4][4];
     bool res = false;
     rep(i, 0, 4) {
         int_fast32_t i0 = indices[i], i1 = indices[(i + 1) & 3];
-        double err;
+        float_t err;
         fit_line(lfps, sz, i0, i1, lines[i], NULL, &err);
         if (err > max_line_fit_mse) {
             res = false;
@@ -211,21 +211,21 @@ bool fit_quad(List_pt_t& cluster, apriltag_family& tf, quad& quad, uint8_t* im) 
     }
 
     rep(i, 0, 4) {
-        double A00 = lines[i][3], A01 = -lines[(i + 1) & 3][3], A10 = -lines[i][2], A11 = lines[(i + 1) & 3][2],
-               B0 = -lines[i][0] + lines[(i + 1) & 3][0], B1 = -lines[i][1] + lines[(i + 1) & 3][1], det = A00 * A11 - A10 * A01,
-               W00 = A11 / det, W01 = -A01 / det;
+        float_t A00 = lines[i][3], A01 = -lines[(i + 1) & 3][3], A10 = -lines[i][2], A11 = lines[(i + 1) & 3][2],
+                B0 = -lines[i][0] + lines[(i + 1) & 3][0], B1 = -lines[i][1] + lines[(i + 1) & 3][1], det = A00 * A11 - A10 * A01,
+                W00 = A11 / det, W01 = -A01 / det;
         if (std::abs(det) < 0.001) {
             res = false;
             goto finish;
         }
-        double L0 = W00 * B0 + W01 * B1;
+        float_t L0 = W00 * B0 + W01 * B1;
         quad.p[i][0] = lines[i][0] + L0 * A00, quad.p[i][1] = lines[i][1] + L0 * A10;
         res = true;
     }
 
     {  // reject quads that are too small
-        double area = 0;
-        double length[3], p;
+        float_t area = 0;
+        float_t length[3], p;
         for (int i = 0; i < 3; i++) {
             int idxa = i;            // 0, 1, 2,
             int idxb = (i + 1) % 3;  // 1, 2, 0
@@ -249,9 +249,9 @@ bool fit_quad(List_pt_t& cluster, apriltag_family& tf, quad& quad, uint8_t* im) 
     {  // reject quads whose cumulative angle change isn't equal to 2PI
         for (int i = 0; i < 4; i++) {
             int i0 = i, i1 = (i + 1) & 3, i2 = (i + 2) & 3;
-            double dx1 = quad.p[i1][0] - quad.p[i0][0], dy1 = quad.p[i1][1] - quad.p[i0][1], dx2 = quad.p[i2][0] - quad.p[i1][0],
-                   dy2 = quad.p[i2][1] - quad.p[i1][1];
-            double cos_dtheta = (dx1 * dx2 + dy1 * dy2) / std::sqrt((dx1 * dx1 + dy1 * dy1) * (dx2 * dx2 + dy2 * dy2));
+            float_t dx1 = quad.p[i1][0] - quad.p[i0][0], dy1 = quad.p[i1][1] - quad.p[i0][1], dx2 = quad.p[i2][0] - quad.p[i1][0],
+                    dy2 = quad.p[i2][1] - quad.p[i1][1];
+            float_t cos_dtheta = (dx1 * dx2 + dy1 * dy2) / std::sqrt((dx1 * dx1 + dy1 * dy1) * (dx2 * dx2 + dy2 * dy2));
             if ((cos_dtheta > cos_critical_rad || cos_dtheta < -cos_critical_rad) || dx1 * dy2 < dy1 * dx2) {
                 res = false;
                 goto finish;

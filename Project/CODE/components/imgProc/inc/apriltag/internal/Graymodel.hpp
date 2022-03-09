@@ -1,17 +1,19 @@
 #ifndef _apriltag_Graymodel_hpp
 #define _apriltag_Graymodel_hpp
 
+#include "apriltag/config.hpp"
+
 namespace imgProc {
 namespace apriltag {
 
 struct graymodel {
-    double A[3][3];
-    double B[3];
-    double C[3];
+    float_t A[3][3];
+    float_t B[3];
+    float_t C[3];
     graymodel();
-    void add(double x, double y, double gray);
+    void add(float_t x, float_t y, float_t gray);
     void solve();
-    double interpolate(double x, double y);
+    float_t interpolate(float_t x, float_t y);
 };
 
 }  // namespace apriltag

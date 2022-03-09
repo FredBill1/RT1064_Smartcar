@@ -51,8 +51,8 @@ struct quad {
     // H: tag coordinates ([-1,1] at the black corners) to pixels
     // Hinv: pixels to tag
     // matd_t *H, *Hinv;
-    double H[3][3];
-    // double Hinv[3][3];
+    float_t H[3][3];
+    // float_t Hinv[3][3];
 };
 
 struct pt {
@@ -88,14 +88,14 @@ struct apriltag_detection {
     // "ideal" tag (with corners at (-1,1), (1,1), (1,-1), and (-1,
     // -1)) to pixels in the image. This matrix will be freed by
     // apriltag_detection_destroy.
-    double H[3][3];
+    float_t H[3][3];
 
     // The center of the detection in image pixel coordinates.
-    double c[2];
+    float_t c[2];
 
     // The corners of the tag in image pixel coordinates. These always
     // wrap counter-clock wise around the tag.
-    double p[4][2];
+    float_t p[4][2];
 };
 
 using QuadImg_t = imgProc::QuadImg<N / quad_decimate, M / quad_decimate>;

@@ -6,6 +6,8 @@
 namespace imgProc {
 namespace apriltag {
 
+using float_t = float;
+
 constexpr int_fast32_t N = 480;  // image height
 constexpr int_fast32_t M = 752;  // image width
 

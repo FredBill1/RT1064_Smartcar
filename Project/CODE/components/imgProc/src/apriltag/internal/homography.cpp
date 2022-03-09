@@ -7,9 +7,9 @@
 namespace imgProc {
 namespace apriltag {
 
-void homography_compute2(double dst[3][3], double c[4][4]) {
+void homography_compute2(float_t dst[3][3], float_t c[4][4]) {
     // clang-format off
-    double A[]{
+    float_t A[]{
         c[0][0], c[0][1], 1,       0,       0, 0, -c[0][0]*c[0][2], -c[0][1]*c[0][2], c[0][2],
               0,       0, 0, c[0][0], c[0][1], 1, -c[0][0]*c[0][3], -c[0][1]*c[0][3], c[0][3],
         c[1][0], c[1][1], 1,       0,       0, 0, -c[1][0]*c[1][2], -c[1][1]*c[1][2], c[1][2],
@@ -24,10 +24,10 @@ void homography_compute2(double dst[3][3], double c[4][4]) {
     // Eliminate.
     for (int col = 0; col < 8; col++) {
         // Find best row to swap with.
-        double max_val = 0;
+        float_t max_val = 0;
         int max_val_idx = -1;
         for (int row = col; row < 8; row++) {
-            double val = std::abs(A[row * 9 + col]);
+            float_t val = std::abs(A[row * 9 + col]);
             if (val > max_val) {
                 max_val = val;
                 max_val_idx = row;
@@ -37,7 +37,7 @@ void homography_compute2(double dst[3][3], double c[4][4]) {
         // Swap to get best row.
         if (max_val_idx != col) {
             for (int i = col; i < 9; i++) {
-                double tmp = A[col * 9 + i];
+                float_t tmp = A[col * 9 + i];
                 A[col * 9 + i] = A[max_val_idx * 9 + i];
                 A[max_val_idx * 9 + i] = tmp;
             }
@@ -45,7 +45,7 @@ void homography_compute2(double dst[3][3], double c[4][4]) {
 
         // Do eliminate.
         for (int i = col + 1; i < 8; i++) {
-            double f = A[i * 9 + col] / A[col * 9 + col];
+            float_t f = A[i * 9 + col] / A[col * 9 + col];
             A[i * 9 + col] = 0;
             for (int j = col + 1; j < 9; j++) A[i * 9 + j] -= f * A[col * 9 + j];
         }
@@ -53,7 +53,7 @@ void homography_compute2(double dst[3][3], double c[4][4]) {
 
     // Back solve.
     for (int col = 7; col >= 0; col--) {
-        double sum = 0;
+        float_t sum = 0;
         for (int i = col + 1; i < 8; i++) { sum += A[col * 9 + i] * A[i * 9 + 8]; }
         A[col * 9 + 8] = (A[col * 9 + 8] - sum) / A[col * 9 + col];
     }
@@ -64,17 +64,17 @@ void homography_compute2(double dst[3][3], double c[4][4]) {
     // clang-format on
 }
 
-void homography_project(const double H[3][3], double x, double y, double *ox, double *oy) {
-    double xx = H[0][0] * x + H[0][1] * y + H[0][2];
-    double yy = H[1][0] * x + H[1][1] * y + H[1][2];
-    double zz = H[2][0] * x + H[2][1] * y + H[2][2];
+void homography_project(const float_t H[3][3], float_t x, float_t y, float_t *ox, float_t *oy) {
+    float_t xx = H[0][0] * x + H[0][1] * y + H[0][2];
+    float_t yy = H[1][0] * x + H[1][1] * y + H[1][2];
+    float_t zz = H[2][0] * x + H[2][1] * y + H[2][2];
     *ox = xx / zz;
     *oy = yy / zz;
 }
 
-void homography_to_pose(const double H[3][3], double fx, double fy, double cx, double cy, double R[3][3], double t[3]) {
+void homography_to_pose(const float_t H[3][3], float_t fx, float_t fy, float_t cx, float_t cy, float_t R[3][3], float_t t[3]) {
     using namespace Eigen;
-    Matrix3d _R;
+    Matrix<float_t, 3, 3> _R;
     _R(2, 0) = H[2][0];
     _R(2, 1) = H[2][1];
     t[2] = H[2][2];
@@ -87,9 +87,9 @@ void homography_to_pose(const double H[3][3], double fx, double fy, double cx, d
 
     // compute the scale by requiring that the rotation columns are unit length
     // (Use geometric average of the two length vectors we have)
-    double length1 = std::sqrt(_R(0, 0) * _R(0, 0) + _R(1, 0) * _R(1, 0) + _R(2, 0) * _R(2, 0));
-    double length2 = std::sqrt(_R(0, 1) * _R(0, 1) + _R(1, 1) * _R(1, 1) + _R(2, 1) * _R(2, 1));
-    double s = 1.0 / std::sqrt(length1 * length2);
+    float_t length1 = std::sqrt(_R(0, 0) * _R(0, 0) + _R(1, 0) * _R(1, 0) + _R(2, 0) * _R(2, 0));
+    float_t length2 = std::sqrt(_R(0, 1) * _R(0, 1) + _R(1, 1) * _R(1, 1) + _R(2, 1) * _R(2, 1));
+    float_t s = 1.0 / std::sqrt(length1 * length2);
 
     // get sign of S by requiring the tag to be in front the camera;
     // we assume camera looks in the -Z direction.
@@ -110,8 +110,8 @@ void homography_to_pose(const double H[3][3], double fx, double fy, double cx, d
     _R(1, 2) = _R(2, 0) * _R(0, 1) - _R(0, 0) * _R(2, 1);
     _R(2, 2) = _R(0, 0) * _R(1, 1) - _R(1, 0) * _R(0, 1);
 
-    JacobiSVD<Matrix3d> svd(_R, ComputeThinU | ComputeThinV);
-    Map<Matrix3d>(R[0], 3, 3).noalias() = svd.matrixU() * svd.matrixV().transpose();
+    JacobiSVD<Matrix<float_t, 3, 3>> svd(_R, ComputeThinU | ComputeThinV);
+    Map<Matrix<float_t, 3, 3>>(R[0], 3, 3).noalias() = svd.matrixU() * svd.matrixV().transpose();
 }
 
 }  // namespace apriltag
