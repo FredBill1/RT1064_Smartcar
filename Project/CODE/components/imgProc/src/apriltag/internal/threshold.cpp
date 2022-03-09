@@ -8,10 +8,10 @@ namespace imgProc {
 namespace apriltag {
 
 void threshold(uint8_t* src, QuadImg_t& dst) {
-    auto& im_max = unionBuffer.threshold.im_max;
-    auto& im_min = unionBuffer.threshold.im_min;
-    auto& im_max2 = unionBuffer.threshold.im_max2;
-    auto& im_min2 = unionBuffer.threshold.im_min2;
+    auto& im_max = thresholdbuf.im_max;
+    auto& im_min = thresholdbuf.im_min;
+    auto& im_max2 = thresholdbuf.im_max2;
+    auto& im_min2 = thresholdbuf.im_min2;
 
     rep(i, 0, TN) rep(j, 0, TM) {
         im_max[i][j] = 0, im_min[i][j] = 255;

@@ -10,20 +10,14 @@
 namespace imgProc {
 namespace apriltag {
 
-union UnionBuffer {
-    struct threshold {
-        uint8_t im_max[TN][TM], im_min[TN][TM];
-        uint8_t im_max2[TN][TM], im_min2[TN][TM];
-    } threshold;
-
-    struct segmentation {
-        Unionfind_t uf;
-        uint8_t hashmapbuf[sizeof(Hashmap)];
-    } segmentation;
+struct threshold_buf {
+    uint8_t im_max[TN][TM], im_min[TN][TM];
+    uint8_t im_max2[TN][TM], im_min2[TN][TM];
 };
-
-extern UnionBuffer unionBuffer;
+extern Unionfind_t uf;
+extern threshold_buf thresholdbuf;
 extern QuadImg_t threshim;
+extern uint8_t hashmapbuf[sizeof(Hashmap)];
 
 }  // namespace apriltag
 }  // namespace imgProc

@@ -126,7 +126,7 @@ void show_unionfind() {
     ips114_set_region(0, 0, M / 4 - 1, N / 4 - 1);
     for (int i = 0; i < (N / 4); ++i)
         for (int j = 0; j < (M / 4); ++j) {
-            uint64_t cur = unionBuffer.segmentation.uf[(i * (M / quad_decimate) + j) * 2];
+            uint64_t cur = uf[(i * (M / quad_decimate) + j) * 2];
             cur *= int(1e9 + 7);
             cur &= 0xFFFF;
             ips114_writedata_16bit(cur);
