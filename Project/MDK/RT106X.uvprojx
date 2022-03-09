@@ -2639,6 +2639,11 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\components\imgProc\src\apriltag\internal\globalVariables.cpp</FilePath>
             </File>
+            <File>
+              <FileName>visualization_pose.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\apriltag\visualization_pose.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -5437,6 +5442,11 @@
               <FileName>globalVariables.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\components\imgProc\src\apriltag\internal\globalVariables.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>visualization_pose.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\apriltag\visualization_pose.cpp</FilePath>
             </File>
           </Files>
         </Group>

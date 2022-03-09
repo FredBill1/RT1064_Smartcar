@@ -5863,6 +5863,18 @@
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
+    <File>
+      <GroupNumber>29</GroupNumber>
+      <FileNumber>424</FileNumber>
+      <FileType>8</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\CODE\components\imgProc\src\apriltag\visualization_pose.cpp</PathWithFileName>
+      <FilenameWithoutPath>visualization_pose.cpp</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
   </Group>
 
   <Group>
@@ -5873,7 +5885,7 @@
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>30</GroupNumber>
-      <FileNumber>424</FileNumber>
+      <FileNumber>425</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -5885,7 +5897,7 @@
     </File>
     <File>
       <GroupNumber>30</GroupNumber>
-      <FileNumber>425</FileNumber>
+      <FileNumber>426</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -5897,7 +5909,7 @@
     </File>
     <File>
       <GroupNumber>30</GroupNumber>
-      <FileNumber>426</FileNumber>
+      <FileNumber>427</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -5909,7 +5921,7 @@
     </File>
     <File>
       <GroupNumber>30</GroupNumber>
-      <FileNumber>427</FileNumber>
+      <FileNumber>428</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>

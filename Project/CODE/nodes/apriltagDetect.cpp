@@ -13,6 +13,7 @@ extern "C" {
 #include "apriltag/apriltag_pose.hpp"
 #include "apriltag/tag25h9.hpp"
 #include "apriltag/visualization.hpp"
+#include "apriltag/visualization_pose.hpp"
 
 static void apriltagDetectThreadEntry(void*) {
     using namespace imgProc::apriltag;
@@ -30,6 +31,7 @@ static void apriltagDetectThreadEntry(void*) {
             plot_tag_det(img, det);
             info.det = det_p;
             estimate_pose_for_tag_homography(info, solution);
+            plot_pose_axis(img, info, solution);
         }
         show_plot_grayscale(img);
         mt9v03x_csi_image_release();

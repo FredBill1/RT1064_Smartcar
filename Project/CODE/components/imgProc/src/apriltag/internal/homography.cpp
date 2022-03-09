@@ -63,7 +63,7 @@ void homography_compute2(float_t dst[3][3], float_t c[4][4]) {
     // clang-format on
 }
 
-void homography_project(const float_t H[3][3], float_t x, float_t y, float_t *ox, float_t *oy) {
+void homography_project(const float_t H[3][3], float_t x, float_t y, float_t* ox, float_t* oy) {
     float_t xx = H[0][0] * x + H[0][1] * y + H[0][2];
     float_t yy = H[1][0] * x + H[1][1] * y + H[1][2];
     float_t zz = H[2][0] * x + H[2][1] * y + H[2][2];
@@ -111,6 +111,20 @@ void homography_to_pose(const float_t H[3][3], float_t fx, float_t fy, float_t c
 
     JacobiSVD<Matrix<float_t, 3, 3>> svd(_R, ComputeThinU | ComputeThinV);
     Map<Matrix<float_t, 3, 3>>(R[0], 3, 3).noalias() = svd.matrixU() * svd.matrixV().transpose();
+}
+
+void matrix_transform(const float_t R[9], const float_t t[3], const float_t v[3], float_t dst[3]) {
+    using namespace Eigen;
+    Map<const Matrix<float_t, 3, 3>> RM(R);
+    Map<const Matrix<float_t, 3, 1>> tM(t);
+    Map<const Matrix<float_t, 3, 1>> vM(v);
+    Map<Matrix<float_t, 3, 1>> dstM(dst);
+    dstM.noalias() = RM * vM;
+    dstM += tM;
+}
+
+void camera_to_image(float_t fx, float_t fy, float_t cx, float_t cy, float_t x, float_t y, float_t z, float_t* ox, float_t* oy) {
+    *ox = x * fx / z + cx, *oy = y * fy / z + cy;
 }
 
 }  // namespace apriltag
