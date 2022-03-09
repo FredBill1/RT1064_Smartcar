@@ -1,14 +1,20 @@
 #include "apriltag/fmath.hpp"
 
 #define USE_ARM_MATH 1
+#include <cmath>
 
 #if (USE_ARM_MATH)
 #include <arm_math.h>
+#endif
+
+#ifndef M_PI
 #define M_PI 3.14159265f
+#endif
+#ifndef M_PI_2
 #define M_PI_2 1.57079632f
+#endif
+#ifndef M_PI_4
 #define M_PI_4 0.78539816f
-#else
-#include <cmath>
 #endif
 
 #if (USE_ARM_MATH)
@@ -98,11 +104,7 @@ float sqrtf(float x) {
     arm_sqrt_f32(x, &y);
     return y;
 }
-float fabs(float x) {
-    float32_t y;
-    arm_abs_f32(&x, &y, 1);
-    return y;
-}
+float fabs(float x) { return fabsf(x); }
 int floorf(float x) { return fast_ceilf(x); }
 int ceilf(float x) { return fast_ceilf(x); }
 int roundf(float x) { return fast_roundf(x); }
@@ -115,6 +117,14 @@ float atan2f(float y, float x) { return fast_atan2f(y, x); }
 #else
 float sqrtf(float x) { return std::sqrt(x); }
 float fabs(float x) { return std::fabs(x); }
+int floorf(float x) { return std::floor(x); }
+int ceilf(float x) { return std::ceil(x); }
+int roundf(float x) { return std::round(x); }
+
+float sinf(float x) { return std::sin(x); }
+float cosf(float x) { return std::cos(x); }
+float atanf(float x) { return std::atan(x); }
+float atan2f(float y, float x) { return std::atan2(y, x); }
 #endif
 }  // namespace apriltag
 }  // namespace imgProc
