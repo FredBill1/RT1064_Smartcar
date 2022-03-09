@@ -62,7 +62,7 @@
                 "SCANF_ADVANCED_ENABLE=1",
                 "FSL_DRIVER_TRANSFER_DOUBLE_WEAK_IRQ=0",
                 "USB_STACK_BM",
-                "__CC_ARM",
+                // "__CC_ARM",
                 "__arm__",
                 "__align(x)=",
                 "__ALIGNOF__(x)=",
@@ -139,7 +139,8 @@
                 "EIGEN_NO_DEBUG",
                 "NDEBUG",
                 "M_PI=3.14",
-                "ARM_MATH_CM7"
+                "ARM_MATH_CM7",
+                "__FPU_PRESENT"
             ],
             "intelliSenseMode": "${default}",
             "cppStandard": "c++17"

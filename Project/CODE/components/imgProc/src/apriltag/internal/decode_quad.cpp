@@ -2,10 +2,9 @@
 
 #include <rtthread.h>
 
-#include <cmath>
-
 #include "Eigen/Eigen"
 #include "apriltag/config.hpp"
+#include "apriltag/fmath.hpp"
 #include "apriltag/internal/Graymodel.hpp"
 #include "apriltag/internal/Quick_decode.hpp"
 #include "apriltag/internal/homography.hpp"
@@ -18,7 +17,7 @@ inline void refine_edges(uint8_t *im_orig, quad *quad) {
     float_t lines[4][4];
     for (int edge = 0; edge < 4; edge++) {
         int a = edge, b = (edge + 1) & 3;
-        float_t nx = quad->p[b][1] - quad->p[a][1], ny = -quad->p[b][0] + quad->p[a][0], mag = sqrt(nx * nx + ny * ny);
+        float_t nx = quad->p[b][1] - quad->p[a][1], ny = -quad->p[b][0] + quad->p[a][0], mag = sqrtf(nx * nx + ny * ny);
         nx /= mag, ny /= mag;
         if (quad->reversed_border) nx = -nx, ny = -ny;
         int nsamples = max(16, mag / 8);
@@ -42,14 +41,14 @@ inline void refine_edges(uint8_t *im_orig, quad *quad) {
             Mx += bestx, My += besty, Mxx += bestx * bestx, Mxy += bestx * besty, Myy += besty * besty, N++;
         }
         float_t Ex = Mx / N, Ey = My / N, Cxx = Mxx / N - Ex * Ex, Cxy = Mxy / N - Ex * Ey, Cyy = Myy / N - Ey * Ey,
-                normal_theta = .5 * std::atan2(-2 * Cxy, (Cyy - Cxx));
-        nx = std::cos(normal_theta), ny = std::sin(normal_theta), lines[edge][0] = Ex, lines[edge][1] = Ey, lines[edge][2] = nx,
+                normal_theta = .5 * atan2f(-2 * Cxy, (Cyy - Cxx));
+        nx = cosf(normal_theta), ny = sinf(normal_theta), lines[edge][0] = Ex, lines[edge][1] = Ey, lines[edge][2] = nx,
         lines[edge][3] = ny;
     }
     for (int i = 0; i < 4; i++) {
         float_t A00 = lines[i][3], A01 = -lines[(i + 1) & 3][3], A10 = -lines[i][2], A11 = lines[(i + 1) & 3][2],
                 B0 = -lines[i][0] + lines[(i + 1) & 3][0], B1 = -lines[i][1] + lines[(i + 1) & 3][1], det = A00 * A11 - A10 * A01;
-        if (std::abs(det) > 0.001) {
+        if (fabs(det) > 0.001) {
             float_t W00 = A11 / det, W01 = -A01 / det, L0 = W00 * B0 + W01 * B1;
             quad->p[i][0] = lines[i][0] + L0 * A00, quad->p[i][1] = lines[i][1] + L0 * A10;
         } else {  // this is a bad sign. We'll just keep the corner we had.
@@ -74,11 +73,11 @@ inline void quad_update_homographies(quad &quad) {
 }
 
 inline float_t value_for_pixel(uint8_t *im, float_t px, float_t py) {
-    int x1 = std::floor(px - 0.5);
-    int x2 = std::ceil(px - 0.5);
+    int x1 = floorf(px - 0.5);
+    int x2 = ceilf(px - 0.5);
     float_t x = px - 0.5 - x1;
-    int y1 = std::floor(py - 0.5);
-    int y2 = std::ceil(py - 0.5);
+    int y1 = floorf(py - 0.5);
+    int y2 = ceilf(py - 0.5);
     float_t y = py - 0.5 - y1;
     if (x1 < 0 || x2 >= M || y1 < 0 || y2 >= N) return -1;
     return im[y1 * M + x1] * (1 - x) * (1 - y) + im[y1 * M + x2] * x * (1 - y) + im[y2 * M + x1] * (1 - x) * y +
@@ -235,7 +234,7 @@ detections_t *decode_quads(const apriltag_family &family, uint8_t *im, quads_t &
             det.decision_margin = decision_margin;
             if (debug) plotInt(im, quad.p[2][1], quad.p[2][0], det.id, 2, true);
 
-            // float_t theta = entry.rotation * (EIGEN_PI / 2.0), c = std::cos(theta), s = std::sin(theta);
+            // float_t theta = entry.rotation * (EIGEN_PI / 2.0), c = cosf(theta), s = sinf(theta);
             float_t c, s;
             switch (entry.rotation) {
             case 0: c = 1, s = 0; break;

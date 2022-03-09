@@ -7,6 +7,7 @@
 #include <limits>
 
 #include "apriltag/config.hpp"
+#include "apriltag/fmath.hpp"
 #include "apriltag/internal/StaticBuffer.hpp"
 #include "apriltag/internal/utility.hpp"
 #include "apriltag/visualization.hpp"
@@ -32,7 +33,7 @@ inline line_fit_pt* compute_lfps(int_fast32_t sz, const List_pt_t& cluster, cons
         if (ix > 0 && ix + 1 < M / quad_decimate && iy > 0 && iy + 1 < N / quad_decimate) {
             int_fast32_t grad_x = (int_fast32_t)im[(iy * M + ix + 1) * quad_decimate] - im[(iy * M + ix - 1) * quad_decimate],
                          grad_y = (int_fast32_t)im[((iy + 1) * M + ix) * quad_decimate] - im[((iy - 1) * M + ix) * quad_decimate];
-            W = std::sqrt(grad_x * grad_x + grad_y * grad_y) + 1;
+            W = sqrtf(grad_x * grad_x + grad_y * grad_y) + 1;
         }
         float_t fx = x, fy = y;
         lfps[i].Mx += W * fx;
@@ -62,16 +63,16 @@ static void fit_line(line_fit_pt* lfps, int_fast32_t sz, int_fast32_t i0, int_fa
         N = sz - i0 + i1 + 1;
     }
     float_t Ex = Mx / W, Ey = My / W, Cxx = Mxx / W - Ex * Ex, Cxy = Mxy / W - Ex * Ey, Cyy = Myy / W - Ey * Ey,
-            eig_small = 0.5 * (Cxx + Cyy - std::sqrt((Cxx - Cyy) * (Cxx - Cyy) + 4 * Cxy * Cxy));
+            eig_small = 0.5 * (Cxx + Cyy - sqrtf((Cxx - Cyy) * (Cxx - Cyy) + 4 * Cxy * Cxy));
     if (lineparm) {
         lineparm[0] = Ex;
         lineparm[1] = Ey;
-        float_t eig = 0.5 * (Cxx + Cyy + std::sqrt((Cxx - Cyy) * (Cxx - Cyy) + 4 * Cxy * Cxy)), nx1 = Cxx - eig, ny1 = Cxy,
+        float_t eig = 0.5 * (Cxx + Cyy + sqrtf((Cxx - Cyy) * (Cxx - Cyy) + 4 * Cxy * Cxy)), nx1 = Cxx - eig, ny1 = Cxy,
                 M1 = nx1 * nx1 + ny1 * ny1, nx2 = Cxy, ny2 = Cyy - eig, M2 = nx2 * nx2 + ny2 * ny2, nx, ny, M;
         if (M1 > M2) nx = nx1, ny = ny1, M = M1;
         else
             nx = nx2, ny = ny2, M = M2;
-        float_t length = std::sqrt(M);
+        float_t length = sqrtf(M);
         lineparm[2] = nx / length, lineparm[3] = ny / length;
     }
     if (err) *err = N * eig_small;
@@ -144,7 +145,7 @@ inline bool quad_segment_maxima(int_fast32_t sz, List_pt_t& cluster, line_fit_pt
                 fit_line(lfps, sz, i1, i2, params12, &err12, &mse12);
                 if (mse12 > max_line_fit_mse) continue;
                 float_t dot = params01[2] * params12[2] + params01[3] * params12[3];
-                if (std::abs(dot) > max_dot) continue;
+                if (fabs(dot) > max_dot) continue;
                 for (int m3 = m2 + 1; m3 < nmaxima; m3++) {
                     int i3 = maxima[m3];
                     fit_line(lfps, sz, i2, i3, params23, &err23, &mse23);
@@ -214,7 +215,7 @@ bool fit_quad(List_pt_t& cluster, apriltag_family& tf, quad& quad, uint8_t* im) 
         float_t A00 = lines[i][3], A01 = -lines[(i + 1) & 3][3], A10 = -lines[i][2], A11 = lines[(i + 1) & 3][2],
                 B0 = -lines[i][0] + lines[(i + 1) & 3][0], B1 = -lines[i][1] + lines[(i + 1) & 3][1], det = A00 * A11 - A10 * A01,
                 W00 = A11 / det, W01 = -A01 / det;
-        if (std::abs(det) < 0.001) {
+        if (fabs(det) < 0.001) {
             res = false;
             goto finish;
         }
@@ -229,18 +230,18 @@ bool fit_quad(List_pt_t& cluster, apriltag_family& tf, quad& quad, uint8_t* im) 
         for (int i = 0; i < 3; i++) {
             int idxa = i;            // 0, 1, 2,
             int idxb = (i + 1) % 3;  // 1, 2, 0
-            length[i] = std::sqrt(sq(quad.p[idxb][0] - quad.p[idxa][0]) + sq(quad.p[idxb][1] - quad.p[idxa][1]));
+            length[i] = sqrtf(sq(quad.p[idxb][0] - quad.p[idxa][0]) + sq(quad.p[idxb][1] - quad.p[idxa][1]));
         }
         p = (length[0] + length[1] + length[2]) / 2;
-        area += std::sqrt(p * (p - length[0]) * (p - length[1]) * (p - length[2]));
+        area += sqrtf(p * (p - length[0]) * (p - length[1]) * (p - length[2]));
         for (int i = 0; i < 3; i++) {
             int idxs[] = {2, 3, 0, 2};
             int idxa = idxs[i];
             int idxb = idxs[i + 1];
-            length[i] = std::sqrt(sq(quad.p[idxb][0] - quad.p[idxa][0]) + sq(quad.p[idxb][1] - quad.p[idxa][1]));
+            length[i] = sqrtf(sq(quad.p[idxb][0] - quad.p[idxa][0]) + sq(quad.p[idxb][1] - quad.p[idxa][1]));
         }
         p = (length[0] + length[1] + length[2]) / 2;
-        area += std::sqrt(p * (p - length[0]) * (p - length[1]) * (p - length[2]));
+        area += sqrtf(p * (p - length[0]) * (p - length[1]) * (p - length[2]));
         if (area < 0.95 * sq(max(tf.width_at_border / quad_decimate, 3))) {
             res = false;
             goto finish;
@@ -251,7 +252,7 @@ bool fit_quad(List_pt_t& cluster, apriltag_family& tf, quad& quad, uint8_t* im) 
             int i0 = i, i1 = (i + 1) & 3, i2 = (i + 2) & 3;
             float_t dx1 = quad.p[i1][0] - quad.p[i0][0], dy1 = quad.p[i1][1] - quad.p[i0][1], dx2 = quad.p[i2][0] - quad.p[i1][0],
                     dy2 = quad.p[i2][1] - quad.p[i1][1];
-            float_t cos_dtheta = (dx1 * dx2 + dy1 * dy2) / std::sqrt((dx1 * dx1 + dy1 * dy1) * (dx2 * dx2 + dy2 * dy2));
+            float_t cos_dtheta = (dx1 * dx2 + dy1 * dy2) / sqrtf((dx1 * dx1 + dy1 * dy1) * (dx2 * dx2 + dy2 * dy2));
             if ((cos_dtheta > cos_critical_rad || cos_dtheta < -cos_critical_rad) || dx1 * dy2 < dy1 * dx2) {
                 res = false;
                 goto finish;

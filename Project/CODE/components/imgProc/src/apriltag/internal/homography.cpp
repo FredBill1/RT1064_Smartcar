@@ -1,8 +1,7 @@
 #include "apriltag/internal/homography.hpp"
 
-#include <cmath>
-
 #include "Eigen/Eigen"
+#include "apriltag/fmath.hpp"
 
 namespace imgProc {
 namespace apriltag {
@@ -27,7 +26,7 @@ void homography_compute2(float_t dst[3][3], float_t c[4][4]) {
         float_t max_val = 0;
         int max_val_idx = -1;
         for (int row = col; row < 8; row++) {
-            float_t val = std::abs(A[row * 9 + col]);
+            float_t val = fabs(A[row * 9 + col]);
             if (val > max_val) {
                 max_val = val;
                 max_val_idx = row;
@@ -87,9 +86,9 @@ void homography_to_pose(const float_t H[3][3], float_t fx, float_t fy, float_t c
 
     // compute the scale by requiring that the rotation columns are unit length
     // (Use geometric average of the two length vectors we have)
-    float_t length1 = std::sqrt(_R(0, 0) * _R(0, 0) + _R(1, 0) * _R(1, 0) + _R(2, 0) * _R(2, 0));
-    float_t length2 = std::sqrt(_R(0, 1) * _R(0, 1) + _R(1, 1) * _R(1, 1) + _R(2, 1) * _R(2, 1));
-    float_t s = 1.0 / std::sqrt(length1 * length2);
+    float_t length1 = sqrtf(_R(0, 0) * _R(0, 0) + _R(1, 0) * _R(1, 0) + _R(2, 0) * _R(2, 0));
+    float_t length2 = sqrtf(_R(0, 1) * _R(0, 1) + _R(1, 1) * _R(1, 1) + _R(2, 1) * _R(2, 1));
+    float_t s = 1.0 / sqrtf(length1 * length2);
 
     // get sign of S by requiring the tag to be in front the camera;
     // we assume camera looks in the -Z direction.
