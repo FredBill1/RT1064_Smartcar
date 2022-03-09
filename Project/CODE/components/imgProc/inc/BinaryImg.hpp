@@ -39,9 +39,12 @@ template <int_fast32_t Height, int_fast32_t Width> class QuadImg {
     inline constexpr data_t idx(int_fast32_t i, int_fast32_t j) const { return (i * M + j) << 1; }
 
  public:
-    inline uint8_t operator()(int_fast32_t i, int_fast32_t j) const { return data[idx(i, j) / SZ] >> (idx(i, j) & (SZ - 1)) & 3; }
+    inline uint8_t operator()(int_fast32_t i, int_fast32_t j) const {
+        int_fast32_t Idx = idx(i, j);
+        return data[Idx / SZ] >> (Idx & (SZ - 1)) & 3;
+    }
     inline void set(int_fast32_t i, int_fast32_t j, uint8_t v) {
-        int_fast32_t I = idx(i, j) / SZ, J = idx(i, j) & (SZ - 1);
+        int_fast32_t Idx = idx(i, j), I = Idx / SZ, J = Idx & (SZ - 1);
         data[I] &= ~(data_t(3) << J);
         data[I] |= data_t(v) << J;
     }
