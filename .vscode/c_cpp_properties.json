@@ -62,7 +62,7 @@
                 "SCANF_ADVANCED_ENABLE=1",
                 "FSL_DRIVER_TRANSFER_DOUBLE_WEAK_IRQ=0",
                 "USB_STACK_BM",
-                // "__CC_ARM",
+                "__CC_ARM",
                 "__arm__",
                 "__align(x)=",
                 "__ALIGNOF__(x)=",

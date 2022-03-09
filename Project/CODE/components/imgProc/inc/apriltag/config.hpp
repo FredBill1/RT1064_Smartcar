@@ -21,7 +21,8 @@ constexpr int_fast32_t TN = N / TILESZ / quad_decimate, TM = M / TILESZ / quad_d
 constexpr int_fast32_t THRESH_MIN_DIFF = 5;
 
 // Segmentation
-constexpr int_fast32_t HASH_BUCKET_CNT = N * M / (quad_decimate * quad_decimate) + 1;
+// constexpr int_fast32_t HASH_BUCKET_CNT = N * M / (quad_decimate * quad_decimate) + 1;
+constexpr int_fast32_t HASH_BUCKET_CNT = 233;
 constexpr int_fast32_t CLUSTER_MIN_SIZE = 25;
 
 // fit quad
