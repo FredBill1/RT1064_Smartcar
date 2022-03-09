@@ -20,6 +20,7 @@ static void apriltagDetectThreadEntry(void*) {
     tf.init(1);
     apriltag_detection_info info{nullptr, tagsize, fx, fy, cx, cy};
     apriltag_pose solution;
+    int32_t pre_time = rt_tick_get();
     for (;;) {
         uint8_t* img = mt9v03x_csi_image_take();
         detections_t& dets = apriltag_detect(tf, img);
@@ -32,6 +33,9 @@ static void apriltagDetectThreadEntry(void*) {
         }
         show_plot_grayscale(img);
         mt9v03x_csi_image_release();
+        int32_t cur_time = rt_tick_get();
+        rt_kprintf("%d\r\n", cur_time - pre_time);
+        pre_time = cur_time;
     }
 }
 
