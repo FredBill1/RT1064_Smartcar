@@ -704,13 +704,14 @@ status_t CSI_TransferSubmitEmptyBuffer(CSI_Type *base, csi_handle_t *handle, uin
          * If user has started transfer using @ref CSI_TransferStart, and the CSI is
          * stopped due to no empty frame buffer in queue, then start the CSI.
          */
-        if ((!handle->transferOnGoing) && (CSI_TransferGetEmptyBufferCount(base, handle) >= 2U))
+        // if ((!handle->transferOnGoing) && (CSI_TransferGetEmptyBufferCount(base, handle) >= 2U))
+        if (!handle->transferOnGoing) //! FredBill: start immediately
         {
             handle->transferOnGoing = true;
             handle->nextBufferIdx = 0U;
 
             /* Load the frame buffers to CSI module. */
-            CSI_TransferLoadBufferToDevice(base, handle);
+            // CSI_TransferLoadBufferToDevice(base, handle); //! FredBill: only once
             CSI_TransferLoadBufferToDevice(base, handle);
             CSI_ReflashFifoDma(base, kCSI_RxFifo);
             CSI_Start(base);
