@@ -247,11 +247,15 @@ detections_t *decode_quads(const apriltag_family &family, uint8_t *im, quads_t &
                 R * Eigen::Map<Eigen::Matrix<float_t, 3, 3>>(quad.H[0]);
             homography_project(det.H, 0, 0, &det.c[0], &det.c[1]);
 
+#if (0)
             for (int i = 0; i < 4; i++) {
                 int tcx = (i == 1 || i == 2) ? 1 : -1;
                 int tcy = (i < 2) ? 1 : -1;
                 homography_project(det.H, tcx, tcy, &det.p[i][0], &det.p[i][1]);
             }
+#else
+            rep(i, 0, 4) rep(j, 0, 2) det.p[i][j] = quad.p[i][j];
+#endif
         }
     }
 

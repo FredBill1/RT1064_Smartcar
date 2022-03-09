@@ -64,7 +64,7 @@ clusters_t* gradient_clusters(const QuadImg_t& img) {
             if (r0 > r1) std::swap(r0, r1);
             List_pt_t*& list = dict[hashPt2(r0, r1)];
             if (!list) list = new (staticBuffer.allocate(sizeof(List_pt_t))) List_pt_t(List_pt_alloc_t{staticBuffer});
-            int_fast32_t dif = ((int_fast32_t)v1 - v0) / 3 * 255;
+            int_fast32_t dif = ((int_fast32_t)v1 - v0) * (255 / 3);
             list->push_front({uint16_t(2 * x + dx), uint16_t(2 * y + dy), int16_t(dx * dif), int16_t(dy * dif), 0.f});
         }
     }

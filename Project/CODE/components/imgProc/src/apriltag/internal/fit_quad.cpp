@@ -99,7 +99,15 @@ inline bool quad_segment_maxima(int_fast32_t sz, List_pt_t& cluster, line_fit_pt
         constexpr float f[fsz]{0.01110899635F, 0.1353352815F, 0.6065306664F, 1.0F, 0.6065306664F, 0.1353352815F, 0.01110899635F};
         rep(iy, 0, sz) {
             float_t acc = 0;
+#if (0)
             rep(i, 0, fsz) acc += errs[(iy + i - fsz / 2 + sz) % sz] * f[i];
+#else
+            int index = (iy - fsz / 2 + sz) % sz;
+            rep(i, 0, fsz) {
+                acc += errs[index] * f[i];
+                if (++index >= sz) index = 0;
+            }
+#endif
             y[iy] = acc;
         }
         rt_memcpy(errs, y, sizeof(float_t) * sz);
