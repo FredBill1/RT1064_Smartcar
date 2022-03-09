@@ -51,7 +51,7 @@ detections_t &apriltag_detect(apriltag_family &tf, uint8_t *img, apriltag_detect
 
     int32_t t4 = rt_tick_get();
     auto &detections = *decode_quads(tf, img, quads, visualize_flag == apriltag_detect_visualize_flag::decode);
-    // reconcile_detections(detections);
+    reconcile_detections(detections);
     int32_t t5 = rt_tick_get();
 
     rt_kprintf("%d %d %d %d %d\r\n", t1 - t0, t2 - t1, t3 - t2, t4 - t3, t5 - t4);
