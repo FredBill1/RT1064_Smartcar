@@ -81,10 +81,9 @@ void lineImg(uint8_t* img, int_fast32_t i0, int_fast32_t j0, int_fast32_t i1, in
 }
 
 void plot_tag_det(uint8_t* img, apriltag_detection& det) {
-    uint16_t color = det.id * 2333;
+    for (int i = 0; i < 4; i++) lineImg(img, det.p[(i + 1) & 3][1], det.p[(i + 1) & 3][0], det.p[i][1], det.p[i][0], RED);
+    plotImg(img, det.p[0][1], det.p[0][0], BLUE, 2);
     plotInt(img, det.c[1], det.c[0], det.id, 2, true);
-    for (int i = 0; i < 4; i++) lineImg(img, det.p[(i + 1) & 3][1], det.p[(i + 1) & 3][0], det.p[i][1], det.p[i][0], color);
-    plotImg(img, det.p[0][1], det.p[0][0], color * 233, 2);
 }
 
 void show_plot_grayscale(const uint8_t* img) {
