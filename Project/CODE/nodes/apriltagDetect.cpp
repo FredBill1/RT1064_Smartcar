@@ -8,7 +8,7 @@ extern "C" {
 }
 
 //
-#include "ApriltagConfig.h"
+#include "ApriltagConfig.hpp"
 #include "apriltag/apriltag.hpp"
 #include "apriltag/apriltag_pose.hpp"
 #include "apriltag/tag25h9.hpp"
