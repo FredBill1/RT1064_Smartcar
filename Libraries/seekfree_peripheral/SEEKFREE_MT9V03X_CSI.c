@@ -34,6 +34,7 @@
 #include <rthw.h>
 #include <rtthread.h>
 
+#include "fsl_cache.h"
 #include "fsl_common.h"
 #include "fsl_gpio.h"
 #include "fsl_csi.h"
@@ -48,7 +49,8 @@
 
 
 //图像缓冲区  如果用户需要访问图像数据 最好通过mt9v03x_csi_image来访问数据，最好不要直接访问缓冲区
-AT_SDRAM_NONCACHE_SECTION_ALIGN(uint8 mt9v03x_csi_buf[2][MT9V03X_CSI_H * MT9V03X_CSI_W], 64);
+AT_SDRAM_SECTION_ALIGN(static uint8 mt9v03x_csi_buf[2][MT9V03X_CSI_H * MT9V03X_CSI_W], 64);
+
 
 //用户访问图像数据直接访问这个指针变量就可以
 //访问方式非常简单，可以直接使用下标的方式访问
@@ -138,7 +140,10 @@ uint8_t *mt9v03x_csi_image_take() {
         rt_base_t level = rt_hw_interrupt_disable();
         uint8_t res = csi_get_full_buffer(&csi_handle, &fullCameraBufferAddr);
         rt_hw_interrupt_enable(level);
-        if (res) return (uint8_t *)fullCameraBufferAddr;
+        if (res) {
+            L1CACHE_InvalidateDCacheByRange(fullCameraBufferAddr, MT9V03X_CSI_H * MT9V03X_CSI_W);
+            return (uint8_t *)fullCameraBufferAddr;
+        }
     }
 }
 void mt9v03x_csi_image_release() {
