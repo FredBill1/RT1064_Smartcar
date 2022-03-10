@@ -7,13 +7,13 @@ extern "C" {
 #include "zf_gpio.h"
 }
 
-//
 #include "ApriltagConfig.hpp"
 #include "apriltag/apriltag.hpp"
 #include "apriltag/apriltag_pose.hpp"
 #include "apriltag/tag25h9.hpp"
 #include "apriltag/visualization.hpp"
 #include "apriltag/visualization_pose.hpp"
+#include "devices.hpp"
 
 static void apriltagDetectThreadEntry(void*) {
     using namespace imgProc::apriltag;
@@ -23,6 +23,7 @@ static void apriltagDetectThreadEntry(void*) {
     apriltag_pose solution;
     int32_t pre_time = rt_tick_get();
     gpio_init(D4, GPI, 0, GPIO_PIN_CONFIG);
+    SerialIO::TxUtil<float, 3, true> txUtil("apriltag", 3);
     for (;;) {
         uint8_t* img = mt9v03x_csi_image_take();
         bool visualize = gpio_get(D4);
@@ -35,6 +36,10 @@ static void apriltagDetectThreadEntry(void*) {
             if (visualize) {
                 plot_tag_det(img, det);
                 plot_pose_axis(img, info, solution);
+            }
+            if (txUtil.txFinished()) {
+                txUtil.setAll(solution.t[0], solution.t[1], solution.t[2]);
+                wireless.send(txUtil);
             }
         }
         if (visualize) show_plot_grayscale(img);

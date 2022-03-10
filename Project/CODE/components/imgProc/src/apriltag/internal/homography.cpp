@@ -123,8 +123,9 @@ void matrix_transform(const float_t R[9], const float_t t[3], const float_t v[3]
     dstM += tM;
 }
 
-void camera_to_image(float_t fx, float_t fy, float_t cx, float_t cy, float_t x, float_t y, float_t z, float_t* ox, float_t* oy) {
-    *ox = x * fx / z + cx, *oy = y * fy / z + cy;
+void camera_to_image(float_t fx, float_t fy, float_t cx, float_t cy, const float_t src[3], float_t dst[2]) {
+    dst[0] = fx * src[0] / src[2] + cx;
+    dst[1] = fy * src[1] / src[2] + cy;
 }
 
 }  // namespace apriltag

@@ -6,7 +6,7 @@
 namespace imgProc {
 namespace apriltag {
 
-void plot_pose_axis(uint8_t* img, apriltag_detection_info& info, apriltag_pose& solution);
+void plot_pose_axis(uint8_t* img, const apriltag_detection_info& info, const apriltag_pose& pose);
 
 }  // namespace apriltag
 }  // namespace imgProc
