@@ -94,18 +94,26 @@ static inline float fast_atan2f(float y, float x) {
     if (x > 0 && y < 0) return 2 * M_PI - fast_atanf(-y / x);
     return (y == 0) ? 0 : ((y > 0) ? M_PI : -M_PI);
 }
+
+// #define fast_sqrtf sqrtf
+static inline float fast_sqrtf(float x) {
+#if defined(__CC_ARM)
+    __asm {
+		VSQRT.F32	x,	x
+    }
+#else
+    asm volatile("vsqrt.f32 %[r], %[x]\n" : [r] "=t"(x) : [x] "t"(x));
+#endif
+    return x;
+}
 #endif
 
 namespace imgProc {
 namespace apriltag {
 #if (USE_ARM_MATH)
-float sqrtf(float x) {
-    float32_t y;
-    arm_sqrt_f32(x, &y);
-    return y;
-}
+float sqrtf(float x) { return fast_sqrtf(x); }
 float fabs(float x) { return fabsf(x); }
-int floorf(float x) { return fast_ceilf(x); }
+int floorf(float x) { return fast_floorf(x); }
 int ceilf(float x) { return fast_ceilf(x); }
 int roundf(float x) { return fast_roundf(x); }
 
