@@ -205,10 +205,10 @@ bool fit_quad(List_pt_t& cluster, apriltag_family& tf, quad& quad, uint8_t* im) 
     line_fit_pt* lfps = compute_lfps(sz, cluster, im);
 
     int indices[4];
-    if (!quad_segment_maxima(sz, lfps, indices)) return false;
+    bool res = false;
+    if (!quad_segment_maxima(sz, lfps, indices)) goto finish;
 
     float_t lines[4][4];
-    bool res = false;
     rep(i, 0, 4) {
         int_fast32_t i0 = indices[i], i1 = indices[(i + 1) & 3];
         float_t err;
