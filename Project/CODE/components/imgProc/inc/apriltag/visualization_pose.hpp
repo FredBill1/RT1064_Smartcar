@@ -8,6 +8,8 @@ namespace apriltag {
 
 void plot_pose_axis(uint8_t* img, const apriltag_detection_info& info, const apriltag_pose& pose);
 
+void plot_pose_cube(uint8_t* img, const apriltag_detection_info& info, const apriltag_pose& pose);
+
 }  // namespace apriltag
 }  // namespace imgProc
 
