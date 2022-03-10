@@ -79,7 +79,7 @@ static void fit_line(line_fit_pt* lfps, int_fast32_t sz, int_fast32_t i0, int_fa
     if (mse) *mse = eig_small;
 }
 
-inline bool quad_segment_maxima(int_fast32_t sz, List_pt_t& cluster, line_fit_pt* lfps, int indices[4]) {
+inline bool quad_segment_maxima(int_fast32_t sz, line_fit_pt* lfps, int indices[4]) {
     int_fast32_t ksz = min(20, sz / 12);
     if (ksz < 2) return false;
 
@@ -205,7 +205,7 @@ bool fit_quad(List_pt_t& cluster, apriltag_family& tf, quad& quad, uint8_t* im) 
     line_fit_pt* lfps = compute_lfps(sz, cluster, im);
 
     int indices[4];
-    if (!quad_segment_maxima(sz, cluster, lfps, indices)) return false;
+    if (!quad_segment_maxima(sz, lfps, indices)) return false;
 
     float_t lines[4][4];
     bool res = false;
