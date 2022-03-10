@@ -178,7 +178,14 @@ bool fit_quad(List_pt_t& cluster, apriltag_family& tf, quad& quad, uint8_t* im) 
     int_fast32_t sz = std::distance(cluster.begin(), cluster.end());
     if (sz < 24) return false;
     int_fast32_t xmax = 0, xmin = std::numeric_limits<int_fast32_t>::max(), ymax = 0, ymin = xmin;
-    for (auto& p : cluster) chkmax(xmax, p.x), chkmin(xmin, p.x), chkmax(ymax, p.y), chkmin(ymin, p.y);
+    for (auto& p : cluster) {
+        if (p.x > xmax) xmax = p.x;
+        else if (p.x < xmin)
+            xmin = p.x;
+        if (p.y > ymax) ymax = p.y;
+        else if (p.y < ymin)
+            ymin = p.y;
+    }
     if ((xmax - xmin) * (ymax - ymin) < max(tf.width_at_border / quad_decimate, 3)) return false;
     float cx = (xmin + xmax) * 0.5 + 0.05118, cy = (ymin + ymax) * 0.5 + -0.028581;
     float dot = 0;

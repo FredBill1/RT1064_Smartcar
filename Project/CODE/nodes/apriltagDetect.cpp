@@ -34,9 +34,9 @@ static void apriltagDetectThreadEntry(void*) {
             info.det = det_p;
             estimate_pose_for_tag_homography(info, solution);
             if (visualize) {
-                // plot_tag_det(img, det);
-                // plot_pose_axis(img, info, solution);
-                plot_pose_cube(img, info, solution);
+                plot_tag_det(img, det);
+                plot_pose_axis(img, info, solution);
+                // plot_pose_cube(img, info, solution);
             }
             if (txUtil.txFinished()) {
                 txUtil.setAll(solution.t[0], solution.t[1], solution.t[2]);
