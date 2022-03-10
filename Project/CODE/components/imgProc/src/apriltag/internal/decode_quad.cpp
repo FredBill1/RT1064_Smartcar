@@ -245,7 +245,7 @@ detections_t *decode_quads(const apriltag_family &family, uint8_t *im, quads_t &
             default: c = 0, s = -1; break;
             }
 #endif
-            Eigen::Matrix<float_t, 3, 3> R{{c, -s, 0}, {s, c, 0}, {0, 0, 1}};
+            Eigen::Matrix<float_t, 3, 3> R{{c, s, 0}, {-s, c, 0}, {0, 0, 1}};
             Eigen::Map<Eigen::Matrix<float_t, 3, 3>>(det.H[0]).noalias() =
                 R * Eigen::Map<Eigen::Matrix<float_t, 3, 3>>(quad.H[0]);
             homography_project(det.H, 0, 0, &det.c[0], &det.c[1]);
