@@ -13,7 +13,7 @@ extern "C" {
 #include "common.h"
 }
 
-#define apriltag_benchmark 0
+#define apriltag_benchmark 1
 
 #if (apriltag_benchmark)
 #include <rtthread.h>
