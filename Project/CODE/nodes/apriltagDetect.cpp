@@ -22,18 +22,22 @@ static void apriltagDetectThreadEntry(void*) {
     apriltag_detection_info info{nullptr, tagsize, fx, fy, cx, cy};
     apriltag_pose solution;
     int32_t pre_time = rt_tick_get();
+    gpio_init(D4, GPI, 0, GPIO_PIN_CONFIG);
     for (;;) {
         uint8_t* img = mt9v03x_csi_image_take();
+        bool visualize = gpio_get(D4);
         detections_t& dets = apriltag_detect(tf, img);
 
         for (apriltag_detection* det_p : dets) {
             apriltag_detection& det = *det_p;
-            plot_tag_det(img, det);
             info.det = det_p;
             estimate_pose_for_tag_homography(info, solution);
-            plot_pose_axis(img, info, solution);
+            if (visualize) {
+                plot_tag_det(img, det);
+                plot_pose_axis(img, info, solution);
+            }
         }
-        show_plot_grayscale(img);
+        if (visualize) show_plot_grayscale(img);
         mt9v03x_csi_image_release();
         int32_t cur_time = rt_tick_get();
         rt_kprintf("%d\r\n", cur_time - pre_time);
