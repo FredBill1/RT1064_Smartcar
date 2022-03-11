@@ -21,7 +21,7 @@ void plot_pose_axis(uint8_t* img, const apriltag_detection_info& info, const apr
     }
 }
 
-void plot_pose_cube(uint8_t* img, const apriltag_detection_info& info, const apriltag_pose& pose) {
+void plot_pose_cube(uint8_t* img, const apriltag_detection_info& info, const apriltag_pose& pose, bool plotID) {
     float_t p[8][2];
     const float_t X = info.tagsize / 2;
     float_t corner[4][3]{{X, X}, {X, -X}, {-X, -X}, {-X, X}};
@@ -30,9 +30,14 @@ void plot_pose_cube(uint8_t* img, const apriltag_detection_info& info, const apr
         corner[i][2] = -2 * X;
         tag_pose_to_image(info, pose, corner[i], p[i + 4]);
     }
-    rep(i, 0, 4) lineImg(img, p[i][1], p[i][0], p[((i + 1) & 3)][1], p[((i + 1) & 3)][0], colors[2]);
-    rep(i, 0, 4) lineImg(img, p[i][1], p[i][0], p[i + 4][1], p[i + 4][0], colors[1]);
-    rep(i, 0, 4) lineImg(img, p[i + 4][1], p[i + 4][0], p[((i + 1) & 3) + 4][1], p[((i + 1) & 3) + 4][0], colors[0]);
+    rep(i, 0, 4) lineImg(img, p[i][1], p[i][0], p[((i + 1) & 3)][1], p[((i + 1) & 3)][0], colors[2], 0);
+    if (plotID) {
+        float_t c[2], center[3]{0, 0, -X};
+        tag_pose_to_image(info, pose, center, c);
+        plotInt(img, c[1], c[0], info.det->id, 2, true);
+    }
+    rep(i, 0, 4) lineImg(img, p[i][1], p[i][0], p[i + 4][1], p[i + 4][0], colors[1], 0);
+    rep(i, 0, 4) lineImg(img, p[i + 4][1], p[i + 4][0], p[((i + 1) & 3) + 4][1], p[((i + 1) & 3) + 4][0], colors[0], 0);
 }
 
 }  // namespace apriltag
