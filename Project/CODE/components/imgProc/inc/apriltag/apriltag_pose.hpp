@@ -16,8 +16,8 @@ struct apriltag_detection_info {
 };
 
 struct apriltag_pose {
-    float_t R[3][3];
-    float_t t[3];
+    float_t R[3][3];  // 旋转矩阵
+    float_t t[3];     // 平移向量
 };
 
 void estimate_pose_for_tag_homography(const apriltag_detection_info& info, apriltag_pose& solution);
