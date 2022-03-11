@@ -19,13 +19,13 @@ void estimate_pose_for_tag_homography(const apriltag_detection_info& info, april
     }
 }
 
-void tag_pose_to_camera(const apriltag_detection_info& info, const apriltag_pose& pose, const float_t src[3], float_t dst[3]) {
+void tag_pose_to_camera(const apriltag_pose& pose, const float_t src[3], float_t dst[3]) {
     matrix_transform(pose.R[0], pose.t, src, dst);
 }
 
 void tag_pose_to_image(const apriltag_detection_info& info, const apriltag_pose& pose, const float_t src[3], float_t dst[2]) {
     float_t cam[3];
-    tag_pose_to_camera(info, pose, src, cam);
+    tag_pose_to_camera(pose, src, cam);
     camera_to_image(info.fx, info.fy, info.cx, info.cy, cam, dst);
 }
 

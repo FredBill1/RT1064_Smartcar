@@ -22,7 +22,7 @@ struct apriltag_pose {
 
 void estimate_pose_for_tag_homography(const apriltag_detection_info& info, apriltag_pose& solution);
 
-void tag_pose_to_camera(const apriltag_detection_info& info, const apriltag_pose& pose, const float_t src[3], float_t dst[3]);
+void tag_pose_to_camera(const apriltag_pose& pose, const float_t src[3], float_t dst[3]);
 
 void tag_pose_to_image(const apriltag_detection_info& info, const apriltag_pose& pose, const float_t src[3], float_t dst[2]);
 
