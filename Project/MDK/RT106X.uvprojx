@@ -2523,13 +2523,6 @@
         </Group>
         <Group>
           <GroupName>pose_kailman</GroupName>
-          <Files>
-            <File>
-              <FileName>pose_kalman_test.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\CODE\components\pose_kalman\src\pose_kalman_test.cpp</FilePath>
-            </File>
-          </Files>
         </Group>
         <Group>
           <GroupName>user_nodes</GroupName>
@@ -2643,6 +2636,11 @@
               <FileName>visualization_pose.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\components\imgProc\src\apriltag\visualization_pose.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>undisort.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\apriltag\undisort\undisort.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -5258,13 +5256,6 @@
               </Aads>
             </GroupArmAds>
           </GroupOption>
-          <Files>
-            <File>
-              <FileName>pose_kalman_test.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\CODE\components\pose_kalman\src\pose_kalman_test.cpp</FilePath>
-            </File>
-          </Files>
         </Group>
         <Group>
           <GroupName>user_nodes</GroupName>
@@ -5447,6 +5438,11 @@
               <FileName>visualization_pose.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\components\imgProc\src\apriltag\visualization_pose.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>undisort.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\apriltag\undisort\undisort.cpp</FilePath>
             </File>
           </Files>
         </Group>

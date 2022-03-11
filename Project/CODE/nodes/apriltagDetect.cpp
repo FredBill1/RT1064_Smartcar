@@ -11,6 +11,7 @@ extern "C" {
 #include "apriltag/apriltag.hpp"
 #include "apriltag/apriltag_pose.hpp"
 #include "apriltag/tag25h9.hpp"
+#include "apriltag/undisort.hpp"
 #include "apriltag/visualization.hpp"
 #include "apriltag/visualization_pose.hpp"
 #include "devices.hpp"
@@ -20,6 +21,7 @@ extern "C" {
 
 static void apriltagDetectThreadEntry(void*) {
     using namespace imgProc::apriltag;
+    AT_DTCM_SECTION_ALIGN(static uint8_t img[N * M], 64);
 
     // 初始化tag
     apriltag_family tf = tag25h9_create();
@@ -32,8 +34,10 @@ static void apriltagDetectThreadEntry(void*) {
     gpio_init(D4, GPI, 0, GPIO_PIN_CONFIG);
 
     for (;;) {
-        uint8_t* img = mt9v03x_csi_image_take();  // 获取图片
-        bool visualize = gpio_get(D4);            // 拨码开关决定是否进行可视化，因为可视化会消耗时间
+        uint8_t* src = mt9v03x_csi_image_take();  // 获取图片
+        undisort_I(src, img);                     // 矫正图像畸变
+
+        bool visualize = gpio_get(D4);  // 拨码开关决定是否进行可视化，因为可视化会消耗时间
 
         // 进行检测
         detections_t& dets = apriltag_detect(tf, img);
