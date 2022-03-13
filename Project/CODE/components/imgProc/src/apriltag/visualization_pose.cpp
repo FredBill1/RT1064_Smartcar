@@ -40,5 +40,13 @@ void plot_pose_cube(uint8_t* img, const apriltag_detection_info& info, const apr
     rep(i, 0, 4) lineImg(img, p[i + 4][1], p[i + 4][0], p[((i + 1) & 3) + 4][1], p[((i + 1) & 3) + 4][0], colors[0], 0);
 }
 
+void plot_det_poses(uint8_t* img, const apriltag_detection_info& info, const det_poses_t& det_poses) {
+    for (auto& [det, pose] : det_poses) {
+        // plot_tag_det(img, det);           // 画出tag边框和id
+        // plot_pose_axis(img, info, pose);  // 画出tag的坐标系，RGB分别为xyz轴
+        plot_pose_cube(img, info, pose, false);  // 画出tag的3d方块
+    }
+}
+
 }  // namespace apriltag
 }  // namespace imgProc

@@ -19,6 +19,17 @@ void estimate_pose_for_tag_homography(const apriltag_detection_info& info, april
     }
 }
 
+det_poses_t& estimate_poses(apriltag_detection_info& info, detections_t& dets) {
+    det_poses_t& det_poses = *new (staticBuffer.allocate(sizeof(det_poses_t))) det_poses_t(det_poses_alloc_t{staticBuffer});
+    det_poses.reserve(std::distance(dets.begin(), dets.end()));
+    for (apriltag_detection* det_p : dets) {
+        det_poses.emplace_back(*det_p);
+        info.det = det_p;
+        estimate_pose_for_tag_homography(info, det_poses.back().pose);
+    }
+    return det_poses;
+}
+
 void tag_pose_to_camera(const apriltag_pose& pose, const float_t src[3], float_t dst[3]) {
     matrix_transform(pose.R[0], pose.t, src, dst);
 }

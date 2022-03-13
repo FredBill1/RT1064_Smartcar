@@ -23,7 +23,7 @@ void plotChar(uint8_t* img, int_fast32_t i, int_fast32_t j, char dat);
 
 void plotInt(uint8_t* img, int_fast32_t i, int_fast32_t j, int32_t dat, int_fast32_t len = 2, bool atCenter = false);
 
-void plot_tag_det(uint8_t* img, apriltag_detection& det);
+void plot_tag_det(uint8_t* img, const apriltag_detection& det);
 
 void show_plot_grayscale(const uint8_t* img);
 
