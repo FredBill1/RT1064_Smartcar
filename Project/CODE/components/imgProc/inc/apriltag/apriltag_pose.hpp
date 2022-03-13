@@ -38,6 +38,8 @@ det_poses_t& estimate_poses(apriltag_detection_info& info, detections_t& dets);
 
 void tag_pose_to_camera(const apriltag_pose& pose, const float_t src[3], float_t dst[3]);
 
+void camera_info_to_image(const apriltag_detection_info& info, const float_t src[3], float_t dst[2]);
+
 void tag_pose_to_image(const apriltag_detection_info& info, const apriltag_pose& pose, const float_t src[3], float_t dst[2]);
 
 }  // namespace apriltag

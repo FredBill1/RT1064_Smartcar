@@ -1,24 +1,32 @@
 #include "apriltag/visualization_pose.hpp"
 
+#include <algorithm>
+
 #include "apriltag/internal/homography.hpp"
 #include "apriltag/internal/utility.hpp"
 #include "apriltag/visualization.hpp"
-
 namespace imgProc {
 namespace apriltag {
 
-constexpr uint16_t colors[]{0xF800, 0x07E0, 0x001F};  // RGB
+constexpr uint16_t colors[]{0xF800, 0x07E0, 0x001F, 0xFFFF};  // RGB,White
 
 void plot_pose_axis(uint8_t* img, const apriltag_detection_info& info, const apriltag_pose& pose) {
     float_t p0[2], p1[2];
     float_t O[3]{};
     tag_pose_to_image(info, pose, O, p0);
+    float_t cam[3][3];
+    int idx[3]{0, 1, 2};
     rep(i, 0, 3) {
-        float_t v[3]{}, dst[3];
-        v[i] = info.tagsize;
-        tag_pose_to_image(info, pose, v, p1);
-        lineImg(img, p0[1], p0[0], p1[1], p1[0], colors[i]);
+        float tag[3]{};
+        tag[i] = info.tagsize;
+        tag_pose_to_camera(pose, tag, cam[i]);
     }
+    std::sort(idx, idx + 3, [cam](int i, int j) { return cam[i][2] > cam[j][2]; });
+    for (int i : idx) {
+        camera_info_to_image(info, cam[i], p1);
+        lineImg(img, p0[1], p0[0], p1[1], p1[0], colors[i], 1);
+    }
+    plotImg(img, p0[1], p0[0], colors[3], 1);
 }
 
 void plot_pose_cube(uint8_t* img, const apriltag_detection_info& info, const apriltag_pose& pose, bool plotID) {
