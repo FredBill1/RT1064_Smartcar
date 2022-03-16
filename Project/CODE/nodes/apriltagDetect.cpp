@@ -42,8 +42,6 @@ static void apriltagDetectThreadEntry(void*) {
 
         det_poses_t& det_poses = estimate_poses(info, dets);  // 计算tag位姿
 
-        det_2ds_t& det_2ds = poese_to_det_2ds(det_poses, shift_dist);  // 转换成二维坐标
-
         if (visualize) plot_det_poses(img, info, det_poses);  // 可视化
 
         if (visualize) show_plot_grayscale(img);  // 如果启用可视化就把图片显示出来
