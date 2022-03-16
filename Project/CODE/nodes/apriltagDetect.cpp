@@ -34,11 +34,15 @@ static void apriltagDetectThreadEntry(void*) {
     for (;;) {
         bool visualize = gpio_get(D4);  // 拨码开关决定是否进行可视化，因为可视化会消耗时间
 
-        undisort_I(mt9v03x_csi_image_take(), img);  // 矫正图像畸变
+        uint8_t* src = mt9v03x_csi_image_take();
+        undisort_I(src, img);  // 矫正图像畸变
+        // rt_memcpy(img, src, N * M);
 
         detections_t& dets = apriltag_detect(tf, img);  // 进行检测
 
         det_poses_t& det_poses = estimate_poses(info, dets);  // 计算tag位姿
+
+        det_2ds_t& det_2ds = poese_to_det_2ds(det_poses, shift_dist);  // 转换成二维坐标
 
         if (visualize) plot_det_poses(img, info, det_poses);  // 可视化
 
