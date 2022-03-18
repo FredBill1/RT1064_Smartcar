@@ -75,7 +75,8 @@ static float orthogonal_iteration(const Vector3f v[], const Vector3f p[], Ref<Ve
         rep(j, 0, n_points) M3 += (q[j] - q_mean) * p_res[j].transpose();
         JacobiSVD<Matrix3f> svd(M3, ComputeThinU | ComputeThinV);
         R = svd.matrixU() * svd.matrixV().transpose();
-        if (R.determinant() < 0) {
+        // if (R.determinant() < 0) {
+        if (R(2, 2) < 0) {
             R(0, 2) = -R(0, 2);
             R(1, 2) = -R(1, 2);
             R(2, 2) = -R(2, 2);
