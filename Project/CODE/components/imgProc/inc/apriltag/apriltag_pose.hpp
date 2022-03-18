@@ -34,6 +34,8 @@ using det_poses_t = std::vector<det_pose, det_poses_alloc_t>;
 
 void estimate_pose_for_tag_homography(const apriltag_detection_info& info, apriltag_pose& solution);
 
+float estimate_tag_pose(const apriltag_detection_info& info, apriltag_pose& pose);
+
 det_poses_t& estimate_poses(apriltag_detection_info& info, detections_t& dets);
 
 void tag_pose_to_camera(const apriltag_pose& pose, const float_t src[3], float_t dst[3]);
