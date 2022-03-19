@@ -22,6 +22,7 @@ struct apriltag_detection_info {
 struct apriltag_pose {
     float_t R[3][3];  // 旋转矩阵
     float_t t[3];     // 平移向量
+    float_t err;      // 误差
 };
 
 struct det_pose {

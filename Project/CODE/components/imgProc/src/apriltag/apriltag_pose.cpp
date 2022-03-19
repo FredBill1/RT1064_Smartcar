@@ -349,7 +349,8 @@ det_poses_t& estimate_poses(apriltag_detection_info& info, detections_t& dets) {
     for (apriltag_detection* det_p : dets) {
         det_poses.emplace_back(*det_p);
         info.det = det_p;
-        float err = estimate_tag_pose(info, det_poses.back().pose);
+        apriltag_pose& pose = det_poses.back().pose;
+        pose.err = estimate_tag_pose(info, pose);
         // estimate_pose_for_tag_homography(info, det_poses.back().pose);
     }
     return det_poses;
