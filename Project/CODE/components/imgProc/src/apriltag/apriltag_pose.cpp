@@ -61,6 +61,7 @@ static float orthogonal_iteration(const Vector3f v[], const Vector3f p[], Ref<Ve
         rep(j, 0, n_points) M2 += (F[j] - Matrix3f::Identity()) * R * p[j];
         M2 *= 1.f / n_points;
         t = M1_inv * M2;
+        t[2] = fabs(t[2]);  // 不知道为啥, 不取绝对值的话, 离远了z轴就会反转
 
         // Calculate rotation.
         Vector3f q[n_points];
