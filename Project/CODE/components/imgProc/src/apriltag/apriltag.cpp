@@ -70,10 +70,11 @@ detections_t &apriltag_detect(apriltag_family &tf, uint8_t *img, apriltag_detect
     rt_kprintf("%d %d %d %d %d\r\n", t1 - t0, t2 - t1, t3 - t2, t4 - t3, t5 - t4);
 #endif
 
-    detections.sort([](const apriltag_detection *a, const apriltag_detection *b) {
-        if (a->hamming != b->hamming) return a->hamming < b->hamming;
-        return a->decision_margin > b->decision_margin;
-    });
+    // 按检测的可信度降序排序
+    // detections.sort([](const apriltag_detection *a, const apriltag_detection *b) {
+    //     if (a->hamming != b->hamming) return a->hamming < b->hamming;
+    //     return a->decision_margin > b->decision_margin;
+    // });
 
     return detections;
 }
