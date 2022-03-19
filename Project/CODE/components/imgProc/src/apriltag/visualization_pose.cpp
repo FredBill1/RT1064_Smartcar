@@ -2,6 +2,7 @@
 
 #include <algorithm>
 
+#include "apriltag/fmath.hpp"
 #include "apriltag/internal/homography.hpp"
 #include "apriltag/internal/utility.hpp"
 #include "apriltag/visualization.hpp"
@@ -47,12 +48,18 @@ void polt_pose_err(uint8_t* img, const apriltag_detection& det, const apriltag_p
     plotInt(img, det.c[1], det.c[0], pose.err * 1e9, 4, true);
 }
 
+void plot_dist(uint8_t* img, const apriltag_detection& det, const apriltag_pose& pose) {
+    float dist = sqrtf(pose.t[0] * pose.t[0] + pose.t[1] * pose.t[1] + pose.t[2] * pose.t[2]);
+    plotInt(img, det.c[1], det.c[0], dist * 1000, 4, true);
+}
+
 void plot_det_poses(uint8_t* img, const apriltag_detection_info& info, const det_poses_t& det_poses) {
     for (auto& [det, pose] : det_poses) {
         // polt_pose_err(img, det, pose);  // 画出tag pose的err
         // plot_tag_det(img, det);           // 画出tag边框和id
         // plot_pose_axis(img, info, pose);  // 画出tag的坐标系，RGB分别为xyz轴
         plot_pose_cube(img, info, pose);  // 画出tag的3d方块
+        // plot_dist(img, det, pose);        // 画出距离
     }
 }
 
