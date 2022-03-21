@@ -1,5 +1,5 @@
-#include "Thread.h"
-
+#include "nodes.hpp"
+//
 extern "C" {
 #include "SEEKFREE_IPS114_SPI.h"
 #include "SEEKFREE_MT9V03X_CSI.h"
@@ -19,7 +19,7 @@ extern "C" {
 // 相机和tag的参数在这里，识别用的参数在"apriltag/config.hpp"里
 #include "ApriltagConfig.hpp"
 
-static void apriltagDetectThreadEntry(void*) {
+static void apriltagDetectEntry() {
     using namespace imgProc::apriltag;
     AT_DTCM_SECTION_ALIGN(static uint8_t img[N * M], 64);
 
@@ -54,4 +54,4 @@ static void apriltagDetectThreadEntry(void*) {
     }
 }
 
-// rtthread::Thread apriltagDetectThread(apriltagDetectThreadEntry, NULL, 4096, 1, 1000, "apriltagDetectThread");
+bool apriltagDetectNode() { return FuncThread(apriltagDetectEntry, "apriltagDetect", 4096, 2, 1000); }

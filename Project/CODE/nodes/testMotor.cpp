@@ -1,7 +1,8 @@
-#include "Thread.h"
+#include "nodes.hpp"
+//
 #include "devices.hpp"
 
-static void testMotorThreadEntry(void*) {
+static void testMotorEntry() {
     int32_t duty = 5000;
     constexpr int32_t delta = 100;
     for (;;) {
@@ -16,4 +17,4 @@ static void testMotorThreadEntry(void*) {
     }
 }
 
-rtthread::Thread testMotorThread(testMotorThreadEntry, NULL, 2048, (RT_THREAD_PRIORITY_MAX * 2) / 3, 1000, "testMotor");
+bool testMotorNode() { return FuncThread(testMotorEntry, "testMotor"); }

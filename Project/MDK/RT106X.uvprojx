@@ -2674,6 +2674,16 @@
             </File>
           </Files>
         </Group>
+        <Group>
+          <GroupName>user_utils</GroupName>
+          <Files>
+            <File>
+              <FileName>FuncThread.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\utils\src\FuncThread.cpp</FilePath>
+            </File>
+          </Files>
+        </Group>
       </Groups>
     </Target>
     <Target>
@@ -5478,6 +5488,16 @@
               <FileName>arm_sin_f32.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Libraries\nxp_libraries\CMSIS\math\FastMathFunctions\arm_sin_f32.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>user_utils</GroupName>
+          <Files>
+            <File>
+              <FileName>FuncThread.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\utils\src\FuncThread.cpp</FilePath>
             </File>
           </Files>
         </Group>

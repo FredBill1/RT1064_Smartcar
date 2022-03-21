@@ -1,9 +1,10 @@
-#include "Thread.h"
+#include "nodes.hpp"
+//
 #include "devices.hpp"
 
 inline void SystemReset() { NVIC_SystemReset(); }
 
-static void wirelessThreadEntry(void*) {
+static void wirelessEntry() {
     SerialIO::TxUtil<float, 3> data("recvTest");
     for (;;) {
         wireless.waitHeader();
@@ -17,4 +18,4 @@ static void wirelessThreadEntry(void*) {
     }
 }
 
-rtthread::Thread wirelessThread(wirelessThreadEntry, NULL, 2048, 0, 20, "wirelessThread");
+bool wirelessNode() { return FuncThread(wirelessEntry, "wireless", 1024, 0, 20); }

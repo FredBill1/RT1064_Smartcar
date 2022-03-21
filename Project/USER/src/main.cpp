@@ -14,11 +14,11 @@ int main(void) {
     // usb_cdc_init();
 
     EnableGlobalIRQ(0);  // 启用全局中断
-    wirelessThread.start();
+    wirelessNode();
 
-    // imgUSBXferThread.start();
-    // apriltagDetectThread.start();
-    // testMotorThread.start();
+    // imgUSBXferNode();
+    // apriltagDetectNode();
+    // testMotorNode();
 
     for (;;) {
         led.toggle();

@@ -1,5 +1,5 @@
-#include "Thread.h"
-
+#include "nodes.hpp"
+//
 extern "C" {
 #include "SEEKFREE_MT9V03X_CSI.h"
 #include "common.h"
@@ -9,7 +9,7 @@ extern "C" {
 
 #include "apriltag/visualization.hpp"
 
-static void imgUSBXferEntry(void*) {
+static void imgUSBXferEntry() {
     using namespace imgProc::apriltag;
     static uint8_t buf[4]{0x00, 0xff, 0x80, 0x7f};
     for (;;) {
@@ -23,4 +23,4 @@ static void imgUSBXferEntry(void*) {
     }
 }
 
-// rtthread::Thread imgUSBXferThread(imgUSBXferEntry, NULL, 512, 1, 1000, "imgUSBXfer");
+bool imgUSBXferNode() { return FuncThread(imgUSBXferEntry, "imgUSBXfer"); }
