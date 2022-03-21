@@ -15,6 +15,8 @@ MotorDRV motorDrvR1(MOTORDRV_R1_CONFIG);
 MotorDRV motorDrvR2(MOTORDRV_R2_CONFIG);
 
 GPIO led(B9);
+GPIO beep(B11);
+
 GPIO btn_c4(C4);
 GPIO btn_c26(C26);
 GPIO btn_c27(C27);
@@ -43,6 +45,7 @@ void initDevices() {
 
     // gpio
     led.init(false);
+    beep.init(false);
     btn_c4.init(true);
     btn_c26.init(true);
     btn_c27.init(true);

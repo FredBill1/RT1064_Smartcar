@@ -12,6 +12,8 @@
 #include "PinConfig.h"
 
 extern GPIO led;
+extern GPIO beep;
+
 extern GPIO btn_c4;
 extern GPIO btn_c26;
 extern GPIO btn_c27;
