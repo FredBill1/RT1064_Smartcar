@@ -49,4 +49,6 @@ void initDevices() {
     btn_c31.init(true);
     switch_d27.init(true);
     switch_d4.init(true);
+
+    ips.puts("Initialization Complete.");
 }

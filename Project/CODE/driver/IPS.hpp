@@ -31,6 +31,7 @@ class IPS {
     void putchar(char c);
     void flush();
     void printStr(const char* s);
+    void puts(const char* s) { printStr(s), putchar('\n'), flush(); }
     void printf(const char* fmt, ...);
 };
 
