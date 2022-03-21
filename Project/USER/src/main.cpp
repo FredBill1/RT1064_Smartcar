@@ -12,17 +12,16 @@ int main(void) {
     gpio_init(C4, GPI, 0, GPIO_PIN_CONFIG);
     rt_thread_mdelay(500);
 
-    // wireless.init("Wireless", UART8_CONFIG);
     initDevices();
     wirelessThread.start();
     // imu.init();
     mt9v03x_csi_init();
     // usb_cdc_init();
-    EnableGlobalIRQ(0);
+
+    EnableGlobalIRQ(0);  // 启用全局中断
 
     // imgUSBXferThread.start();
 
-    // testtest::pose_kalman_test(NULL);
     apriltagDetectThread.start();
     for (;;) {
         gpio_toggle(B9);
