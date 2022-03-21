@@ -17,8 +17,9 @@ int main(void) {
     wirelessThread.start();
 
     // imgUSBXferThread.start();
-
     // apriltagDetectThread.start();
+    // testMotorThread.start();
+
     for (;;) {
         led.toggle();
         rt_thread_mdelay(500);
