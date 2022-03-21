@@ -54,4 +54,4 @@ static void apriltagDetectThreadEntry(void*) {
     }
 }
 
-rtthread::Thread apriltagDetectThread(apriltagDetectThreadEntry, NULL, 4096, 1, 1000, "apriltagDetectThread");
+// rtthread::Thread apriltagDetectThread(apriltagDetectThreadEntry, NULL, 4096, 1, 1000, "apriltagDetectThread");

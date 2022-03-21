@@ -22,7 +22,7 @@ int main(void) {
 
     // imgUSBXferThread.start();
 
-    apriltagDetectThread.start();
+    // apriltagDetectThread.start();
     for (;;) {
         gpio_toggle(B9);
         rt_thread_mdelay(500);
