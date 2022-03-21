@@ -2,6 +2,7 @@
 #define _devices_hpp
 
 #include "Encoder.hpp"
+#include "GPIO.hpp"
 #include "ICM20948.hpp"
 #include "IPS.hpp"
 #include "MotorDRV.hpp"
@@ -9,6 +10,14 @@
 
 //
 #include "PinConfig.h"
+
+extern GPIO led;
+extern GPIO btn_c4;
+extern GPIO btn_c26;
+extern GPIO btn_c27;
+extern GPIO btn_c31;
+extern GPIO switch_d27;
+extern GPIO switch_d4;
 
 extern SerialIO uart2;
 extern SerialIO uart3;
