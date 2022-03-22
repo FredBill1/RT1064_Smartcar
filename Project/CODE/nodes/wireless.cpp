@@ -11,12 +11,17 @@ inline void SystemReset() {
 
 inline void SetMotorPwm() {
     int32_t speed;
-    if (!(wireless.getchar(id) && wireless.getData<float>(speed))) return;
-    switch (id) {
-    case 0: motorDrvL1.setPWM(speed); break;
-    case 1: motorDrvL2.setPWM(speed); break;
-    case 2: motorDrvR1.setPWM(speed); break;
-    case 3: motorDrvR2.setPWM(speed); break;
+    if (!wireless.getchar(id)) return;
+    if (id == 4) {
+        motorDrvL1.setPWM(0), motorDrvL2.setPWM(0), motorDrvR1.setPWM(0), motorDrvR2.setPWM(0);
+    } else {
+        if (!wireless.getData<float>(speed)) return;
+        switch (id) {
+        case 0: motorDrvL1.setPWM(speed); break;
+        case 1: motorDrvL2.setPWM(speed); break;
+        case 2: motorDrvR1.setPWM(speed); break;
+        case 3: motorDrvR2.setPWM(speed); break;
+        }
     }
     beep.set(false);
 }
