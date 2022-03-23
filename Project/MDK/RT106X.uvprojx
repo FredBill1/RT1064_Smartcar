@@ -2410,11 +2410,6 @@
               <FilePath>..\CODE\driver\IPS.hpp</FilePath>
             </File>
             <File>
-              <FileName>MotorDRV.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\CODE\driver\MotorDRV.cpp</FilePath>
-            </File>
-            <File>
               <FileName>MotorDRV.hpp</FileName>
               <FileType>5</FileType>
               <FilePath>..\CODE\driver\MotorDRV.hpp</FilePath>
@@ -5087,11 +5082,6 @@
               <FileName>IPS.hpp</FileName>
               <FileType>5</FileType>
               <FilePath>..\CODE\driver\IPS.hpp</FilePath>
-            </File>
-            <File>
-              <FileName>MotorDRV.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\CODE\driver\MotorDRV.cpp</FilePath>
             </File>
             <File>
               <FileName>MotorDRV.hpp</FileName>

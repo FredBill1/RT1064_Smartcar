@@ -10,7 +10,7 @@ inline void SystemReset() {
 }
 
 inline void SetMotorPwm() {
-    int32_t speed;
+    float speed;
     if (!wireless.getchar(id)) return;
     if (id == 4) {
         motorDrvL1.setPWM(0), motorDrvL2.setPWM(0), motorDrvR1.setPWM(0), motorDrvR2.setPWM(0);
