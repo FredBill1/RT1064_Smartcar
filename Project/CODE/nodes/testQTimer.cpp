@@ -9,4 +9,4 @@ static void testQTimerEntry() {
     }
 }
 
-bool testQTimerNode() { return FuncThread(testQTimerEntry, "testMotor"); }
+bool testQTimerNode() { return FuncThread(testQTimerEntry, "testQTimer"); }
