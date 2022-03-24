@@ -9,10 +9,10 @@ SerialIO wireless(UART8_CONFIG);
 ICM20948 imu(ICM20948_CONFIG);
 IPS ips;
 
-MotorDRV motorDrvL1(MOTORDRV_L1_CONFIG);
-MotorDRV motorDrvL2(MOTORDRV_L2_CONFIG);
-MotorDRV motorDrvR1(MOTORDRV_R1_CONFIG);
-MotorDRV motorDrvR2(MOTORDRV_R2_CONFIG);
+extern const MotorDRV motorDrvL1(MOTORDRV_L1_CONFIG);
+extern const MotorDRV motorDrvL2(MOTORDRV_L2_CONFIG);
+extern const MotorDRV motorDrvR1(MOTORDRV_R1_CONFIG);
+extern const MotorDRV motorDrvR2(MOTORDRV_R2_CONFIG);
 
 GPIO led(B9);
 GPIO beep(B11);
