@@ -18,10 +18,10 @@ class LADRC2 {
 
      public:
         ESO() {}
-        ESO(float wo, float b0, float dt) { SetParameters(wo, b0, dt); }
-        void SetState(Eigen::Vector3f const& xhat);
-        void SetParameters(float wo, float b, float dt);
-        const Eigen::Vector3f& Update(float u, float y);
+        ESO(float wo, float b0, float dt) { setParameters(wo, b0, dt); }
+        void setState(Eigen::Vector3f const& xhat);
+        void setParameters(float wo, float b, float dt);
+        const Eigen::Vector3f& update(float u, float y);
     };
 
  private:
@@ -33,11 +33,11 @@ class LADRC2 {
     float Controller(Eigen::Vector3f const& xhat, float y_desired);
 
  public:
-    LADRC2() { Reset(); }
-    LADRC2(float kp, float kd, float wo, float b0, float dt) : LADRC2() { SetParameters(kp, kd, wo, b0, dt); }
-    void SetParameters(float kp, float kd, float wo, float b0, float dt);
-    void Reset();
-    float Update(float u, float y, float y_desired);
+    LADRC2() { reset(); }
+    LADRC2(float kp, float kd, float wo, float b0, float dt) : LADRC2() { setParameters(kp, kd, wo, b0, dt); }
+    void setParameters(float kp, float kd, float wo, float b0, float dt);
+    void reset();
+    float update(float u, float y, float y_desired);
 };
 
 }  // namespace controller
