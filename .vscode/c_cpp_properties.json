@@ -48,7 +48,8 @@
                 "${workspaceFolder}\\Libraries\\eMD-SmartMotion-ICM20948-1.1.0-MP",
                 "${workspaceFolder}\\Project\\CODE\\components",
                 "${workspaceFolder}\\Project\\CODE\\driver",
-                "${workspaceFolder}\\Project\\CODE\\components\\imgProc\\inc"
+                "${workspaceFolder}\\Project\\CODE\\components\\imgProc\\inc",
+                "${workspaceFolder}\\Project\\CODE\\components\\controller\\inc"
             ],
             "defines": [
                 "CPU_MIMXRT1064DVL6A",
