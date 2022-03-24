@@ -12,20 +12,20 @@ class GPIO {
 
  public:
     GPIO(PIN_enum pin) : _pin(pin) {}
-    void init(bool is_input, bool initial_output = false) {
+    void init(bool is_input, bool initial_output = false) const {
         gpio_init(_pin, is_input ? GPI : GPO, initial_output, GPIO_PIN_CONFIG);
     }
-    void setMode(bool is_input) { gpio_dir(_pin, is_input ? GPI : GPO); }
+    void setMode(bool is_input) const { gpio_dir(_pin, is_input ? GPI : GPO); }
 
     // GPI
 
-    bool get() { return gpio_get(_pin); }
-    bool pressing() { return !get(); }
+    bool get() const { return gpio_get(_pin); }
+    bool pressing() const { return !get(); }
 
     // GPO
 
-    void set(bool dat) { gpio_set(_pin, dat); }
-    void toggle() { gpio_toggle(_pin); }
+    void set(bool dat) const { gpio_set(_pin, dat); }
+    void toggle() const { gpio_toggle(_pin); }
 };
 
 #endif  // _GPIO_hpp

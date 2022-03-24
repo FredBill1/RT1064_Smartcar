@@ -14,15 +14,15 @@ extern const MotorDRV motorDrvL2(MOTORDRV_L2_CONFIG);
 extern const MotorDRV motorDrvR1(MOTORDRV_R1_CONFIG);
 extern const MotorDRV motorDrvR2(MOTORDRV_R2_CONFIG);
 
-GPIO led(B9);
-GPIO beep(B11);
+extern const GPIO led(B9);
+extern const GPIO beep(B11);
 
-GPIO btn_c4(C4);
-GPIO btn_c26(C26);
-GPIO btn_c27(C27);
-GPIO btn_c31(C31);
-GPIO switch_d27(D27);
-GPIO switch_d4(D4);
+extern const GPIO btn_c4(C4);
+extern const GPIO btn_c26(C26);
+extern const GPIO btn_c27(C27);
+extern const GPIO btn_c31(C31);
+extern const GPIO switch_d27(D27);
+extern const GPIO switch_d4(D4);
 
 void initDevices() {
     // motor pwm
