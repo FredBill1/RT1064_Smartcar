@@ -2547,6 +2547,11 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\testMotor.cpp</FilePath>
             </File>
+            <File>
+              <FileName>testQTimer.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\testQTimer.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -5289,6 +5294,11 @@
               <FileName>testMotor.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\testMotor.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>testQTimer.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\testQTimer.cpp</FilePath>
             </File>
           </Files>
         </Group>

@@ -6,6 +6,7 @@
 #include "ICM20948.hpp"
 #include "IPS.hpp"
 #include "MotorDRV.hpp"
+#include "QTimer.hpp"
 #include "SerialIO.hpp"
 
 //
@@ -32,6 +33,8 @@ extern ICM20948 imu;
 extern IPS ips;
 
 extern const MotorDRV motorDrvL1, motorDrvL2, motorDrvR1, motorDrvR2;
+
+extern const QTimer qtimerL1, qtimerL2, qtimerR1, qtimerR2;
 
 void initDevices();
 

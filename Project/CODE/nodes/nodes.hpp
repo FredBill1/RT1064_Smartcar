@@ -16,4 +16,7 @@ bool imgUSBXferNode();
 // 用按键和ips屏幕测试电机
 bool testMotorNode();
 
+// 测试qtimer
+bool testQTimerNode();
+
 #endif  // _nodes_hpp

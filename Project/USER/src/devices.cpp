@@ -14,6 +14,11 @@ extern const MotorDRV motorDrvL2(MOTORDRV_L2_CONFIG);
 extern const MotorDRV motorDrvR1(MOTORDRV_R1_CONFIG);
 extern const MotorDRV motorDrvR2(MOTORDRV_R2_CONFIG);
 
+extern const QTimer qtimerL1(EncoderL1_CONFIG);
+extern const QTimer qtimerL2(EncoderL2_CONFIG);
+extern const QTimer qtimerR1(EncoderR1_CONFIG);
+extern const QTimer qtimerR2(EncoderR2_CONFIG);
+
 extern const GPIO led(B9);
 extern const GPIO beep(B11);
 
@@ -52,6 +57,12 @@ void initDevices() {
     btn_c31.init(true);
     switch_d27.init(true);
     switch_d4.init(true);
+
+    // qtimer
+    qtimerL1.init();
+    qtimerL2.init();
+    qtimerR1.init();
+    qtimerR2.init();
 
     ips.puts("Initialization Complete.");
 }
