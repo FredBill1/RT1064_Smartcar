@@ -1,5 +1,7 @@
 #include "devices.hpp"
 
+#include "parameters.hpp"
+
 SerialIO uart2(UART2_CONFIG);
 SerialIO uart3(UART3_CONFIG);
 SerialIO uart4(UART4_CONFIG);
@@ -23,6 +25,20 @@ Encoder encoderL1(qtimerL1);
 Encoder encoderL2(qtimerL2);
 Encoder encoderR1(qtimerR1);
 Encoder encoderR2(qtimerR2);
+
+// clang-format off
+controller::LADRC2 controllerL1(Param::LADRC2::L1::kp, Param::LADRC2::L1::kd, Param::LADRC2::L1::wo, Param::LADRC2::L1::b0,Param::MotorControlPeriod);
+controller::LADRC2 controllerL2(Param::LADRC2::L2::kp, Param::LADRC2::L2::kd, Param::LADRC2::L2::wo, Param::LADRC2::L2::b0,Param::MotorControlPeriod);
+controller::LADRC2 controllerR1(Param::LADRC2::R1::kp, Param::LADRC2::R1::kd, Param::LADRC2::R1::wo, Param::LADRC2::R1::b0,Param::MotorControlPeriod);
+controller::LADRC2 controllerR2(Param::LADRC2::R2::kp, Param::LADRC2::R2::kd, Param::LADRC2::R2::wo, Param::LADRC2::R2::b0,Param::MotorControlPeriod);
+// clang-format on
+
+MotorCtrl motorCtrlL1(motorDrvL1, encoderL1, controllerL1);
+MotorCtrl motorCtrlL2(motorDrvL2, encoderL2, controllerL2);
+MotorCtrl motorCtrlR1(motorDrvR1, encoderR1, controllerR1);
+MotorCtrl motorCtrlR2(motorDrvR2, encoderR2, controllerR2);
+
+MoveBase moveBase;
 
 extern const GPIO led(B9);
 extern const GPIO beep(B11);

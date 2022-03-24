@@ -13,6 +13,11 @@ template <typename T> class FakeAtomicLoader {
         _tmp = data, _changed = true;
         rt_hw_interrupt_enable(level);
     }
+    template <typename... Args> void emplace(Args&&... args) {
+        rt_base_t level = rt_hw_interrupt_disable();
+        _tmp = T(std::forward<Args>(args)...), _changed = true;
+        rt_hw_interrupt_enable(level);
+    }
     bool load(T& data) {
         bool res = _changed;
         rt_base_t level = rt_hw_interrupt_disable();

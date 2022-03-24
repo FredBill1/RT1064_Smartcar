@@ -16,7 +16,6 @@ class MotorCtrl {
         : _motor(motor), _encoder(encoder), _controller(controller) {
         reset();
     }
-    void reset() { _u_prev = _y_desired = 0; }
 
     void setTargetSpeed(float speed) { _y_desired = speed; }
     float getTargetSpeed() const { return _y_desired; }
@@ -30,6 +29,14 @@ class MotorCtrl {
     void reset() {
         _controller.reset();
         _u_prev = _y_desired = 0;
+    }
+
+    void handleStateChange(bool enable) {
+        if (enable) {
+            reset();
+        } else {
+            _motor.setPWM(0);
+        }
     }
 };
 
