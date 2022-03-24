@@ -13,6 +13,9 @@ bool apriltagDetectNode();
 // 上位机传图, 需要初始化usb_cdc和mt9v03x
 bool imgUSBXferNode();
 
+// 使用rtthread timer驱动的周期性电机转速控制
+bool motorControlNode();
+
 // 用按键和ips屏幕测试电机
 bool testMotorNode();
 

@@ -2380,11 +2380,6 @@
           <GroupName>user_driver</GroupName>
           <Files>
             <File>
-              <FileName>Encoder.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\CODE\driver\Encoder.cpp</FilePath>
-            </File>
-            <File>
               <FileName>Encoder.hpp</FileName>
               <FileType>5</FileType>
               <FilePath>..\CODE\driver\Encoder.hpp</FilePath>
@@ -2551,6 +2546,11 @@
               <FileName>testQTimer.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\testQTimer.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>motorControl.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\motorControl.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -5059,11 +5059,6 @@
           <GroupName>user_driver</GroupName>
           <Files>
             <File>
-              <FileName>Encoder.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\CODE\driver\Encoder.cpp</FilePath>
-            </File>
-            <File>
               <FileName>Encoder.hpp</FileName>
               <FileType>5</FileType>
               <FilePath>..\CODE\driver\Encoder.hpp</FilePath>
@@ -5299,6 +5294,11 @@
               <FileName>testQTimer.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\testQTimer.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>motorControl.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\motorControl.cpp</FilePath>
             </File>
           </Files>
         </Group>

@@ -19,6 +19,11 @@ extern const QTimer qtimerL2(EncoderL2_CONFIG);
 extern const QTimer qtimerR1(EncoderR1_CONFIG);
 extern const QTimer qtimerR2(EncoderR2_CONFIG);
 
+Encoder encoderL1(qtimerL1);
+Encoder encoderL2(qtimerL2);
+Encoder encoderR1(qtimerR1);
+Encoder encoderR2(qtimerR2);
+
 extern const GPIO led(B9);
 extern const GPIO beep(B11);
 
@@ -63,6 +68,12 @@ void initDevices() {
     qtimerL2.init();
     qtimerR1.init();
     qtimerR2.init();
+
+    // encoder
+    encoderL1.init();
+    encoderL2.init();
+    encoderR1.init();
+    encoderR2.init();
 
     ips.puts("Initialization Complete.");
 }
