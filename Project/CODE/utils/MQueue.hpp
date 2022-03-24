@@ -84,19 +84,4 @@ class MQueue {
     size_t data_size() const { return Data_sz; }
 };
 
-template <typename T> class FakeAtomicVar {
-    MQueue mq;
-    T m_data;
-
- public:
-    FakeAtomicVar(const char* name = "data") : mq(sizeof(T), 1, name) {}
-    void set(const T& data) { mq.put(&data); }
-
-    // 不加const修饰是为了灵活性
-    T& get() {
-        mq.popfront(&m_data, 0);
-        return m_data;
-    }
-};
-
 #endif  // _MQueue_hpp
