@@ -8,7 +8,7 @@ using namespace Eigen;
 
 namespace controller {
 
-void LADRC::ESO::SetParameters(float wo, float b0, float dt) {
+void LADRC2::ESO::SetParameters(float wo, float b0, float dt) {
     Matrix3f A;
     Vector3f B;
     Vector3f L;
@@ -32,7 +32,7 @@ void LADRC::ESO::SetParameters(float wo, float b0, float dt) {
     Discretize(A_obs_ct, B_obs_ct, dt);
 }
 
-void LADRC::ESO::Discretize(Matrix3f const& A_obs_ct, Matrix<float, 3, 2> const& B_obs_ct, float dt) {
+void LADRC2::ESO::Discretize(Matrix3f const& A_obs_ct, Matrix<float, 3, 2> const& B_obs_ct, float dt) {
     Matrix<float, 5, 5> discretization, discretization_exp;
 
     discretization << A_obs_ct, B_obs_ct, Matrix<float, 2, 5>::Zero();
@@ -42,30 +42,30 @@ void LADRC::ESO::Discretize(Matrix3f const& A_obs_ct, Matrix<float, 3, 2> const&
     m_B_obs_dt = discretization_exp.block<3, 2>(0, 3);
 }
 
-void LADRC::ESO::SetState(Eigen::Vector3f const& xhat) { m_xhat = xhat; }
+void LADRC2::ESO::SetState(Eigen::Vector3f const& xhat) { m_xhat = xhat; }
 
-const Vector3f& LADRC::ESO::Update(float u, float y) {
+const Vector3f& LADRC2::ESO::Update(float u, float y) {
     Vector2f u_obs{u, y};
     m_xhat.noalias() = m_A_obs_dt * m_xhat;
     m_xhat += m_B_obs_dt * u_obs;
     return m_xhat;
 }
 
-void LADRC::SetParameters(float kp, float kd, float wo, float b0, float dt) {
+void LADRC2::SetParameters(float kp, float kd, float wo, float b0, float dt) {
     m_observer.SetParameters(wo, b0, dt);
     m_kp = kp;
     m_kd = kd;
     m_b = b0;
 }
 
-float LADRC::Controller(Vector3f const& xhat, float y_desired) {
+float LADRC2::Controller(Vector3f const& xhat, float y_desired) {
     float u0 = m_kp * (y_desired - xhat[0]) - m_kd * xhat[1];
     return (u0 - xhat[2]) / m_b;
 }
 
-void LADRC::Reset() { m_observer.SetState(Vector3f::Zero()); }
+void LADRC2::Reset() { m_observer.SetState(Vector3f::Zero()); }
 
-float LADRC::Update(float u, float y, float y_desired) {
+float LADRC2::Update(float u, float y, float y_desired) {
     const Vector3f& xhat = m_observer.Update(u, y);
     return Controller(xhat, y_desired);
 }

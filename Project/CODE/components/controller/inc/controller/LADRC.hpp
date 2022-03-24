@@ -7,7 +7,7 @@
 
 namespace controller {
 
-class LADRC {
+class LADRC2 {
  protected:
     class ESO {
         Eigen::Vector3f m_xhat;
@@ -33,8 +33,8 @@ class LADRC {
     float Controller(Eigen::Vector3f const& xhat, float y_desired);
 
  public:
-    LADRC() { Reset(); }
-    LADRC(float kp, float kd, float wo, float b0, float dt) : LADRC() { SetParameters(kp, kd, wo, b0, dt); }
+    LADRC2() { Reset(); }
+    LADRC2(float kp, float kd, float wo, float b0, float dt) : LADRC2() { SetParameters(kp, kd, wo, b0, dt); }
     void SetParameters(float kp, float kd, float wo, float b0, float dt);
     void Reset();
     float Update(float u, float y, float y_desired);
