@@ -45,12 +45,12 @@ void plot(int_fast32_t i, int_fast32_t j, uint16_t color, int_fast32_t size) {
     req(u, il, ir) req(v, jl, jr) ips114_writedata_16bit(color);
 }
 
-inline uint8_t& imgIdx(uint8_t* img, int_fast32_t i, int_fast32_t j) { return img[i * M + j]; }
-inline uint8_t imgIdx(const uint8_t* img, int_fast32_t i, int_fast32_t j) { return img[i * M + j]; }
+static inline uint8_t& imgIdx(uint8_t* img, int_fast32_t i, int_fast32_t j) { return img[i * M + j]; }
+static inline uint8_t imgIdx(const uint8_t* img, int_fast32_t i, int_fast32_t j) { return img[i * M + j]; }
 
 constexpr uint8_t HEADER[4]{0x00, 0xff, 0x80, 0x7f};
-inline void setHeader(uint8_t* img, int_fast32_t i, int_fast32_t j) { rep(t, 0, 4) imgIdx(img, i, j + t) = HEADER[t]; }
-inline bool checkHeader(const uint8_t* img, int_fast32_t i, int_fast32_t j) {
+static inline void setHeader(uint8_t* img, int_fast32_t i, int_fast32_t j) { rep(t, 0, 4) imgIdx(img, i, j + t) = HEADER[t]; }
+static inline bool checkHeader(const uint8_t* img, int_fast32_t i, int_fast32_t j) {
     rep(t, 0, 4) if (imgIdx(img, i, j + t) != HEADER[t]) return false;
     return true;
 }

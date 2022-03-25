@@ -96,7 +96,7 @@ static float orthogonal_iteration(const Vector3f v[], const Vector3f p[], Ref<Ve
 /**
  * Evaluates polynomial p at x.
  */
-inline float polyval(float* p, int degree, float x) {
+static inline float polyval(float* p, int degree, float x) {
     float ret = 0;
     for (int i = 0; i <= degree; i++) ret += p[i] * (float)std::pow(x, i);
     return ret;
@@ -202,7 +202,8 @@ static void solve_poly_approx(float* p, int degree, float* roots, int* n_roots) 
 /**
  * Given a local minima of the pose error tries to find the other minima.
  */
-inline bool fix_pose_ambiguities(const Vector3f v[], const Vector3f p[], Ref<Vector3f> t, Ref<Matrix3f> R, Ref<Matrix3f> ret) {
+static inline bool fix_pose_ambiguities(const Vector3f v[], const Vector3f p[], Ref<Vector3f> t, Ref<Matrix3f> R,
+                                        Ref<Matrix3f> ret) {
     // 1. Find R_t
     Vector3f R_t_3 = t / t.norm();
 
@@ -320,8 +321,9 @@ inline bool fix_pose_ambiguities(const Vector3f v[], const Vector3f p[], Ref<Vec
 /**
  * Estimate tag pose using orthogonal iteration.
  */
-inline void estimate_tag_pose_orthogonal_iteration(const apriltag_detection_info& info, float& err1, apriltag_pose& solution1,
-                                                   float& err2, apriltag_pose& solution2, int nIters) {
+static inline void estimate_tag_pose_orthogonal_iteration(const apriltag_detection_info& info, float& err1,
+                                                          apriltag_pose& solution1, float& err2, apriltag_pose& solution2,
+                                                          int nIters) {
     float scale = info.tagsize * 0.5f;
     Vector3f p[4]{{-scale, -scale, 0}, {scale, -scale, 0}, {scale, scale, 0}, {-scale, scale, 0}};
     Vector3f v[4];

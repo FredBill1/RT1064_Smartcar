@@ -10,13 +10,13 @@ namespace apriltag {
 
 // a function that check if the two quads are intersecting
 
-inline bool is_overlap(const apriltag_detection& det0, const apriltag_detection& det1) {
+static inline bool is_overlap(const apriltag_detection& det0, const apriltag_detection& det1) {
     if (det0.id != det1.id || det0.family != det1.family) return false;
     // TODO: 检查是否有重叠，但这个其实不需要检查，因为场地里没有重复出现的同id标签
     return true;
 }
 
-inline bool prefer(const apriltag_detection& det0, const apriltag_detection& det1) {
+static inline bool prefer(const apriltag_detection& det0, const apriltag_detection& det1) {
     if (det0.hamming != det1.hamming) return det0.hamming < det1.hamming;
     return det0.decision_margin > det1.decision_margin;
 }

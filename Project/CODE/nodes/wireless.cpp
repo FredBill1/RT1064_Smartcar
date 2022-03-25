@@ -4,12 +4,12 @@
 
 static uint8_t id;
 
-inline void SystemReset() {
+static inline void SystemReset() {
     beep.set(false);
     NVIC_SystemReset();
 }
 
-inline void SetMotorPwm() {
+static inline void SetMotorPwm() {
     float speed;
     if (!wireless.getchar(id)) return;
     if (id == 4) {

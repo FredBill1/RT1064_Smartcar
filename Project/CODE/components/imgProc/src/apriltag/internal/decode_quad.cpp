@@ -13,7 +13,7 @@
 namespace imgProc {
 namespace apriltag {
 
-inline void refine_edges(uint8_t *im_orig, quad *quad) {
+static inline void refine_edges(uint8_t *im_orig, quad *quad) {
     float_t lines[4][4];
     for (int edge = 0; edge < 4; edge++) {
         int a = edge, b = (edge + 1) & 3;
@@ -56,7 +56,7 @@ inline void refine_edges(uint8_t *im_orig, quad *quad) {
     }
 }
 
-inline void quad_update_homographies(quad &quad) {
+static inline void quad_update_homographies(quad &quad) {
     float_t corr_arr[4][4];
 
     for (int i = 0; i < 4; i++) {
@@ -72,7 +72,7 @@ inline void quad_update_homographies(quad &quad) {
     // Hinv = Hinv.inverse();
 }
 
-inline float_t value_for_pixel(uint8_t *im, float_t px, float_t py) {
+static inline float_t value_for_pixel(uint8_t *im, float_t px, float_t py) {
     int x1 = floorf(px - 0.5);
     int x2 = ceilf(px - 0.5);
     float_t x = px - 0.5 - x1;
@@ -84,7 +84,7 @@ inline float_t value_for_pixel(uint8_t *im, float_t px, float_t py) {
            im[y2 * M + x2] * x * y;
 }
 
-inline void sharpen(float_t *values, int size) {
+static inline void sharpen(float_t *values, int size) {
     float_t *sharpened = (float_t *)staticBuffer.allocate(sizeof(float_t) * sq(size));
     float_t kernel[9] = {0, -1, 0, -1, 4, -1, 0, -1, 0};
     rep(y, 0, size) rep(x, 0, size) {
@@ -98,7 +98,7 @@ inline void sharpen(float_t *values, int size) {
     staticBuffer.pop(sizeof(float_t) * sq(size));  // float_t sharpened[sq(size)];
 }
 
-inline uint64_t rotate90(uint64_t w, int numBits) {
+static inline uint64_t rotate90(uint64_t w, int numBits) {
     int p = numBits;
     uint64_t l = 0;
     if (numBits % 4 == 1) {

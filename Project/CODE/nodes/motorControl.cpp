@@ -4,7 +4,7 @@
 
 static MoveBase::ControlState state;
 
-inline void updateControlState() {
+static inline void updateControlState() {
     if (moveBase.loadControlState()) {
         const MoveBase::ControlState &cur_state = moveBase.getControlState();
         state ^= cur_state;
@@ -16,7 +16,7 @@ inline void updateControlState() {
     }
 }
 
-inline void updateWheelSpeed() {
+static inline void updateWheelSpeed() {
     if (moveBase.loadWheelSpeed()) {
         const MoveBase::WheelSpeed &wheel = moveBase.getWheelSpeed();
         motorCtrlL1.setTargetSpeed(wheel.L1);
@@ -26,7 +26,7 @@ inline void updateWheelSpeed() {
     }
 }
 
-inline void readEncoder() {
+static inline void readEncoder() {
     encoderL1.update();
     encoderL2.update();
     encoderR1.update();
@@ -34,14 +34,14 @@ inline void readEncoder() {
     moveBase.get_vel(encoderL1.get(), encoderL2.get(), encoderR1.get(), encoderR2.get());
 }
 
-inline void applyMotorCtrl() {
+static inline void applyMotorCtrl() {
     if (state.L1()) motorCtrlL1.update();
     if (state.L2()) motorCtrlL2.update();
     if (state.R1()) motorCtrlR1.update();
     if (state.R2()) motorCtrlR2.update();
 }
 
-inline void uploadDebugData() {
+static inline void uploadDebugData() {
     static SerialIO::TxUtil<float, 4, true> encoderXfer("encoder", 20);
     static SerialIO::TxUtil<float, 4, true> motorOutputXfer("motorOutput", 21);
     if (encoderXfer.txFinished()) {

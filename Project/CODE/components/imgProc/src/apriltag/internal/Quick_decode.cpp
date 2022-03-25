@@ -41,7 +41,7 @@ void quick_decode::init(apriltag_family& family, int maxhamming, bool static_all
     family.impl = qd;
 }
 
-inline uint64_t rotate90(uint64_t w, int numBits) {
+static inline uint64_t rotate90(uint64_t w, int numBits) {
     int p = numBits;
     uint64_t l = 0;
     if (numBits % 4 == 1) {

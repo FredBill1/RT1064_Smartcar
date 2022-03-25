@@ -21,7 +21,7 @@ struct line_fit_pt {
     float_t W;  // total weight
 };
 
-inline line_fit_pt* compute_lfps(int_fast32_t sz, const List_pt_t& cluster, const uint8_t* im) {
+static inline line_fit_pt* compute_lfps(int_fast32_t sz, const List_pt_t& cluster, const uint8_t* im) {
     line_fit_pt* lfps = (line_fit_pt*)staticBuffer.allocate(sizeof(line_fit_pt) * sz);
     int_fast32_t i = -1;
     for (const auto& p : cluster) {
@@ -79,7 +79,7 @@ static void fit_line(line_fit_pt* lfps, int_fast32_t sz, int_fast32_t i0, int_fa
     if (mse) *mse = eig_small;
 }
 
-inline bool quad_segment_maxima(int_fast32_t sz, line_fit_pt* lfps, int indices[4]) {
+static inline bool quad_segment_maxima(int_fast32_t sz, line_fit_pt* lfps, int indices[4]) {
     int_fast32_t ksz = min(20, sz / 12);
     if (ksz < 2) return false;
 
