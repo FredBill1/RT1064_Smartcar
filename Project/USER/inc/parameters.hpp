@@ -7,6 +7,9 @@ namespace Param {
 
 constexpr int32_t MotorControlPeriod = 5;  // 电机控制的周期, 单位是tick, 相当于ms
 
+constexpr int32_t MotorDeadzone = 2000;  // 电机电压死区对应的pwm
+constexpr int32_t MotorMinimum = 200;    // 输出pwm大于此值时把死区pwm加上去
+
 namespace LADRC2 {
 namespace L1 {
 constexpr float kp = 0.5;

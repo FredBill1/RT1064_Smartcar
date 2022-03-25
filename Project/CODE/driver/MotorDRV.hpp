@@ -21,16 +21,38 @@ class MotorDRV {
         pwm_init(PWM_ch, 17000, 0);
     }
 
-    template <typename T> static constexpr T limit(T duty) {
+    template <typename T> static constexpr T limit_raw(T duty) {
         if (duty > PWM_DUTY_MAX) return PWM_DUTY_MAX;
         if constexpr (std::numeric_limits<T>::is_signed)
             if (duty < -PWM_DUTY_MAX) return -PWM_DUTY_MAX;
         return duty;
     }
 
+    inline void setPWM_raw(int32 duty) const {
+        bool negative = duty < 0;
+        if (negative) duty = -duty;
+        pwm_duty(PWM_ch, duty);
+        gpio_set(DIR_pin, negative ^ invert);
+    }
+
+    template <typename T> inline T setPWM_Limit_raw(T duty) const {
+        T duty_limit = limit_raw(duty);
+        setPWM(duty_limit);
+        return duty_limit;
+    }
+
+    template <typename T> static constexpr T limit(T duty) {
+        constexpr int32 bound = PWM_DUTY_MAX - Param::MotorDeadzone;
+        if (duty > bound) return bound;
+        if constexpr (std::numeric_limits<T>::is_signed)
+            if (duty < -bound) return -bound;
+        return duty;
+    }
+
     inline void setPWM(int32 duty) const {
         bool negative = duty < 0;
         if (negative) duty = -duty;
+        if (duty > Param::MotorMinimum) duty += Param::MotorDeadzone;
         pwm_duty(PWM_ch, duty);
         gpio_set(DIR_pin, negative ^ invert);
     }
