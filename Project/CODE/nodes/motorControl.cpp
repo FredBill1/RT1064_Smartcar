@@ -2,8 +2,6 @@
 //
 #include "devices.hpp"
 
-static SerialIO::TxUtil<float, 4, true> encoderXfer("encoder", 20);
-static SerialIO::TxUtil<float, 4, true> motorOutputXfer("motorOutput", 21);
 static MoveBase::ControlState state;
 
 inline void updateControlState() {
@@ -44,6 +42,8 @@ inline void applyMotorCtrl() {
 }
 
 inline void uploadDebugData() {
+    static SerialIO::TxUtil<float, 4, true> encoderXfer("encoder", 20);
+    static SerialIO::TxUtil<float, 4, true> motorOutputXfer("motorOutput", 21);
     if (encoderXfer.txFinished()) {
         encoderXfer.setAll(encoderL1.get(), encoderL2.get(), encoderR1.get(), encoderR2.get());
         wireless.send(encoderXfer);

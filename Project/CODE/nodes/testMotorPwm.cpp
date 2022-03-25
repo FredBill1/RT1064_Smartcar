@@ -3,13 +3,13 @@
 #include "devices.hpp"
 
 static uint8_t id;
-static SerialIO::TxUtil<float, 2, true> encoderXfer("encoder", 0);
 
 static float pre_speed = 0;
 
 static float encoder_speed = 0;
 
 inline void SetMotorPwm() {
+    static SerialIO::TxUtil<float, 2, true> encoderXfer("encoder", 0);
     float cur_speed;
     if (!wireless.getchar(id)) return;
     if (id == 4) {
