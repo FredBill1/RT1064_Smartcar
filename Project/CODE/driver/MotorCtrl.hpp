@@ -23,7 +23,7 @@ class MotorCtrl {
 
     void update() {
         float u = _controller.update(_u_prev, _encoder.get(), _y_desired);
-        _u_prev = _motor.setPWM(u);
+        _u_prev = _motor.setPWM_Limit(u);
     }
 
     void reset() {
@@ -35,7 +35,7 @@ class MotorCtrl {
         if (enable) {
             reset();
         } else {
-            _motor.setPWM(0);
+            _motor.setPWM_Limit(0);
         }
     }
 };

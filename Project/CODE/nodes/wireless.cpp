@@ -13,14 +13,14 @@ inline void SetMotorPwm() {
     float speed;
     if (!wireless.getchar(id)) return;
     if (id == 4) {
-        motorDrvL1.setPWM(0), motorDrvL2.setPWM(0), motorDrvR1.setPWM(0), motorDrvR2.setPWM(0);
+        motorDrvL1.setPWM_Limit(0), motorDrvL2.setPWM_Limit(0), motorDrvR1.setPWM_Limit(0), motorDrvR2.setPWM_Limit(0);
     } else {
         if (!wireless.getData<float>(speed)) return;
         switch (id) {
-        case 0: motorDrvL1.setPWM(speed); break;
-        case 1: motorDrvL2.setPWM(speed); break;
-        case 2: motorDrvR1.setPWM(speed); break;
-        case 3: motorDrvR2.setPWM(speed); break;
+        case 0: motorDrvL1.setPWM_Limit(speed); break;
+        case 1: motorDrvL2.setPWM_Limit(speed); break;
+        case 2: motorDrvR1.setPWM_Limit(speed); break;
+        case 3: motorDrvR2.setPWM_Limit(speed); break;
         }
     }
     beep.set(false);

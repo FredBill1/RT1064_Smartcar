@@ -21,29 +21,24 @@ class MotorDRV {
         pwm_init(PWM_ch, 17000, 0);
     }
 
-    /**
-     * @brief 给电机设置PWM脉宽
-     *
-     * @param duty 要设置的pwm值, 如果是负数则会反向; 绝对值最大为50000(fsl_pwm.h -> PWM_DUTY_MAX)
-     */
-    template <typename T> inline T setPWM(T duty) const {
-        bool negative, dir;
-        if constexpr (!std::numeric_limits<T>::is_signed) {
-            negative = false, dir = invert;
-            if (duty > PWM_DUTY_MAX) duty = PWM_DUTY_MAX;
-        } else {
-            negative = duty < 0, dir = negative ^ invert;
-            if constexpr (std::numeric_limits<T>::is_integer) {
-                if (duty < -PWM_DUTY_MAX || duty > PWM_DUTY_MAX) duty = PWM_DUTY_MAX;
-                if (duty < 0) duty = -duty;
-            } else {
-                if (negative) duty = -duty;
-                if (duty > PWM_DUTY_MAX) duty = PWM_DUTY_MAX;
-            }
-        }
+    template <typename T> static constexpr T limit(T duty) {
+        if (duty > PWM_DUTY_MAX) return PWM_DUTY_MAX;
+        if constexpr (std::numeric_limits<T>::is_signed)
+            if (duty < -PWM_DUTY_MAX) return -PWM_DUTY_MAX;
+        return duty;
+    }
+
+    inline void setPWM(int32 duty) const {
+        bool negative = duty < 0;
+        if (negative) duty = -duty;
         pwm_duty(PWM_ch, duty);
-        gpio_set(DIR_pin, dir);
-        return negative ? -duty : duty;
+        gpio_set(DIR_pin, negative ^ invert);
+    }
+
+    template <typename T> inline T setPWM_Limit(T duty) const {
+        T duty_limit = limit(duty);
+        setPWM(duty_limit);
+        return duty_limit;
     }
 };
 

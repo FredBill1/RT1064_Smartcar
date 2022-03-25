@@ -13,7 +13,7 @@ static void testMotorEntry() {
             duty -= delta;
         else
             continue;
-        motorDrvL1.setPWM(duty);
+        motorDrvL1.setPWM_Limit(duty);
     }
 }
 
