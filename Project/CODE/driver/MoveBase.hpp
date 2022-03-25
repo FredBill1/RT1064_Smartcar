@@ -70,18 +70,13 @@ class MoveBase {
     inline void setControlState(int state) { _controlStateLoader.emplace(state); }
     inline void setControlState(const ControlState& state) { _controlStateLoader.store(state); }
 
-    inline const WheelSpeed& loadWheelSpeed() {
-        _wheelSpeedLoader.load(_wheelSpeed);
-        return _wheelSpeed;
-    }
-    inline const BaseSpeed& loadBaseSpeed() {
-        _baseSpeedLoader.load(_baseSpeed);
-        return _baseSpeed;
-    }
-    inline const ControlState& loadControlState() {
-        _controlStateLoader.load(_controlState);
-        return _controlState;
-    }
+    inline bool loadWheelSpeed() { return _wheelSpeedLoader.load(_wheelSpeed); }
+    inline bool loadBaseSpeed() { return _baseSpeedLoader.load(_baseSpeed); }
+    inline bool loadControlState() { return _controlStateLoader.load(_controlState); }
+
+    inline const WheelSpeed& getWheelSpeed() const { return _wheelSpeed; }
+    inline const BaseSpeed& getBaseSpeed() const { return _baseSpeed; }
+    inline const ControlState& getControlState() const { return _controlState; }
 
     MoveBase() {
         cmd_vel(0, 0, 0);
