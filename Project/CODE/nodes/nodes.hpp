@@ -22,4 +22,7 @@ bool testMotorNode();
 // 测试qtimer
 bool testQTimerNode();
 
+// 结合上位机测试电机PWM, 需要禁用wirelessNode和motorControlNode
+bool testMotorPwmNode();
+
 #endif  // _nodes_hpp

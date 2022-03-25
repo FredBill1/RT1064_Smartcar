@@ -2552,6 +2552,11 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\motorControl.cpp</FilePath>
             </File>
+            <File>
+              <FileName>testMotorPwm.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\testMotorPwm.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -5309,6 +5314,11 @@
               <FileName>motorControl.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\motorControl.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>testMotorPwm.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\testMotorPwm.cpp</FilePath>
             </File>
           </Files>
         </Group>
