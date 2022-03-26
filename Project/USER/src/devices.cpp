@@ -11,10 +11,10 @@ SerialIO wireless(UART8_CONFIG);
 ICM20948 imu(ICM20948_CONFIG);
 IPS ips;
 
-extern const MotorDRV motorDrvL1(MOTORDRV_L1_CONFIG);
-extern const MotorDRV motorDrvL2(MOTORDRV_L2_CONFIG);
-extern const MotorDRV motorDrvR1(MOTORDRV_R1_CONFIG);
-extern const MotorDRV motorDrvR2(MOTORDRV_R2_CONFIG);
+MotorDRV motorDrvL1(MOTORDRV_L1_CONFIG, Param::Motor::L1::deadzone);
+MotorDRV motorDrvL2(MOTORDRV_L2_CONFIG, Param::Motor::L2::deadzone);
+MotorDRV motorDrvR1(MOTORDRV_R1_CONFIG, Param::Motor::R1::deadzone);
+MotorDRV motorDrvR2(MOTORDRV_R2_CONFIG, Param::Motor::R2::deadzone);
 
 extern const QTimer qtimerL1(EncoderL1_CONFIG);
 extern const QTimer qtimerL2(EncoderL2_CONFIG);
@@ -27,10 +27,10 @@ Encoder encoderR1(qtimerR1);
 Encoder encoderR2(qtimerR2);
 
 // clang-format off
-controller::LADRC2 controllerL1(Param::LADRC2::L1::kp, Param::LADRC2::L1::kd, Param::LADRC2::L1::wo, Param::LADRC2::L1::b0,Param::MotorControlPeriod);
-controller::LADRC2 controllerL2(Param::LADRC2::L2::kp, Param::LADRC2::L2::kd, Param::LADRC2::L2::wo, Param::LADRC2::L2::b0,Param::MotorControlPeriod);
-controller::LADRC2 controllerR1(Param::LADRC2::R1::kp, Param::LADRC2::R1::kd, Param::LADRC2::R1::wo, Param::LADRC2::R1::b0,Param::MotorControlPeriod);
-controller::LADRC2 controllerR2(Param::LADRC2::R2::kp, Param::LADRC2::R2::kd, Param::LADRC2::R2::wo, Param::LADRC2::R2::b0,Param::MotorControlPeriod);
+controller::LADRC2 controllerL1(Param::Motor::L1::kp, Param::Motor::L1::kd, Param::Motor::L1::wo, Param::Motor::L1::b0, Param::MotorControlPeriod);
+controller::LADRC2 controllerL2(Param::Motor::L2::kp, Param::Motor::L2::kd, Param::Motor::L2::wo, Param::Motor::L2::b0, Param::MotorControlPeriod);
+controller::LADRC2 controllerR1(Param::Motor::R1::kp, Param::Motor::R1::kd, Param::Motor::R1::wo, Param::Motor::R1::b0, Param::MotorControlPeriod);
+controller::LADRC2 controllerR2(Param::Motor::R2::kp, Param::Motor::R2::kd, Param::Motor::R2::wo, Param::Motor::R2::b0, Param::MotorControlPeriod);
 // clang-format on
 
 MotorCtrl motorCtrlL1(motorDrvL1, encoderL1, controllerL1);
