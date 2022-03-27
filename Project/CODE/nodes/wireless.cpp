@@ -116,4 +116,4 @@ static void wirelessEntry() {
     }
 }
 
-bool wirelessNode() { return FuncThread(wirelessEntry, "wireless", 2048, 0); }
+bool wirelessNode() { return FuncThread(wirelessEntry, "wireless", 4096, 0); }
