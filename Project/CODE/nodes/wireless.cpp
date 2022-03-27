@@ -30,6 +30,13 @@ static inline void SetMotorPwm() {
     beep.set(false);
 }
 
+static inline void SetMotorControlState() {
+    uint8_t state;
+    if (!wireless.getchar(state)) return;
+    moveBase.setControlState(state);
+    beep.set(false);
+}
+
 static void wirelessEntry() {
     for (;;) {
         wireless.waitHeader();
@@ -39,6 +46,7 @@ static void wirelessEntry() {
         case 0: SystemReset(); break;
         case 1:
         case 2: SetMotorPwm(); break;
+        case 3: SetMotorControlState(); break;
         }
     }
 }
