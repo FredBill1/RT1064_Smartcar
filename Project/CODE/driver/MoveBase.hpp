@@ -7,6 +7,7 @@ class MoveBase {
  public:
     struct WheelSpeed {
         float L1, L2, R1, R2;
+        void setZero() { L1 = L2 = R1 = R2 = 0; }
     };
     struct BaseSpeed {
         float x, y, yaw;
