@@ -88,15 +88,24 @@ static inline void SetMotorTargetSpeed() {
     if (!wireless.getData<float>(speed)) return;
     beep.set(false);
 
-    MoveBase::WheelSpeed wheelSpeed;
-    wheelSpeed.setZero();
     switch (id) {
-    case 0: wheelSpeed.L1 = speed; break;
-    case 1: wheelSpeed.L2 = speed; break;
-    case 2: wheelSpeed.R1 = speed; break;
-    case 3: wheelSpeed.R2 = speed; break;
+    case 0:
+        moveBase.cmd_vel(speed, 0, 0, 0);
+        moveBase.setControlState(1, 0, 0, 0);
+        break;
+    case 1:
+        moveBase.cmd_vel(0, speed, 0, 0);
+        moveBase.setControlState(0, 1, 0, 0);
+        break;
+    case 2:
+        moveBase.cmd_vel(0, 0, speed, 0);
+        moveBase.setControlState(0, 0, 1, 0);
+        break;
+    case 3:
+        moveBase.cmd_vel(0, 0, 0, speed);
+        moveBase.setControlState(0, 0, 0, 1);
+        break;
     }
-    moveBase.cmd_vel(wheelSpeed);
 }
 
 static void wirelessEntry() {
