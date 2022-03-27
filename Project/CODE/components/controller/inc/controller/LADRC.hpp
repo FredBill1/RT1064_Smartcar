@@ -33,18 +33,11 @@ class LADRC2 {
     float Controller(Eigen::Vector3f const& xhat, float y_desired);
 
  public:
-    struct Param {
-        float kp;
-        float kd;
-        float wo;
-        float b0;
-        float dt;
-    };
     LADRC2() { reset(); }
-    LADRC2(const Param& param) { setParameters(param); }
     LADRC2(float kp, float kd, float wo, float b0, float dt) : LADRC2() { setParameters(kp, kd, wo, b0, dt); }
+    LADRC2(float wc, float wo, float b0, float dt) : LADRC2() { setParameters(wc, wo, b0, dt); }
     void setParameters(float kp, float kd, float wo, float b0, float dt);
-    void setParameters(const Param& param) { setParameters(param.kp, param.kd, param.wo, param.b0, param.dt); }
+    void setParameters(float wc, float wo, float b0, float dt) { setParameters(wc * wc, wc + wc, wo, b0, dt); }
     void reset();
     float update(float u, float y, float y_desired);
 };

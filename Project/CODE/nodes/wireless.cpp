@@ -42,20 +42,38 @@ static inline void SetMotorControlState() {
 }
 
 static inline void SetMotorControllerParam() {
+    bool use_wc = id == 4;  // 决定是使用控制器带宽wc还是分开指定kp和kd
     if (!wireless.getchar(id)) return;
-    float kp, kd, wo, b0;
-    if (!wireless.getData<float>(kp, kd, wo, b0)) return;
-    beep.set(false);
+    if (use_wc) {
+        float wc, wo, b0;
+        if (!wireless.getData<float>(wc, wo, b0)) return;
+        beep.set(false);
 
-    // 先禁用控制器, 确保安全
-    moveBase.setControlState(0);
-    rt_thread_mdelay(Param::MotorControlPeriod * 10);
+        // 先禁用控制器, 确保安全
+        moveBase.setControlState(0);
+        rt_thread_mdelay(Param::MotorControlPeriod * 10);
 
-    switch (id) {
-    case 0: controllerL1.setParameters(kp, kd, wo, b0, Param::MotorControlPeriod * 0.001f); break;
-    case 1: controllerL2.setParameters(kp, kd, wo, b0, Param::MotorControlPeriod * 0.001f); break;
-    case 2: controllerR1.setParameters(kp, kd, wo, b0, Param::MotorControlPeriod * 0.001f); break;
-    case 3: controllerR2.setParameters(kp, kd, wo, b0, Param::MotorControlPeriod * 0.001f); break;
+        switch (id) {
+        case 0: controllerL1.setParameters(wc, wo, b0, Param::MotorControlPeriod * 0.001f); break;
+        case 1: controllerL2.setParameters(wc, wo, b0, Param::MotorControlPeriod * 0.001f); break;
+        case 2: controllerR1.setParameters(wc, wo, b0, Param::MotorControlPeriod * 0.001f); break;
+        case 3: controllerR2.setParameters(wc, wo, b0, Param::MotorControlPeriod * 0.001f); break;
+        }
+    } else {
+        float kp, kd, wo, b0;
+        if (!wireless.getData<float>(kp, kd, wo, b0)) return;
+        beep.set(false);
+
+        // 先禁用控制器, 确保安全
+        moveBase.setControlState(0);
+        rt_thread_mdelay(Param::MotorControlPeriod * 10);
+
+        switch (id) {
+        case 0: controllerL1.setParameters(kp, kd, wo, b0, Param::MotorControlPeriod * 0.001f); break;
+        case 1: controllerL2.setParameters(kp, kd, wo, b0, Param::MotorControlPeriod * 0.001f); break;
+        case 2: controllerR1.setParameters(kp, kd, wo, b0, Param::MotorControlPeriod * 0.001f); break;
+        case 3: controllerR2.setParameters(kp, kd, wo, b0, Param::MotorControlPeriod * 0.001f); break;
+        }
     }
 }
 
@@ -91,8 +109,9 @@ static void wirelessEntry() {
         case 1:
         case 2: SetMotorPwm(); break;
         case 3: SetMotorControlState(); break;
-        case 4: SetMotorControllerParam(); break;
-        case 5: SetMotorTargetSpeed(); break;
+        case 4:
+        case 5: SetMotorControllerParam(); break;
+        case 6: SetMotorTargetSpeed(); break;
         }
     }
 }
