@@ -27,10 +27,17 @@ Encoder encoderR1(qtimerR1);
 Encoder encoderR2(qtimerR2);
 
 // clang-format off
+#if (MOTOR_ADRC_USE_WC)
+controller::LADRC2 controllerL1(Param::Motor::L1::wc, Param::Motor::L1::wo, Param::Motor::L1::b0, Param::MotorControlPeriod * 0.001f);
+controller::LADRC2 controllerL2(Param::Motor::L2::wc, Param::Motor::L2::wo, Param::Motor::L2::b0, Param::MotorControlPeriod * 0.001f);
+controller::LADRC2 controllerR1(Param::Motor::R1::wc, Param::Motor::R1::wo, Param::Motor::R1::b0, Param::MotorControlPeriod * 0.001f);
+controller::LADRC2 controllerR2(Param::Motor::R2::wc, Param::Motor::R2::wo, Param::Motor::R2::b0, Param::MotorControlPeriod * 0.001f);
+#else
 controller::LADRC2 controllerL1(Param::Motor::L1::kp, Param::Motor::L1::kd, Param::Motor::L1::wo, Param::Motor::L1::b0, Param::MotorControlPeriod * 0.001f);
 controller::LADRC2 controllerL2(Param::Motor::L2::kp, Param::Motor::L2::kd, Param::Motor::L2::wo, Param::Motor::L2::b0, Param::MotorControlPeriod * 0.001f);
 controller::LADRC2 controllerR1(Param::Motor::R1::kp, Param::Motor::R1::kd, Param::Motor::R1::wo, Param::Motor::R1::b0, Param::MotorControlPeriod * 0.001f);
 controller::LADRC2 controllerR2(Param::Motor::R2::kp, Param::Motor::R2::kd, Param::Motor::R2::wo, Param::Motor::R2::b0, Param::MotorControlPeriod * 0.001f);
+#endif
 // clang-format on
 
 MotorCtrl motorCtrlL1(motorDrvL1, encoderL1, controllerL1);
