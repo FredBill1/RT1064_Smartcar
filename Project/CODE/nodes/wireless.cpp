@@ -108,6 +108,19 @@ static inline void SetMotorTargetSpeed() {
     }
 }
 
+static inline void Remote() {
+    uint8_t forward, left, rotate;
+    if (!(wireless.getchar(forward) && wireless.getchar(left) && wireless.getchar(rotate))) return;
+    beep.set(false);
+    constexpr float x_speed = 1;
+    constexpr float y_speed = 1;
+    constexpr float r_speed = 2;
+    float x = forward ? (forward == 1 ? x_speed : -x_speed) : 0;
+    float y = left ? (left == 1 ? y_speed : -y_speed) : 0;
+    float r = rotate ? (rotate == 1 ? r_speed : -r_speed) : 0;
+    moveBase.cmd_vel(x, y, r);
+}
+
 static void wirelessEntry() {
     for (;;) {
         wireless.waitHeader();
@@ -121,6 +134,7 @@ static void wirelessEntry() {
         case 4:
         case 5: SetMotorControllerParam(); break;
         case 6: SetMotorTargetSpeed(); break;
+        case 7: Remote(); break;
         }
     }
 }
