@@ -46,8 +46,7 @@ void LADRC2::ESO::setState(Eigen::Vector3f const& xhat) { m_xhat = xhat; }
 
 const Vector3f& LADRC2::ESO::update(float u, float y) {
     Vector2f u_obs{u, y};
-    m_xhat.noalias() = m_A_obs_dt * m_xhat;
-    m_xhat += m_B_obs_dt * u_obs;
+    m_xhat = m_A_obs_dt * m_xhat + m_B_obs_dt * u_obs;
     return m_xhat;
 }
 
