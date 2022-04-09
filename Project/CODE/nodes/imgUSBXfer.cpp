@@ -1,4 +1,4 @@
-#include "nodes.hpp"
+#include "utils/FuncThread.hpp"
 //
 extern "C" {
 #include "SEEKFREE_MT9V03X_CSI.h"

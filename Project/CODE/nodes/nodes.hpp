@@ -1,9 +1,6 @@
 #ifndef _nodes_hpp
 #define _nodes_hpp
 
-#include "Thread.h"
-#include "utils/FuncThread.hpp"
-
 // 无线串口接收进程, 用于遥控
 bool wirelessNode();
 
