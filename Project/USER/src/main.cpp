@@ -24,6 +24,9 @@ int main(void) {
     // testQTimerNode();
     // testMotorPwmNode();
 
+    // uartMasterTest();
+    // uartSlaveTest();
+
     for (;;) {
         led.toggle();
         rt_thread_mdelay(500);

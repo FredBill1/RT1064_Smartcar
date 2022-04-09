@@ -22,4 +22,8 @@ bool testQTimerNode();
 // 结合上位机测试电机PWM, 需要禁用wirelessNode和motorControlNode
 bool testMotorPwmNode();
 
+// 主从机传输测试
+bool uartMasterTest();
+bool uartSlaveTest();
+
 #endif  // _nodes_hpp

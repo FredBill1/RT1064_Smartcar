@@ -2557,6 +2557,16 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\testMotorPwm.cpp</FilePath>
             </File>
+            <File>
+              <FileName>uartMasterTest.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\uartMasterTest.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>uartSlaveTest.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\uartSlaveTest.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -5319,6 +5329,16 @@
               <FileName>testMotorPwm.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\testMotorPwm.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>uartMasterTest.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\uartMasterTest.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>uartSlaveTest.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\uartSlaveTest.cpp</FilePath>
             </File>
           </Files>
         </Group>
