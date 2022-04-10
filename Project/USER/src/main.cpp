@@ -23,6 +23,7 @@ int main(void) {
     // testMotorNode();
     // testQTimerNode();
     // testMotorPwmNode();
+    // testKeyNode();
 
     // uartMasterTest();
     // uartSlaveTest();

@@ -57,6 +57,11 @@ extern const GPIO btn_c31(C31);
 extern const GPIO switch_d27(D27);
 extern const GPIO switch_d4(D4);
 
+extern const GPIO master_key[5]{MASTER_KEY};
+extern const GPIO master_switch[3]{MASTER_SWITCH};
+extern const GPIO slave_key[5]{SLAVE_KEY};
+extern const GPIO slave_switch[3]{SLAVE_SWITCH};
+
 void initDevices() {
     // motor pwm
     motorDrvL1.init();
@@ -79,12 +84,16 @@ void initDevices() {
     // gpio
     led.init(false);
     beep.init(false);
-    btn_c4.init(true);
-    btn_c26.init(true);
-    btn_c27.init(true);
-    btn_c31.init(true);
-    switch_d27.init(true);
-    switch_d4.init(true);
+    // btn_c4.init(true);
+    // btn_c26.init(true);
+    // btn_c27.init(true);
+    // btn_c31.init(true);
+    // switch_d27.init(true);
+    // switch_d4.init(true);
+    for (auto& gpio : master_key) gpio.init(true);
+    for (auto& gpio : master_switch) gpio.init(true);
+    for (auto& gpio : slave_key) gpio.init(true);
+    for (auto& gpio : slave_switch) gpio.init(true);
 
     // qtimer
     qtimerL1.init();

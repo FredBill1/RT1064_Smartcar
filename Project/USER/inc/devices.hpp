@@ -25,6 +25,11 @@ extern const GPIO btn_c31;
 extern const GPIO switch_d27;
 extern const GPIO switch_d4;
 
+extern const GPIO master_key[5];
+extern const GPIO master_switch[3];
+extern const GPIO slave_key[5];
+extern const GPIO slave_switch[3];
+
 extern SerialIO uart2;
 extern SerialIO uart3;
 extern SerialIO uart4;
