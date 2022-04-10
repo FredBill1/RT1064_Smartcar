@@ -18,7 +18,7 @@ int main(void) {
 
     // imgUSBXferNode();
     // apriltagDetectNode();
-    // motorControlNode();
+    motorControlNode();
 
     // testMotorNode();
     // testQTimerNode();
