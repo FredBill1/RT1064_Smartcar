@@ -16,40 +16,40 @@ namespace L1 {
 constexpr float kp = 2500;
 constexpr float kd = 100;
 
-constexpr float wc = 50;
-constexpr float wo = 150;
-constexpr float b0 = 5;
-constexpr int32_t deadzone = 2700;
+constexpr float wc = 43;
+constexpr float wo = 276;
+constexpr float b0 = 2;
+constexpr int32_t deadzone = 2000;
 }  // namespace L1
 
 namespace L2 {
 constexpr float kp = 2500;
 constexpr float kd = 100;
 
-constexpr float wc = 50;
-constexpr float wo = 150;
-constexpr float b0 = 5;
-constexpr int32_t deadzone = 3000;
+constexpr float wc = 43;
+constexpr float wo = 276;
+constexpr float b0 = 2;
+constexpr int32_t deadzone = 2000;
 }  // namespace L2
 
 namespace R1 {
 constexpr float kp = 2500;
 constexpr float kd = 100;
 
-constexpr float wc = 50;
-constexpr float wo = 150;
-constexpr float b0 = 5;
-constexpr int32_t deadzone = 2850;
+constexpr float wc = 43;
+constexpr float wo = 276;
+constexpr float b0 = 2;
+constexpr int32_t deadzone = 2000;
 }  // namespace R1
 
 namespace R2 {
 constexpr float kp = 2500;
 constexpr float kd = 100;
 
-constexpr float wc = 50;
-constexpr float wo = 150;
-constexpr float b0 = 5;
-constexpr int32_t deadzone = 3550;
+constexpr float wc = 43;
+constexpr float wo = 276;
+constexpr float b0 = 2;
+constexpr int32_t deadzone = 2000;
 }  // namespace R2
 
 }  // namespace Motor

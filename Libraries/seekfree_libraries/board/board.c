@@ -10,6 +10,7 @@
 #include "fsl_debug_console.h"
 #include "pin_mux.h"
 #include "zf_uart.h"
+#include "zf_gpio.h"
 #include "board.h"
 #if defined(SDK_I2C_BASED_COMPONENT_USED) && SDK_I2C_BASED_COMPONENT_USED
 #include "fsl_lpi2c.h"
@@ -460,7 +461,9 @@ void board_init(void)
     
 //    BOARD_InitBootPins();   //初始化开发板引脚
 //    BOARD_InitDebugConsole();
-    
+
+    gpio_init(D12, GPO, 0, GPIO_PIN_CONFIG);
+
 #if (1==PRINTF_ENABLE)      //初始化调试串口
     BOARD_InitDebugConsole();
     uart_init(DEBUG_UART, DEBUG_UART_BAUD, DEBUG_UART_TX_PIN, DEBUG_UART_RX_PIN);
