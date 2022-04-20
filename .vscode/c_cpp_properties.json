@@ -50,7 +50,8 @@
                 "${workspaceFolder}\\Project\\CODE\\components",
                 "${workspaceFolder}\\Project\\CODE\\driver",
                 "${workspaceFolder}\\Project\\CODE\\components\\imgProc\\inc",
-                "${workspaceFolder}\\Project\\CODE\\components\\controller\\inc"
+                "${workspaceFolder}\\Project\\CODE\\components\\controller\\inc",
+                "${workspaceFolder}\\Project\\CODE\\components\\pose_kalman\\inc"
             ],
             "defines": [
                 "CPU_MIMXRT1064DVL6A",

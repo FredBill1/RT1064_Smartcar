@@ -1,0 +1,65 @@
+cur_yaw = u.dt*u.vYaw + atan2(x.oy, x.ox)
+res_oy = sin(cur_yaw)
+res_ox = cos(cur_yaw)
+vXox = u.vX()*res_ox
+vXoy = u.vX()*res_oy
+vYox = u.vY()*res_ox
+vYoy = u.vY()*res_oy
+vXoxvYoy = vXox - vYoy
+vXoyvYox = vXoy + vYox
+
+1
+0
+x.oy()*vXoyvYox*u.dt()
+-x.ox()*vXoyvYox*u.dt()
+0
+0
+0
+
+0
+1
+-x.oy()*vXoxvYoy*u.dt()
+x.ox()*vXoxvYoy*u.dt()
+0
+0
+0
+
+0
+0
+x.oy()*res_oy
+-x.ox()*res_oy
+0
+0
+0
+
+0
+0
+-x.oy()*res_ox
+x.ox()*res_ox
+0
+0
+0
+
+0
+0
+x.oy()*vXoyvYox
+-x.ox()*vXoyvYox
+0
+0
+0
+
+0
+0
+-x.oy()*vXoxvYoy
+x.ox()*vXoxvYoy
+0
+0
+0
+
+0
+0
+0
+0
+0
+0
+0
