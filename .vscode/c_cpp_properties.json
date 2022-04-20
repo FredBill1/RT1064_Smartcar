@@ -45,6 +45,7 @@
                 "${workspaceFolder}\\Libraries\\rttherad_libraries\\components\\cplusplus",
                 "${workspaceFolder}\\Libraries\\eigen",
                 "${workspaceFolder}\\Libraries\\kalman\\include",
+                "${workspaceFolder}\\Libraries\\kalman\\external\\googletest\\include",
                 "${workspaceFolder}\\Libraries\\eMD-SmartMotion-ICM20948-1.1.0-MP",
                 "${workspaceFolder}\\Project\\CODE\\components",
                 "${workspaceFolder}\\Project\\CODE\\driver",
