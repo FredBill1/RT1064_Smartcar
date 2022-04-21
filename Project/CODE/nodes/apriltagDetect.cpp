@@ -28,11 +28,10 @@ static void apriltagDetectEntry() {
     tf.init(maxhamming);
     apriltag_detection_info info{nullptr, tagsize, fx, fy, cx, cy};  // 用来计算tag的位姿
 
-    gpio_init(D4, GPI, 0, GPIO_PIN_CONFIG);
     int32_t pre_time = rt_tick_get();
 
     for (;;) {
-        bool visualize = gpio_get(D4);  // 拨码开关决定是否进行可视化，因为可视化会消耗时间
+        bool visualize = slave_switch[2].get();  // 拨码开关决定是否进行可视化，因为可视化会消耗时间
 
         uint8_t* src = mt9v03x_csi_image_take();
         undisort_I(src, img);  // 矫正图像畸变
