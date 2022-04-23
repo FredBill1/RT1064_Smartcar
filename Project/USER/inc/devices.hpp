@@ -10,6 +10,7 @@
 #include "MoveBase.hpp"
 #include "QTimer.hpp"
 #include "SerialIO.hpp"
+#include "Systick.hpp"
 #include "controller/LADRC.hpp"
 
 //
@@ -29,6 +30,8 @@ extern const GPIO master_key[5];
 extern const GPIO master_switch[3];
 extern const GPIO slave_key[5];
 extern const GPIO slave_switch[3];
+
+extern Systick systick;
 
 extern SerialIO uart2;
 extern SerialIO uart3;

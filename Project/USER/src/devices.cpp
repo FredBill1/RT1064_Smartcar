@@ -47,6 +47,8 @@ MotorCtrl motorCtrlR2(motorDrvR2, encoderR2, controllerR2);
 
 MoveBase moveBase;
 
+Systick systick;
+
 extern const GPIO led(B9);
 extern const GPIO beep(B11);
 
@@ -70,6 +72,7 @@ void initDevices() {
     motorDrvR2.init();
 
     rt_thread_mdelay(500);
+    systick.init();
 
     // screen
     ips.init();

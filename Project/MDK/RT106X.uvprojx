@@ -2409,6 +2409,11 @@
               <FileType>5</FileType>
               <FilePath>..\CODE\driver\MotorDRV.hpp</FilePath>
             </File>
+            <File>
+              <FileName>Systick.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\driver\src\Systick.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -5124,6 +5129,11 @@
               <FileName>MotorDRV.hpp</FileName>
               <FileType>5</FileType>
               <FilePath>..\CODE\driver\MotorDRV.hpp</FilePath>
+            </File>
+            <File>
+              <FileName>Systick.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\driver\src\Systick.cpp</FilePath>
             </File>
           </Files>
         </Group>
