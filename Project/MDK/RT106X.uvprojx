@@ -2495,14 +2495,14 @@
           <GroupName>user_ICM20948</GroupName>
           <Files>
             <File>
-              <FileName>system.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\CODE\driver\ICM20948\system.c</FilePath>
-            </File>
-            <File>
               <FileName>dmp_img.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\driver\ICM20948\dmp_img.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>system.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\driver\ICM20948\system.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -5216,14 +5216,14 @@
           <GroupName>user_ICM20948</GroupName>
           <Files>
             <File>
-              <FileName>system.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\CODE\driver\ICM20948\system.c</FilePath>
-            </File>
-            <File>
               <FileName>dmp_img.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\driver\ICM20948\dmp_img.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>system.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\driver\ICM20948\system.cpp</FilePath>
             </File>
           </Files>
         </Group>

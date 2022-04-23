@@ -5527,19 +5527,19 @@
 
   <Group>
     <GroupName>user_ICM20948</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>25</GroupNumber>
       <FileNumber>399</FileNumber>
-      <FileType>1</FileType>
+      <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CODE\driver\ICM20948\system.c</PathWithFileName>
-      <FilenameWithoutPath>system.c</FilenameWithoutPath>
+      <PathWithFileName>..\CODE\driver\ICM20948\dmp_img.cpp</PathWithFileName>
+      <FilenameWithoutPath>dmp_img.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -5550,8 +5550,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CODE\driver\ICM20948\dmp_img.cpp</PathWithFileName>
-      <FilenameWithoutPath>dmp_img.cpp</FilenameWithoutPath>
+      <PathWithFileName>..\CODE\driver\ICM20948\system.cpp</PathWithFileName>
+      <FilenameWithoutPath>system.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -5579,7 +5579,7 @@
 
   <Group>
     <GroupName>pose_kailman</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
