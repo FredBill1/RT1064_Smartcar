@@ -13,7 +13,7 @@ class PeekQueue {
     ~PeekQueue();
     void init(int size, int data_size);
     bool get();
-    void push(void* data);
+    void push(const void* data);
     void* front();
     template <typename T> T& front() { return *(T*)front(); }
 };

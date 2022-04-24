@@ -20,7 +20,7 @@ bool PeekQueue::get() {
     rt_hw_interrupt_enable(level);
     return true;
 }
-void PeekQueue::push(void* data) {
+void PeekQueue::push(const void* data) {
     rt_base_t level = rt_hw_interrupt_disable();
     Q.push_back(data);
     rt_hw_interrupt_enable(level);
