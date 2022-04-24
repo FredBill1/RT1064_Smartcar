@@ -10,6 +10,7 @@
 
 namespace pose_kalman {
 template <bool _x, bool _y, bool _yaw, bool _vX, bool _vY, bool _vYaw> struct Measurement {
+    static constexpr bool X = _x, Y = _y, YAW = _yaw, V_X = _vX, V_Y = _vY, V_YAW = _vYaw;
     static constexpr int SIZE = _x + _y + _yaw + _vX + _vY + _vYaw;
     class Data : public Kalman::Vector<T, SIZE> {
      public:
