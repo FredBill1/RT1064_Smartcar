@@ -15,12 +15,10 @@ class RDeque {
     ~RDeque();
     void init(int size, int data_size);
     void push_back(const void* data);
-    template <typename T> void push_back(const T& data) { push_back(&data); }
     void pop_back();
     void* back();
     template <typename T> T& back() { return *(T*)back(); }
     void push_front(const void* data);
-    template <typename T> void push_front(const T& data) { push_front(&data); }
     void pop_front();
     void* front();
     template <typename T> T& front() { return *(T*)front(); }
@@ -28,6 +26,7 @@ class RDeque {
     bool full() const;
     void clear();
     int size() const { return cnt; }
+    int data_size() const { return data_sz; }
 };
 
 #endif  // _utils_RDeque_hpp

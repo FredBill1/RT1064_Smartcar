@@ -2719,6 +2719,11 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\utils\src\RDeque.cpp</FilePath>
             </File>
+            <File>
+              <FileName>PeekQueue.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\utils\src\PeekQueue.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -5582,6 +5587,11 @@
               <FileName>RDeque.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\utils\src\RDeque.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>PeekQueue.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\utils\src\PeekQueue.cpp</FilePath>
             </File>
           </Files>
         </Group>
