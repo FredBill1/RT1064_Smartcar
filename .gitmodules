@@ -4,3 +4,6 @@
 [submodule "Libraries/kalman"]
 	path = Libraries/kalman
 	url = git@github.com:mherb/kalman.git
+[submodule "Libraries/map-macro/map-macro"]
+	path = Libraries/map-macro/map-macro
+	url = git@github.com:swansontec/map-macro.git
