@@ -6019,7 +6019,7 @@
 
   <Group>
     <GroupName>user_utils</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -6035,6 +6035,18 @@
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
+    <File>
+      <GroupNumber>31</GroupNumber>
+      <FileNumber>437</FileNumber>
+      <FileType>8</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\CODE\utils\src\RDeque.cpp</PathWithFileName>
+      <FilenameWithoutPath>RDeque.cpp</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
   </Group>
 
   <Group>
@@ -6045,7 +6057,7 @@
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>32</GroupNumber>
-      <FileNumber>437</FileNumber>
+      <FileNumber>438</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>

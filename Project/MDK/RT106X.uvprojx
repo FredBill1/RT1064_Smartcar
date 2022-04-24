@@ -2714,6 +2714,11 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\utils\src\FuncThread.cpp</FilePath>
             </File>
+            <File>
+              <FileName>RDeque.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\utils\src\RDeque.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -5572,6 +5577,11 @@
               <FileName>FuncThread.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\utils\src\FuncThread.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>RDeque.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\utils\src\RDeque.cpp</FilePath>
             </File>
           </Files>
         </Group>
