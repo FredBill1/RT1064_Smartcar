@@ -6,16 +6,17 @@
 class PeekQueue {
     RDeque Q;
     char* buf = nullptr;
+    bool valid = false;
 
  public:
     PeekQueue() = default;
     PeekQueue(int size, int data_size);
     ~PeekQueue();
     void init(int size, int data_size);
-    bool get();
+    bool peek();
     void push(const void* data);
+    void pop();
     void* front();
-    template <typename T> T& front() { return *(T*)front(); }
 };
 
 #endif  // _utils_PeekQueue_hpp

@@ -9,7 +9,8 @@ void PeekQueue::init(int size, int data_size) {
     buf = new char[RT_ALIGN(data_size, RT_ALIGN_SIZE)];
 }
 PeekQueue::~PeekQueue() { delete buf; }
-bool PeekQueue::get() {
+bool PeekQueue::peek() {
+    if (valid) return true;
     rt_base_t level = rt_hw_interrupt_disable();
     if (Q.empty()) {
         rt_hw_interrupt_enable(level);
@@ -18,8 +19,9 @@ bool PeekQueue::get() {
     rt_memcpy(buf, Q.front(), Q.data_size());
     Q.pop_front();
     rt_hw_interrupt_enable(level);
-    return true;
+    return valid = true;
 }
+void PeekQueue::pop() { valid = false; }
 void PeekQueue::push(const void* data) {
     rt_base_t level = rt_hw_interrupt_disable();
     Q.push_back(data);
