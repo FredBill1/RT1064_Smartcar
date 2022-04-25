@@ -8,21 +8,12 @@
 
 #include "apriltag/fmath.hpp"
 #include "kalman/SquareRootExtendedKalmanFilter.hpp"
+#include "pose_kalman/NoiseGenerator.hpp"
 #include "pose_kalman/SystemModel.hpp"
 #include "pose_kalman/measurementTypes.hpp"
 
 namespace pose_kalman {
 using imgProc::apriltag::atan2f, imgProc::apriltag::sinf, imgProc::apriltag::cosf;
-
-class NoiseGenerator {
-    static std::default_random_engine generator;
-    std::normal_distribution<T> distribution;
-
- public:
-    NoiseGenerator(T sigma2 = 1) : distribution(0, sigma2) {}
-    T operator()() { return distribution(generator); }
-};
-std::default_random_engine NoiseGenerator::generator;
 
 constexpr T xy_Noise = 0.05;
 constexpr T yaw_Noise = 0.06;

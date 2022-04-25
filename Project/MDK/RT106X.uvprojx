@@ -2524,6 +2524,16 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\components\pose_kalman\src\pose_kalman_test.cpp</FilePath>
             </File>
+            <File>
+              <FileName>PoseKalman.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\pose_kalman\src\PoseKalman.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>NoiseGenerator.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\pose_kalman\src\NoiseGenerator.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2583,11 +2593,6 @@
               <FileName>testKey.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\testKey.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>PoseKalman.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\CODE\components\pose_kalman\src\PoseKalman.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -5329,6 +5334,16 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\components\pose_kalman\src\pose_kalman_test.cpp</FilePath>
             </File>
+            <File>
+              <FileName>PoseKalman.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\pose_kalman\src\PoseKalman.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>NoiseGenerator.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\pose_kalman\src\NoiseGenerator.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -5388,11 +5403,6 @@
               <FileName>testKey.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\testKey.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>PoseKalman.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\CODE\components\pose_kalman\src\PoseKalman.cpp</FilePath>
             </File>
           </Files>
         </Group>
