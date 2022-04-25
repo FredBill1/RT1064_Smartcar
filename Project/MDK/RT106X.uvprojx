@@ -2584,6 +2584,11 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\imuCallback.cpp</FilePath>
             </File>
+            <File>
+              <FileName>poseKalman.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\poseKalman.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -5383,6 +5388,11 @@
               <FileName>imuCallback.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\imuCallback.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>poseKalman.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\poseKalman.cpp</FilePath>
             </File>
           </Files>
         </Group>

@@ -12,6 +12,7 @@
 #include "SerialIO.hpp"
 #include "Systick.hpp"
 #include "controller/LADRC.hpp"
+#include "pose_kalman/PoseKalman.hpp"
 
 //
 #include "PinConfig.h"
@@ -51,6 +52,10 @@ extern Encoder encoderL1, encoderL2, encoderR1, encoderR2;
 extern controller::LADRC controllerL1, controllerL2, controllerR1, controllerR2;
 extern MotorCtrl motorCtrlL1, motorCtrlL2, motorCtrlR1, motorCtrlR2;
 extern MoveBase moveBase;
+
+namespace pose_kalman {
+extern PoseKalman kf;
+}
 
 void initDevices();
 

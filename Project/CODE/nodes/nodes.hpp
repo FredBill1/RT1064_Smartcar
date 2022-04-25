@@ -29,6 +29,9 @@ bool testKeyNode();
 bool uartMasterTest();
 bool uartSlaveTest();
 
+// ¿¨¶ûÂüÂË²¨¶¨Î»
+bool poseKalmanNode();
+
 // ²âÊÔ¿¨¶ûÂüÂË²¨Àà
 bool testPoseKalmanNode();
 

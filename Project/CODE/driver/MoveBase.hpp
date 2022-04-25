@@ -36,7 +36,6 @@ class MoveBase {
 
  protected:
     FakeAtomicLoader<WheelSpeed> _wheelSpeedLoader;
-    FakeAtomicLoader<BaseSpeed> _baseSpeedLoader;
     FakeAtomicLoader<ControlState> _controlStateLoader;
     WheelSpeed _wheelSpeed;
     BaseSpeed _baseSpeed;
@@ -59,11 +58,9 @@ class MoveBase {
     inline void cmd_vel(const WheelSpeed& wheel) { _wheelSpeedLoader.store(wheel); }
 
     inline void get_vel(float L1, float L2, float R1, float R2) {
-        BaseSpeed res;
-        res.x = (L1 + L2 + R1 + R2) / 4;
-        res.y = (-L1 + L2 + R1 - R2) / 4;
-        res.yaw = (-L1 - L2 + R1 + R2) / (4 * (r_x + r_y));
-        _baseSpeedLoader.store(res);
+        _baseSpeed.x = (L1 + L2 + R1 + R2) / 4;
+        _baseSpeed.y = (-L1 + L2 + R1 - R2) / 4;
+        _baseSpeed.yaw = (-L1 - L2 + R1 + R2) / (4 * (r_x + r_y));
     }
     inline void get_vel(WheelSpeed& wheel) { get_vel(wheel.L1, wheel.L2, wheel.R1, wheel.R2); }
 
@@ -72,7 +69,6 @@ class MoveBase {
     inline void setControlState(const ControlState& state) { _controlStateLoader.store(state); }
 
     inline bool loadWheelSpeed() { return _wheelSpeedLoader.load(_wheelSpeed); }
-    inline bool loadBaseSpeed() { return _baseSpeedLoader.load(_baseSpeed); }
     inline bool loadControlState() { return _controlStateLoader.load(_controlState); }
 
     inline const WheelSpeed& getWheelSpeed() const { return _wheelSpeed; }

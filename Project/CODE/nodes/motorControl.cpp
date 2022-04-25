@@ -34,6 +34,13 @@ static inline void readEncoder() {
     moveBase.get_vel(encoderL1.get(), encoderL2.get(), encoderR1.get(), encoderR2.get());
 }
 
+static inline void updateKf() {
+    using namespace pose_kalman;
+    auto &baseSpeed = moveBase.getBaseSpeed();
+    T odom[3]{baseSpeed.x, baseSpeed.y, baseSpeed.yaw};
+    kf.enqueMeasurement(MeasurementType::Odom, odom, systick.get_us());
+}
+
 static inline void applyMotorCtrl() {
     if (state.L1()) motorCtrlL1.update();
     if (state.L2()) motorCtrlL2.update();
@@ -59,6 +66,7 @@ static void motorControlEntry() {
     updateControlState();
     updateWheelSpeed();
     readEncoder();
+    updateKf();
     applyMotorCtrl();
     uploadDebugData();
 }

@@ -39,6 +39,9 @@ MotorCtrl motorCtrlR1(motorDrvR1, encoderR1, controllerR1);
 MotorCtrl motorCtrlR2(motorDrvR2, encoderR2, controllerR2);
 
 MoveBase moveBase;
+namespace pose_kalman {
+PoseKalman kf;
+}
 
 Systick systick;
 
