@@ -29,4 +29,7 @@ bool testKeyNode();
 bool uartMasterTest();
 bool uartSlaveTest();
 
+// ²âÊÔ¿¨¶ûÂüÂË²¨Àà
+bool testPoseKalmanNode();
+
 #endif  // _nodes_hpp

@@ -20,7 +20,7 @@ void RDeque::init(int size, int data_size) {
     data_sz_aligned = RT_ALIGN(data_size, RT_ALIGN_SIZE);
     sz = size;
     int buf_sz = data_sz_aligned * size;
-    l = r = buf = new char[buf_sz];
+    l = r = buf = (char*)rt_malloc(buf_sz);
     buf_end = buf + buf_sz;
 }
 void RDeque::push_back(const void* data) {

@@ -2520,11 +2520,6 @@
           <GroupName>pose_kailman</GroupName>
           <Files>
             <File>
-              <FileName>pose_kalman_test.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\CODE\components\pose_kalman\src\pose_kalman_test.cpp</FilePath>
-            </File>
-            <File>
               <FileName>PoseKalman.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\components\pose_kalman\src\PoseKalman.cpp</FilePath>
@@ -2593,6 +2588,11 @@
               <FileName>testKey.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\testKey.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>testPoseKalman.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\testPoseKalman.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -5330,11 +5330,6 @@
           </GroupOption>
           <Files>
             <File>
-              <FileName>pose_kalman_test.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\CODE\components\pose_kalman\src\pose_kalman_test.cpp</FilePath>
-            </File>
-            <File>
               <FileName>PoseKalman.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\components\pose_kalman\src\PoseKalman.cpp</FilePath>
@@ -5403,6 +5398,11 @@
               <FileName>testKey.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\testKey.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>testPoseKalman.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\testPoseKalman.cpp</FilePath>
             </File>
           </Files>
         </Group>

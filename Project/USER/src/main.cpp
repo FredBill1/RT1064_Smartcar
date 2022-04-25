@@ -24,7 +24,8 @@ int main(void) {
     // testQTimerNode();
     // testMotorPwmNode();
     // testKeyNode();
-    pose_kalman_test_node();
+    // pose_kalman_test_node();
+    testPoseKalmanNode();
 
     // uartMasterTest();
     // uartSlaveTest();

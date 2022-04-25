@@ -5,8 +5,9 @@
 #include "map-macro/map.h"
 #define MAP_P(x) x
 //
+#include <crt.h>
 #include <rtthread.h>
-
+//
 #include "kalman/SquareRootExtendedKalmanFilter.hpp"
 #include "pose_kalman/SystemModel.hpp"
 #include "pose_kalman/measurementTypes.hpp"
@@ -26,7 +27,7 @@ template <class U> struct Stamped {
 #define MeasurementMemberName(type) type##_m
 
 struct PoseKalman::Impl {
-    bool enabled = false, isFirst = true;
+    bool enabled, isFirst;
     uint64_t lastPredict_us;
     SystemModel sys;
 
@@ -42,15 +43,19 @@ struct PoseKalman::Impl {
 void PoseKalman::Impl::initQueue() {
 #define initQueueUtil(type)                                                                        \
     measurementQueue[(int)MeasurementType::type].init(MeasurementQueueSize(MeasurementType::type), \
-                                                      sizeof(Stamped<T[type::SIZE]>));             \
+                                                      sizeof(Stamped<T[type::SIZE]>));
     MAP(initQueueUtil, MeasurementModelTypes);
 #undef initQueueUtil
 }
 
 PoseKalman::PoseKalman() {
-    pimpl = new Impl();
+    pimpl = (Impl*)rt_malloc(sizeof(Impl));
+    pimpl = new (pimpl) Impl();
+    RT_ASSERT(pimpl);
+    pimpl->enabled = false;
     pimpl->initQueue();
 }
+
 PoseKalman::~PoseKalman() { delete pimpl; }
 void PoseKalman::setEnabled(bool enabled) {
     if (pimpl->enabled == enabled) return;
@@ -62,7 +67,7 @@ void PoseKalman::setState(const T stateData[], uint64_t timestamp_us) {
     if (!pimpl->enabled) {
         State x = MapAsConst<State>(stateData);
         pimpl->kf.init(x);
-        pimpl->kf.setCovariance(SMALL_COV);
+        // pimpl->kf.setCovariance(SMALL_COV);
     } else {
         enqueMeasurement(MeasurementType::SetState, stateData, timestamp_us);
     }
@@ -70,6 +75,11 @@ void PoseKalman::setState(const T stateData[], uint64_t timestamp_us) {
 void PoseKalman::setSystemCovariance(const T systemCovariance[]) {
     Covariance<State> cov = MapAsConst<Covariance<State>>(systemCovariance);
     pimpl->sys.setCovariance(cov);
+}
+
+void PoseKalman::setPredictionCovariance(const T predictionCovariance[]) {
+    Covariance<State> cov = MapAsConst<Covariance<State>>(predictionCovariance);
+    pimpl->kf.setCovariance(cov);
 }
 
 void PoseKalman::setMeasurementCovariance(MeasurementType measurementType, const T measurementCovariance[]) {
@@ -104,7 +114,9 @@ void PoseKalman::update(uint64_t timestamp_us) {
     if (!pimpl->enabled) return;
     if (pimpl->isFirst) pimpl->isFirst = false, pimpl->lastPredict_us = timestamp_us;
     Control u;
-    for (int64_t max_dt = 0, dt;; max_dt = 0) {
+    int64_t dt;
+    for (;;) {
+        int64_t max_dt = 0;
         MeasurementType res = MeasurementType::NUM_TYPES;
 #define update_max_dt_util(type)                                                   \
     {                                                                              \
@@ -141,15 +153,18 @@ void PoseKalman::update(uint64_t timestamp_us) {
             m_yaw = x_yaw + wrapAngle(m_yaw - x_yaw);                          \
         }                                                                      \
         pimpl->kf.update(pimpl->MeasurementMemberName(type), data);            \
+        queue.pop();                                                           \
     } break;
             MAP(update_predict_update_util, MeasurementModelTypes)
 #undef update_predict_update_util
         default: break;
         }
     }
-    int32_t dt = timestamp_us - pimpl->lastPredict_us;
+    dt = timestamp_us - pimpl->lastPredict_us;
     u.dt() = dt * 1e-6;
     pimpl->kf.predict(pimpl->sys, u);
     pimpl->lastPredict_us = timestamp_us;
 }
+
+const T* PoseKalman::getState() const { return pimpl->kf.getState().data(); }
 }  // namespace pose_kalman

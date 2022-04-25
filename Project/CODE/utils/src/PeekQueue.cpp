@@ -6,9 +6,9 @@
 PeekQueue::PeekQueue(int size, int data_size) { init(size, data_size); }
 void PeekQueue::init(int size, int data_size) {
     Q.init(size, data_size);
-    buf = new char[RT_ALIGN(data_size, RT_ALIGN_SIZE)];
+    buf = (char*)rt_malloc(RT_ALIGN(data_size, RT_ALIGN_SIZE));
 }
-PeekQueue::~PeekQueue() { delete buf; }
+PeekQueue::~PeekQueue() { rt_free(buf); }
 bool PeekQueue::peek() {
     if (valid) return true;
     rt_base_t level = rt_hw_interrupt_disable();

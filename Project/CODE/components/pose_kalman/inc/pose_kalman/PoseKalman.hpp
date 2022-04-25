@@ -17,9 +17,11 @@ class PoseKalman {
     void setEnabled(bool enable);
     void setState(const T stateData[], uint64_t timestamp_us = 0);
     void setSystemCovariance(const T systemCovariance[]);
+    void setPredictionCovariance(const T predictionCovariance[]);
     void setMeasurementCovariance(MeasurementType measurementType, const T measurementCovariance[]);
     void enqueMeasurement(MeasurementType measurementType, const T measurementData[], uint64_t timestamp_us);
     void update(uint64_t timestamp_us);
+    const T* getState() const;
 };
 
 }  // namespace pose_kalman
