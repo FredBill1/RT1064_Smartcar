@@ -15,6 +15,7 @@ class PoseKalman {
     PoseKalman();
     ~PoseKalman();
     void setEnabled(bool enable);
+    bool getEnabled() const;
     void setState(const T stateData[], uint64_t timestamp_us = 0);
     void setSystemCovariance(const T systemCovariance[]);
     void setPredictionCovariance(const T predictionCovariance[]);

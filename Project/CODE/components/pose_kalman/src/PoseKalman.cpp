@@ -12,6 +12,7 @@
 #include "pose_kalman/SystemModel.hpp"
 #include "pose_kalman/measurementTypes.hpp"
 #include "utils/FakeAtomic.hpp"
+#include "utils/InterruptGuard.hpp"
 #include "utils/PeekQueue.hpp"
 namespace pose_kalman {
 using namespace Kalman;
@@ -58,13 +59,23 @@ PoseKalman::PoseKalman() {
 
 PoseKalman::~PoseKalman() { delete pimpl; }
 void PoseKalman::setEnabled(bool enabled) {
+    InterruptGuard guard;
     if (pimpl->enabled == enabled) return;
-    if (enabled) pimpl->isFirst = true;
+    if (enabled) {
+        pimpl->isFirst = true;
+        for (auto& queue : pimpl->measurementQueue) queue.clear();
+    }
     pimpl->enabled = enabled;
 }
+
+bool PoseKalman::getEnabled() const {
+    InterruptGuard guard;
+    return pimpl->enabled;
+}
+
 void PoseKalman::setState(const T stateData[], uint64_t timestamp_us) {
     static const Covariance<State> SMALL_COV = Covariance<State>::Identity() * 1e-6;
-    if (!pimpl->enabled) {
+    if (!getEnabled()) {
         State x = MapAsConst<State>(stateData);
         pimpl->kf.init(x);
         // pimpl->kf.setCovariance(SMALL_COV);
@@ -111,7 +122,7 @@ void PoseKalman::enqueMeasurement(MeasurementType measurementType, const T measu
 }
 
 void PoseKalman::update(uint64_t timestamp_us) {
-    if (!pimpl->enabled) return;
+    if (!getEnabled()) return;
     if (pimpl->isFirst) pimpl->isFirst = false, pimpl->lastPredict_us = timestamp_us;
     Control u;
     int64_t dt;

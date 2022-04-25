@@ -15,6 +15,7 @@ class PeekQueue {
     void init(int size, int data_size);
     bool peek();
     void push(const void* data);
+    void clear();
     void pop();
     void* front();
 };

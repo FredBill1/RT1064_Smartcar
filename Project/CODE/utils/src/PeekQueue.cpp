@@ -27,4 +27,9 @@ void PeekQueue::push(const void* data) {
     Q.push_back(data);
     rt_hw_interrupt_enable(level);
 }
+void PeekQueue::clear() {
+    rt_base_t level = rt_hw_interrupt_disable();
+    Q.clear();
+    rt_hw_interrupt_enable(level);
+}
 void* PeekQueue::front() { return buf; }
