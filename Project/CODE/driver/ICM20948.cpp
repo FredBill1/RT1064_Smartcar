@@ -35,22 +35,6 @@ static float cfg_mounting_matrix[9]{
 
 static int unscaled_bias[THREE_AXES * 2];
 
-void ICM20948::initPubs() {
-    // clang-format off
-    if constexpr (use_uncal_mag       ) _pub_uncal_mag       .initialize("imu/uncal_mag",        sizeof(rosRT::msgs::VectBias         ), 1);
-    if constexpr (use_uncal_gyro      ) _pub_uncal_gyro      .initialize("imu/uncal_gyro",       sizeof(rosRT::msgs::VectBias         ), 1);
-    if constexpr (use_accel           ) _pub_accel           .initialize("imu/accel",            sizeof(rosRT::msgs::Vector3Stamped   ), 1);
-    if constexpr (use_gyro            ) _pub_gyro            .initialize("imu/gyro",             sizeof(rosRT::msgs::Vector3Stamped   ), 1);
-    if constexpr (use_mag             ) _pub_mag             .initialize("imu/mag",              sizeof(rosRT::msgs::Vector3Stamped   ), 1);
-    if constexpr (use_gravity         ) _pub_gravity         .initialize("imu/gravity",          sizeof(rosRT::msgs::Vector3Stamped   ), 1);
-    if constexpr (use_linear_accel    ) _pub_linear_accel    .initialize("imu/linear_accel",     sizeof(rosRT::msgs::Vector3Stamped   ), 1);
-    if constexpr (use_rpy_orientation ) _pub_rpy_orientation .initialize("imu/rpy_orientation",  sizeof(rosRT::msgs::Vector3Stamped   ), 1);
-    if constexpr (use_6DOF_orientation) _pub_6DOF_orientation.initialize("imu/6DOF_orientation", sizeof(rosRT::msgs::QuaternionStamped), 1);
-    if constexpr (use_9DOF_orientation) _pub_9DOF_orientation.initialize("imu/9DOF_orientation", sizeof(rosRT::msgs::QuaternionStamped), 1);
-    if constexpr (use_mag_orientation ) _pub_mag_orientation .initialize("imu/mag_orientation",  sizeof(rosRT::msgs::QuaternionStamped), 1);
-    // clang-format on
-}
-
 void ICM20948::enableSetSensors() {
     // clang-format off
     if constexpr (use_uncal_mag       ) enableSetSensor(INV_ICM20948_SENSOR_MAGNETIC_FIELD_UNCALIBRATED, period_uncal_mag       );
@@ -67,8 +51,10 @@ void ICM20948::enableSetSensors() {
     // clang-format on
 }
 
+RT_WEAK void ICM20948::setupCallbacks() {}
+
 void ICM20948::init() {
-    initPubs();
+    setupCallbacks();
     systick_delay_ms(10);
     spi_init(SPI_N, SCK, MOSI, MISO, CS, 3, 7 * 1000 * 1000);
 
@@ -311,80 +297,41 @@ void ICM20948::build_sensor_event_data(void* context, enum inv_icm20948_sensor s
 }
 void ICM20948::build_sensor_event_data(enum inv_icm20948_sensor sensortype, uint64_t timestamp, const void* data,
                                        const void* arg) {
-    static union {
-        rosRT::msgs::Vector3Stamped vector3_stamped;
-        rosRT::msgs::VectBias vectbias;
-        rosRT::msgs::QuaternionStamped quaternion_stamped;
-    } msg_buf;
     uint8_t sensor_id = convert_to_generic_ids[sensortype];
-    uint32_t stamp = timestamp / 1000;
     float* dat = (float*)data;
-    using namespace rosRT::msgs;
-    float_t* buf;
     switch (sensor_id) {
     case INV_SENSOR_TYPE_UNCAL_GYROSCOPE:  // 未校准陀螺仪
-        buf = (float_t*)&msg_buf.vectbias;
-        for (int i = 0; i < 6; ++i) buf[i] = dat[i];
-        _pub_uncal_gyro.instance().publish(&msg_buf.vectbias);
+        if (cb_uncal_gyro) cb_uncal_gyro(dat, timestamp);
         break;
     case INV_SENSOR_TYPE_UNCAL_MAGNETOMETER:  // 未校准磁场
-        buf = (float_t*)&msg_buf.vectbias;
-        for (int i = 0; i < 6; ++i) buf[i] = dat[i];
-        _pub_uncal_mag.instance().publish(&msg_buf.vectbias);
+        if (cb_uncal_mag) cb_uncal_mag(dat, timestamp);
         break;
     case INV_SENSOR_TYPE_GYROSCOPE:  // 陀螺仪
-        msg_buf.vector3_stamped.header.stamp = stamp;
-        buf = (float_t*)&msg_buf.vector3_stamped.vector;
-        for (int i = 0; i < 3; ++i) buf[i] = dat[i];
-        _pub_gyro.instance().publish(&msg_buf.vector3_stamped);
+        if (cb_gyro) cb_gyro(dat, timestamp);
         break;
     case INV_SENSOR_TYPE_GRAVITY:  // 重力
-        msg_buf.vector3_stamped.header.stamp = stamp;
-        buf = (float_t*)&msg_buf.vector3_stamped.vector;
-        for (int i = 0; i < 3; ++i) buf[i] = dat[i];
-        _pub_gravity.instance().publish(&msg_buf.vector3_stamped);
+        if (cb_gravity) cb_gravity(dat, timestamp);
         break;
     case INV_SENSOR_TYPE_LINEAR_ACCELERATION:  // 线加速度
-        msg_buf.vector3_stamped.header.stamp = stamp;
-        buf = (float_t*)&msg_buf.vector3_stamped.vector;
-        for (int i = 0; i < 3; ++i) buf[i] = dat[i];
-        _pub_linear_accel.instance().publish(&msg_buf.vector3_stamped);
+        if (cb_linear_accel) cb_linear_accel(dat, timestamp);
         break;
     case INV_SENSOR_TYPE_ACCELEROMETER:  // 加速度计
-        msg_buf.vector3_stamped.header.stamp = stamp;
-        buf = (float_t*)&msg_buf.vector3_stamped.vector;
-        for (int i = 0; i < 3; ++i) buf[i] = dat[i];
-        _pub_accel.instance().publish(&msg_buf.vector3_stamped);
+        if (cb_accel) cb_accel(dat, timestamp);
         break;
     case INV_SENSOR_TYPE_MAGNETOMETER:  // 磁场
-        msg_buf.vector3_stamped.header.stamp = stamp;
-        buf = (float_t*)&msg_buf.vector3_stamped.vector;
-        for (int i = 0; i < 3; ++i) buf[i] = dat[i];
-        _pub_mag.instance().publish(&msg_buf.vector3_stamped);
+        if (cb_mag) cb_mag(dat, timestamp);
         break;
     case INV_SENSOR_TYPE_GEOMAG_ROTATION_VECTOR:  // 地磁位姿
-        msg_buf.quaternion_stamped.header.stamp = stamp;
-        buf = (float_t*)&msg_buf.quaternion_stamped.quaternion;
-        for (int i = 0; i < 4; ++i) buf[i] = dat[i];
-        _pub_mag_orientation.instance().publish(&msg_buf.quaternion_stamped);
+        if (cb_mag_orientation) cb_mag_orientation(dat, timestamp);
         break;
     case INV_SENSOR_TYPE_ROTATION_VECTOR:  // 6DOF位姿
-        msg_buf.quaternion_stamped.header.stamp = stamp;
-        buf = (float_t*)&msg_buf.quaternion_stamped.quaternion;
-        for (int i = 0; i < 4; ++i) buf[i] = dat[i];
-        _pub_9DOF_orientation.instance().publish(&msg_buf.quaternion_stamped);
+        if (cb_6DOF_orientation) cb_6DOF_orientation(dat, timestamp);
         break;
     case INV_SENSOR_TYPE_GAME_ROTATION_VECTOR:  // 9DOF位姿
-        msg_buf.quaternion_stamped.header.stamp = stamp;
-        buf = (float_t*)&msg_buf.quaternion_stamped.quaternion;
-        for (int i = 0; i < 4; ++i) buf[i] = dat[i];
-        _pub_6DOF_orientation.instance().publish(&msg_buf.quaternion_stamped);
+        if (cb_9DOF_orientation) cb_9DOF_orientation(dat, timestamp);
         break;
     case INV_SENSOR_TYPE_ORIENTATION:  // 9DOF RPY
-        msg_buf.vector3_stamped.header.stamp = stamp;
-        buf = (float_t*)&msg_buf.vector3_stamped.vector;
-        for (int i = 0; i < 3; ++i) buf[i] = dat[i];
-        _pub_rpy_orientation.instance().publish(&msg_buf.vector3_stamped);
+        if (cb_9DOF_orientation) cb_9DOF_orientation(dat, timestamp);
         break;
     }
 }

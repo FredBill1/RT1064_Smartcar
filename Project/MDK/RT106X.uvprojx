@@ -2507,16 +2507,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>rosRT</GroupName>
-          <Files>
-            <File>
-              <FileName>Topic.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\CODE\components\rosRT\src\Topic.cpp</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>pose_kailman</GroupName>
           <Files>
             <File>
@@ -2548,11 +2538,6 @@
               <FileName>imgUSBXfer.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\imgUSBXfer.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>imuEcho.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\CODE\nodes\imuEcho.cpp</FilePath>
             </File>
             <File>
               <FileName>testMotor.cpp</FileName>
@@ -2593,6 +2578,11 @@
               <FileName>testPoseKalman.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\testPoseKalman.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>imuCallback.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\imuCallback.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -5248,16 +5238,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>rosRT</GroupName>
-          <Files>
-            <File>
-              <FileName>Topic.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\CODE\components\rosRT\src\Topic.cpp</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>pose_kailman</GroupName>
           <GroupOption>
             <CommonProperty>
@@ -5360,11 +5340,6 @@
               <FilePath>..\CODE\nodes\imgUSBXfer.cpp</FilePath>
             </File>
             <File>
-              <FileName>imuEcho.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\CODE\nodes\imuEcho.cpp</FilePath>
-            </File>
-            <File>
               <FileName>testMotor.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\testMotor.cpp</FilePath>
@@ -5403,6 +5378,11 @@
               <FileName>testPoseKalman.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\testPoseKalman.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>imuCallback.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\imuCallback.cpp</FilePath>
             </File>
           </Files>
         </Group>

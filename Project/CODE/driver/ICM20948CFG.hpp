@@ -26,13 +26,13 @@ static int32_t cfg_gyr_fsr = GyroFSR2000dps;
 static constexpr bool use_uncal_mag        = 0; // 未校准磁场
 static constexpr bool use_uncal_gyro       = 0; // 未校准陀螺仪
 static constexpr bool use_accel            = 0; // 加速度计
-static constexpr bool use_gyro             = 0; // 陀螺仪
+static constexpr bool use_gyro             = 1; // 陀螺仪
 static constexpr bool use_mag              = 0; // 磁场
-static constexpr bool use_gravity          = 0; // 重力
-static constexpr bool use_linear_accel     = 1; // 线加速度
-static constexpr bool use_rpy_orientation  = 0; // 9DOF RPY
+static constexpr bool use_gravity          = 0; // 重力 (基于6DOF位姿)
+static constexpr bool use_linear_accel     = 0; // 线加速度 (基于6DOF位姿和加速度计)
+static constexpr bool use_rpy_orientation  = 0; // 9DOF RPY (基于9DOF位姿)
 static constexpr bool use_6DOF_orientation = 1; // 6DOF位姿
-static constexpr bool use_9DOF_orientation = 0; // 9DOF位姿
+static constexpr bool use_9DOF_orientation = 1; // 9DOF位姿
 static constexpr bool use_mag_orientation  = 0; // 地磁位姿
 
 // 周期/ms

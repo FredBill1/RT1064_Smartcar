@@ -9,7 +9,7 @@ int main(void);
 bool pose_kalman_test_node();
 int main(void) {
     initDevices();
-    // imu.init();
+    imu.init();
     // mt9v03x_csi_init();
     // usb_cdc_init();
 
@@ -18,7 +18,7 @@ int main(void) {
 
     // imgUSBXferNode();
     // apriltagDetectNode();
-    motorControlNode();
+    // motorControlNode();
 
     // testMotorNode();
     // testQTimerNode();
