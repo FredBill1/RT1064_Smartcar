@@ -57,7 +57,10 @@ PoseKalman::PoseKalman() {
     pimpl->initQueue();
 }
 
-PoseKalman::~PoseKalman() { delete pimpl; }
+PoseKalman::~PoseKalman() {
+    pimpl->~Impl();
+    rt_free(pimpl);
+}
 void PoseKalman::setEnabled(bool enabled) {
     InterruptGuard guard;
     if (pimpl->enabled == enabled) return;
