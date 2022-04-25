@@ -8,11 +8,11 @@
 class MotorCtrl {
     const MotorDRV& _motor;
     const Encoder& _encoder;
-    controller::LADRC2& _controller;
+    controller::LADRC& _controller;
     float _u_prev, _y_desired;
 
  public:
-    MotorCtrl(const MotorDRV& motor, const Encoder& encoder, controller::LADRC2& controller)
+    MotorCtrl(const MotorDRV& motor, const Encoder& encoder, controller::LADRC& controller)
         : _motor(motor), _encoder(encoder), _controller(controller) {
         reset();
     }

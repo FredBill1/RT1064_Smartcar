@@ -48,7 +48,7 @@ extern MotorDRV motorDrvL1, motorDrvL2, motorDrvR1, motorDrvR2;
 extern const QTimer qtimerL1, qtimerL2, qtimerR1, qtimerR2;
 extern Encoder encoderL1, encoderL2, encoderR1, encoderR2;
 
-extern controller::LADRC2 controllerL1, controllerL2, controllerR1, controllerR2;
+extern controller::LADRC controllerL1, controllerL2, controllerR1, controllerR2;
 extern MotorCtrl motorCtrlL1, motorCtrlL2, motorCtrlR1, motorCtrlR2;
 extern MoveBase moveBase;
 

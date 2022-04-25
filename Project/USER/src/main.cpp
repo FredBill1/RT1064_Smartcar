@@ -18,14 +18,14 @@ int main(void) {
 
     // imgUSBXferNode();
     // apriltagDetectNode();
-    // motorControlNode();
+    motorControlNode();
 
     // testMotorNode();
     // testQTimerNode();
     // testMotorPwmNode();
     // testKeyNode();
     // pose_kalman_test_node();
-    testPoseKalmanNode();
+    // testPoseKalmanNode();
 
     // uartMasterTest();
     // uartSlaveTest();
