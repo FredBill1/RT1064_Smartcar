@@ -12,10 +12,10 @@ static constexpr T sys_yaw_sigma2 = 0.06;
 static constexpr T sys_v_xy_sigma2 = 0.025;
 static constexpr T sys_v_yaw_sigma2 = 0.02;
 
-static constexpr T odom_v_xy_sigma2 = 1;
-static constexpr T odom_v_yaw_sigma2 = 3;
+static constexpr T odom_v_xy_sigma2 = 1e-2;
+static constexpr T odom_v_yaw_sigma2 = 1e-2;
 
-static constexpr T gyro_v_yaw_sigma2 = 1;
+static constexpr T gyro_v_yaw_sigma2 = 1e-3;
 
 static inline void setupSystemCovariance() {
     T sysCov[6][6]{0};
@@ -65,6 +65,7 @@ static void poseKalmanEntry() {
     setupGyroCovariance();
     // setupPredictCovariance();
     setInitialState();
+    rt_thread_mdelay(100);
     kf.setEnabled(true);
     for (;;) {
         kf.update(systick.get_us());

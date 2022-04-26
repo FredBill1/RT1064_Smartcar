@@ -2,18 +2,27 @@
 #include "ICM20948CFG.hpp"
 //
 #include "devices.hpp"
+#include "pose_kalman/utils.hpp"
 
-#define send_data(name, len, id)                                    \
-    static SerialIO::TxUtil<float, len, true> name##_tx(#name, id); \
-    if (name##_tx.txFinished()) {                                   \
-        name##_tx.setArr(data);                                     \
-        wireless.send(name##_tx);                                   \
+using namespace pose_kalman;
+
+#define send_data(name, len, id)                                        \
+    {                                                                   \
+        static SerialIO::TxUtil<float, len, true> name##_tx(#name, id); \
+        if (name##_tx.txFinished()) {                                   \
+            name##_tx.setArr(data);                                     \
+            wireless.send(name##_tx);                                   \
+        }                                                               \
     }
 
 static void imu_cb_uncal_mag(const float data[6], uint64_t timestamp_us) { send_data(mag_uncal, 6, 0); }
 static void imu_cb_uncal_gyro(const float data[6], uint64_t timestamp_us) { send_data(gyro_uncal, 6, 1); }
 static void imu_cb_accel(const float data[3], uint64_t timestamp_us) { send_data(acc, 3, 2); }
-static void imu_cb_gyro(const float data[3], uint64_t timestamp_us) { send_data(gyro, 3, 3); }
+static void imu_cb_gyro(const float data[3], uint64_t timestamp_us) {
+    send_data(gyro, 3, 3);
+    T gyro_data = data[2] * (T)(PI / 180.0);
+    kf.enqueMeasurement(MeasurementType::Gyro, &gyro_data, timestamp_us);
+}
 static void imu_cb_mag(const float data[3], uint64_t timestamp_us) { send_data(mag, 3, 4); }
 static void imu_cb_gravity(const float data[3], uint64_t timestamp_us) { send_data(gravity, 3, 5); }
 static void imu_cb_linear_accel(const float data[3], uint64_t timestamp_us) { send_data(acc_lin, 3, 6); }
