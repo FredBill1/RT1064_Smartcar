@@ -18,8 +18,19 @@ enum GyroscopeFSR {
     GyroFSR2000dps = 2000,  // default
 };
 
-static int32_t cfg_acc_fsr = AccelFSR4g;
-static int32_t cfg_gyr_fsr = GyroFSR2000dps;
+static constexpr double GyroScaleFactor(int32_t fsr) {
+    switch (fsr) {
+    case GyroFSR250dps: return 131.0;
+    case GyroFSR500dps: return 65.5;
+    case GyroFSR1000dps: return 32.8;
+    case GyroFSR2000dps: return 16.4;
+    default: return 0;
+    }
+}
+
+static constexpr int32_t cfg_acc_fsr = AccelFSR4g;
+static constexpr int32_t cfg_gyr_fsr = GyroFSR2000dps;
+static constexpr double gyro_scale_factor = GyroScaleFactor(cfg_gyr_fsr);
 
 // clang-format off
 // π¶ƒ‹∆Ù”√
