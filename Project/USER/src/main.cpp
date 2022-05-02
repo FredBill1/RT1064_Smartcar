@@ -18,7 +18,7 @@ int main(void) {
 
     // imgUSBXferNode();
     // apriltagDetectNode();
-    // motorControlNode();
+    motorControlNode();
 
     // testMotorNode();
     // testQTimerNode();
@@ -26,9 +26,16 @@ int main(void) {
     // testKeyNode();
     // pose_kalman_test_node();
     // testPoseKalmanNode();
-    testLocalPlannerNode();
+    // testLocalPlannerNode();
 
-    // poseKalmanNode();
+    poseKalmanNode();
+
+    moveBase.set_enabled(true);
+    rt_kprintf("start move base\r\n");
+    rt_thread_mdelay(5000);
+    baseDriver.setControlState(1, 1, 1, 1);
+    rt_thread_mdelay(1000);
+    moveBase.send_goal(10, 3, 3.14);
 
     // uartMasterTest();
     // uartSlaveTest();

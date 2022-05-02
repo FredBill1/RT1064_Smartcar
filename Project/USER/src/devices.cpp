@@ -41,7 +41,8 @@ MotorCtrl motorCtrlR2(motorDrvR2, encoderR2, controllerR2);
 BaseDriver baseDriver;
 namespace pose_kalman {
 PoseKalman kf;
-}
+LocalPlanner localPlanner;
+}  // namespace pose_kalman
 
 Systick systick;
 
@@ -59,6 +60,8 @@ extern const GPIO master_key[5]{MASTER_KEY};
 extern const GPIO master_switch[3]{MASTER_SWITCH};
 extern const GPIO slave_key[5]{SLAVE_KEY};
 extern const GPIO slave_switch[3]{SLAVE_SWITCH};
+
+MoveBase moveBase;
 
 void initDevices() {
     // motor pwm

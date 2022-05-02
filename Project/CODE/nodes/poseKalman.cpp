@@ -47,6 +47,15 @@ static inline void setInitialState() {
     kf.setState(state);
 }
 
+static void runLocalPlanner(const T state[6]) {
+    if (!moveBase.get_enabled() || moveBase.get_reached()) return;
+    auto& goal = moveBase.get_goal();
+    T goal_[3]{goal.x, goal.y, goal.yaw};
+    T cmd_vel[3];
+    localPlanner.getControlCmd(state, state + 3, goal_, cmd_vel);
+    baseDriver.cmd_vel(cmd_vel[0], cmd_vel[1], cmd_vel[2]);
+}
+
 static void poseKalmanEntry() {
     static SerialIO::TxUtil<float, 6, true> pose_tx("pose", 30);
     setupSystemCovariance();
@@ -59,6 +68,7 @@ static void poseKalmanEntry() {
     for (;;) {
         kf.update(systick.get_us());
         const T* state = kf.getState();
+        runLocalPlanner(state);
 
         if (pose_tx.txFinished()) {
             pose_tx.setArr(state);

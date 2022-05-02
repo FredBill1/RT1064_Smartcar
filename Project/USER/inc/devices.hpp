@@ -8,10 +8,12 @@
 #include "IPS.hpp"
 #include "MotorCtrl.hpp"
 #include "MotorDRV.hpp"
+#include "MoveBase.hpp"
 #include "QTimer.hpp"
 #include "SerialIO.hpp"
 #include "Systick.hpp"
 #include "controller/LADRC.hpp"
+#include "pose_kalman/LocalPlanner.hpp"
 #include "pose_kalman/PoseKalman.hpp"
 
 //
@@ -55,7 +57,10 @@ extern BaseDriver baseDriver;
 
 namespace pose_kalman {
 extern PoseKalman kf;
-}
+extern LocalPlanner localPlanner;
+}  // namespace pose_kalman
+
+extern MoveBase moveBase;
 
 void initDevices();
 

@@ -2414,6 +2414,11 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\driver\src\Systick.cpp</FilePath>
             </File>
+            <File>
+              <FileName>MoveBase.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\driver\src\MoveBase.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -5159,6 +5164,11 @@
               <FileName>Systick.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\driver\src\Systick.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>MoveBase.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\driver\src\MoveBase.cpp</FilePath>
             </File>
           </Files>
         </Group>
