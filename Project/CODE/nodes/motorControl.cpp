@@ -2,11 +2,11 @@
 //
 #include "devices.hpp"
 
-static MoveBase::ControlState state;
+static BaseDriver::ControlState state;
 
 static inline void updateControlState() {
-    if (moveBase.loadControlState()) {
-        const MoveBase::ControlState &cur_state = moveBase.getControlState();
+    if (baseDriver.loadControlState()) {
+        const BaseDriver::ControlState &cur_state = baseDriver.getControlState();
         state ^= cur_state;
         if (state.L1()) motorCtrlL1.handleStateChange(cur_state.L1());
         if (state.L2()) motorCtrlL2.handleStateChange(cur_state.L2());
@@ -17,8 +17,8 @@ static inline void updateControlState() {
 }
 
 static inline void updateWheelSpeed() {
-    if (moveBase.loadWheelSpeed()) {
-        const MoveBase::WheelSpeed &wheel = moveBase.getWheelSpeed();
+    if (baseDriver.loadWheelSpeed()) {
+        const BaseDriver::WheelSpeed &wheel = baseDriver.getWheelSpeed();
         motorCtrlL1.setTargetSpeed(wheel.L1);
         motorCtrlL2.setTargetSpeed(wheel.L2);
         motorCtrlR1.setTargetSpeed(wheel.R1);
@@ -31,12 +31,12 @@ static inline void readEncoder() {
     encoderL2.update();
     encoderR1.update();
     encoderR2.update();
-    moveBase.get_vel(encoderL1.get(), encoderL2.get(), encoderR1.get(), encoderR2.get());
+    baseDriver.get_vel(encoderL1.get(), encoderL2.get(), encoderR1.get(), encoderR2.get());
 }
 
 static inline void updateKf() {
     using namespace pose_kalman;
-    auto &baseSpeed = moveBase.getBaseSpeed();
+    auto &baseSpeed = baseDriver.getBaseSpeed();
     T odom[3]{baseSpeed.x, baseSpeed.y, baseSpeed.yaw};
     kf.enqueMeasurement(MeasurementType::Odom, odom, systick.get_us());
 }

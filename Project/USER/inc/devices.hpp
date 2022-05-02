@@ -1,13 +1,13 @@
 #ifndef _devices_hpp
 #define _devices_hpp
 
+#include "BaseDriver.hpp"
 #include "Encoder.hpp"
 #include "GPIO.hpp"
 #include "ICM20948.hpp"
 #include "IPS.hpp"
 #include "MotorCtrl.hpp"
 #include "MotorDRV.hpp"
-#include "MoveBase.hpp"
 #include "QTimer.hpp"
 #include "SerialIO.hpp"
 #include "Systick.hpp"
@@ -51,7 +51,7 @@ extern Encoder encoderL1, encoderL2, encoderR1, encoderR2;
 
 extern controller::LADRC controllerL1, controllerL2, controllerR1, controllerR2;
 extern MotorCtrl motorCtrlL1, motorCtrlL2, motorCtrlR1, motorCtrlR2;
-extern MoveBase moveBase;
+extern BaseDriver baseDriver;
 
 namespace pose_kalman {
 extern PoseKalman kf;

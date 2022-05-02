@@ -38,7 +38,7 @@ static inline void SetMotorControlState() {
     if (!wireless.getchar(state)) return;
     beep.set(false);
 
-    moveBase.setControlState(state);
+    baseDriver.setControlState(state);
 }
 
 static inline void SetMotorControllerParam() {
@@ -50,7 +50,7 @@ static inline void SetMotorControllerParam() {
         beep.set(false);
 
         // 先禁用控制器, 确保安全
-        moveBase.setControlState(0);
+        baseDriver.setControlState(0);
         rt_thread_mdelay(Param::MotorControlPeriod * 10);
 
         switch (id) {
@@ -65,7 +65,7 @@ static inline void SetMotorControllerParam() {
         // beep.set(false);
 
         // // 先禁用控制器, 确保安全
-        // moveBase.setControlState(0);
+        // baseDriver.setControlState(0);
         // rt_thread_mdelay(Param::MotorControlPeriod * 10);
 
         // switch (id) {
@@ -81,7 +81,7 @@ static inline void SetMotorTargetSpeed() {
     if (!wireless.getchar(id)) return;
     if (id == 4) {
         beep.set(false);
-        moveBase.cmd_vel(0, 0, 0, 0);
+        baseDriver.cmd_vel(0, 0, 0, 0);
         return;
     }
     float speed;
@@ -90,20 +90,20 @@ static inline void SetMotorTargetSpeed() {
 
     switch (id) {
     case 0:
-        moveBase.cmd_vel(speed, 0, 0, 0);
-        moveBase.setControlState(1, 0, 0, 0);
+        baseDriver.cmd_vel(speed, 0, 0, 0);
+        baseDriver.setControlState(1, 0, 0, 0);
         break;
     case 1:
-        moveBase.cmd_vel(0, speed, 0, 0);
-        moveBase.setControlState(0, 1, 0, 0);
+        baseDriver.cmd_vel(0, speed, 0, 0);
+        baseDriver.setControlState(0, 1, 0, 0);
         break;
     case 2:
-        moveBase.cmd_vel(0, 0, speed, 0);
-        moveBase.setControlState(0, 0, 1, 0);
+        baseDriver.cmd_vel(0, 0, speed, 0);
+        baseDriver.setControlState(0, 0, 1, 0);
         break;
     case 3:
-        moveBase.cmd_vel(0, 0, 0, speed);
-        moveBase.setControlState(0, 0, 0, 1);
+        baseDriver.cmd_vel(0, 0, 0, speed);
+        baseDriver.setControlState(0, 0, 0, 1);
         break;
     }
 }
@@ -118,7 +118,7 @@ static inline void Remote() {
     float x = forward ? (forward == 1 ? x_speed : -x_speed) : 0;
     float y = left ? (left == 1 ? y_speed : -y_speed) : 0;
     float r = rotate ? (rotate == 1 ? r_speed : -r_speed) : 0;
-    moveBase.cmd_vel(x, y, r);
+    baseDriver.cmd_vel(x, y, r);
 }
 
 static void wirelessEntry() {

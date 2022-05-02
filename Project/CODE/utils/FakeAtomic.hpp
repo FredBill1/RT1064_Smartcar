@@ -3,6 +3,8 @@
 
 #include <rthw.h>
 
+#include <utility>
+
 template <typename T> class FakeAtomicLoader {
     T _tmp;
     bool _changed = false;

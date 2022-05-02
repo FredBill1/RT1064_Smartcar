@@ -1,9 +1,9 @@
-#ifndef _MoveBase_hpp
-#define _MoveBase_hpp
+#ifndef _BaseDriver_hpp
+#define _BaseDriver_hpp
 
 #include "utils/FakeAtomic.hpp"
 
-class MoveBase {
+class BaseDriver {
  public:
     struct WheelSpeed {
         float L1, L2, R1, R2;
@@ -75,11 +75,11 @@ class MoveBase {
     inline const BaseSpeed& getBaseSpeed() const { return _baseSpeed; }
     inline const ControlState& getControlState() const { return _controlState; }
 
-    MoveBase() {
+    BaseDriver() {
         cmd_vel(0, 0, 0);
         get_vel(0, 0, 0, 0);
         setControlState(0);
     }
 };
 
-#endif  // _MoveBase_hpp
+#endif  // _BaseDriver_hpp
