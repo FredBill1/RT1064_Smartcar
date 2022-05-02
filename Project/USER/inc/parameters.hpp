@@ -12,30 +12,30 @@ namespace Motor {
 constexpr int32_t deadzone_thresh = 200;  // 输出pwm大于此值时把死区pwm加上去
 
 namespace L1 {
-constexpr float wc = 43;
-constexpr float wo = 276;
-constexpr float b0 = 2;
+constexpr float wc = 20;
+constexpr float wo = 40;
+constexpr float b0 = 0.004;
 constexpr int32_t deadzone = 2000;
 }  // namespace L1
 
 namespace L2 {
-constexpr float wc = 43;
-constexpr float wo = 276;
-constexpr float b0 = 2;
+constexpr float wc = 20;
+constexpr float wo = 40;
+constexpr float b0 = 0.004;
 constexpr int32_t deadzone = 2000;
 }  // namespace L2
 
 namespace R1 {
-constexpr float wc = 43;
-constexpr float wo = 276;
-constexpr float b0 = 2;
+constexpr float wc = 20;
+constexpr float wo = 40;
+constexpr float b0 = 0.004;
 constexpr int32_t deadzone = 2000;
 }  // namespace R1
 
 namespace R2 {
-constexpr float wc = 43;
-constexpr float wo = 276;
-constexpr float b0 = 2;
+constexpr float wc = 20;
+constexpr float wo = 40;
+constexpr float b0 = 0.004;
 constexpr int32_t deadzone = 2000;
 }  // namespace R2
 
