@@ -9,8 +9,8 @@
 #include "pose_kalman/utils.hpp"
 namespace pose_kalman {
 
-static constexpr T xy_sigma2 = 1;
-static constexpr T yaw_sigma2 = 3;
+static constexpr T xy_sigma2 = 0.01;
+static constexpr T yaw_sigma2 = 0.03;
 using Vector3 = Eigen::Matrix<T, 3, 1>;
 using Matrix2 = Eigen::Matrix<T, 2, 2>;
 static void testLocalPlannerEntry() {
@@ -31,11 +31,13 @@ static void testLocalPlannerEntry() {
     Eigen::Map<Vector3> pose(state);
     Eigen::Map<Vector3> vel(state + 3);
     Vector3 target{10, 3, 3.14};
-    Vector3 cmd_acc{0, 0, 0};
+    Vector3 cmd_vel{0, 0, 0};
 
     for (;;) {
-        if (lp.getControlCmd(pose.data(), vel.data(), target.data(), cmd_acc.data())) {}
-        vel += cmd_acc * predict_period_s;
+        if (lp.getControlCmd(pose.data(), vel.data(), target.data(), cmd_vel.data())) {}
+        cmd_vel[0] += xy_noise(), cmd_vel[1] += xy_noise(), cmd_vel[2] += yaw_noise();
+        vel += cmd_vel;
+        vel *= 0.5;
         // transform to global coordinate
         const T cy = std::cos(pose[2]), sy = std::sin(pose[2]);
         Matrix2 rot{{cy, -sy}, {sy, cy}};
@@ -43,6 +45,7 @@ static void testLocalPlannerEntry() {
         global_vel.segment(0, 2).noalias() = rot * vel.segment(0, 2);
         pose += global_vel * predict_period_s;
         pose[2] = wrapAngle(pose[2]);
+        vel = cmd_vel;
         if (pose_tx.txFinished()) {
             pose_tx.setArr(state);
             wireless.send(pose_tx);

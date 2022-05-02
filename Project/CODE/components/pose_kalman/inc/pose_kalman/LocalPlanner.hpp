@@ -17,7 +17,7 @@ class LocalPlanner {
         T yaw_goal_tolerance = 0.1;
     };
     Params params;
-    bool getControlCmd(const T pose[3], const T vel[3], const T target[3], T cmd_acc[3]) const;
+    bool getControlCmd(const T pose[3], const T vel[3], const T target[3], T cmd_vel[3]) const;
 };
 
 }  // namespace pose_kalman
