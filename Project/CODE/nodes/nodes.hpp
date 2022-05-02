@@ -35,4 +35,7 @@ bool poseKalmanNode();
 // 测试卡尔曼滤波类
 bool testPoseKalmanNode();
 
+// 测试局部路径规划类
+bool testLocalPlannerNode();
+
 #endif  // _nodes_hpp

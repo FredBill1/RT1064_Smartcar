@@ -18,7 +18,7 @@ int main(void) {
 
     // imgUSBXferNode();
     // apriltagDetectNode();
-    motorControlNode();
+    // motorControlNode();
 
     // testMotorNode();
     // testQTimerNode();
@@ -26,8 +26,9 @@ int main(void) {
     // testKeyNode();
     // pose_kalman_test_node();
     // testPoseKalmanNode();
+    testLocalPlannerNode();
 
-    poseKalmanNode();
+    // poseKalmanNode();
 
     // uartMasterTest();
     // uartSlaveTest();

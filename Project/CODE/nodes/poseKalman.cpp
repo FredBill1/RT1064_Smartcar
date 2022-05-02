@@ -2,20 +2,9 @@
 //
 
 #include "devices.hpp"
+#include "pose_kalman/params.hpp"
 
 namespace pose_kalman {
-
-static constexpr uint64_t predict_period_us = 10000;
-
-static constexpr T sys_xy_sigma2 = 0.05;
-static constexpr T sys_yaw_sigma2 = 0.06;
-static constexpr T sys_v_xy_sigma2 = 0.025;
-static constexpr T sys_v_yaw_sigma2 = 0.02;
-
-static constexpr T odom_v_xy_sigma2 = 1e-2;
-static constexpr T odom_v_yaw_sigma2 = 1e-2;
-
-static constexpr T gyro_v_yaw_sigma2 = 1e-3;
 
 static inline void setupSystemCovariance() {
     T sysCov[6][6]{0};

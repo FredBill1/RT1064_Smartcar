@@ -2519,6 +2519,11 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\components\pose_kalman\src\NoiseGenerator.cpp</FilePath>
             </File>
+            <File>
+              <FileName>LocalPlanner.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\pose_kalman\src\LocalPlanner.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2683,6 +2688,11 @@
               <FileName>undisort.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\components\imgProc\src\apriltag\undisort\undisort.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>testLocalPlanner.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\testLocalPlanner.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -5324,6 +5334,11 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\components\pose_kalman\src\NoiseGenerator.cpp</FilePath>
             </File>
+            <File>
+              <FileName>LocalPlanner.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\pose_kalman\src\LocalPlanner.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -5557,6 +5572,11 @@
               <FileName>undisort.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\components\imgProc\src\apriltag\undisort\undisort.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>testLocalPlanner.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\testLocalPlanner.cpp</FilePath>
             </File>
           </Files>
         </Group>
