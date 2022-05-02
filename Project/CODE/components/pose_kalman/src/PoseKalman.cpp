@@ -14,16 +14,14 @@
 #include "utils/FakeAtomic.hpp"
 #include "utils/InterruptGuard.hpp"
 #include "utils/PeekQueue.hpp"
+#include "utils/Stamped.hpp"
+
 namespace pose_kalman {
 using namespace Kalman;
 using namespace Eigen;
 
 template <class U> using MapAs = Eigen::Map<Eigen::Matrix<T, U::RowsAtCompileTime, U::ColsAtCompileTime>>;
 template <class U> using MapAsConst = Eigen::Map<const Eigen::Matrix<T, U::RowsAtCompileTime, U::ColsAtCompileTime>>;
-template <class U> struct Stamped {
-    uint64_t timestamp_us;
-    U data;
-};
 
 #define MeasurementMemberName(type) type##_m
 
