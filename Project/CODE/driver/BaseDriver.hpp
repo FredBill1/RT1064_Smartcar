@@ -1,6 +1,8 @@
 #ifndef _BaseDriver_hpp
 #define _BaseDriver_hpp
 
+#include <cstdint>
+
 #include "utils/FakeAtomic.hpp"
 
 class BaseDriver {
@@ -12,6 +14,13 @@ class BaseDriver {
     struct BaseSpeed {
         float x, y, yaw;
     };
+
+    struct CmdVelAcc {
+        uint64_t timestamp_us;
+        bool valid;
+        BaseSpeed vel, acc;
+    };
+
     class ControlState {
         int flag;
 
@@ -37,31 +46,43 @@ class BaseDriver {
  protected:
     FakeAtomicLoader<WheelSpeed> _wheelSpeedLoader;
     FakeAtomicLoader<ControlState> _controlStateLoader;
+    FakeAtomicLoader<CmdVelAcc> _cmdVelAccLoader;
     WheelSpeed _wheelSpeed;
     BaseSpeed _baseSpeed;
     ControlState _controlState;
+    CmdVelAcc _cmdVelAcc;
 
  public:
     // 车底盘中心到轮子中心的距离的分量, 单位是m
     static constexpr float r_x = 0.198 / 2, r_y = 0.120 / 2 + 0.03;
 
-    inline void cmd_vel(float x, float y, float yaw) {
+    static inline WheelSpeed calc_vel(float x, float y, float yaw) {
         WheelSpeed res;
         res.L1 = x - y - yaw * (r_x + r_y);
         res.L2 = x + y - yaw * (r_x + r_y);
         res.R1 = x + y + yaw * (r_x + r_y);
         res.R2 = x - y + yaw * (r_x + r_y);
-        _wheelSpeedLoader.store(res);
+        return res;
     }
+
+    static inline BaseSpeed calc_vel(float L1, float L2, float R1, float R2) {
+        BaseSpeed res;
+        res.x = (L1 + L2 + R1 + R2) / 4;
+        res.y = (-L1 + L2 + R1 - R2) / 4;
+        res.yaw = (-L1 - L2 + R1 + R2) / (4 * (r_x + r_y));
+        return res;
+    }
+
+    inline void cmd_vel(float x, float y, float yaw) { _wheelSpeedLoader.store(calc_vel(x, y, yaw)); }
     inline void cmd_vel(const BaseSpeed& base) { cmd_vel(base.x, base.y, base.yaw); }
     inline void cmd_vel(float L1, float L2, float R1, float R2) { _wheelSpeedLoader.store({L1, L2, R1, R2}); }
     inline void cmd_vel(const WheelSpeed& wheel) { _wheelSpeedLoader.store(wheel); }
 
-    inline void get_vel(float L1, float L2, float R1, float R2) {
-        _baseSpeed.x = (L1 + L2 + R1 + R2) / 4;
-        _baseSpeed.y = (-L1 + L2 + R1 - R2) / 4;
-        _baseSpeed.yaw = (-L1 - L2 + R1 + R2) / (4 * (r_x + r_y));
+    inline void cmd_vel_acc(float vX, float vY, float vYaw, float aX, float aY, float aYaw, uint64_t timestamp_us) {
+        _cmdVelAccLoader.store({timestamp_us, true, {vX, vY, vYaw}, {aX, aY, aYaw}});
     }
+
+    inline void get_vel(float L1, float L2, float R1, float R2) { _baseSpeed = calc_vel(L1, L2, R1, R2); }
     inline void get_vel(WheelSpeed& wheel) { get_vel(wheel.L1, wheel.L2, wheel.R1, wheel.R2); }
 
     inline void setControlState(bool L1, bool L2, bool R1, bool R2) { _controlStateLoader.emplace(L1, L2, R1, R2); }
@@ -70,12 +91,15 @@ class BaseDriver {
 
     inline bool loadWheelSpeed() { return _wheelSpeedLoader.load(_wheelSpeed); }
     inline bool loadControlState() { return _controlStateLoader.load(_controlState); }
+    inline bool loadCmdVelAcc() { return _cmdVelAccLoader.load(_cmdVelAcc); }
 
     inline const WheelSpeed& getWheelSpeed() const { return _wheelSpeed; }
     inline const BaseSpeed& getBaseSpeed() const { return _baseSpeed; }
     inline const ControlState& getControlState() const { return _controlState; }
+    inline CmdVelAcc& getCmdVelAcc() { return _cmdVelAcc; }
 
     BaseDriver() {
+        _cmdVelAcc.valid = false;
         cmd_vel(0, 0, 0);
         get_vel(0, 0, 0, 0);
         setControlState(0);

@@ -2,6 +2,8 @@
 //
 #include "devices.hpp"
 
+constexpr uint64_t cmd_vel_acc_timeout_us = 0.5 * 1e6;
+
 static BaseDriver::ControlState state;
 
 static inline void updateControlState() {
@@ -17,6 +19,29 @@ static inline void updateControlState() {
 }
 
 static inline void updateWheelSpeed() {
+    baseDriver.loadCmdVelAcc();
+    BaseDriver::CmdVelAcc &cmd_vel_acc = baseDriver.getCmdVelAcc();
+    if (cmd_vel_acc.valid) {
+        uint64_t dt_us = systick.get_us() - cmd_vel_acc.timestamp_us;
+        if (dt_us > cmd_vel_acc_timeout_us) {
+            cmd_vel_acc.valid = false;
+            motorCtrlL1.setTargetSpeed(0);
+            motorCtrlL2.setTargetSpeed(0);
+            motorCtrlR1.setTargetSpeed(0);
+            motorCtrlR2.setTargetSpeed(0);
+            return;
+        }
+        float dt_s = dt_us * 1e-6f;
+        float vX = cmd_vel_acc.vel.x + cmd_vel_acc.acc.x * dt_s;
+        float vY = cmd_vel_acc.vel.y + cmd_vel_acc.acc.y * dt_s;
+        float vYaw = cmd_vel_acc.vel.yaw + cmd_vel_acc.acc.yaw * dt_s;
+        BaseDriver::WheelSpeed wheel = baseDriver.calc_vel(vX, vY, vYaw);
+        motorCtrlL1.setTargetSpeed(wheel.L1);
+        motorCtrlL2.setTargetSpeed(wheel.L2);
+        motorCtrlR1.setTargetSpeed(wheel.R1);
+        motorCtrlR2.setTargetSpeed(wheel.R2);
+        return;
+    }
     if (baseDriver.loadWheelSpeed()) {
         const BaseDriver::WheelSpeed &wheel = baseDriver.getWheelSpeed();
         motorCtrlL1.setTargetSpeed(wheel.L1);
@@ -58,6 +83,8 @@ static inline void uploadDebugData() {
     if (motorOutputXfer.txFinished()) {
         motorOutputXfer.setAll(motorCtrlL1.getOutput(), motorCtrlL2.getOutput(), motorCtrlR1.getOutput(),
                                motorCtrlR2.getOutput());
+        // motorOutputXfer.setAll(motorCtrlL1.getTargetSpeed(), motorCtrlL2.getTargetSpeed(), motorCtrlR1.getTargetSpeed(),
+        //                        motorCtrlR2.getTargetSpeed());
         wireless.send(motorOutputXfer);
     }
 }
