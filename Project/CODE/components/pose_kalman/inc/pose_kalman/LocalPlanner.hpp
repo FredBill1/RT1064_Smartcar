@@ -8,10 +8,10 @@ namespace pose_kalman {
 class LocalPlanner {
  public:
     struct Params {
-        T acc_lim_xy = 1;
-        T acc_lim_yaw = 1;
+        T acc_lim_xy = 0.3;
+        T acc_lim_yaw = 1.6;
         T vel_lim_xy = 2;
-        T vel_lim_yaw = 3;
+        T vel_lim_yaw = 6;
 
         T xy_goal_tolerance = 5 * 1e-3;
         T yaw_goal_tolerance = 0.1;

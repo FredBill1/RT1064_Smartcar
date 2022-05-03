@@ -8,6 +8,7 @@
 #include <crt.h>
 #include <rtthread.h>
 //
+#include "Systick.hpp"
 #include "kalman/SquareRootExtendedKalmanFilter.hpp"
 #include "pose_kalman/SystemModel.hpp"
 #include "pose_kalman/measurementTypes.hpp"
@@ -135,7 +136,7 @@ void PoseKalman::update(uint64_t timestamp_us) {
         auto& queue = pimpl->measurementQueue[(int)MeasurementType::type];         \
         auto& m_time = ((Stamped<T[type::SIZE]>*)queue.front())->timestamp_us;     \
         while (queue.peek()) {                                                     \
-            dt = timestamp_us - m_time;                                            \
+            dt = systick.get_diff_us(m_time, timestamp_us);                        \
             if (dt < timeout_us) break;                                            \
             queue.pop();                                                           \
         }                                                                          \
@@ -152,7 +153,7 @@ void PoseKalman::update(uint64_t timestamp_us) {
         auto& queue = pimpl->measurementQueue[(int)MeasurementType::type];     \
         auto& m_time = ((Stamped<T[type::SIZE]>*)queue.front())->timestamp_us; \
         auto& m_data = ((Stamped<T[type::SIZE]>*)queue.front())->data;         \
-        dt = m_time - pimpl->lastPredict_us;                                   \
+        dt = systick.get_diff_us(pimpl->lastPredict_us, m_time);               \
         if (dt > 0) {                                                          \
             u.dt() = dt * 1e-6;                                                \
             pimpl->kf.predict(pimpl->sys, u);                                  \
@@ -172,7 +173,7 @@ void PoseKalman::update(uint64_t timestamp_us) {
         default: break;
         }
     }
-    dt = timestamp_us - pimpl->lastPredict_us;
+    dt = systick.get_diff_us(pimpl->lastPredict_us, timestamp_us);
     u.dt() = dt * 1e-6;
     pimpl->kf.predict(pimpl->sys, u);
     pimpl->lastPredict_us = timestamp_us;

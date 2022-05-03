@@ -49,6 +49,7 @@ static inline void setInitialState() {
 
 static void runLocalPlanner(const T state[6]) {
     static SerialIO::TxUtil<float, 6, true> goal_tx("goal", 31);
+    static SerialIO::TxUtil<float, 3, true> cmd_vel_tx("cmd_vel", 22);
     if (!moveBase.get_enabled() || moveBase.get_reached()) return;
     auto& goal = moveBase.get_goal();
 
@@ -59,12 +60,18 @@ static void runLocalPlanner(const T state[6]) {
 
     T goal_[3]{goal.x, goal.y, goal.yaw};
     T cmd_vel[3];
-    localPlanner.getControlCmd(state, state + 3, goal_, cmd_vel);
+    moveBase.set_reached(localPlanner.getControlCmd(state, state + 3, goal_, cmd_vel));
     baseDriver.cmd_vel(cmd_vel[0], cmd_vel[1], cmd_vel[2]);
+
+    if (cmd_vel_tx.txFinished()) {
+        cmd_vel_tx.setArr(cmd_vel);
+        wireless.send(cmd_vel_tx);
+    }
 }
 
 static void poseKalmanEntry() {
     static SerialIO::TxUtil<float, 6, true> pose_tx("pose", 30);
+    static SerialIO::TxUtil<float, 1, true> timestamp_tx("timestamp", 23);
     setupSystemCovariance();
     setupOdomCovariance();
     setupGyroCovariance();
@@ -73,7 +80,8 @@ static void poseKalmanEntry() {
     rt_thread_mdelay(100);
     kf.setEnabled(true);
     for (;;) {
-        kf.update(systick.get_us());
+        uint64_t timestamp_us = systick.get_us();
+        kf.update(timestamp_us);
         const T* state = kf.getState();
         runLocalPlanner(state);
 
@@ -82,9 +90,14 @@ static void poseKalmanEntry() {
             wireless.send(pose_tx);
         }
 
-        int64_t delta_time = predict_period_us - systick.get_us();
-        delta_time /= 1000;
-        if (delta_time > 0) rt_thread_mdelay(delta_time);
+        if (timestamp_tx.txFinished()) {
+            timestamp_tx.setAll(timestamp_us);
+            wireless.send(timestamp_tx);
+        }
+
+        int64_t delay_time = predict_period_us - systick.get_delta_us(timestamp_us);
+        delay_time = (delay_time + 500) / 1000;
+        if (delay_time > 0) rt_thread_mdelay(delay_time);
     }
 }
 

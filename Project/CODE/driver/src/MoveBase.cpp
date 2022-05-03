@@ -7,7 +7,7 @@ MoveBase::MoveBase() {
 
 void MoveBase::set_enabled(bool enabled) {
     _enabledLoader.store(enabled);
-    rt_event_send(&_reachedEvent, 1);
+    if (!enabled) rt_event_send(&_reachedEvent, 1);
 }
 
 bool MoveBase::get_enabled() {
@@ -23,6 +23,10 @@ const MoveBase::Goal& MoveBase::get_goal() {
 }
 
 bool MoveBase::get_reached() { return get_goal().reached; }
+void MoveBase::set_reached(bool reached) {
+    _goal.reached = reached;
+    rt_event_send(&_reachedEvent, 1);
+}
 
 bool MoveBase::wait_for_result() {
     if (!get_enabled()) return false;
