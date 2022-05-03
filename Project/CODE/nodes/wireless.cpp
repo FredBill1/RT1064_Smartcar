@@ -121,6 +121,13 @@ static inline void Remote() {
     baseDriver.cmd_vel(x, y, r);
 }
 
+static inline void SendGoal() {
+    float x, y, yaw;
+    if (!(wireless.getData<float>(x, y, yaw))) return;
+    beep.set(false);
+    moveBase.send_goal(x, y, yaw);
+}
+
 static void wirelessEntry() {
     for (;;) {
         wireless.waitHeader();
@@ -135,6 +142,7 @@ static void wirelessEntry() {
         case 5: SetMotorControllerParam(); break;
         case 6: SetMotorTargetSpeed(); break;
         case 7: Remote(); break;
+        case 8: SendGoal(); break;
         }
     }
 }

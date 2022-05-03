@@ -15,6 +15,7 @@ class MoveBase {
 
  private:
     bool _enabled = false;
+    bool _new_goal = false;
     Goal _goal;
     FakeAtomicLoader<bool> _enabledLoader;
     FakeAtomicLoader<Goal> _goalLoader;
@@ -28,6 +29,7 @@ class MoveBase {
     const Goal& get_goal();
     bool wait_for_result();
     bool get_reached();
+    bool new_goal();
 };
 
 #endif  // _driver_MoveBase_hpp

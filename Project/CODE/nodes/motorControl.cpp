@@ -81,10 +81,10 @@ static inline void uploadDebugData() {
         wireless.send(encoderXfer);
     }
     if (motorOutputXfer.txFinished()) {
-        // motorOutputXfer.setAll(motorCtrlL1.getOutput(), motorCtrlL2.getOutput(), motorCtrlR1.getOutput(),
-        //                        motorCtrlR2.getOutput());
-        motorOutputXfer.setAll(motorCtrlL1.getTargetSpeed(), motorCtrlL2.getTargetSpeed(), motorCtrlR1.getTargetSpeed(),
-                               motorCtrlR2.getTargetSpeed());
+        motorOutputXfer.setAll(motorCtrlL1.getOutput(), motorCtrlL2.getOutput(), motorCtrlR1.getOutput(),
+                               motorCtrlR2.getOutput());
+        // motorOutputXfer.setAll(motorCtrlL1.getTargetSpeed(), motorCtrlL2.getTargetSpeed(), motorCtrlR1.getTargetSpeed(),
+        //                        motorCtrlR2.getTargetSpeed());
         wireless.send(motorOutputXfer);
     }
 }

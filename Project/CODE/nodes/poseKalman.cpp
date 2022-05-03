@@ -48,8 +48,15 @@ static inline void setInitialState() {
 }
 
 static void runLocalPlanner(const T state[6]) {
+    static SerialIO::TxUtil<float, 6, true> goal_tx("goal", 31);
     if (!moveBase.get_enabled() || moveBase.get_reached()) return;
     auto& goal = moveBase.get_goal();
+
+    if (moveBase.new_goal() && goal_tx.txFinished()) {
+        goal_tx.setAll(goal.x, goal.y, goal.yaw, 0, 0, 0);
+        wireless.send(goal_tx);
+    }
+
     T goal_[3]{goal.x, goal.y, goal.yaw};
     T cmd_vel[3];
     localPlanner.getControlCmd(state, state + 3, goal_, cmd_vel);

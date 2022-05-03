@@ -18,7 +18,7 @@ bool MoveBase::get_enabled() {
 void MoveBase::send_goal(float x, float y, float yaw) { _goalLoader.store({x, y, yaw, false}); }
 
 const MoveBase::Goal& MoveBase::get_goal() {
-    _goalLoader.load(_goal);
+    if (_goalLoader.load(_goal)) _new_goal = true;
     return _goal;
 }
 
@@ -29,4 +29,10 @@ bool MoveBase::wait_for_result() {
     if (get_reached()) return true;
     rt_event_recv(&_reachedEvent, 1, RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR, RT_WAITING_FOREVER, RT_NULL);
     return get_enabled();
+}
+
+bool MoveBase::new_goal() {
+    bool res = _new_goal;
+    _new_goal = false;
+    return res;
 }
