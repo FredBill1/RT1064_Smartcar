@@ -3,7 +3,7 @@
 
 namespace controller {
 
-using T = float;
+using T = double;
 
 }  // namespace controller
 

@@ -15,7 +15,7 @@ bool MoveBase::get_enabled() {
     return _enabled;
 }
 
-void MoveBase::send_goal(float x, float y, float yaw) { _goalLoader.store({x, y, yaw, false}); }
+void MoveBase::send_goal(pose_kalman::T x, pose_kalman::T y, pose_kalman::T yaw) { _goalLoader.store({x, y, yaw, false}); }
 
 const MoveBase::Goal& MoveBase::get_goal() {
     if (_goalLoader.load(_goal)) _new_goal = true;

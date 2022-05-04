@@ -25,7 +25,7 @@ class MoveBase {
     MoveBase();
     void set_enabled(bool enabled);
     bool get_enabled();
-    void send_goal(float x, float y, float yaw);
+    void send_goal(pose_kalman::T x, pose_kalman::T y, pose_kalman::T yaw);
     const Goal& get_goal();
     void set_reached(bool reached = true);
     bool wait_for_result();

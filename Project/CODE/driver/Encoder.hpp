@@ -10,18 +10,19 @@ class Encoder {
     using qtimer_data_t = decltype(_qtimer.get());
     qtimer_data_t _last;
     uint64_t _last_time;
-    float mps;  // m/s 米每秒
+    double mps;  // m/s 米每秒
 
     // 换算成轮子转轴的转速
-    void convert(float delta) {
-        constexpr float scalefactor =              // 比例系数
-            2. * 3.14159265358979323846 / 1024. *  // 编码器转1周产生1024个脉冲
-            30. / 70. *                            // 车轮齿数为70, 编码器齿数为30
-            6.3 / 2. / 100.;                       // 车轮直径6.3cm
+    void convert(double delta) {
+        constexpr double scalefactor =        // 比例系数
+            3.14159265358979323846 / 1024. *  // 编码器转1周产生1024个脉冲
+            30. / 70. *                       // 车轮齿数为70, 编码器齿数为30
+            6.3 / 100. *                      // 车轮直径6.3cm
+            1e6;                              // 时间戳单位是us
         uint64_t cur_time = systick.get_us();
         int64_t dt = systick.get_diff_us(_last_time, cur_time);
         _last_time = cur_time;
-        mps = delta * scalefactor * 1e6 / dt;
+        mps = delta * scalefactor / dt;
     }
 
  public:
@@ -38,7 +39,7 @@ class Encoder {
         _last = cur;
     }
     // m/s 米每秒
-    float get() const { return mps; }
+    double get() const { return mps; }
 };
 
 #endif  // _Encoder_hpp

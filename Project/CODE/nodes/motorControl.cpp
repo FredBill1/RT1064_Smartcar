@@ -31,10 +31,10 @@ static inline void updateWheelSpeed() {
             motorCtrlR2.setTargetSpeed(0);
             return;
         }
-        float dt_s = dt_us * 1e-6f;
-        float vX = cmd_vel_acc.vel.x + cmd_vel_acc.acc.x * dt_s;
-        float vY = cmd_vel_acc.vel.y + cmd_vel_acc.acc.y * dt_s;
-        float vYaw = cmd_vel_acc.vel.yaw + cmd_vel_acc.acc.yaw * dt_s;
+        pose_kalman::T dt_s = dt_us * 1e-6f;
+        pose_kalman::T vX = cmd_vel_acc.vel.x + cmd_vel_acc.acc.x * dt_s;
+        pose_kalman::T vY = cmd_vel_acc.vel.y + cmd_vel_acc.acc.y * dt_s;
+        pose_kalman::T vYaw = cmd_vel_acc.vel.yaw + cmd_vel_acc.acc.yaw * dt_s;
         BaseDriver::WheelSpeed wheel = baseDriver.calc_vel(vX, vY, vYaw);
         motorCtrlL1.setTargetSpeed(wheel.L1);
         motorCtrlL2.setTargetSpeed(wheel.L2);

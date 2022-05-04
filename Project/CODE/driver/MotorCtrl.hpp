@@ -9,7 +9,7 @@ class MotorCtrl {
     const MotorDRV& _motor;
     const Encoder& _encoder;
     controller::LADRC& _controller;
-    float _u_prev, _y_desired;
+    controller::T _u_prev, _y_desired;
 
  public:
     MotorCtrl(const MotorDRV& motor, const Encoder& encoder, controller::LADRC& controller)
@@ -17,12 +17,12 @@ class MotorCtrl {
         reset();
     }
 
-    void setTargetSpeed(float speed) { _y_desired = speed; }
-    float getTargetSpeed() const { return _y_desired; }
-    float getOutput() const { return _u_prev; }
+    void setTargetSpeed(controller::T speed) { _y_desired = speed; }
+    controller::T getTargetSpeed() const { return _y_desired; }
+    controller::T getOutput() const { return _u_prev; }
 
     void update() {
-        float u = _controller.update(_u_prev, _encoder.get(), _y_desired);
+        controller::T u = _controller.update(_u_prev, _encoder.get(), _y_desired);
         _u_prev = _motor.setPWM_Limit(u);
     }
 
