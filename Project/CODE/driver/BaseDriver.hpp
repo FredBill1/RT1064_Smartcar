@@ -54,7 +54,7 @@ class BaseDriver {
 
  public:
     // 车底盘中心到轮子中心的距离的分量, 单位是m
-    static constexpr float r_x = 0.198 / 2, r_y = 0.120 / 2 + 0.03;
+    static constexpr float r_x = 0.198 / 2, r_y = (0.21 - 0.0325) / 2;
 
     static inline WheelSpeed calc_vel(float x, float y, float yaw) {
         WheelSpeed res;
