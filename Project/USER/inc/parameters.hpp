@@ -5,7 +5,7 @@
 
 namespace Param {
 
-constexpr int32_t MotorControlPeriod = 5;  // 电机控制的周期, 单位是tick, 相当于ms
+constexpr int32_t MotorControlPeriod = 1;  // 电机控制的周期, 单位是tick, 相当于ms
 
 namespace Motor {
 

@@ -16,8 +16,8 @@ enum class MeasurementType : int {
 
 constexpr int MeasurementQueueSize(MeasurementType type) {
     switch (type) {
-    case MeasurementType::Odom: return 3;
-    case MeasurementType::Gyro: return 3;
+    case MeasurementType::Odom: return 20;
+    case MeasurementType::Gyro: return 20;
     case MeasurementType::SetState: return 1;
     default: return 0;
     }

@@ -16,10 +16,10 @@ constexpr T sys_yaw_sigma2 = 0.06;
 constexpr T sys_v_xy_sigma2 = 0.025;
 constexpr T sys_v_yaw_sigma2 = 0.02;
 
-constexpr T odom_v_xy_sigma2 = 1e-2;
-constexpr T odom_v_yaw_sigma2 = 1e-2;
+constexpr T odom_v_xy_sigma2 = 1e-6;
+constexpr T odom_v_yaw_sigma2 = 1e-3;
 
-constexpr T gyro_v_yaw_sigma2 = 1e-3;
+constexpr T gyro_v_yaw_sigma2 = 1e-6;
 
 }  // namespace pose_kalman
 
