@@ -10,6 +10,7 @@ constexpr int64_t timeout_us = 1000000;
 enum class MeasurementType : int {
     Odom,
     Gyro,
+    Yaw,
     SetState,
     NUM_TYPES,
 };
@@ -18,12 +19,13 @@ constexpr int MeasurementQueueSize(MeasurementType type) {
     switch (type) {
     case MeasurementType::Odom: return 20;
     case MeasurementType::Gyro: return 20;
+    case MeasurementType::Yaw: return 20;
     case MeasurementType::SetState: return 1;
     default: return 0;
     }
 }
 
-#define MeasurementModelTypes Odom, Gyro, SetState
+#define MeasurementModelTypes Odom, Gyro, Yaw, SetState
 
 }  // namespace pose_kalman
 

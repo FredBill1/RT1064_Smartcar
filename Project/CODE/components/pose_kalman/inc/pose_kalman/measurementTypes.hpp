@@ -7,6 +7,7 @@ namespace pose_kalman {
 
 using Odom = Measurement<0, 0, 0, 1, 1, 1>;
 using Gyro = Measurement<0, 0, 0, 0, 0, 1>;
+using Yaw = Measurement<0, 0, 1, 0, 0, 0>;
 using SetState = Measurement<1, 1, 1, 1, 1, 1>;
 
 }  // namespace pose_kalman

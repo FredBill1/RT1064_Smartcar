@@ -1,6 +1,8 @@
 #include "ICM20948.hpp"
 #include "ICM20948CFG.hpp"
 //
+#include <cmath>
+
 #include "devices.hpp"
 #include "pose_kalman/utils.hpp"
 
@@ -28,7 +30,19 @@ static void imu_cb_gravity(const float data[3], uint64_t timestamp_us) { send_da
 static void imu_cb_linear_accel(const float data[3], uint64_t timestamp_us) { send_data(acc_lin, 3, 6); }
 static void imu_cb_rpy_orientation(const float data[3], uint64_t timestamp_us) { send_data(orpy, 3, 7); }
 static void imu_cb_6DOF_orientation(const float data[4], uint64_t timestamp_us) { send_data(o6dof, 4, 8); }
-static void imu_cb_9DOF_orientation(const float data[4], uint64_t timestamp_us) { send_data(o9dof, 4, 9); }
+static void imu_cb_9DOF_orientation(const float data[4], uint64_t timestamp_us) {
+    send_data(o9dof, 4, 9);
+    static SerialIO::TxUtil<float, 1, true> yaw_tx("yaw", 11);
+    using std::atan2, std::asin;
+    // T r = atan2(2 * (data[0] * data[1] + data[2] * data[3]), 1 - 2 * (data[1] * data[1] + data[2] * data[2]));
+    // T p = asin(2 * (data[0] * data[2] - data[1] * data[3]));
+    T y = atan2(2 * (data[0] * data[3] + data[1] * data[2]), 1 - 2 * (data[2] * data[2] + data[3] * data[3]));
+    if (yaw_tx.txFinished()) {
+        yaw_tx.setAll(y);
+        wireless.send(yaw_tx);
+    }
+    kf.enqueMeasurement(MeasurementType::Yaw, &y, timestamp_us);
+}
 static void imu_cb_mag_orientation(const float data[4], uint64_t timestamp_us) { send_data(omag, 4, 10); }
 
 void ICM20948::setupCallbacks() {

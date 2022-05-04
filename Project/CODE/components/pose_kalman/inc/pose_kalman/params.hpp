@@ -21,6 +21,8 @@ constexpr T odom_v_yaw_sigma2 = 1e-3;
 
 constexpr T gyro_v_yaw_sigma2 = 1e-6;
 
+constexpr T yaw_yaw_sigma2 = 1e-3;
+
 }  // namespace pose_kalman
 
 #endif  // _pose_kalman_params_hpp

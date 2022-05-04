@@ -31,6 +31,12 @@ static inline void setupGyroCovariance() {
     kf.setMeasurementCovariance(MeasurementType::Gyro, gyroCov[0]);
 }
 
+static inline void setupYawCovariance() {
+    T yawCov[1][1]{0};
+    yawCov[0][0] = yaw_yaw_sigma2;
+    kf.setMeasurementCovariance(MeasurementType::Yaw, yawCov[0]);
+}
+
 static inline void setupPredictCovariance() {
     T predictCov[6][6]{0};
     predictCov[0][0] = 0.1;
@@ -75,6 +81,7 @@ static void poseKalmanEntry() {
     setupSystemCovariance();
     setupOdomCovariance();
     setupGyroCovariance();
+    setupYawCovariance();
     // setupPredictCovariance();
     setInitialState();
     rt_thread_mdelay(100);
