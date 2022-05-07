@@ -15,7 +15,10 @@ bool MoveBase::get_enabled() {
     return _enabled;
 }
 
-void MoveBase::send_goal(pose_kalman::T x, pose_kalman::T y, pose_kalman::T yaw) { _goalLoader.store({x, y, yaw, false}); }
+void MoveBase::send_goal(pose_kalman::T x, pose_kalman::T y, pose_kalman::T yaw, pose_kalman::T xy_tolerance,
+                         pose_kalman::T yaw_tolerance) {
+    _goalLoader.store({x, y, yaw, xy_tolerance, yaw_tolerance, false});
+}
 
 const MoveBase::Goal& MoveBase::get_goal() {
     if (_goalLoader.load(_goal)) _new_goal = true;

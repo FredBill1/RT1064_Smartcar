@@ -14,25 +14,25 @@ static inline void chkmin(T &a, T b) {
     if (a > b) a = b;
 }
 constexpr T eps = 1e-4;
-bool LocalPlanner::getControlCmd(const T pose_[3], const T vel_[3], const T target_[3], T cmd_vel_[3]) const {
+bool LocalPlanner::getControlCmd(const T pose_[3], const T vel_[3], const MoveBase::Goal &goal, T cmd_vel_[3]) const {
     Map<Vector2> cmd_vel_xy(cmd_vel_);
     T &cmd_vel_yaw = cmd_vel_[2];
 
     Map<const Vector2> pose_xy(pose_);
     // Map<const Vector2> vel_xy(vel_);
     Vector2 vel_xy = cmd_vel_xy;
-    Map<const Vector2> target_xy(target_);
+    const Vector2 target_xy{goal.x, goal.y};
     const T pose_yaw = pose_[2];
     // const T vel_yaw = vel_[2];
     const T vel_yaw = cmd_vel_yaw;
-    const T target_yaw = target_[2];
+    const T target_yaw = goal.yaw;
 
     bool xy_goal_reached = false;
     bool yaw_goal_reached = false;
 
     T pose_yaw_simulate = pose_yaw + vel_yaw * (predict_period_s * 0.5);
     T pose_yaw_dif = wrapAngle(target_yaw - pose_yaw_simulate);
-    if (abs(pose_yaw_dif) <= params.yaw_goal_tolerance) {
+    if (abs(pose_yaw_dif) <= goal.yaw_tolerance) {
         yaw_goal_reached = true;
         cmd_vel_yaw = 0;
     } else {
@@ -57,7 +57,7 @@ bool LocalPlanner::getControlCmd(const T pose_[3], const T vel_[3], const T targ
     Vector2 pose_xy_dif = rot * (target_xy - pose_xy_simulate);
     T pose_xy_dif_norm = pose_xy_dif.norm();
     T cmd_vel_xy_norm;
-    if (pose_xy_dif_norm <= params.xy_goal_tolerance) {
+    if (pose_xy_dif_norm <= goal.xy_tolerance) {
         xy_goal_reached = true;
         cmd_vel_xy.setZero(), cmd_vel_xy_norm = 0;
     } else {
