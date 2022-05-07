@@ -19,7 +19,6 @@ bool FuncThread(std::function<void()> func, const char* name, rt_uint32_t stack_
         }
         void func() {
             _func();
-            rt_thread_delete(_thread);
             delete this;
         }
     };
