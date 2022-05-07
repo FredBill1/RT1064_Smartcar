@@ -38,4 +38,7 @@ bool testPoseKalmanNode();
 // 测试局部路径规划类
 bool testLocalPlannerNode();
 
+// 测试TSP类
+bool testTSPSolverNode();
+
 #endif  // _nodes_hpp

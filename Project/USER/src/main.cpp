@@ -6,7 +6,7 @@ int main(void);
 #include "Thread.h"
 #include "devices.hpp"
 #include "nodes/nodes.hpp"
-bool pose_kalman_test_node();
+
 int main(void) {
     initDevices();
     // imu.init();
@@ -27,6 +27,7 @@ int main(void) {
     // pose_kalman_test_node();
     // testPoseKalmanNode();
     // testLocalPlannerNode();
+    // testTSPSolverNode();
 
     poseKalmanNode();
 
