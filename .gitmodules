@@ -7,3 +7,6 @@
 [submodule "Libraries/map-macro/map-macro"]
 	path = Libraries/map-macro/map-macro
 	url = git@github.com:swansontec/map-macro.git
+[submodule "Libraries/TSP"]
+	path = Libraries/TSP
+	url = git@github.com:FredBill1/TSP.git

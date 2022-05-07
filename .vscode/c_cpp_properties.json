@@ -52,9 +52,11 @@
                 "${workspaceFolder}\\Project\\CODE\\driver",
                 "${workspaceFolder}\\Project\\CODE\\components\\imgProc\\inc",
                 "${workspaceFolder}\\Project\\CODE\\components\\controller\\inc",
-                "${workspaceFolder}\\Project\\CODE\\components\\pose_kalman\\inc"
+                "${workspaceFolder}\\Project\\CODE\\components\\pose_kalman\\inc",
+                "${workspaceFolder}\\Libraries\\TSP\\inc"
             ],
             "defines": [
+                "TSP_MAX_POINT_NUM=21",
                 "CPU_MIMXRT1064DVL6A",
                 "SKIP_SYSCLK_INIT",
                 "XIP_EXTERNAL_FLASH=1",
