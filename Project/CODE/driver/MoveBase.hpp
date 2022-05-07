@@ -30,6 +30,7 @@ class MoveBase {
                    pose_kalman::T yaw_tolerance = (5 * 3.14 / 180));
     const Goal& get_goal();
     void set_reached(bool reached = true);
+    void send_reached(bool reached = true);
     bool wait_for_result();
     bool get_reached();
     bool new_goal();

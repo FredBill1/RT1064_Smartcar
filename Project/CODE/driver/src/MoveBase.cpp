@@ -36,6 +36,14 @@ void MoveBase::set_reached(bool reached) {
     if (reached) rt_event_send(&_reachedEvent, (rt_uint32_t)GoalEventFlag::reached);
 }
 
+void MoveBase::send_reached(bool reached) {
+    auto goal = _goal;
+    if (reached != goal.reached) {
+        goal.reached = reached;
+        _goalLoader.store(goal);
+    }
+}
+
 bool MoveBase::wait_for_result() {
     if (!get_enabled()) return false;
     rt_uint32_t res;
