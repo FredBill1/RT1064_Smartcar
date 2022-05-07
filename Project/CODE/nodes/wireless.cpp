@@ -128,6 +128,14 @@ static inline void SendGoal() {
     moveBase.send_goal(x, y, yaw);
 }
 
+static inline void SetLocalPlannerParam() {
+    using namespace pose_kalman;
+    LocalPlanner::Params params;
+    if (!(wireless.getData<float>(params.vel_lim_xy, params.vel_lim_yaw, params.acc_lim_xy, params.acc_lim_yaw))) return;
+    beep.set(false);
+    localPlanner.setParams(params);
+}
+
 static void wirelessEntry() {
     for (;;) {
         wireless.waitHeader();
@@ -143,6 +151,7 @@ static void wirelessEntry() {
         case 6: SetMotorTargetSpeed(); break;
         case 7: Remote(); break;
         case 8: SendGoal(); break;
+        case 9: SetLocalPlannerParam(); break;
         }
     }
 }

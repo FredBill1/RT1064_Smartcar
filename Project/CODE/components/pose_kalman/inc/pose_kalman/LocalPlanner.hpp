@@ -15,7 +15,8 @@ class LocalPlanner {
         T vel_lim_yaw = 6;
     };
     Params params;
-    bool getControlCmd(const T pose[3], const T vel[3], const MoveBase::Goal &goal, T cmd_vel[3]) const;
+    void setParams(const Params& params) { this->params = params; }
+    bool getControlCmd(const T pose[3], const T vel[3], const MoveBase::Goal& goal, T cmd_vel[3]) const;
 };
 
 }  // namespace pose_kalman
