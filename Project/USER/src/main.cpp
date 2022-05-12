@@ -3,7 +3,6 @@ extern "C" {
 int main(void);
 }
 
-#include "Thread.h"
 #include "devices.hpp"
 #include "nodes/nodes.hpp"
 
