@@ -2704,11 +2704,6 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\testLocalPlanner.cpp</FilePath>
             </File>
-            <File>
-              <FileName>bresenham.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\CODE\components\imgProc\src\bresenham.cpp</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -5612,11 +5607,6 @@
               <FileName>testLocalPlanner.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\testLocalPlanner.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>bresenham.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\CODE\components\imgProc\src\bresenham.cpp</FilePath>
             </File>
           </Files>
         </Group>
