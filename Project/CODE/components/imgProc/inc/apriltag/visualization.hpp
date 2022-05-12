@@ -38,6 +38,9 @@ void show_clustersImg(uint8_t* img, const clusters_t& clusters);
 void show_quads(quads_t& quads);
 void show_quadsImg(uint8_t* img, quads_t& quads);
 
+void plot_rect(uint8_t* img, rect& r);
+void plot_rects(uint8_t* img, rects_t& rects);
+
 }  // namespace apriltag
 }  // namespace imgProc
 

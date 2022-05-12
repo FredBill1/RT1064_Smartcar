@@ -98,6 +98,11 @@ struct apriltag_detection {
     float_t p[4][2];
 };
 
+struct rect {
+    float_t p[4][2];
+    uint32_t magnitude;
+};
+
 using QuadImg_t = imgProc::QuadImg<N / quad_decimate, M / quad_decimate>;
 using Unionfind_t = Unionfind<int32_t, N * M / (quad_decimate * quad_decimate)>;
 
@@ -115,10 +120,16 @@ using quads_t = std::forward_list<quad, quads_alloc_t>;
 using detections_alloc_t = StaticAllocator<apriltag_detection *>;
 using detections_t = std::forward_list<apriltag_detection *, detections_alloc_t>;
 
+using rects_alloc_t = StaticAllocator<rect *>;
+using rects_t = std::forward_list<rect *, rects_alloc_t>;
+
 enum class apriltag_detect_visualize_flag { None, threshim, unionfind, clusters, quads, decode };
 
 detections_t &apriltag_detect(apriltag_family &tf, uint8_t *img,
                               apriltag_detect_visualize_flag visualize_flag = apriltag_detect_visualize_flag::None);
+
+rects_t &find_rects(uint8_t *img, float_t min_magnitude,
+                    apriltag_detect_visualize_flag visualize_flag = apriltag_detect_visualize_flag::None);
 
 }  // namespace apriltag
 }  // namespace imgProc

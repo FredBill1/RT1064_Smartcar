@@ -6,9 +6,9 @@
 namespace imgProc {
 namespace apriltag {
 
-bool fit_quad(List_pt_t& cluster, apriltag_family& tf, quad& quad, uint8_t* im);
+bool fit_quad(List_pt_t& cluster, apriltag_family* tf, quad& quad, uint8_t* im);
 
-quads_t* fit_quads(clusters_t& clusters, apriltag_family& tf, uint8_t* im, bool clear = false);
+quads_t* fit_quads(clusters_t& clusters, apriltag_family* tf, uint8_t* im, bool clear = false);
 
 }  // namespace apriltag
 }  // namespace imgProc

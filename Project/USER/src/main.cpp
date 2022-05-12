@@ -10,7 +10,7 @@ int main(void);
 int main(void) {
     initDevices();
     // imu.init();
-    // mt9v03x_csi_init();
+    mt9v03x_csi_init();
     // usb_cdc_init();
 
     EnableGlobalIRQ(0);  // 启用全局中断
@@ -18,7 +18,8 @@ int main(void) {
 
     // imgUSBXferNode();
     // apriltagDetectNode();
-    motorControlNode();
+    findRectNode();
+    // motorControlNode();
 
     // testMotorNode();
     // testQTimerNode();
@@ -29,10 +30,10 @@ int main(void) {
     // testLocalPlannerNode();
     // testTSPSolverNode();
 
-    poseKalmanNode();
+    // poseKalmanNode();
 
-    moveBase.set_enabled(true);
-    baseDriver.setControlState(1, 1, 1, 1);
+    // moveBase.set_enabled(true);
+    // baseDriver.setControlState(1, 1, 1, 1);
 
     // uartMasterTest();
     // uartSlaveTest();

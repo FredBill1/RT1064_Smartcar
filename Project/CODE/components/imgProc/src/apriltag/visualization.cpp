@@ -169,5 +169,13 @@ void show_quads(quads_t& quads) {
 void show_quadsImg(uint8_t* img, quads_t& quads) {
     for (auto& quad : quads) rep(i, 0, 4) plotImg(img, quad.p[i][1], quad.p[i][0]);
 }
+
+void plot_rect(uint8_t* img, rect& r) {
+    rep(i, 0, 4) lineImg(img, r.p[i][1], r.p[i][0], r.p[(i + 1) & 3][1], r.p[(i + 1) & 3][0], GREEN, 0);
+}
+
+void plot_rects(uint8_t* img, rects_t& rects) {
+    for (auto& r : rects) plot_rect(img, *r);
+}
 }  // namespace apriltag
 }  // namespace imgProc

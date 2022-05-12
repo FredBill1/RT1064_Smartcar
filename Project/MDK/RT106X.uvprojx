@@ -2604,6 +2604,11 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\testTSPSolver.cpp</FilePath>
             </File>
+            <File>
+              <FileName>findRect.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\findRect.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2703,6 +2708,11 @@
               <FileName>testLocalPlanner.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\testLocalPlanner.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>line_magnitude.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\apriltag\internal\line_magnitude.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -5439,6 +5449,11 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\testTSPSolver.cpp</FilePath>
             </File>
+            <File>
+              <FileName>findRect.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\findRect.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -5607,6 +5622,11 @@
               <FileName>testLocalPlanner.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\testLocalPlanner.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>line_magnitude.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\apriltag\internal\line_magnitude.cpp</FilePath>
             </File>
           </Files>
         </Group>

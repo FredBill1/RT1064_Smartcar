@@ -5,9 +5,11 @@
 #include "apriltag/internal/decode_quad.hpp"
 #include "apriltag/internal/fit_quad.hpp"
 #include "apriltag/internal/globalVariables.hpp"
+#include "apriltag/internal/line_magnitude.hpp"
 #include "apriltag/internal/reconcile_detections.hpp"
 #include "apriltag/internal/segmentation.hpp"
 #include "apriltag/internal/threshold.hpp"
+#include "apriltag/internal/utility.hpp"
 #include "apriltag/visualization.hpp"
 extern "C" {
 #include "common.h"
@@ -52,7 +54,7 @@ detections_t &apriltag_detect(apriltag_family &tf, uint8_t *img, apriltag_detect
 #endif
 
     auto &quads = *fit_quads(
-        clusters, tf, img,
+        clusters, &tf, img,
         visualize_flag == apriltag_detect_visualize_flag::quads || visualize_flag == apriltag_detect_visualize_flag::decode);
     if (visualize_flag == apriltag_detect_visualize_flag::quads || visualize_flag == apriltag_detect_visualize_flag::decode) {
         show_clustersImg(img, clusters);
@@ -77,6 +79,55 @@ detections_t &apriltag_detect(apriltag_family &tf, uint8_t *img, apriltag_detect
     // });
 
     return detections;
+}
+
+rects_t &find_rects(uint8_t *img, float_t min_magnitude, apriltag_detect_visualize_flag visualize_flag) {
+    staticBuffer.reset();
+#if (apriltag_benchmark)
+    int32_t t0 = rt_tick_get();
+#endif
+    // show_grayscale(img);
+    threshold(img, threshim);
+    if (visualize_flag == apriltag_detect_visualize_flag::threshim) show_threshim(threshim);
+
+#if (apriltag_benchmark)
+    int32_t t1 = rt_tick_get();
+#endif
+
+    unionfind_connected(threshim);
+    if (visualize_flag == apriltag_detect_visualize_flag::unionfind) show_unionfind();
+
+#if (apriltag_benchmark)
+    int32_t t2 = rt_tick_get();
+#endif
+
+    auto &clusters = *gradient_clusters(threshim);
+    if (visualize_flag == apriltag_detect_visualize_flag::clusters) show_clustersImg(img, clusters);
+
+#if (apriltag_benchmark)
+    int32_t t3 = rt_tick_get();
+#endif
+
+    auto &quads = *fit_quads(
+        clusters, nullptr, img,
+        visualize_flag == apriltag_detect_visualize_flag::quads || visualize_flag == apriltag_detect_visualize_flag::decode);
+    if (visualize_flag == apriltag_detect_visualize_flag::quads || visualize_flag == apriltag_detect_visualize_flag::decode) {
+        show_clustersImg(img, clusters);
+        show_quadsImg(img, quads);
+    }
+
+#if (apriltag_benchmark)
+    int32_t t4 = rt_tick_get();
+#endif
+
+    auto &rects = rects_magnitude(img, quads, min_magnitude);
+
+#if (apriltag_benchmark)
+    int32_t t5 = rt_tick_get();
+    rt_kprintf("%d %d %d %d %d\r\n", t1 - t0, t2 - t1, t3 - t2, t4 - t3, t5 - t4);
+#endif
+
+    return rects;
 }
 
 }  // namespace apriltag

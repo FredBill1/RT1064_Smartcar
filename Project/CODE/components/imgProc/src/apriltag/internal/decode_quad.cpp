@@ -13,7 +13,7 @@
 namespace imgProc {
 namespace apriltag {
 
-static inline void refine_edges(uint8_t *im_orig, quad *quad) {
+void refine_edges(uint8_t *im_orig, quad *quad) {
     float_t lines[4][4];
     for (int edge = 0; edge < 4; edge++) {
         int a = edge, b = (edge + 1) & 3;
