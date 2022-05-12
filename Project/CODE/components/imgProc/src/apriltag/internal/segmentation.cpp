@@ -4,9 +4,11 @@
 
 #include <algorithm>
 
+#include "RectConfig.hpp"
 #include "apriltag/internal/Hashmap.hpp"
 #include "apriltag/internal/StaticBuffer.hpp"
 #include "apriltag/internal/globalVariables.hpp"
+#include "apriltag/internal/line_magnitude.hpp"
 #include "apriltag/internal/utility.hpp"
 #include "apriltag/visualization.hpp"
 
@@ -46,7 +48,16 @@ void unionfind_connected(const QuadImg_t& img) {
 
 static inline ID_t hashPt2(uint64_t x, uint64_t y) { return (((x << 32) + y) * 2654435761) >> 32; }
 
-clusters_t* gradient_clusters(const QuadImg_t& img) {
+static inline bool checkSz(const List_pt_t& list) {
+    auto it = list.begin();
+    rep(i, 0, 24) {
+        if (it == list.end()) return false;
+        ++it;
+    }
+    return true;
+}
+
+clusters_t* gradient_clusters(const QuadImg_t& img, const uint8_t* orig_im) {
     constexpr int_fast32_t dxy[][2]{{1, 0}, {0, 1}, {-1, 1}, {1, 1}};
     Hashmap& dict = Hashmap::create(hashmapbuf, staticBuffer);
     rep(y, 1, (N / quad_decimate) - 1) rep(x, 1, (M / quad_decimate) - 1) {
@@ -65,7 +76,16 @@ clusters_t* gradient_clusters(const QuadImg_t& img) {
         }
     }
     clusters_t* clusters = new (staticBuffer.allocate(sizeof(clusters_t))) clusters_t(clusters_alloc_t{staticBuffer});
-    dict.for_each([clusters](List_pt_t*& list) { clusters->push_front(list); });
+    dict.for_each([clusters, orig_im](List_pt_t*& list) {
+        if (!checkSz(*list)) return;
+        if (orig_im) {
+            float_t magnitude = 0;
+            for (auto& pt : *list)
+                magnitude += pixel_magnitude(orig_im, (int(pt.x) * quad_decimate) >> 1, (int(pt.y) * quad_decimate) >> 1);
+            if (magnitude * quad_decimate < min_magnitude) return;
+        }
+        clusters->push_front(list);
+    });
     return clusters;
 }
 

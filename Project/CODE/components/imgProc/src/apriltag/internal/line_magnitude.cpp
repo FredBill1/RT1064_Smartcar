@@ -2,6 +2,7 @@
 
 #include <rtthread.h>
 
+#include "RectConfig.hpp"
 #include "apriltag/fmath.hpp"
 #include "apriltag/internal/decode_quad.hpp"
 #include "apriltag/internal/utility.hpp"
@@ -9,11 +10,11 @@
 namespace imgProc {
 namespace apriltag {
 
-static inline float_t pixel_magnitude(uint8_t* img, int x, int y) {
+float_t pixel_magnitude(const uint8_t* img, int x, int y) {
     int pixel;
     int x_acc = 0, y_acc = 0;
 
-    uint8_t* row_ptr = img + max(0, y - 1) * M;
+    const uint8_t* row_ptr = img + max(0, y - 1) * M;
 
     // (-1,-1)
     pixel = *(row_ptr + max(0, x - 1));
@@ -29,7 +30,7 @@ static inline float_t pixel_magnitude(uint8_t* img, int x, int y) {
     x_acc -= pixel;
     y_acc += pixel;
 
-    row_ptr += M;
+    if (y) row_ptr += M;
 
     // (-1,0)
     pixel = *(row_ptr + max(0, x - 1));
@@ -39,7 +40,7 @@ static inline float_t pixel_magnitude(uint8_t* img, int x, int y) {
     pixel = *(row_ptr + min(M - 1, x + 1));
     x_acc -= pixel << 1;
 
-    if (y < M - 1) row_ptr += M;
+    if (y < N - 1) row_ptr += M;
 
     // (-1,1)
     pixel = *(row_ptr + max(0, x - 1));
@@ -64,7 +65,7 @@ static inline float_t line_magnitude(uint8_t* img, int x1, int y1, int x2, int y
     return res;
 }
 
-rects_t& rects_magnitude(uint8_t* img, quads_t& quads, float min_magnitude) {
+rects_t& rects_magnitude(uint8_t* img, quads_t& quads) {
     rects_t& rects = *new (staticBuffer.allocate(sizeof(rects_t))) rects_t(rects_alloc_t{staticBuffer});
     for (auto& quad : quads) {
         refine_edges(img, &quad);

@@ -11,7 +11,7 @@ using float_t = float;
 constexpr int_fast32_t N = 480;  // image height
 constexpr int_fast32_t M = 752;  // image width
 
-constexpr int_fast32_t quad_decimate = 2;
+constexpr int_fast32_t quad_decimate = 4;
 
 constexpr int_fast32_t STATICBUFFER_SIZE = 1024 * 1024 * 10;
 
@@ -31,6 +31,7 @@ constexpr float max_line_fit_mse = 10.0f;
 constexpr float cos_critical_rad = 0.98480775301220802032;
 constexpr float decode_sharpening = 0.25;
 constexpr float min_decision_margin = 50.0;
+
 }  // namespace apriltag
 }  // namespace imgProc
 

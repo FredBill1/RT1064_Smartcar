@@ -176,7 +176,7 @@ static inline bool quad_segment_maxima(int_fast32_t sz, line_fit_pt* lfps, int i
 
 bool fit_quad(List_pt_t& cluster, apriltag_family* tf, quad& quad, uint8_t* im) {
     int_fast32_t sz = std::distance(cluster.begin(), cluster.end());
-    if (sz < 24) return false;
+    // if (sz < 24) return false;
     int_fast32_t xmax = 0, xmin = std::numeric_limits<int_fast32_t>::max(), ymax = 0, ymin = xmin;
     for (auto& p : cluster) {
         if (p.x > xmax) xmax = p.x;

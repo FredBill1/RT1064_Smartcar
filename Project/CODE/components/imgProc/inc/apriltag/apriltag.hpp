@@ -128,8 +128,7 @@ enum class apriltag_detect_visualize_flag { None, threshim, unionfind, clusters,
 detections_t &apriltag_detect(apriltag_family &tf, uint8_t *img,
                               apriltag_detect_visualize_flag visualize_flag = apriltag_detect_visualize_flag::None);
 
-rects_t &find_rects(uint8_t *img, float_t min_magnitude,
-                    apriltag_detect_visualize_flag visualize_flag = apriltag_detect_visualize_flag::None);
+rects_t &find_rects(uint8_t *img, apriltag_detect_visualize_flag visualize_flag = apriltag_detect_visualize_flag::None);
 
 }  // namespace apriltag
 }  // namespace imgProc

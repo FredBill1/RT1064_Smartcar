@@ -7,7 +7,8 @@
 namespace imgProc {
 namespace apriltag {
 
-rects_t& rects_magnitude(uint8_t* img, quads_t& quads, float min_magnitude);
+float_t pixel_magnitude(const uint8_t* img, int x, int y);
+rects_t& rects_magnitude(uint8_t* img, quads_t& quads);
 
 }  // namespace apriltag
 }  // namespace imgProc
