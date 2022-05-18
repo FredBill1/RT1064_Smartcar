@@ -2609,6 +2609,16 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\findRect.cpp</FilePath>
             </File>
+            <File>
+              <FileName>testLocalPlanner.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\testLocalPlanner.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>testCanny.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\testCanny.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2705,14 +2715,24 @@
               <FilePath>..\CODE\components\imgProc\src\apriltag\undisort\undisort.cpp</FilePath>
             </File>
             <File>
-              <FileName>testLocalPlanner.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\CODE\nodes\testLocalPlanner.cpp</FilePath>
-            </File>
-            <File>
               <FileName>line_magnitude.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\components\imgProc\src\apriltag\internal\line_magnitude.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>canny.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\edge_detect\canny.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>conv.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\edge_detect\conv.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>show_edge.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\edge_detect\show_edge.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -5454,6 +5474,16 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\findRect.cpp</FilePath>
             </File>
+            <File>
+              <FileName>testLocalPlanner.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\testLocalPlanner.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>testCanny.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\testCanny.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -5619,14 +5649,24 @@
               <FilePath>..\CODE\components\imgProc\src\apriltag\undisort\undisort.cpp</FilePath>
             </File>
             <File>
-              <FileName>testLocalPlanner.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\CODE\nodes\testLocalPlanner.cpp</FilePath>
-            </File>
-            <File>
               <FileName>line_magnitude.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\components\imgProc\src\apriltag\internal\line_magnitude.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>canny.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\edge_detect\canny.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>conv.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\edge_detect\conv.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>show_edge.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\edge_detect\show_edge.cpp</FilePath>
             </File>
           </Files>
         </Group>

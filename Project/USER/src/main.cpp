@@ -10,14 +10,14 @@ int main(void) {
     initDevices();
     // imu.init();
     mt9v03x_csi_init();
-    // usb_cdc_init();
+    usb_cdc_init();
 
     EnableGlobalIRQ(0);  // 启用全局中断
     wirelessNode();
 
     // imgUSBXferNode();
     // apriltagDetectNode();
-    findRectNode();
+    // findRectNode();
     // motorControlNode();
 
     // testMotorNode();
@@ -28,6 +28,7 @@ int main(void) {
     // testPoseKalmanNode();
     // testLocalPlannerNode();
     // testTSPSolverNode();
+    testCannyNode();
 
     // poseKalmanNode();
 

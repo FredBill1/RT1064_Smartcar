@@ -44,4 +44,7 @@ bool testLocalPlannerNode();
 // ≤‚ ‘TSP¿‡
 bool testTSPSolverNode();
 
+// ≤‚ ‘Canny±ﬂ‘µºÏ≤‚
+bool testCannyNode();
+
 #endif  // _nodes_hpp
