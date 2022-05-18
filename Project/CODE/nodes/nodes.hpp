@@ -47,4 +47,7 @@ bool testTSPSolverNode();
 // ≤‚ ‘Canny±ﬂ‘µºÏ≤‚
 bool testCannyNode();
 
+// A4÷ΩºÏ≤‚
+bool A4DetectNode();
+
 #endif  // _nodes_hpp

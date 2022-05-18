@@ -2619,6 +2619,11 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\testCanny.cpp</FilePath>
             </File>
+            <File>
+              <FileName>A4Detect.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\A4Detect.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -5483,6 +5488,11 @@
               <FileName>testCanny.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\testCanny.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>A4Detect.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\A4Detect.cpp</FilePath>
             </File>
           </Files>
         </Group>

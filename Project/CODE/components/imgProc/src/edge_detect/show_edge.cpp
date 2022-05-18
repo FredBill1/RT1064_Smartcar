@@ -17,9 +17,23 @@ static inline bool have_edge(uint8_t* img, int i, int j) {
     return false;
 }
 
+static constexpr uint16_t get_color(uint8_t m) {
+    switch (m) {
+    case 2: return RED;
+    case 3: return BLUE;
+    case 4: return GREEN;
+    default: return 0;
+    }
+}
+
 void show_edge(uint8_t* img) {
     ips114_set_region(0, 0, M / 4 - 1, N / 4 - 1);
-    rep(i, 0, N / 4) rep(j, 0, M / 4) ips114_writedata_16bit(have_edge(img, i * 4, j * 4) ? 0x0000 : 0xffff);
+    rep(i, 0, N / 4) rep(j, 0, M / 4) {
+        uint16_t color = get_color(img[(i * M + j) * 4]);
+        if (color) ips114_writedata_16bit(color);
+        else
+            ips114_writedata_16bit(have_edge(img, i * 4, j * 4) ? 0x0000 : 0xffff);
+    }
 }
 
 }  // namespace edge_detect

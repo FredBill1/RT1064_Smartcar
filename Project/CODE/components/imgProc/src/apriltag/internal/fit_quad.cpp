@@ -280,6 +280,68 @@ finish:
     return res;
 }
 
+static inline line_fit_pt* compute_lfps_simple(int_fast32_t sz, const Coordinate cluster[], const uint8_t* im) {
+    line_fit_pt* lfps = (line_fit_pt*)staticBuffer.allocate(sizeof(line_fit_pt) * sz);
+    int_fast32_t i = -1;
+    rep(i, 0, sz) {
+        const Coordinate& p = cluster[i];
+        if (i > 0) rt_memcpy(lfps + i, lfps + (i - 1), sizeof(line_fit_pt));
+        else
+            rt_memset(lfps, 0, sizeof(line_fit_pt));
+        float_t delta = 0.5, x = p.x * .5 + delta, y = p.y * .5 + delta, W = 1;
+        int_fast32_t ix = x, iy = y;
+        if (ix > 0 && ix + 1 < M / quad_decimate && iy > 0 && iy + 1 < N / quad_decimate) {
+            int_fast32_t grad_x = (int_fast32_t)im[(iy * M + ix + 1) * quad_decimate] - im[(iy * M + ix - 1) * quad_decimate],
+                         grad_y = (int_fast32_t)im[((iy + 1) * M + ix) * quad_decimate] - im[((iy - 1) * M + ix) * quad_decimate];
+            W = sqrtf(grad_x * grad_x + grad_y * grad_y) + 1;
+        }
+        float_t fx = x, fy = y;
+        lfps[i].Mx += W * fx;
+        lfps[i].My += W * fy;
+        lfps[i].Mxx += W * fx * fx;
+        lfps[i].Mxy += W * fx * fy;
+        lfps[i].Myy += W * fy * fy;
+        lfps[i].W += W;
+    }
+    return lfps;
+}
+
+bool fit_quad_simple(Coordinate cluster[], int sz, quad& quad, uint8_t* im) {
+    if (sz < 24) return false;
+    line_fit_pt* lfps = compute_lfps_simple(sz, cluster, im);
+    int indices[4];
+    bool res = false;
+    if (!quad_segment_maxima(sz, lfps, indices)) goto finish_simple;
+
+    float_t lines[4][4];
+    rep(i, 0, 4) {
+        int_fast32_t i0 = indices[i], i1 = indices[(i + 1) & 3];
+        float_t err;
+        fit_line(lfps, sz, i0, i1, lines[i], NULL, &err);
+        if (err > max_line_fit_mse) {
+            res = false;
+            goto finish_simple;
+        }
+    }
+
+    rep(i, 0, 4) {
+        float_t A00 = lines[i][3], A01 = -lines[(i + 1) & 3][3], A10 = -lines[i][2], A11 = lines[(i + 1) & 3][2],
+                B0 = -lines[i][0] + lines[(i + 1) & 3][0], B1 = -lines[i][1] + lines[(i + 1) & 3][1], det = A00 * A11 - A10 * A01,
+                W00 = A11 / det, W01 = -A01 / det;
+        if (fabs(det) < 0.001) {
+            res = false;
+            goto finish_simple;
+        }
+        float_t L0 = W00 * B0 + W01 * B1;
+        quad.p[i][0] = lines[i][0] + L0 * A00, quad.p[i][1] = lines[i][1] + L0 * A10;
+        res = true;
+    }
+
+finish_simple:
+    staticBuffer.pop(sizeof(line_fit_pt) * sz);  // line_fit_pt lfps[sz];
+    return res;
+}
+
 quads_t* fit_quads(clusters_t& clusters, apriltag_family* tf, uint8_t* im, bool clear) {
     quads_t* quads = new (staticBuffer.allocate(sizeof(quads_t))) quads_t(quads_alloc_t{staticBuffer});
     quad quad;

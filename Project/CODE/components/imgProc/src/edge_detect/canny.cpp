@@ -6,6 +6,7 @@
 #include "apriltag/fmath.hpp"
 #include "apriltag/internal/StaticBuffer.hpp"
 #include "edge_detect/conv.hpp"
+#include "imgProc/common.hpp"
 namespace imgProc {
 namespace edge_detect {
 using namespace apriltag;
@@ -15,9 +16,6 @@ typedef struct gvec {
     uint16_t g;
 } gvec_t;
 
-struct Coordinate {
-    int16_t x, y;
-};
 class CannyStack {
     int cnt = 0;
 
@@ -94,7 +92,7 @@ void canny(uint8_t* src, int low_thresh, int high_thresh) {
             } else if (vc->g >= high_thresh) {
                 src[i] = 255;
             } else {  // Weak edge
-                src[i] = 127;
+                src[i] = 1;
                 continue;
             }
 
@@ -118,7 +116,7 @@ void canny(uint8_t* src, int low_thresh, int high_thresh) {
         int x = xy.x, y = xy.y;
         uint8_t* m = src + (y * M + x);
 #define CANNY_PUSH(dx, dy) \
-    if (*(m + ((dy)*M + (dx))) == 127) *(m + ((dy)*M + (dx))) = 255, stack.push({(int16_t)(x + (dx)), (int16_t)(y + (dy))});
+    if (*(m + ((dy)*M + (dx))) == 1) *(m + ((dy)*M + (dx))) = 255, stack.push({(int16_t)(x + (dx)), (int16_t)(y + (dy))});
         if (y > 0) {
             if (x > 0) CANNY_PUSH(-1, -1);
             CANNY_PUSH(0, -1);

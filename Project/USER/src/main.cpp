@@ -18,6 +18,7 @@ int main(void) {
     // imgUSBXferNode();
     // apriltagDetectNode();
     // findRectNode();
+    A4DetectNode();
     // motorControlNode();
 
     // testMotorNode();
@@ -28,7 +29,7 @@ int main(void) {
     // testPoseKalmanNode();
     // testLocalPlannerNode();
     // testTSPSolverNode();
-    testCannyNode();
+    // testCannyNode();
 
     // poseKalmanNode();
 
