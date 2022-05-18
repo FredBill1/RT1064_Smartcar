@@ -25,6 +25,8 @@ static void testCannyEntry() {
         staticBuffer.reset();
 
         uint8_t* img = mt9v03x_csi_image_take();
+        if (!visualize) show_grayscale(img);
+
         canny(img, 50, 100);  // ±ßÔµ¼ì²â
 
         if (visualize) show_edge(img);

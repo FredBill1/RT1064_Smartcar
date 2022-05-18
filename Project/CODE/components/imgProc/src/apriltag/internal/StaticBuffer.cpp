@@ -6,7 +6,7 @@
 namespace imgProc {
 namespace apriltag {
 
-constexpr size_t alignment = 16;
+constexpr size_t alignment = 4;
 template <typename T> static inline constexpr T get_aligned_size(T size) { return (size + alignment - 1) & ~(alignment - 1); }
 
 StaticBuffer::StaticBuffer(void* buf, int32_t size) : data((uint8_t*)buf), N(size) { reset(); }
@@ -18,6 +18,7 @@ void* StaticBuffer::allocate(int32_t size) {
     i += aligned_size;
     return res;
 }
+void* StaticBuffer::peek() { return data + i; }
 void StaticBuffer::pop(int32_t size) {
     if (_overflow) return;
     size = get_aligned_size(size);

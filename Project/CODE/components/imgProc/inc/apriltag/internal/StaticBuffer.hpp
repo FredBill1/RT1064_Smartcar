@@ -18,6 +18,7 @@ class StaticBuffer {
     void reset();
     void* allocate(int32_t size);
     void pop(int32_t size);
+    void* peek();
     bool overflow() const { return _overflow; }
     int32_t usage() const { return i; }
 };
