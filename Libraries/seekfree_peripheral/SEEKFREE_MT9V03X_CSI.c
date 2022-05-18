@@ -147,6 +147,7 @@ uint8_t *mt9v03x_csi_image_take() {
     }
 }
 void mt9v03x_csi_image_release() {
+    L1CACHE_InvalidateDCacheByRange(fullCameraBufferAddr, MT9V03X_CSI_H * MT9V03X_CSI_W);
     rt_base_t level = rt_hw_interrupt_disable();
     csi_add_empty_buffer(&csi_handle, (uint8_t *)fullCameraBufferAddr);
     rt_hw_interrupt_enable(level);
