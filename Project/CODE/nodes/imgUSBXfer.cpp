@@ -3,11 +3,10 @@
 extern "C" {
 #include "SEEKFREE_MT9V03X_CSI.h"
 #include "common.h"
-#include "zf_gpio.h"
 #include "zf_usb_cdc.h"
 }
-
 #include "apriltag/visualization.hpp"
+#include "devices.hpp"
 
 static void imgUSBXferEntry() {
     using namespace imgProc::apriltag;
@@ -15,7 +14,7 @@ static void imgUSBXferEntry() {
     for (;;) {
         uint8_t* img = mt9v03x_csi_image_take();
         show_grayscale(img);
-        if (!gpio_get(C4)) {
+        if (!slave_key[0].get()) {
             usb_cdc_send_buff(buf, 4);
             usb_cdc_send_buff(img, N * M);
         }
