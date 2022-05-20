@@ -4,6 +4,9 @@
 namespace imgProc {
 namespace apriltag {
 
+constexpr double PI_d = 3.14159265358979323846;
+constexpr float PI_f = 3.14159265358979323846f;
+
 float sqrtf(float x);
 float fabs(float x);
 int floorf(float x);

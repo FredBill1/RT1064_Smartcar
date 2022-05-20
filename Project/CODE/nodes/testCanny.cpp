@@ -6,11 +6,13 @@ extern "C" {
 #include "common.h"
 #include "fsl_debug_console.h"
 #include "zf_gpio.h"
+#include "zf_usb_cdc.h"
 }
 
 #include "apriltag/visualization.hpp"
 #include "devices.hpp"
 #include "edge_detect/canny.hpp"
+#include "edge_detect/conv.hpp"
 #include "edge_detect/show_edge.hpp"
 
 static void testCannyEntry() {
@@ -30,6 +32,12 @@ static void testCannyEntry() {
         canny(img, 50, 100);  // ±ﬂ‘µºÏ≤‚
 
         if (visualize) show_edge(img);
+
+        if (!slave_key[0].get()) {
+            static uint8_t buf[4]{0x00, 0xff, 0x80, 0x7f};
+            usb_cdc_send_buff(buf, 4);
+            usb_cdc_send_buff(img, N * M);
+        }
 
         mt9v03x_csi_image_release();  //  Õ∑≈Õº∆¨
 

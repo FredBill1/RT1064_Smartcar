@@ -7,6 +7,11 @@
 #include "apriltag/internal/StaticBuffer.hpp"
 #include "edge_detect/conv.hpp"
 #include "imgProc/common.hpp"
+
+#ifndef M_PI
+#define M_PI 3.14159265f
+#endif
+
 namespace imgProc {
 namespace edge_detect {
 using namespace apriltag;
@@ -43,17 +48,20 @@ void canny(uint8_t* src, int low_thresh, int high_thresh) {
         for (int x = 1; x < M - 1; x++) {
             int vx = 0, vy = 0;
             // sobel kernel in the horizontal direction
-            vx = src[(y - 1) * M + x - 1] - src[(y - 1) * M + x + 1] + (src[(y + 0) * M + x - 1] << 1) -
-                 (src[(y + 0) * M + x + 1] << 1) + src[(y + 1) * M + x - 1] - src[(y + 1) * M + x + 1];
+            vx = (int)src[(y - 1) * M + x - 1] - (int)src[(y - 1) * M + x + 1] + ((int)src[(y + 0) * M + x - 1] << 1) -
+                 ((int)src[(y + 0) * M + x + 1] << 1) + (int)src[(y + 1) * M + x - 1] - (int)src[(y + 1) * M + x + 1];
 
             // sobel kernel in the vertical direction
-            vy = src[(y - 1) * M + x - 1] + (src[(y - 1) * M + x + 0] << 1) + src[(y - 1) * M + x + 1] -
-                 src[(y + 1) * M + x - 1] - (src[(y + 1) * M + x + 0] << 1) - src[(y + 1) * M + x + 1];
+            vy = (int)src[(y - 1) * M + x - 1] + ((int)src[(y - 1) * M + x + 0] << 1) + (int)src[(y - 1) * M + x + 1] -
+                 (int)src[(y + 1) * M + x - 1] - ((int)src[(y + 1) * M + x + 0] << 1) - (int)src[(y + 1) * M + x + 1];
 
             // Find magnitude
             int g = (int)sqrtf(vx * vx + vy * vy);
             // Find the direction and round angle to 0, 45, 90 or 135
-            int t = (int)fabs((atan2f(vy, vx) * (180.0f / 3.14159265358979323846f)));
+            float theta = atan2f(vy, vx);
+            if (theta < 0) theta += M_PI;
+            int t = (int)(theta * (180.0f / M_PI));
+
             if (t < 22) {
                 t = 0;
             } else if (t < 67) {
@@ -96,17 +104,20 @@ void canny(uint8_t* src, int low_thresh, int high_thresh) {
                 continue;
             }
 
-            switch (vc->t) {
-            case 0: va = &gm[(y + 0) * M + (x - 1)], vb = &gm[(y + 0) * M + (x + 1)]; break;
-            case 45: va = &gm[(y + 1) * M + (x - 1)], vb = &gm[(y - 1) * M + (x + 1)]; break;
-            case 90: va = &gm[(y + 1) * M + (x + 0)], vb = &gm[(y - 1) * M + (x + 0)]; break;
-            default: va = &gm[(y + 1) * M + (x + 1)], vb = &gm[(y - 1) * M + (x - 1)]; break;
-            }
+#define CANNY_CHECK_                                         \
+    if (src[i] == 255) stack.push({(int16_t)x, (int16_t)y}); \
+    else                                                     \
+        src[i] = 0;
+#define CANNY_CHECK1(dx, dy) \
+    if (vc->g > gm[(y - dy) * M + (x - dx)].g && vc->g >= gm[(y + dy) * M + (x + dx)].g) { CANNY_CHECK_ }
+#define CANNY_CHECK2(dx, dy) \
+    if (vc->g > gm[(y - dy) * M + (x - dx)].g && vc->g > gm[(y + dy) * M + (x + dx)].g) { CANNY_CHECK_ }
 
-            if (!(vc->g > va->g && vc->g > vb->g)) {
-                src[i] = 0;
-            } else if (src[i] == 255) {
-                stack.push({(int16_t)x, (int16_t)y});
+            switch (vc->t) {
+            case 0: CANNY_CHECK1(1, 0); break;
+            case 45: CANNY_CHECK2(1, 1); break;
+            case 90: CANNY_CHECK1(0, 1); break;
+            default: CANNY_CHECK2(-1, 1); break;
             }
         }
     }

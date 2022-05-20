@@ -11,6 +11,7 @@ extern "C" {
 #include <utility>
 
 #include "apriltag/fmath.hpp"
+#include "apriltag/internal/StaticBuffer.hpp"
 #include "apriltag/internal/fit_quad.hpp"
 #include "apriltag/visualization.hpp"
 #include "bresenham.hpp"
@@ -23,10 +24,16 @@ using namespace apriltag;
 namespace edge_detect {
 using std::pair;
 
+#define PIXEL(img, x, y) (*(img + (y)*M + (x)))
+#define DRAW(img, x, y) (*(img + ((y) & ~3) * M + ((x) & ~3)))
+#define CIRCLE(img, x, y, r, color)                                                            \
+    drawCircle((y) >> 2, (x) >> 2, (r), [img](int i, int j) {                                  \
+        if (0 <= i && i < N / 4 && 0 <= j && j < M / 4) *(img + ((i * M + j) << 2)) = (color); \
+    })
 static inline pair<int, int> find_farthest(uint8_t* img, bool visualize = false) {
     constexpr float start_dist = 50;
 
-    int res_i = N / 2, res_j = M / 2;
+    int res_i = -1, res_j = -1;
     int res_dist2 = 0;
     for (int degree = 0; degree < 360; degree += 10) {
         float x = M / 2, y = N / 2;
@@ -49,11 +56,32 @@ static inline pair<int, int> find_farthest(uint8_t* img, bool visualize = false)
             if (visualize) *(img + ((i & ~3) * M + (j & ~3))) = 2;  // RED
         }
     }
-    if (visualize)
-        drawCircle(res_i / 4, res_j / 4, 6, [img](int i, int j) {
-            *(img + (i * M + j) * 4) = 3;  // BLUE
-        });
+    if (visualize) CIRCLE(img, res_j, res_i, 6, 3);
     return {res_i, res_j};
+}
+
+// 王福生,齐国清.二值图像中目标物体轮廓的边界跟踪算法[J].大连海事大学学报,2006(01):62-64+67.DOI:10.16411/j.cnki.issn1006-7736.2006.01.017.
+static inline pair<Coordinate*, int> edgeTrace(uint8_t* img, int X, int Y) {
+    constexpr int dxy[8][2]{{1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}, {1, 1}};
+    Coordinate* coords = (Coordinate*)staticBuffer.peek();
+    int n = 0, x = X, y = Y;
+    for (;;) {
+        coords[n].x = x, coords[n].y = y, ++n;
+        PIXEL(img, x, y) = 0;
+        for (int t = 0, dir = int((1.125f - atan2f(y - N / 2, x - M / 2) / PI_f) * 4) & 7; t < 8; ++t, dir = (dir + 1) & 7) {
+            int u = x + dxy[dir][0], v = y + dxy[dir][1];
+            if (u == 0 || u == M - 1 || v == 0 || v == N - 1) return {nullptr, 0};
+            if (PIXEL(img, u, v) == 255) {
+                x = u, y = v;
+                goto edgeTrace_success;
+            }
+        }
+        break;
+    edgeTrace_success:;
+    }
+    staticBuffer.allocate(n * sizeof(Coordinate));
+    for (int i = 0; i < n; ++i) DRAW(img, coords[i].x, coords[i].y) = 2;
+    return {coords, n};
 }
 
 static void A4DetectEntry() {
@@ -72,7 +100,12 @@ static void A4DetectEntry() {
 
         canny(img, 50, 100);  // 边缘检测
 
-        find_farthest(img, true);  // 找到最远的点
+        auto [y, x] = find_farthest(img);  // 找到最远的点
+        if (y != -1) {
+            auto [coords, sz] = edgeTrace(img, x, y);
+
+            ips114_showint32(188, 1, sz, 4);
+        }
 
         show_edge(img);  // 显示边缘图片
 
