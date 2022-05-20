@@ -92,7 +92,7 @@ static inline float fast_atan2f(float y, float x) {
     if (x < 0 && y >= 0) return M_PI - fast_atanf(-y / x);
     if (x < 0 && y < 0) return fast_atanf(y / x) - M_PI;
     if (x > 0 && y < 0) return -fast_atanf(-y / x);
-    return (y == 0) ? 0 : ((y > 0) ? M_PI : -M_PI);
+    return (y == 0) ? 0 : ((y > 0) ? M_PI_2 : -M_PI_2);
 }
 
 // #define fast_sqrtf sqrtf
