@@ -18,6 +18,7 @@ extern "C" {
 #include "devices.hpp"
 #include "edge_detect/canny.hpp"
 #include "edge_detect/show_edge.hpp"
+#include "imgProc/CoordStack.hpp"
 
 namespace imgProc {
 using namespace apriltag;
@@ -60,18 +61,18 @@ static inline pair<int, int> find_farthest(uint8_t* img, bool visualize = false)
     return {res_i, res_j};
 }
 
-// 王福生,齐国清.二值图像中目标物体轮廓的边界跟踪算法[J].大连海事大学学报,2006(01):62-64+67.DOI:10.16411/j.cnki.issn1006-7736.2006.01.017.
+constexpr int dxy8[8][2]{{1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}, {1, 1}};
+constexpr int dxy4[8][2]{{1, 0}, {0, -1}, {-1, 0}, {0, 1}};
 static inline pair<Coordinate*, int> edgeTrace(uint8_t* img, int X, int Y, bool visualize = false) {
-    constexpr int dxy[8][2]{{1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}, {1, 1}};
     Coordinate* coords = (Coordinate*)staticBuffer.peek();
     int n = 0, x = X, y = Y;
     for (;;) {
         coords[n].x = x, coords[n].y = y, ++n;
-        PIXEL(img, x, y) = 0;
+        PIXEL(img, x, y) = 0;  // 将8邻域遍历到的黑点标记成白色，防止重复遍历
         for (int t = 0, dir = int((1.125f - atan2f(y - N / 2, x - M / 2) / PI_f) * 4) & 7; t < 8; ++t, dir = (dir + 1) & 7) {
-            int u = x + dxy[dir][0], v = y + dxy[dir][1];
+            int u = x + dxy8[dir][0], v = y + dxy8[dir][1];
             if (u == 0 || u == M - 1 || v == 0 || v == N - 1) return {nullptr, 0};
-            if (PIXEL(img, u, v) == 255) {
+            if (PIXEL(img, u, v) == 255) {  // 如果这个点是黑点
                 x = u, y = v;
                 goto edgeTrace_success;
             }
@@ -83,6 +84,59 @@ static inline pair<Coordinate*, int> edgeTrace(uint8_t* img, int X, int Y, bool 
     if (visualize)
         for (int i = 0; i < n; ++i) DRAW(img, coords[i].x, coords[i].y) = 2;
     return {coords, n};
+}
+
+constexpr int target_coords_maxn = 20;
+Coordinate target_coords[target_coords_maxn];
+int target_coords_cnt;
+
+static inline void dfs_black(uint8_t* img, int x, int y) {
+    if (target_coords_cnt >= target_coords_maxn) return;
+    CoordStack stack;
+    stack.push(x, y);
+    int cnt = 0, xmax = x, xmin = x, ymax = y, ymin = y;
+    while (!stack.empty()) {
+        auto [x, y] = stack.pop();
+        ++cnt;
+        if (x > xmax) xmax = x;
+        else if (x < xmin)
+            xmin = x;
+        if (y > ymax) ymax = y;
+        else if (y < ymin)
+            ymin = y;
+        for (int t = 0, u, v; t < 4; ++t) {
+            u = x + dxy4[t][0], v = y + dxy4[t][1];
+            if (PIXEL(img, u, v) == 255) {  // 只有当下一个点是黑点时才入栈
+                PIXEL(img, u, v) = 0;       // 把黑点改成白点
+                stack.push(u, v);
+            }
+        }
+    }
+    if (cnt < 10 || xmax - xmin > 100 || ymax - ymin > 100) return;
+    target_coords[target_coords_cnt].x = (xmax + xmin) >> 1;
+    target_coords[target_coords_cnt].y = (ymax + ymin) >> 1;
+    ++target_coords_cnt;
+}
+
+static inline void dfs_white(uint8_t* img) {
+    target_coords_cnt = 0;
+    int x = M / 2, y = N / 2;
+    CoordStack stack;
+    stack.push(x, y);
+    while (!stack.empty()) {
+        auto [x, y] = stack.pop();  //
+        for (int t = 0, u, v; t < 4; ++t) {
+            u = x + dxy4[t][0], v = y + dxy4[t][1];
+            if (PIXEL(img, u, v) == 255) {  // 如果下一个点是黑点则用dfs_black函数描绘目标点
+                PIXEL(img, u, v) = 0;
+                dfs_black(img, u, v);
+            }
+            if (PIXEL(img, u, v) <= 1) {  // Canny时 0: 非边界 1: 高于低阈值但不是边界的点
+                PIXEL(img, u, v) = 10;    // 随便给的值，表示已访问
+                stack.push(u, v);
+            }
+        }
+    }
 }
 
 static void A4DetectEntry() {
@@ -111,8 +165,19 @@ static void A4DetectEntry() {
 
             apriltag::quad q;
             bool fit_res = fit_quad_simple(coords, sz, q, g);
+
+            if (fit_res) {
+                // 将边框所在像素的3x3范围内标记成边界
+                for (int i = 0; i < sz; ++i)
+                    for (int x = coords[i].x - 1; x <= coords[i].x + 1; ++x)
+                        for (int y = coords[i].y - 1; y <= coords[i].y + 1; ++y) PIXEL(img, x, y) = 3;
+            }
+            staticBuffer.pop(sz * sizeof(*coords));
             staticBuffer.pop(N * M * sizeof(*g));
             if (!fit_res) break;
+
+            dfs_white(img);
+            for (int i = 0; i < target_coords_cnt; ++i) CIRCLE(img, target_coords[i].x, target_coords[i].y, 3, 2);
 
             for (int i = 0; i < 4; ++i) CIRCLE(img, q.p[i][0], q.p[i][1], 6, 3);
 

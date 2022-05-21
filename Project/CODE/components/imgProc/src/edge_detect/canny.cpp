@@ -6,6 +6,7 @@
 #include "apriltag/fmath.hpp"
 #include "apriltag/internal/StaticBuffer.hpp"
 #include "edge_detect/conv.hpp"
+#include "imgProc/CoordStack.hpp"
 #include "imgProc/common.hpp"
 
 #ifndef M_PI
@@ -15,22 +16,6 @@
 namespace imgProc {
 namespace edge_detect {
 using namespace apriltag;
-
-class CannyStack {
-    int cnt = 0;
-
- public:
-    void push(Coordinate x) {
-        *(Coordinate*)(staticBuffer.allocate(sizeof(Coordinate))) = x;
-        ++cnt;
-    }
-    Coordinate pop() {
-        staticBuffer.pop(sizeof(Coordinate));
-        --cnt;
-        return *(Coordinate*)staticBuffer.peek();
-    }
-    bool empty() { return !cnt; }
-};
 
 gvec_t* canny(uint8_t* src, int low_thresh, int high_thresh) {
     // 1. Noise Reduction with a Gaussian filter
@@ -75,7 +60,7 @@ gvec_t* canny(uint8_t* src, int low_thresh, int high_thresh) {
     }
 
     // 3. Non-maximum Suppression
-    CannyStack stack;
+    CoordStack stack;
     for (int y = 0; y < N; y++) {
         for (int x = 0; x < M; x++) {
             int i = y * M + x;

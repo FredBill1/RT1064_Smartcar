@@ -2739,6 +2739,11 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\components\imgProc\src\edge_detect\show_edge.cpp</FilePath>
             </File>
+            <File>
+              <FileName>CoordStack.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\imgProc\CoordStack.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -5677,6 +5682,11 @@
               <FileName>show_edge.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\components\imgProc\src\edge_detect\show_edge.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>CoordStack.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\imgProc\CoordStack.cpp</FilePath>
             </File>
           </Files>
         </Group>
