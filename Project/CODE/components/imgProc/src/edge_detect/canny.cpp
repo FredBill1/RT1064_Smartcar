@@ -18,6 +18,8 @@ namespace edge_detect {
 using namespace apriltag;
 
 gvec_t* canny(uint8_t* src, int low_thresh, int high_thresh) {
+    if (low_thresh > high_thresh) std::swap(low_thresh, high_thresh);
+
     // 1. Noise Reduction with a Gaussian filter
     sepconv3(src, kernel_gauss_3, 1.0f / 16.0f, 0.0f);
 
