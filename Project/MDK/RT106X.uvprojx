@@ -2620,9 +2620,9 @@
               <FilePath>..\CODE\nodes\testCanny.cpp</FilePath>
             </File>
             <File>
-              <FileName>A4Detect.cpp</FileName>
+              <FileName>testA4Detect.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\CODE\nodes\A4Detect.cpp</FilePath>
+              <FilePath>..\CODE\nodes\testA4Detect.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -2743,6 +2743,11 @@
               <FileName>CoordStack.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\components\imgProc\src\imgProc\CoordStack.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>A4Detect.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\edge_detect\A4Detect.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -5495,9 +5500,9 @@
               <FilePath>..\CODE\nodes\testCanny.cpp</FilePath>
             </File>
             <File>
-              <FileName>A4Detect.cpp</FileName>
+              <FileName>testA4Detect.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\CODE\nodes\A4Detect.cpp</FilePath>
+              <FilePath>..\CODE\nodes\testA4Detect.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -5687,6 +5692,11 @@
               <FileName>CoordStack.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\components\imgProc\src\imgProc\CoordStack.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>A4Detect.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\edge_detect\A4Detect.cpp</FilePath>
             </File>
           </Files>
         </Group>

@@ -1,12 +1,4 @@
-#include "utils/FuncThread.hpp"
-//
-extern "C" {
-#include "SEEKFREE_IPS114_SPI.h"
-#include "SEEKFREE_MT9V03X_CSI.h"
-#include "common.h"
-#include "fsl_debug_console.h"
-#include "zf_gpio.h"
-}
+#include "edge_detect/A4Detect.hpp"
 
 #include <utility>
 
@@ -20,6 +12,9 @@ extern "C" {
 #include "edge_detect/show_edge.hpp"
 #include "imgProc/CoordStack.hpp"
 
+extern "C" {
+#include "SEEKFREE_IPS114_SPI.h"
+}
 namespace imgProc {
 using namespace apriltag;
 namespace edge_detect {
@@ -31,6 +26,8 @@ using std::pair;
     drawCircle(int(y) >> 2, int(x) >> 2, (r), [img](int i, int j) {                            \
         if (0 <= i && i < N / 4 && 0 <= j && j < M / 4) *(img + ((i * M + j) << 2)) = (color); \
     })
+
+// 找到边框上距离中心最远的点
 static inline pair<int, int> find_farthest(uint8_t* img, bool visualize = false) {
     constexpr float start_dist = 50;
 
@@ -63,6 +60,8 @@ static inline pair<int, int> find_farthest(uint8_t* img, bool visualize = false)
 
 constexpr int dxy8[8][2]{{1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}, {1, 1}};
 constexpr int dxy4[8][2]{{1, 0}, {0, -1}, {-1, 0}, {0, 1}};
+
+// 8邻域追踪边框
 static inline pair<Coordinate*, int> edgeTrace(uint8_t* img, int X, int Y, bool visualize = false) {
     Coordinate* coords = (Coordinate*)staticBuffer.peek();
     int n = 0, x = X, y = Y;
@@ -86,10 +85,10 @@ static inline pair<Coordinate*, int> edgeTrace(uint8_t* img, int X, int Y, bool 
     return {coords, n};
 }
 
-constexpr int target_coords_maxn = 20;
 Coordinate target_coords[target_coords_maxn];
 int target_coords_cnt;
 
+// 描绘黑点
 static inline void dfs_black(uint8_t* img, int x, int y) {
     if (target_coords_cnt >= target_coords_maxn) return;
     CoordStack stack;
@@ -118,6 +117,7 @@ static inline void dfs_black(uint8_t* img, int x, int y) {
     ++target_coords_cnt;
 }
 
+// 探索白点
 static inline void dfs_white(uint8_t* img) {
     target_coords_cnt = 0;
     int x = M / 2, y = N / 2;
@@ -139,60 +139,50 @@ static inline void dfs_white(uint8_t* img) {
     }
 }
 
-static void A4DetectEntry() {
-    int32_t pre_time = rt_tick_get();
+bool A4Detect(uint8_t* img, int low_thresh, int high_thresh) {
+    staticBuffer.reset();
 
-    for (;;) {
-        bool enabled = slave_switch[2].get();  // 拨码开关决定是否进行可视化，因为可视化会消耗时间
+    gvec_t* g = canny(img, low_thresh, high_thresh);  // 边缘检测
+#define free_g staticBuffer.pop(N* M * sizeof(*g))
 
-        staticBuffer.reset();
-
-        uint8_t* img = mt9v03x_csi_image_take();
-        if (!enabled) {
-            show_grayscale(img);
-            continue;
-        }
-
-        do {
-            gvec_t* g = canny(img, 50, 100);  // 边缘检测
-
-            auto [y, x] = find_farthest(img);  // 找到最远的点
-            if (y == -1) break;
-
-            auto [coords, sz] = edgeTrace(img, x, y, true);
-            ips114_showint32(188, 1, sz, 4);
-            if (sz < 1000) break;
-
-            apriltag::quad q;
-            bool fit_res = fit_quad_simple(coords, sz, q, g);
-
-            if (fit_res) {
-                // 将边框所在像素的3x3范围内标记成边界
-                for (int i = 0; i < sz; ++i)
-                    for (int x = coords[i].x - 1; x <= coords[i].x + 1; ++x)
-                        for (int y = coords[i].y - 1; y <= coords[i].y + 1; ++y) PIXEL(img, x, y) = 3;
-            }
-            staticBuffer.pop(sz * sizeof(*coords));
-            staticBuffer.pop(N * M * sizeof(*g));
-            if (!fit_res) break;
-
-            dfs_white(img);
-            for (int i = 0; i < target_coords_cnt; ++i) CIRCLE(img, target_coords[i].x, target_coords[i].y, 3, 2);
-
-            for (int i = 0; i < 4; ++i) CIRCLE(img, q.p[i][0], q.p[i][1], 6, 3);
-
-        } while (0);
-
-        show_edge(img);  // 显示边缘图片
-
-        mt9v03x_csi_image_release();  // 释放图片
-
-        int32_t cur_time = rt_tick_get();
-        ips114_showint32(188, 0, cur_time - pre_time, 3);  // 显示耗时/ms
-        pre_time = cur_time;
+    auto [y, x] = find_farthest(img);  // 找到最远的点
+    if (y == -1) {
+        free_g;
+        return false;
     }
+
+    auto [coords, sz] = edgeTrace(img, x, y, true);
+#define free_coords staticBuffer.pop(sz * sizeof(*coords))
+
+    ips114_showint32(188, 1, sz, 4);
+    if (sz < 1000) {
+        free_coords;
+        free_g;
+        return false;
+    }
+
+    apriltag::quad q;
+    bool fit_res = fit_quad_simple(coords, sz, q, g);
+
+    if (fit_res) {
+        // 将边框所在像素的3x3范围内标记成边界
+        for (int i = 0; i < sz; ++i)
+            for (int x = coords[i].x - 1; x <= coords[i].x + 1; ++x)
+                for (int y = coords[i].y - 1; y <= coords[i].y + 1; ++y) PIXEL(img, x, y) = 3;
+    }
+    free_coords;
+    free_g;
+    if (!fit_res) return false;
+
+    // 从中心开始dfs，找黑点
+    dfs_white(img);
+
+    // 画结果
+    for (int i = 0; i < target_coords_cnt; ++i) CIRCLE(img, target_coords[i].x, target_coords[i].y, 3, 2);
+    for (int i = 0; i < 4; ++i) CIRCLE(img, q.p[i][0], q.p[i][1], 6, 3);
+
+    return true;
 }
+
 }  // namespace edge_detect
 }  // namespace imgProc
-
-bool A4DetectNode() { return FuncThread(imgProc::edge_detect::A4DetectEntry, "A4Detect", 4096, 2, 1000); }
