@@ -6,7 +6,12 @@
 namespace imgProc {
 namespace edge_detect {
 
-void canny(uint8_t* src, int low_thresh, int high_thresh);
+typedef struct gvec {
+    uint16_t t;
+    uint16_t g;
+} gvec_t;
+
+gvec_t* canny(uint8_t* src, int low_thresh, int high_thresh);
 
 }  // namespace edge_detect
 }  // namespace imgProc

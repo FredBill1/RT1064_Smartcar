@@ -16,11 +16,6 @@ namespace imgProc {
 namespace edge_detect {
 using namespace apriltag;
 
-typedef struct gvec {
-    uint16_t t;
-    uint16_t g;
-} gvec_t;
-
 class CannyStack {
     int cnt = 0;
 
@@ -37,7 +32,7 @@ class CannyStack {
     bool empty() { return !cnt; }
 };
 
-void canny(uint8_t* src, int low_thresh, int high_thresh) {
+gvec_t* canny(uint8_t* src, int low_thresh, int high_thresh) {
     // 1. Noise Reduction with a Gaussian filter
     sepconv3(src, kernel_gauss_3, 1.0f / 16.0f, 0.0f);
 
@@ -142,7 +137,8 @@ void canny(uint8_t* src, int low_thresh, int high_thresh) {
         }
     }
 #undef CANNY_PUSH
-    staticBuffer.pop(N * M * sizeof(*gm));  // gvec_t* gm
+    // staticBuffer.pop(N * M * sizeof(*gm));  // gvec_t* gm
+    return gm;
 }
 
 }  // namespace edge_detect

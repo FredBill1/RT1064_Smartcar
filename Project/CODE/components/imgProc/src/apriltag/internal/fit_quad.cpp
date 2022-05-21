@@ -79,8 +79,8 @@ static void fit_line(line_fit_pt* lfps, int_fast32_t sz, int_fast32_t i0, int_fa
     if (mse) *mse = eig_small;
 }
 
-static inline bool quad_segment_maxima(int_fast32_t sz, line_fit_pt* lfps, int indices[4]) {
-    int_fast32_t ksz = min(20, sz / 12);
+static inline bool quad_segment_maxima(int_fast32_t sz, line_fit_pt* lfps, int indices[4], int ksz_max = 20) {
+    int_fast32_t ksz = min(ksz_max, sz / 12);
     if (ksz < 2) return false;
 
     int_fast32_t* maxima = (int_fast32_t*)staticBuffer.allocate(sizeof(int_fast32_t) * sz);
@@ -280,7 +280,7 @@ finish:
     return res;
 }
 
-static inline line_fit_pt* compute_lfps_simple(int_fast32_t sz, const Coordinate cluster[], const uint8_t* im) {
+static inline line_fit_pt* compute_lfps_simple(int_fast32_t sz, const Coordinate cluster[], const edge_detect::gvec_t* g) {
     line_fit_pt* lfps = (line_fit_pt*)staticBuffer.allocate(sizeof(line_fit_pt) * sz);
     int_fast32_t i = -1;
     rep(i, 0, sz) {
@@ -288,13 +288,9 @@ static inline line_fit_pt* compute_lfps_simple(int_fast32_t sz, const Coordinate
         if (i > 0) rt_memcpy(lfps + i, lfps + (i - 1), sizeof(line_fit_pt));
         else
             rt_memset(lfps, 0, sizeof(line_fit_pt));
-        float_t delta = 0.5, x = p.x * .5 + delta, y = p.y * .5 + delta, W = 1;
-        int_fast32_t ix = x, iy = y;
-        if (ix > 0 && ix + 1 < M / quad_decimate && iy > 0 && iy + 1 < N / quad_decimate) {
-            int_fast32_t grad_x = (int_fast32_t)im[(iy * M + ix + 1) * quad_decimate] - im[(iy * M + ix - 1) * quad_decimate],
-                         grad_y = (int_fast32_t)im[((iy + 1) * M + ix) * quad_decimate] - im[((iy - 1) * M + ix) * quad_decimate];
-            W = sqrtf(grad_x * grad_x + grad_y * grad_y) + 1;
-        }
+        float_t x = p.x, y = p.y, W = 1;
+        int_fast32_t ix = p.x, iy = p.y;
+        if (ix > 0 && ix + 1 < M && iy > 0 && iy + 1 < N) { W += g[iy * M + ix].g; }
         float_t fx = x, fy = y;
         lfps[i].Mx += W * fx;
         lfps[i].My += W * fy;
@@ -306,12 +302,37 @@ static inline line_fit_pt* compute_lfps_simple(int_fast32_t sz, const Coordinate
     return lfps;
 }
 
-bool fit_quad_simple(Coordinate cluster[], int sz, quad& quad, uint8_t* im) {
+bool fit_quad_simple(Coordinate cluster[], int sz, quad& quad, const edge_detect::gvec_t* g) {
     if (sz < 24) return false;
-    line_fit_pt* lfps = compute_lfps_simple(sz, cluster, im);
+
+    int xmax = 0, xmin = std::numeric_limits<int>::max(), ymax = 0, ymin = xmin;
+    rep(i, 0, sz) {
+        auto& p = cluster[i];
+        if (p.x > xmax) xmax = p.x;
+        else if (p.x < xmin)
+            xmin = p.x;
+        if (p.y > ymax) ymax = p.y;
+        else if (p.y < ymin)
+            ymin = p.y;
+    }
+    float cx = (xmin + xmax) * 0.5 + 0.05118, cy = (ymin + ymax) * 0.5 + -0.028581;
+    auto slope = [=](Coordinate p) {
+        constexpr float quadrants[2][2] = {{-1 * (2 << 15), 0}, {2 * (2 << 15), 2 << 15}};
+        float dx = p.x - cx, dy = p.y - cy;
+        float quadrant = quadrants[dy > 0][dx > 0];
+        if (dy < 0) dy = -dy, dx = -dx;
+        if (dx < 0) {
+            float tmp = dx;
+            dx = dy, dy = -tmp;
+        }
+        return quadrant + dy / dx;
+    };
+    std::sort(cluster, cluster + sz, [&](Coordinate a, Coordinate b) { return slope(a) < slope(b); });
+
+    line_fit_pt* lfps = compute_lfps_simple(sz, cluster, g);
     int indices[4];
     bool res = false;
-    if (!quad_segment_maxima(sz, lfps, indices)) goto finish_simple;
+    if (!quad_segment_maxima(sz, lfps, indices, 100)) goto finish_simple;
 
     float_t lines[4][4];
     rep(i, 0, 4) {
