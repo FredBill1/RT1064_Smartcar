@@ -18,7 +18,7 @@ static void testA4DetectEntry() {
     int32_t pre_time = rt_tick_get();
 
     for (;;) {
-        bool enabled = slave_switch[2].get();  // 拨码开关决定是否进行可视化，因为可视化会消耗时间
+        bool enabled = slave_switch[2].get();  // 拨码开关
 
         uint8_t* img = mt9v03x_csi_image_take();
 

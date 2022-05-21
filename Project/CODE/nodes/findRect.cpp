@@ -5,25 +5,17 @@ extern "C" {
 #include "SEEKFREE_MT9V03X_CSI.h"
 #include "common.h"
 #include "fsl_debug_console.h"
-#include "zf_gpio.h"
 }
 
 #include "apriltag/apriltag.hpp"
-#include "apriltag/apriltag_pose.hpp"
-#include "apriltag/tag25h9.hpp"
 #include "apriltag/undisort.hpp"
 #include "apriltag/visualization.hpp"
-#include "apriltag/visualization_pose.hpp"
 #include "devices.hpp"
-
-// 相机和tag的参数在这里，识别用的参数在"apriltag/config.hpp"里
-#include "ApriltagConfig.hpp"
 
 static void findRectEntry() {
     using namespace imgProc::apriltag;
     // AT_DTCM_SECTION_ALIGN(static uint8_t img[N * M], 64);
 
-    // 初始化tag
     int32_t pre_time = rt_tick_get();
 
     for (;;) {
