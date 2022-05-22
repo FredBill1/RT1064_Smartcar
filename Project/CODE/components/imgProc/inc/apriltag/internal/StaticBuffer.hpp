@@ -21,6 +21,7 @@ class StaticBuffer {
     void* peek();
     bool overflow() const { return _overflow; }
     int32_t usage() const { return i; }
+    int32_t free() const { return N - i; }
 };
 
 template <typename T> struct StaticAllocator {

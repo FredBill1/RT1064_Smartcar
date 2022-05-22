@@ -71,23 +71,29 @@ constexpr int dxy4[8][2]{{1, 0}, {0, -1}, {-1, 0}, {0, 1}};
 
 // 8邻域追踪边框
 static inline pair<Coordinate*, int> edgeTrace(uint8_t* img, int X, int Y, bool visualize = false) {
-    Coordinate* coords = (Coordinate*)staticBuffer.peek();
-    int n = 0, x = X, y = Y;
-    for (;;) {
+    int half_size = staticBuffer.free() / 2;
+    int n = 0;
+    Coordinate* coords = (Coordinate*)staticBuffer.allocate(half_size);
+    CoordStack stack;
+    stack.push(X, Y);
+    PIXEL(img, X, Y) = 0;
+    while (!stack.empty()) {
+        auto [x, y] = stack.pop();
         coords[n].x = x, coords[n].y = y, ++n;
-        PIXEL(img, x, y) = 0;  // 将8邻域遍历到的黑点标记成白色，防止重复遍历
-        for (int t = 0, dir = int((1.125f - atan2f(y - N / 2, x - M / 2) / PI_f) * 4) & 7; t < 8; ++t, dir = (dir + 1) & 7) {
-            int u = x + dxy8[dir][0], v = y + dxy8[dir][1];
-            if (u == 0 || u == M - 1 || v == 0 || v == N - 1) return {nullptr, 0};
-            if (PIXEL(img, u, v) == 255) {  // 如果这个点是黑点
-                x = u, y = v;
-                goto edgeTrace_success;
+        for (int i = 0, u, v; i < 8; ++i) {
+            u = x + dxy8[i][0], v = y + dxy8[i][1];
+            if (u == 0 || u == M - 1 || v == 0 || v == N - 1) {
+                while (!stack.empty()) stack.pop();
+                staticBuffer.pop(half_size);
+                return {nullptr, 0};
+            }
+            if (PIXEL(img, u, v) == 255) {
+                PIXEL(img, u, v) = 0;
+                stack.push(u, v);
             }
         }
-        break;
-    edgeTrace_success:;
     }
-    // if (std::abs(x - X) > 2 || std::abs(y - Y) > 2) return {nullptr, 0};
+    staticBuffer.pop(half_size);
     staticBuffer.allocate(n * sizeof(Coordinate));
     if (visualize)
         for (int i = 0; i < n; ++i) DRAW(img, coords[i].x, coords[i].y) = 2;
@@ -102,7 +108,10 @@ static inline bool dfs_black(uint8_t* img, int x, int y) {
     int cnt = 0, xmax = x, xmin = x, ymax = y, ymin = y;
     while (!stack.empty()) {
         auto [x, y] = stack.pop();
-        if (0 == x || x == M - 1 || 0 == y || y == N - 1) return false;
+        if (0 == x || x == M - 1 || 0 == y || y == N - 1) {
+            while (!stack.empty()) stack.pop();
+            return false;
+        }
         ++cnt;
         if (x > xmax) xmax = x;
         else if (x < xmin)
@@ -133,12 +142,18 @@ static inline bool dfs_white(uint8_t* img) {
     stack.push(x, y);
     while (!stack.empty()) {
         auto [x, y] = stack.pop();  //
-        if (0 == x || x == M - 1 || 0 == y || y == N - 1) return false;
+        if (0 == x || x == M - 1 || 0 == y || y == N - 1) {
+            while (!stack.empty()) stack.pop();
+            return false;
+        }
         for (int t = 0, u, v; t < 4; ++t) {
             u = x + dxy4[t][0], v = y + dxy4[t][1];
             if (PIXEL(img, u, v) == 255) {  // 如果下一个点是黑点则用dfs_black函数描绘目标点
                 PIXEL(img, u, v) = 0;
-                if (!dfs_black(img, u, v)) return false;
+                if (!dfs_black(img, u, v)) {
+                    while (!stack.empty()) stack.pop();
+                    return false;
+                }
             }
             if (PIXEL(img, u, v) <= 1) {  // Canny时 0: 非边界 1: 高于低阈值但不是边界的点
                 PIXEL(img, u, v) = 10;    // 随便给的值，表示已访问
@@ -167,7 +182,7 @@ bool A4Detect(uint8_t* img, apriltag::float_t borderWidth, apriltag::float_t bor
 
     debug_ips(":2");
 
-    auto [coords, sz] = edgeTrace(img, x, y, true);
+    auto [coords, sz] = edgeTrace(img, x, y);
 #define free_coords staticBuffer.pop(sz * sizeof(*coords))
 
     debug_ips(":3");
