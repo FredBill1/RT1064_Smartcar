@@ -15,6 +15,9 @@
 extern "C" {
 #include "SEEKFREE_IPS114_SPI.h"
 }
+
+#define debug_ips(s) ips114_showstr(188, 4, s)
+
 namespace imgProc {
 using namespace apriltag;
 namespace edge_detect {
@@ -84,6 +87,7 @@ static inline pair<Coordinate*, int> edgeTrace(uint8_t* img, int X, int Y, bool 
         break;
     edgeTrace_success:;
     }
+    // if (std::abs(x - X) > 2 || std::abs(y - Y) > 2) return {nullptr, 0};
     staticBuffer.allocate(n * sizeof(Coordinate));
     if (visualize)
         for (int i = 0; i < n; ++i) DRAW(img, coords[i].x, coords[i].y) = 2;
@@ -91,13 +95,14 @@ static inline pair<Coordinate*, int> edgeTrace(uint8_t* img, int X, int Y, bool 
 }
 
 // 描绘黑点
-static inline void dfs_black(uint8_t* img, int x, int y) {
-    if (target_coords_cnt >= target_coords_maxn) return;
+static inline bool dfs_black(uint8_t* img, int x, int y) {
+    if (target_coords_cnt >= target_coords_maxn) return false;
     CoordStack stack;
     stack.push(x, y);
     int cnt = 0, xmax = x, xmin = x, ymax = y, ymin = y;
     while (!stack.empty()) {
         auto [x, y] = stack.pop();
+        if (0 == x || x == M - 1 || 0 == y || y == N - 1) return false;
         ++cnt;
         if (x > xmax) xmax = x;
         else if (x < xmin)
@@ -113,25 +118,27 @@ static inline void dfs_black(uint8_t* img, int x, int y) {
             }
         }
     }
-    if (cnt < 10 || xmax - xmin > 100 || ymax - ymin > 100) return;
+    if (cnt < 10 || xmax - xmin > 100 || ymax - ymin > 100) return false;
     target_coords[target_coords_cnt].x = (xmax + xmin) >> 1;
     target_coords[target_coords_cnt].y = (ymax + ymin) >> 1;
     ++target_coords_cnt;
+    return true;
 }
 
 // 探索白点
-static inline void dfs_white(uint8_t* img) {
+static inline bool dfs_white(uint8_t* img) {
     target_coords_cnt = 0;
     int x = M / 2, y = N / 2;
     CoordStack stack;
     stack.push(x, y);
     while (!stack.empty()) {
         auto [x, y] = stack.pop();  //
+        if (0 == x || x == M - 1 || 0 == y || y == N - 1) return false;
         for (int t = 0, u, v; t < 4; ++t) {
             u = x + dxy4[t][0], v = y + dxy4[t][1];
             if (PIXEL(img, u, v) == 255) {  // 如果下一个点是黑点则用dfs_black函数描绘目标点
                 PIXEL(img, u, v) = 0;
-                dfs_black(img, u, v);
+                if (!dfs_black(img, u, v)) return false;
             }
             if (PIXEL(img, u, v) <= 1) {  // Canny时 0: 非边界 1: 高于低阈值但不是边界的点
                 PIXEL(img, u, v) = 10;    // 随便给的值，表示已访问
@@ -139,13 +146,18 @@ static inline void dfs_white(uint8_t* img) {
             }
         }
     }
+    return true;
 }
 
 bool A4Detect(uint8_t* img, apriltag::float_t borderWidth, apriltag::float_t borderHeight, int low_thresh, int high_thresh) {
     staticBuffer.reset();
 
+    debug_ips(":0");
+
     gvec_t* g = canny(img, low_thresh, high_thresh);  // 边缘检测
 #define free_g staticBuffer.pop(N* M * sizeof(*g))
+
+    debug_ips(":1");
 
     auto [y, x] = find_farthest(img);  // 找到最远的点
     if (y == -1) {
@@ -153,8 +165,12 @@ bool A4Detect(uint8_t* img, apriltag::float_t borderWidth, apriltag::float_t bor
         return false;
     }
 
+    debug_ips(":2");
+
     auto [coords, sz] = edgeTrace(img, x, y, true);
 #define free_coords staticBuffer.pop(sz * sizeof(*coords))
+
+    debug_ips(":3");
 
     ips114_showint32(188, 1, sz, 4);
     if (sz < 1000) {
@@ -164,6 +180,8 @@ bool A4Detect(uint8_t* img, apriltag::float_t borderWidth, apriltag::float_t bor
     }
 
     bool fit_res = fit_quad_simple(coords, sz, target_quad, g);
+
+    debug_ips(":4");
 
     if (fit_res) {
         // 将边框所在像素的3x3范围内标记成边界
@@ -176,8 +194,10 @@ bool A4Detect(uint8_t* img, apriltag::float_t borderWidth, apriltag::float_t bor
     if (!fit_res) return false;
 
     // 从中心开始dfs，找黑点
-    dfs_white(img);
+    if (!dfs_white(img)) return false;
     ips114_showint32(188, 2, target_coords_cnt, 3);
+
+    debug_ips(":5");
 
     // 画结果
     for (int i = 0; i < target_coords_cnt; ++i) CIRCLE(img, target_coords[i].x, target_coords[i].y, 3, 2);
@@ -194,11 +214,15 @@ bool A4Detect(uint8_t* img, apriltag::float_t borderWidth, apriltag::float_t bor
     // clang-format on
     homography_compute2(target_quad.H, corr_arr);
 
+    debug_ips(":6");
+
     // 将坐标转换为世界坐标
     for (int i = 0; i < target_coords_cnt; ++i) {
         homography_project(target_quad.H, target_coords[i].x, target_coords[i].y, target_coords_corr[i],
                            target_coords_corr[i] + 1);
     }
+
+    debug_ips(":7");
 
     return true;
 }
