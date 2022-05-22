@@ -3,16 +3,20 @@
 
 #include <cstdint>
 
+#include "apriltag/apriltag.hpp"
 #include "imgProc/common.hpp"
 
 namespace imgProc {
 namespace edge_detect {
 
 constexpr int target_coords_maxn = 20;
+extern apriltag::quad target_quad;
 extern Coordinate target_coords[target_coords_maxn];
 extern int target_coords_cnt;
+extern apriltag::float_t target_coords_corr[target_coords_maxn][2];
 
-bool A4Detect(uint8_t* img, int low_thresh = 50, int high_thresh = 100);
+bool A4Detect(uint8_t* img, apriltag::float_t borderWidth = 7, apriltag::float_t borderHeight = 5, int low_thresh = 50,
+              int high_thresh = 100);
 
 }  // namespace edge_detect
 }  // namespace imgProc

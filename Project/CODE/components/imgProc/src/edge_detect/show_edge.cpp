@@ -20,8 +20,8 @@ static inline bool have_edge(uint8_t* img, int i, int j) {
 static constexpr uint16_t get_color(uint8_t m) {
     switch (m) {
     case 2: return RED;
-    case 3: return BLUE;
-    case 4: return GREEN;
+    case 3: return GREEN;
+    case 4: return BLUE;
     default: return 0;
     }
 }

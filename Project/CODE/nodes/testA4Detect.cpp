@@ -23,8 +23,9 @@ static void testA4DetectEntry() {
         uint8_t* img = mt9v03x_csi_image_take();
 
         if (enabled) {
-            A4Detect(img, 50, 100);
+            bool res = A4Detect(img, 7, 5, 50, 100);
             show_edge(img);  // œ‘ æ±ﬂ‘µÕº∆¨
+            if (res) {}
         } else {
             show_grayscale(img);  // œ‘ æª“∂»Õº
         }

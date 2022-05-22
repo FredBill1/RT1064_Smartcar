@@ -5,13 +5,13 @@
 #include "apriltag/fmath.hpp"
 #include "apriltag/internal/StaticBuffer.hpp"
 #include "apriltag/internal/fit_quad.hpp"
+#include "apriltag/internal/homography.hpp"
 #include "apriltag/visualization.hpp"
 #include "bresenham.hpp"
 #include "devices.hpp"
 #include "edge_detect/canny.hpp"
 #include "edge_detect/show_edge.hpp"
 #include "imgProc/CoordStack.hpp"
-
 extern "C" {
 #include "SEEKFREE_IPS114_SPI.h"
 }
@@ -19,6 +19,11 @@ namespace imgProc {
 using namespace apriltag;
 namespace edge_detect {
 using std::pair;
+
+apriltag::quad target_quad;
+Coordinate target_coords[target_coords_maxn];
+int target_coords_cnt;
+float_t target_coords_corr[target_coords_maxn][2];
 
 #define PIXEL(img, x, y) (*(img + (y)*M + (x)))
 #define DRAW(img, x, y) (*(img + ((y) & ~3) * M + ((x) & ~3)))
@@ -85,9 +90,6 @@ static inline pair<Coordinate*, int> edgeTrace(uint8_t* img, int X, int Y, bool 
     return {coords, n};
 }
 
-Coordinate target_coords[target_coords_maxn];
-int target_coords_cnt;
-
 // 描绘黑点
 static inline void dfs_black(uint8_t* img, int x, int y) {
     if (target_coords_cnt >= target_coords_maxn) return;
@@ -139,7 +141,7 @@ static inline void dfs_white(uint8_t* img) {
     }
 }
 
-bool A4Detect(uint8_t* img, int low_thresh, int high_thresh) {
+bool A4Detect(uint8_t* img, apriltag::float_t borderWidth, apriltag::float_t borderHeight, int low_thresh, int high_thresh) {
     staticBuffer.reset();
 
     gvec_t* g = canny(img, low_thresh, high_thresh);  // 边缘检测
@@ -161,8 +163,7 @@ bool A4Detect(uint8_t* img, int low_thresh, int high_thresh) {
         return false;
     }
 
-    apriltag::quad q;
-    bool fit_res = fit_quad_simple(coords, sz, q, g);
+    bool fit_res = fit_quad_simple(coords, sz, target_quad, g);
 
     if (fit_res) {
         // 将边框所在像素的3x3范围内标记成边界
@@ -179,7 +180,24 @@ bool A4Detect(uint8_t* img, int low_thresh, int high_thresh) {
 
     // 画结果
     for (int i = 0; i < target_coords_cnt; ++i) CIRCLE(img, target_coords[i].x, target_coords[i].y, 3, 2);
-    for (int i = 0; i < 4; ++i) CIRCLE(img, q.p[i][0], q.p[i][1], 6, 3);
+    for (int i = 0; i < 4; ++i) CIRCLE(img, target_quad.p[i][0], target_quad.p[i][1], 6, 3);
+
+    // 计算透视变换矩阵
+    // clang-format off
+    apriltag::float_t corr_arr[4][4]{   // fit_quad_simple所得到的4个角的顺序是固定的
+        {target_quad.p[0][0], target_quad.p[0][1], borderWidth, borderHeight},  // 右上角
+        {target_quad.p[1][0], target_quad.p[1][1], borderWidth, 0,          },  // 右下角
+        {target_quad.p[2][0], target_quad.p[2][1], 0,           0,          },  // 左下角
+        {target_quad.p[3][0], target_quad.p[3][1], 0,           borderHeight},  // 左上角
+    };
+    // clang-format on
+    homography_compute2(target_quad.H, corr_arr);
+
+    // 将坐标转换为世界坐标
+    for (int i = 0; i < target_coords_cnt; ++i) {
+        homography_project(target_quad.H, target_coords[i].x, target_coords[i].y, target_coords_corr[i],
+                           target_coords_corr[i] + 1);
+    }
 
     return true;
 }
