@@ -50,4 +50,7 @@ bool testCannyNode();
 // 测试A4纸检测
 bool testA4DetectNode();
 
+// 测试主核接收A4纸检测结果
+bool testA4ReceiveNode();
+
 #endif  // _nodes_hpp

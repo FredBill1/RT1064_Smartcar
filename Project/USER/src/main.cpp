@@ -30,6 +30,7 @@ int main(void) {
     // testTSPSolverNode();
     // testCannyNode();
     testA4DetectNode();
+    // testA4ReceiveNode();
 
     // poseKalmanNode();
 

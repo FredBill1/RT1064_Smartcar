@@ -30,8 +30,34 @@ class SerialIO {
             dataSize = size;
             this->data = (uint8_t *)data;
         }
+        void setSize(size_t size) { dataSize = size; }
         bool txFinished(int32_t timeout_ms = 0) { return sem.wait(timeout_ms); }
         void setTxFin() { sem.release(); }
+    };
+
+    template <typename T> class TxWirter {
+        uint8_t *const data;
+
+     public:
+        TxWirter(uint8_t *data) : data(data) {}
+        void set(int i, T val) {
+            uint8_t *buf = (uint8_t *)&val;
+            int I = i * (sizeof(T) + 1);
+            uint8_t &sum = data[I + sizeof(T)];
+            sum = 0;
+            for (int j = 0; j < sizeof(T); ++j) {
+                data[I + j] = buf[j];
+                sum += buf[j];
+            }
+        }
+        static constexpr int getSize(int cnt = 1) { return (sizeof(T) + 1) * cnt; }
+        template <typename... U> inline void setAll(U... val) {
+            int i = 0;
+            ((set(i++, val)), ...);
+        }
+        template <typename U> inline void setArr(U *arr, int cnt) {
+            for (int i = 0; i < cnt; ++i) set(i, arr[i]);
+        }
     };
 
     template <typename T, int cnt, bool withID = false, bool checkSum = true> class TxUtil : public TxXfer {
