@@ -7,8 +7,11 @@ extern "C" {
 #include "edge_detect/A4Detect.hpp"
 
 using imgProc::apriltag::float_t;
-using imgProc::edge_detect::target_coords_corr, imgProc::edge_detect::target_coords_cnt;
+using imgProc::edge_detect::target_coords_corr, imgProc::edge_detect::target_coords_cnt, imgProc::edge_detect::draw_corr;
 static uint8_t id;
+
+static decltype(target_coords_corr) coords;
+static int cnt = 0;
 
 static bool try_recv(SerialIO& uart) {
     uart.waitHeader();
@@ -25,6 +28,11 @@ static bool try_recv(SerialIO& uart) {
 static void testA4ReceiveEntry() {
     for (;;) {
         if (try_recv(uart3)) {
+            draw_corr(coords, cnt, 7, 5, 0xffff);
+            cnt = target_coords_cnt;
+            rt_memcpy(coords[0], target_coords_corr[0], sizeof(target_coords_corr));
+            draw_corr(coords, cnt, 7, 5);
+
             rt_kprintf("%d\r\n", target_coords_cnt);
             for (int i = 0; i < target_coords_cnt; ++i) {
                 for (int j = 0; j < 2; ++j)

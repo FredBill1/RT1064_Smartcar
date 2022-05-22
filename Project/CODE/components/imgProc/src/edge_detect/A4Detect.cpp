@@ -203,5 +203,16 @@ bool A4Detect(uint8_t* img, apriltag::float_t borderWidth, apriltag::float_t bor
     return true;
 }
 
+void draw_corr(apriltag::float_t target_coords_corr[][2], int target_coords_cnt, apriltag::float_t borderWidth,
+               apriltag::float_t borderHeight, uint16_t color) {
+    float k = std::min((M / 4) / borderWidth, (N / 4) / borderHeight);
+    for (int I = 0; I < target_coords_cnt; ++I) {
+        int i = (borderHeight - target_coords_corr[I][1]) * k, j = target_coords_corr[I][0] * k;
+        drawCircle(i, j, 3, [color](int i, int j) {
+            if (0 <= i && i < N / 4 && 0 <= j && j < M / 4) ips114_drawpoint(j, i, color);
+        });
+    }
+}
+
 }  // namespace edge_detect
 }  // namespace imgProc
