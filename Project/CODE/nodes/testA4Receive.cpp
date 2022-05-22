@@ -28,7 +28,7 @@ static void testA4ReceiveEntry() {
             rt_kprintf("%d\r\n", target_coords_cnt);
             for (int i = 0; i < target_coords_cnt; ++i) {
                 for (int j = 0; j < 2; ++j)
-                    rt_kprintf("%d.%d ", int(target_coords_corr[i][j]), int(target_coords_corr[i][j] * 100) % 100);
+                    rt_kprintf("%d.%02d ", int(target_coords_corr[i][j]), int(target_coords_corr[i][j] * 100) % 100);
                 rt_kprintf("\r\n");
             }
             rt_kprintf("\r\n");
