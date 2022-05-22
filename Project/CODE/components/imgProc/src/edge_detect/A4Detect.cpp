@@ -177,6 +177,7 @@ bool A4Detect(uint8_t* img, apriltag::float_t borderWidth, apriltag::float_t bor
 
     // 从中心开始dfs，找黑点
     dfs_white(img);
+    ips114_showint32(188, 2, target_coords_cnt, 3);
 
     // 画结果
     for (int i = 0; i < target_coords_cnt; ++i) CIRCLE(img, target_coords[i].x, target_coords[i].y, 3, 2);
