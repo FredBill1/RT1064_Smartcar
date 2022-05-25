@@ -21,8 +21,8 @@ template <typename T> class FakeAtomicLoader {
         rt_hw_interrupt_enable(level);
     }
     bool load(T& data) {
-        bool res = _changed;
         rt_base_t level = rt_hw_interrupt_disable();
+        bool res = _changed;
         if (_changed) data = _tmp, _changed = false;
         rt_hw_interrupt_enable(level);
         return res;
