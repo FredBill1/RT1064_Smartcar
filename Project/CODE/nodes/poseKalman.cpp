@@ -17,6 +17,12 @@ static inline void setupSystemCovariance() {
     kf.setSystemCovariance(sysCov[0]);
 }
 
+static inline void setupSetStateCovariance() {
+    T setStateCov[6][6]{0};
+    for (int i = 0; i < 6; ++i) setStateCov[i][i] = 1e-6;
+    kf.setMeasurementCovariance(MeasurementType::SetState, setStateCov[0]);
+}
+
 static inline void setupOdomCovariance() {
     T odomCov[3][3]{0};
     odomCov[0][0] = odom_v_xy_sigma2;
@@ -79,6 +85,7 @@ static void poseKalmanEntry() {
     static SerialIO::TxUtil<float, 6, true> pose_tx("pose", 30);
     static SerialIO::TxUtil<float, 1, true> timestamp_tx("timestamp", 23);
     setupSystemCovariance();
+    setupSetStateCovariance();
     setupOdomCovariance();
     setupGyroCovariance();
     setupYawCovariance();
@@ -87,6 +94,10 @@ static void poseKalmanEntry() {
     rt_thread_mdelay(100);
     kf.setEnabled(true);
     for (;;) {
+        MoveBase::State set_state;
+        if (moveBase.get_state(set_state))
+            kf.enqueMeasurement(MeasurementType::SetState, set_state.state, set_state.timestamp_us);
+
         uint64_t timestamp_us = systick.get_us();
         kf.update(timestamp_us);
         const T* state = kf.getState();

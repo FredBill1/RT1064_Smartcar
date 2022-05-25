@@ -9,8 +9,8 @@ int main(void);
 int main(void) {
     initDevices();
     // imu.init();
-    mt9v03x_csi_init();
-    usb_cdc_init();
+    // mt9v03x_csi_init();
+    // usb_cdc_init();
 
     EnableGlobalIRQ(0);  // 启用全局中断
     wirelessNode();
@@ -18,7 +18,7 @@ int main(void) {
     // imgUSBXferNode();
     // apriltagDetectNode();
     // findRectNode();
-    // motorControlNode();
+    motorControlNode();
 
     // testMotorNode();
     // testQTimerNode();
@@ -29,13 +29,13 @@ int main(void) {
     // testLocalPlannerNode();
     // testTSPSolverNode();
     // testCannyNode();
-    testA4DetectNode();
+    // testA4DetectNode();
     // testA4ReceiveNode();
 
-    // poseKalmanNode();
+    poseKalmanNode();
 
-    // moveBase.set_enabled(true);
-    // baseDriver.setControlState(1, 1, 1, 1);
+    moveBase.set_enabled(true);
+    baseDriver.setControlState(1, 1, 1, 1);
 
     // uartMasterTest();
     // uartSlaveTest();

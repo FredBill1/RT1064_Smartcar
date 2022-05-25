@@ -44,6 +44,21 @@ void MoveBase::send_reached(bool reached) {
     }
 }
 
+MoveBase::State::State(uint64_t timestamp_us, const pose_kalman::T* state) {
+    this->timestamp_us = timestamp_us;
+    for (int i = 0; i < 6; i++) this->state[i] = state[i];
+}
+
+MoveBase::State::State(uint64_t timestamp_us, pose_kalman::T x, pose_kalman::T y, pose_kalman::T yaw, pose_kalman::T vX,
+                       pose_kalman::T vY, pose_kalman::T vYaw) {
+    this->timestamp_us = timestamp_us;
+    state[0] = x, state[1] = y, state[2] = yaw, state[3] = vX, state[4] = vY, state[5] = vYaw;
+}
+
+void MoveBase::send_state(const State& state) { _stateLoader.store(state); }
+
+bool MoveBase::get_state(State& new_state) { return _stateLoader.load(new_state); }
+
 bool MoveBase::wait_for_result() {
     if (!get_enabled()) return false;
     rt_uint32_t res;

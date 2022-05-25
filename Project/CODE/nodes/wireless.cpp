@@ -128,6 +128,14 @@ static inline void SendGoal() {
     moveBase.send_goal(x, y, yaw);
 }
 
+static inline void SendState() {
+    MoveBase::State state;
+    if (!wireless.getArr<float, 6>(state.state)) return;
+    beep.set(false);
+    state.timestamp_us = systick.get_us();
+    moveBase.send_state(state);
+}
+
 static inline void SetLocalPlannerParam() {
     using namespace pose_kalman;
     LocalPlanner::Params params;
@@ -152,6 +160,7 @@ static void wirelessEntry() {
         case 7: Remote(); break;
         case 8: SendGoal(); break;
         case 9: SetLocalPlannerParam(); break;
+        case 10: SendState(); break;
         }
     }
 }
