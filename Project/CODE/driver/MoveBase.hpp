@@ -29,6 +29,7 @@ class MoveBase {
     FakeAtomicLoader<bool> _enabledLoader;
     FakeAtomicLoader<Goal> _goalLoader;
     FakeAtomicLoader<State> _stateLoader;
+    FakeAtomicLoader<pose_kalman::T> _yawLoader;
     rt_event _reachedEvent;
 
  public:
@@ -42,6 +43,7 @@ class MoveBase {
     void send_reached(bool reached = true);
     void send_state(const State& state);
     bool get_state(State& new_state);
+    bool get_yaw(pose_kalman::T& new_yaw);
     bool wait_for_result();
     bool get_reached();
     bool new_goal();

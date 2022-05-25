@@ -55,9 +55,13 @@ MoveBase::State::State(uint64_t timestamp_us, pose_kalman::T x, pose_kalman::T y
     state[0] = x, state[1] = y, state[2] = yaw, state[3] = vX, state[4] = vY, state[5] = vYaw;
 }
 
-void MoveBase::send_state(const State& state) { _stateLoader.store(state); }
+void MoveBase::send_state(const State& state) {
+    _stateLoader.store(state);
+    _yawLoader.store(state.state[2]);
+}
 
 bool MoveBase::get_state(State& new_state) { return _stateLoader.load(new_state); }
+bool MoveBase::get_yaw(pose_kalman::T& new_yaw) { return _yawLoader.load(new_yaw); }
 
 bool MoveBase::wait_for_result() {
     if (!get_enabled()) return false;
