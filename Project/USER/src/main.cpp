@@ -5,6 +5,7 @@ int main(void);
 
 #include "devices.hpp"
 #include "nodes/nodes.hpp"
+#include "show_image.hpp"
 
 int main(void) {
     initDevices();
@@ -13,6 +14,7 @@ int main(void) {
     // usb_cdc_init();
 
     EnableGlobalIRQ(0);  // 启用全局中断
+    // show_image::koishi();
     wirelessNode();
 
     // imgUSBXferNode();
