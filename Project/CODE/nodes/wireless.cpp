@@ -139,7 +139,8 @@ static inline void SendState() {
 static inline void SetLocalPlannerParam() {
     using namespace pose_kalman;
     LocalPlanner::Params params;
-    if (!(wireless.getData<float>(params.vel_lim_xy, params.vel_lim_yaw, params.acc_lim_xy, params.acc_lim_yaw))) return;
+    if (!(wireless.getData<float>(params.vel_lim_xy, params.vel_lim_yaw, params.acc_lim_xy, params.acc_lim_yaw, params.dt_ref)))
+        return;
     beep.set(false);
     localPlanner.setParams(params);
 }

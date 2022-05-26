@@ -9,10 +9,11 @@ namespace pose_kalman {
 class LocalPlanner {
  public:
     struct Params {
-        T acc_lim_xy = 0.3;
-        T acc_lim_yaw = 1.6;
         T vel_lim_xy = 2;
         T vel_lim_yaw = 6;
+        T acc_lim_xy = 0.8;
+        T acc_lim_yaw = 2;
+        T dt_ref = 0.3;
     };
     Params params;
     void setParams(const Params& params) { this->params = params; }
