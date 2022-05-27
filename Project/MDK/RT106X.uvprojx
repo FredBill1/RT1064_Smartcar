@@ -2605,11 +2605,6 @@
               <FilePath>..\CODE\nodes\testTSPSolver.cpp</FilePath>
             </File>
             <File>
-              <FileName>findRect.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\CODE\nodes\findRect.cpp</FilePath>
-            </File>
-            <File>
               <FileName>testLocalPlanner.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\testLocalPlanner.cpp</FilePath>
@@ -2628,6 +2623,11 @@
               <FileName>testA4Receive.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\testA4Receive.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>testFindRect.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\testFindRect.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -5500,11 +5500,6 @@
               <FilePath>..\CODE\nodes\testTSPSolver.cpp</FilePath>
             </File>
             <File>
-              <FileName>findRect.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\CODE\nodes\findRect.cpp</FilePath>
-            </File>
-            <File>
               <FileName>testLocalPlanner.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\testLocalPlanner.cpp</FilePath>
@@ -5523,6 +5518,11 @@
               <FileName>testA4Receive.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\testA4Receive.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>testFindRect.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\testFindRect.cpp</FilePath>
             </File>
           </Files>
         </Group>

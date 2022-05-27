@@ -7,8 +7,8 @@ bool wirelessNode();
 // apriltag检测, 需要初始化mt9v03x
 bool apriltagDetectNode();
 
-// 矩形检测, 需要初始化mt9v03x
-bool findRectNode();
+// 测试矩形检测, 需要初始化mt9v03x
+bool testFindRectNode();
 
 // 上位机传图, 需要初始化usb_cdc和mt9v03x
 bool imgUSBXferNode();

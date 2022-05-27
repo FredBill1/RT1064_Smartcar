@@ -14,7 +14,7 @@ extern "C" {
 //
 #include "RectConfig.hpp"
 
-static void findRectEntry() {
+static void testFindRectEntry() {
     using namespace imgProc::apriltag;
     // AT_DTCM_SECTION_ALIGN(static uint8_t img[N * M], 64);
 
@@ -41,4 +41,4 @@ static void findRectEntry() {
     }
 }
 
-bool findRectNode() { return FuncThread(findRectEntry, "findRect", 4096, 2, 1000); }
+bool testFindRectNode() { return FuncThread(testFindRectEntry, "testFindRect", 4096, 2, 1000); }

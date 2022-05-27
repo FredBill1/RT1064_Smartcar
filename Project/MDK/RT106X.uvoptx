@@ -5769,18 +5769,6 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CODE\nodes\findRect.cpp</PathWithFileName>
-      <FilenameWithoutPath>findRect.cpp</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>27</GroupNumber>
-      <FileNumber>420</FileNumber>
-      <FileType>8</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
       <PathWithFileName>..\CODE\nodes\testLocalPlanner.cpp</PathWithFileName>
       <FilenameWithoutPath>testLocalPlanner.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
@@ -5788,7 +5776,7 @@
     </File>
     <File>
       <GroupNumber>27</GroupNumber>
-      <FileNumber>421</FileNumber>
+      <FileNumber>420</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -5800,7 +5788,7 @@
     </File>
     <File>
       <GroupNumber>27</GroupNumber>
-      <FileNumber>422</FileNumber>
+      <FileNumber>421</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -5812,13 +5800,25 @@
     </File>
     <File>
       <GroupNumber>27</GroupNumber>
-      <FileNumber>423</FileNumber>
+      <FileNumber>422</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\CODE\nodes\testA4Receive.cpp</PathWithFileName>
       <FilenameWithoutPath>testA4Receive.cpp</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>27</GroupNumber>
+      <FileNumber>423</FileNumber>
+      <FileType>8</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\CODE\nodes\testFindRect.cpp</PathWithFileName>
+      <FilenameWithoutPath>testFindRect.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
