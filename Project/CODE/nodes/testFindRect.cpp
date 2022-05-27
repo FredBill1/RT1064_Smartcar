@@ -29,7 +29,7 @@ static void testFindRectEntry() {
 
         rects_t& rects = find_rects(img, min_magnitude);
         if (visualize) {
-            plot_rects(img, rects);
+            plot_rects(img, rects, true);
             show_plot_grayscale(img);
         }
 
