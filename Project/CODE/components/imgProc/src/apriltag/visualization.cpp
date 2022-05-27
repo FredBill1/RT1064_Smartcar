@@ -170,13 +170,13 @@ void show_quadsImg(uint8_t* img, quads_t& quads) {
     for (auto& quad : quads) rep(i, 0, 4) plotImg(img, quad.p[i][1], quad.p[i][0]);
 }
 
-void plot_rect(uint8_t* img, rect& r, bool show_magnitude) {
-    rep(i, 0, 4) lineImg(img, r.p[i][1], r.p[i][0], r.p[(i + 1) & 3][1], r.p[(i + 1) & 3][0], GREEN, 0);
+void plot_rect(uint8_t* img, rect& r, uint16_t color, bool show_magnitude) {
+    rep(i, 0, 4) lineImg(img, r.p[i][1], r.p[i][0], r.p[(i + 1) & 3][1], r.p[(i + 1) & 3][0], color, 0);
     if (show_magnitude) plotInt(img, r.p[3][1], r.p[3][0], r.magnitude, 5, true);
 }
 
-void plot_rects(uint8_t* img, rects_t& rects, bool show_magnitude) {
-    for (auto& r : rects) plot_rect(img, *r, show_magnitude);
+void plot_rects(uint8_t* img, rects_t& rects, uint16_t color, bool show_magnitude) {
+    for (auto& r : rects) plot_rect(img, *r, color, show_magnitude);
 }
 }  // namespace apriltag
 }  // namespace imgProc

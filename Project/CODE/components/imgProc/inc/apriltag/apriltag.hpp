@@ -100,6 +100,8 @@ struct apriltag_detection {
 
 struct rect {
     float_t p[4][2];
+    float_t p_proj[4][2];
+    float_t c_proj[2];
     uint32_t magnitude;
 };
 
