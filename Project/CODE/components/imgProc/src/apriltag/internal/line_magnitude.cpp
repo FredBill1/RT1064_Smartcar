@@ -2,7 +2,6 @@
 
 #include <rtthread.h>
 
-#include "RectConfig.hpp"
 #include "apriltag/fmath.hpp"
 #include "apriltag/internal/decode_quad.hpp"
 #include "apriltag/internal/utility.hpp"
@@ -65,7 +64,7 @@ static inline float_t line_magnitude(uint8_t* img, int x1, int y1, int x2, int y
     return res;
 }
 
-rects_t& rects_magnitude(uint8_t* img, quads_t& quads) {
+rects_t& rects_magnitude(uint8_t* img, quads_t& quads, float min_magnitude) {
     rects_t& rects = *new (staticBuffer.allocate(sizeof(rects_t))) rects_t(rects_alloc_t{staticBuffer});
     for (auto& quad : quads) {
         refine_edges(img, &quad);

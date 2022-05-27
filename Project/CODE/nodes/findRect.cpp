@@ -11,6 +11,8 @@ extern "C" {
 #include "apriltag/undisort.hpp"
 #include "apriltag/visualization.hpp"
 #include "devices.hpp"
+//
+#include "RectConfig.hpp"
 
 static void findRectEntry() {
     using namespace imgProc::apriltag;
@@ -25,7 +27,7 @@ static void findRectEntry() {
         // undisort_I(src, img);  // ½ÃÕýÍ¼Ïñ»û±ä
         uint8_t* img = mt9v03x_csi_image_take();
 
-        rects_t& rects = find_rects(img);
+        rects_t& rects = find_rects(img, min_magnitude);
         if (visualize) {
             plot_rects(img, rects);
             show_plot_grayscale(img);

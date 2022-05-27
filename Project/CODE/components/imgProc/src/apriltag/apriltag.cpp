@@ -81,7 +81,7 @@ detections_t &apriltag_detect(apriltag_family &tf, uint8_t *img, apriltag_detect
     return detections;
 }
 
-rects_t &find_rects(uint8_t *img, apriltag_detect_visualize_flag visualize_flag) {
+rects_t &find_rects(uint8_t *img, float min_magnitude, apriltag_detect_visualize_flag visualize_flag) {
     staticBuffer.reset();
 #if (apriltag_benchmark)
     int32_t t0 = rt_tick_get();
@@ -101,7 +101,7 @@ rects_t &find_rects(uint8_t *img, apriltag_detect_visualize_flag visualize_flag)
     int32_t t2 = rt_tick_get();
 #endif
 
-    auto &clusters = *gradient_clusters(threshim, img);
+    auto &clusters = *gradient_clusters(threshim, img, min_magnitude);
     if (visualize_flag == apriltag_detect_visualize_flag::clusters) show_clustersImg(img, clusters);
 
 #if (apriltag_benchmark)
@@ -120,7 +120,7 @@ rects_t &find_rects(uint8_t *img, apriltag_detect_visualize_flag visualize_flag)
     int32_t t4 = rt_tick_get();
 #endif
 
-    auto &rects = rects_magnitude(img, quads);
+    auto &rects = rects_magnitude(img, quads, min_magnitude);
 
 #if (apriltag_benchmark)
     int32_t t5 = rt_tick_get();

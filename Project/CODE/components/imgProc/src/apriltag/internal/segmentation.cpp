@@ -4,7 +4,6 @@
 
 #include <algorithm>
 
-#include "RectConfig.hpp"
 #include "apriltag/internal/Hashmap.hpp"
 #include "apriltag/internal/StaticBuffer.hpp"
 #include "apriltag/internal/globalVariables.hpp"
@@ -57,7 +56,7 @@ static inline bool checkSz(const List_pt_t& list) {
     return true;
 }
 
-clusters_t* gradient_clusters(const QuadImg_t& img, const uint8_t* orig_im) {
+clusters_t* gradient_clusters(const QuadImg_t& img, const uint8_t* orig_im, float min_magnitude) {
     constexpr int_fast32_t dxy[][2]{{1, 0}, {0, 1}, {-1, 1}, {1, 1}};
     Hashmap& dict = Hashmap::create(hashmapbuf, staticBuffer);
     rep(y, 1, (N / quad_decimate) - 1) rep(x, 1, (M / quad_decimate) - 1) {
@@ -76,7 +75,7 @@ clusters_t* gradient_clusters(const QuadImg_t& img, const uint8_t* orig_im) {
         }
     }
     clusters_t* clusters = new (staticBuffer.allocate(sizeof(clusters_t))) clusters_t(clusters_alloc_t{staticBuffer});
-    dict.for_each([clusters, orig_im](List_pt_t*& list) {
+    dict.for_each([clusters, orig_im, min_magnitude](List_pt_t*& list) {
         if (!checkSz(*list)) return;
         if (orig_im) {
             float_t magnitude = 0;

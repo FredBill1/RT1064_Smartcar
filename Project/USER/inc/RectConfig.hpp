@@ -6,7 +6,7 @@
 namespace imgProc {
 namespace apriltag {
 
-constexpr float_t min_magnitude = 30000;
+constexpr float_t min_magnitude = 3000;
 
 }  // namespace apriltag
 }  // namespace imgProc
