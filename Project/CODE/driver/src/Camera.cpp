@@ -54,6 +54,8 @@ int16_t Camera::get_exposure_time() { return GET_CFG_CSI[1][1]; }
 
 void Camera::set_exposure_time(int16_t value) { MT9V03X_CFG_CSI[1][1] = value; }
 
+void Camera::set_exposure_time_fast(uint16_t value) { ::set_exposure_time(MT9V03X_CSI_COF_UART, value); }
+
 int16_t Camera::get_fps() { return GET_CFG_CSI[2][1]; }
 
 void Camera::set_fps(int16_t value) { MT9V03X_CFG_CSI[2][1] = value; }

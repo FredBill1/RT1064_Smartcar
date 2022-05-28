@@ -20,6 +20,7 @@ class Camera {
 
     int16_t get_exposure_time();
     void set_exposure_time(int16_t value);
+    void set_exposure_time_fast(uint16_t value);
 
     int16_t get_fps();
     void set_fps(int16_t value);
