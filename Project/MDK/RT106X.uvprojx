@@ -2419,6 +2419,11 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\driver\src\MoveBase.cpp</FilePath>
             </File>
+            <File>
+              <FileName>Camera.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\driver\src\Camera.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -5254,6 +5259,11 @@
               <FileName>MoveBase.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\driver\src\MoveBase.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>Camera.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\driver\src\Camera.cpp</FilePath>
             </File>
           </Files>
         </Group>

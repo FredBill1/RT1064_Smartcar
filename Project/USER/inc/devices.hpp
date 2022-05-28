@@ -2,6 +2,7 @@
 #define _devices_hpp
 
 #include "BaseDriver.hpp"
+#include "Camera.hpp"
 #include "Encoder.hpp"
 #include "GPIO.hpp"
 #include "ICM20948.hpp"

@@ -2,9 +2,9 @@
 //
 extern "C" {
 #include "SEEKFREE_IPS114_SPI.h"
-#include "SEEKFREE_MT9V03X_CSI.h"
 }
 
+#include "Camera.hpp"
 #include "apriltag/visualization.hpp"
 #include "devices.hpp"
 #include "edge_detect/A4Detect.hpp"
@@ -23,7 +23,7 @@ static void testA4DetectEntry() {
     for (;;) {
         bool enabled = slave_switch[2].get();  // 拨码开关
 
-        uint8_t* img = mt9v03x_csi_image_take();
+        uint8_t* img = camera.snapshot();
 
         if (enabled) {
             bool res = A4Detect(img, 7, 5, 50, 100);
@@ -33,7 +33,7 @@ static void testA4DetectEntry() {
             show_grayscale(img);  // 显示灰度图
         }
 
-        mt9v03x_csi_image_release();  // 释放图片
+        camera.release();  // 释放图片
 
         int32_t cur_time = rt_tick_get();
         ips114_showint32(188, 0, cur_time - pre_time, 3);  // 显示耗时/ms

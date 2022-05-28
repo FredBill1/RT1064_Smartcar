@@ -2,13 +2,13 @@
 //
 extern "C" {
 #include "SEEKFREE_IPS114_SPI.h"
-#include "SEEKFREE_MT9V03X_CSI.h"
 #include "common.h"
 #include "fsl_debug_console.h"
 #include "zf_gpio.h"
 #include "zf_usb_cdc.h"
 }
 
+#include "Camera.hpp"
 #include "apriltag/visualization.hpp"
 #include "devices.hpp"
 #include "edge_detect/canny.hpp"
@@ -26,7 +26,7 @@ static void testCannyEntry() {
 
         staticBuffer.reset();
 
-        uint8_t* img = mt9v03x_csi_image_take();
+        uint8_t* img = camera.snapshot();
         if (!visualize) show_grayscale(img);
 
         canny(img, 50, 100);  // ±ﬂ‘µºÏ≤‚
@@ -39,7 +39,7 @@ static void testCannyEntry() {
             usb_cdc_send_buff(img, N * M);
         }
 
-        mt9v03x_csi_image_release();  //  Õ∑≈Õº∆¨
+        camera.release();  //  Õ∑≈Õº∆¨
 
         int32_t cur_time = rt_tick_get();
         ips114_showint32(188, 0, cur_time - pre_time, 3);  // œ‘ æ∫ƒ ±/ms

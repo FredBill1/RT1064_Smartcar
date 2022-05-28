@@ -2,12 +2,12 @@
 //
 extern "C" {
 #include "SEEKFREE_IPS114_SPI.h"
-#include "SEEKFREE_MT9V03X_CSI.h"
 }
 
 #include <algorithm>
 #include <cmath>
 
+#include "Camera.hpp"
 #include "apriltag/apriltag.hpp"
 #include "apriltag/reconcileRects.hpp"
 #include "apriltag/undisort.hpp"
@@ -27,9 +27,9 @@ static void testFindRectEntry() {
     for (;;) {
         bool visualize = slave_switch[2].get();  // 拨码开关决定是否进行可视化
 
-        // uint8_t* src = mt9v03x_csi_image_take();
+        // uint8_t* src = camera.snapshot();
         // undisort_I(src, img);  // 矫正图像畸变
-        uint8_t* img = mt9v03x_csi_image_take();
+        uint8_t* img = camera.snapshot();
 
         rects_t& rects = find_rects(img, min_magnitude);
         if (visualize) plot_rects(img, rects, GREEN);
@@ -39,7 +39,7 @@ static void testFindRectEntry() {
 
         if (visualize) show_plot_grayscale(img);
 
-        mt9v03x_csi_image_release();  // 释放图片
+        camera.release();  // 释放图片
 
         int32_t cur_time = rt_tick_get();
         ips114_showint32(188, 0, cur_time - pre_time, 3);  // 显示耗时/ms

@@ -65,6 +65,9 @@ typedef uint8 (*u8_image_ptr)[MT9V03X_CSI_W];
 extern uint8 mt9v03x_csi_finish_flag;               //一场图像采集完成标志位
 extern uint8 (*mt9v03x_csi_image)[MT9V03X_CSI_W];          //图像数据
 
+extern int16 MT9V03X_CFG_CSI[CONFIG_FINISH][2];
+extern int16 GET_CFG_CSI[CONFIG_FINISH-1][2];
+
 void mt9v03x_csi_init(void);
 void csi_seekfree_sendimg_03x(UARTN_enum uartn, uint8 *image, uint16 width, uint16 height);
 

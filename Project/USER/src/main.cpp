@@ -10,7 +10,7 @@ int main(void);
 int main(void) {
     initDevices();
     // imu.init();
-    mt9v03x_csi_init();
+    camera.init();
     usb_cdc_init();
 
     EnableGlobalIRQ(0);  // 启用全局中断

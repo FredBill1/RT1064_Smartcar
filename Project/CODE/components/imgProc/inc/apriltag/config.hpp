@@ -3,13 +3,15 @@
 
 #include <cstdint>
 
+#include "Camera.hpp"
+
 namespace imgProc {
 namespace apriltag {
 
 using float_t = float;
 
-constexpr int_fast32_t N = 480;  // image height
-constexpr int_fast32_t M = 752;  // image width
+constexpr int_fast32_t N = Camera::H;  // image height
+constexpr int_fast32_t M = Camera::W;  // image width
 
 constexpr int_fast32_t quad_decimate = 4;
 
