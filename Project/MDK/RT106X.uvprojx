@@ -2424,6 +2424,11 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\driver\src\Camera.cpp</FilePath>
             </File>
+            <File>
+              <FileName>Beep.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\driver\src\Beep.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -5269,6 +5274,11 @@
               <FileName>Camera.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\driver\src\Camera.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>Beep.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\driver\src\Beep.cpp</FilePath>
             </File>
           </Files>
         </Group>

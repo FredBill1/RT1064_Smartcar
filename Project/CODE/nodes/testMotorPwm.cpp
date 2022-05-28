@@ -2,6 +2,8 @@
 //
 #include "devices.hpp"
 
+static Beep beep;
+
 static uint8_t id;
 
 static float pre_speed = 0;

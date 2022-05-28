@@ -10,6 +10,8 @@ extern "C" {
 namespace imgProc {
 namespace apriltag {
 
+static Beep beep;
+
 static uint8_t id;
 static int rect_cnt;
 static float_t rects[max_rect_cnt][2];

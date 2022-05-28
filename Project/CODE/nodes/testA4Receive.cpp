@@ -6,6 +6,8 @@ extern "C" {
 #include "devices.hpp"
 #include "edge_detect/A4Detect.hpp"
 
+static Beep beep;
+
 using imgProc::apriltag::float_t;
 using imgProc::edge_detect::target_coords_corr, imgProc::edge_detect::target_coords_cnt, imgProc::edge_detect::draw_corr;
 static uint8_t id;

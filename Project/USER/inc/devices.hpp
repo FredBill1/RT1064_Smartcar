@@ -2,6 +2,7 @@
 #define _devices_hpp
 
 #include "BaseDriver.hpp"
+#include "Beep.hpp"
 #include "Camera.hpp"
 #include "Encoder.hpp"
 #include "GPIO.hpp"
@@ -21,7 +22,7 @@
 #include "PinConfig.h"
 
 extern const GPIO led;
-extern const GPIO beep;
+extern const GPIO beep_io;
 
 extern const GPIO btn_c4;
 extern const GPIO btn_c26;

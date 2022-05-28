@@ -3,6 +3,7 @@
 #include "devices.hpp"
 
 static uint8_t id;
+static Beep beep;
 
 static inline void SystemReset() {
     beep.set(false);

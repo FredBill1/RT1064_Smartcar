@@ -47,7 +47,7 @@ LocalPlanner localPlanner;
 Systick systick;
 
 extern const GPIO led(B9);
-extern const GPIO beep(B11);
+extern const GPIO beep_io(B11);
 
 extern const GPIO btn_c4(C4);
 extern const GPIO btn_c26(C26);
@@ -85,7 +85,7 @@ void initDevices() {
 
     // gpio
     led.init(false);
-    beep.init(false);
+    beep_io.init(false);
     // btn_c4.init(true);
     // btn_c26.init(true);
     // btn_c27.init(true);
