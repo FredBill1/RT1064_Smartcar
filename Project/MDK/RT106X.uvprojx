@@ -2754,6 +2754,16 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\components\imgProc\src\edge_detect\A4Detect.cpp</FilePath>
             </File>
+            <File>
+              <FileName>g2d.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\apriltag\internal\g2d.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>reconcileRects.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\apriltag\reconcileRects.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -5717,6 +5727,16 @@
               <FileName>A4Detect.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\components\imgProc\src\edge_detect\A4Detect.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>g2d.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\apriltag\internal\g2d.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>reconcileRects.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\imgProc\src\apriltag\reconcileRects.cpp</FilePath>
             </File>
           </Files>
         </Group>

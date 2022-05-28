@@ -22,7 +22,7 @@ constexpr float_t max_rect_angle = 110;
 
 // 相机到底盘的透视变换对应坐标点
 // clang-format off
-float_t Cam2Base_corr[4][4]{   // {{图像x_i, 图像y_i, 底盘x_i, 底盘y_i}, 0<=i<=3}
+constexpr float_t Cam2Base_corr[4][4]{   // {{图像x_i, 图像y_i, 底盘x_i, 底盘y_i}, 0<=i<=3}
     {0,   480, 0.13,  0.14},  // 左下角
     {752, 480, 0.13, -0.14},  // 右下角
     {752, 0,   0.50, -0.32},  // 右上角

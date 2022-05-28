@@ -6,7 +6,7 @@
 namespace imgProc {
 namespace apriltag {
 
-void homography_compute2(float_t dst[3][3], float_t c[4][4]);
+void homography_compute2(float_t dst[3][3], const float_t c[4][4]);
 
 void homography_project(const float_t H[3][3], float_t x, float_t y, float_t* ox, float_t* oy);
 

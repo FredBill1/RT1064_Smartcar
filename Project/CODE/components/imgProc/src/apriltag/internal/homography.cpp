@@ -6,7 +6,7 @@
 namespace imgProc {
 namespace apriltag {
 
-void homography_compute2(float_t dst[3][3], float_t c[4][4]) {
+void homography_compute2(float_t dst[3][3], const float_t c[4][4]) {
     // clang-format off
     float_t A[]{
         c[0][0], c[0][1], 1,       0,       0, 0, -c[0][0]*c[0][2], -c[0][1]*c[0][2], c[0][2],
