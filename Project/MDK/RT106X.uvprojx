@@ -2634,6 +2634,11 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\testFindRect.cpp</FilePath>
             </File>
+            <File>
+              <FileName>testRectReceive.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\testRectReceive.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -5543,6 +5548,11 @@
               <FileName>testFindRect.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\testFindRect.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>testRectReceive.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\testRectReceive.cpp</FilePath>
             </File>
           </Files>
         </Group>

@@ -22,6 +22,7 @@ int main(void) {
     // motorControlNode();
 
     testFindRectNode();
+    // testRectReceiveNode();
     // testMotorNode();
     // testQTimerNode();
     // testMotorPwmNode();

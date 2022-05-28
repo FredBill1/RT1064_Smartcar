@@ -8,6 +8,7 @@ extern "C" {
 #include <cmath>
 
 #include "Camera.hpp"
+#include "apriltag/RectSender.hpp"
 #include "apriltag/apriltag.hpp"
 #include "apriltag/reconcileRects.hpp"
 #include "apriltag/undisort.hpp"
@@ -21,6 +22,7 @@ namespace apriltag {
 
 static void testFindRectEntry() {
     // AT_DTCM_SECTION_ALIGN(static uint8_t img[N * M], 64);
+    static RectSender rectSender(0xA5);
 
     int32_t pre_time = rt_tick_get();
 
@@ -35,6 +37,9 @@ static void testFindRectEntry() {
         if (visualize) plot_rects(img, rects, GREEN);
 
         reconcileRects(rects);
+
+        rectSender.send_to(rects, uart3);
+
         if (visualize) plot_rects(img, rects, RED);
 
         if (visualize) show_plot_grayscale(img);
