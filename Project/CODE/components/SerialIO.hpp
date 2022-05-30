@@ -191,8 +191,8 @@ class SerialIO {
         ((data = buf[i++]), ...);
         return true;
     }
-    template <typename T, size_t cnt, bool checkSum = true, typename U> bool getArr(U *data) {
-        T buf[cnt];
+    template <typename T, int max_cnt, bool checkSum = true, typename U> bool getArr(U *data, int cnt = max_cnt) {
+        T buf[max_cnt];
         if (!getTbuf<T, checkSum>(buf, cnt)) return false;
         for (size_t i = 0; i < cnt; ++i) data[i] = buf[i];
         return true;
