@@ -16,6 +16,12 @@ bool motorControlNode();
 // 卡尔曼滤波定位
 bool poseKalmanNode();
 
+// 主机接收从机数据
+bool uartMasterNode();
+
+// 主机的主循环
+bool mainLoopNode();
+
 // ^^^  src  ^^^
 // vvv tests vvv
 

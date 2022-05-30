@@ -54,7 +54,8 @@
                 "${workspaceFolder}\\Project\\CODE\\components\\controller\\inc",
                 "${workspaceFolder}\\Project\\CODE\\components\\pose_kalman\\inc",
                 "${workspaceFolder}\\Libraries\\TSP\\inc",
-                "${workspaceFolder}\\Project\\CODE\\components\\show_image\\inc"
+                "${workspaceFolder}\\Project\\CODE\\components\\show_image\\inc",
+                "${workspaceFolder}\\Project\\CODE\\components\\globalVars\\inc"
             ],
             "defines": [
                 "TSP_MAX_POINT_NUM=21",

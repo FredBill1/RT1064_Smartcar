@@ -11,4 +11,10 @@ class InterruptGuard {
     ~InterruptGuard() { rt_hw_interrupt_enable(level); }
 };
 
+class ScheduleGuard {
+ public:
+    ScheduleGuard() { rt_enter_critical(); }
+    ~ScheduleGuard() { rt_exit_critical(); }
+};
+
 #endif  // _InterruptGuard_hpp

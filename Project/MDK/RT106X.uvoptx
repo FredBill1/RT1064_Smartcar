@@ -6186,6 +6186,30 @@
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
+    <File>
+      <GroupNumber>33</GroupNumber>
+      <FileNumber>449</FileNumber>
+      <FileType>8</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\CODE\nodes\src\uartMaster.cpp</PathWithFileName>
+      <FilenameWithoutPath>uartMaster.cpp</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>33</GroupNumber>
+      <FileNumber>450</FileNumber>
+      <FileType>8</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\CODE\nodes\src\mainLoop.cpp</PathWithFileName>
+      <FilenameWithoutPath>mainLoop.cpp</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
   </Group>
 
   <Group>
@@ -6196,7 +6220,7 @@
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>34</GroupNumber>
-      <FileNumber>449</FileNumber>
+      <FileNumber>451</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -6208,7 +6232,7 @@
     </File>
     <File>
       <GroupNumber>34</GroupNumber>
-      <FileNumber>450</FileNumber>
+      <FileNumber>452</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -6220,7 +6244,7 @@
     </File>
     <File>
       <GroupNumber>34</GroupNumber>
-      <FileNumber>451</FileNumber>
+      <FileNumber>453</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -6232,7 +6256,7 @@
     </File>
     <File>
       <GroupNumber>34</GroupNumber>
-      <FileNumber>452</FileNumber>
+      <FileNumber>454</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -6244,7 +6268,7 @@
     </File>
     <File>
       <GroupNumber>34</GroupNumber>
-      <FileNumber>453</FileNumber>
+      <FileNumber>455</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -6256,7 +6280,7 @@
     </File>
     <File>
       <GroupNumber>34</GroupNumber>
-      <FileNumber>454</FileNumber>
+      <FileNumber>456</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -6268,7 +6292,7 @@
     </File>
     <File>
       <GroupNumber>34</GroupNumber>
-      <FileNumber>455</FileNumber>
+      <FileNumber>457</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -6280,7 +6304,7 @@
     </File>
     <File>
       <GroupNumber>34</GroupNumber>
-      <FileNumber>456</FileNumber>
+      <FileNumber>458</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -6292,7 +6316,7 @@
     </File>
     <File>
       <GroupNumber>34</GroupNumber>
-      <FileNumber>457</FileNumber>
+      <FileNumber>459</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -6304,7 +6328,7 @@
     </File>
     <File>
       <GroupNumber>34</GroupNumber>
-      <FileNumber>458</FileNumber>
+      <FileNumber>460</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -6316,7 +6340,7 @@
     </File>
     <File>
       <GroupNumber>34</GroupNumber>
-      <FileNumber>459</FileNumber>
+      <FileNumber>461</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -6328,7 +6352,7 @@
     </File>
     <File>
       <GroupNumber>34</GroupNumber>
-      <FileNumber>460</FileNumber>
+      <FileNumber>462</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -6340,7 +6364,7 @@
     </File>
     <File>
       <GroupNumber>34</GroupNumber>
-      <FileNumber>461</FileNumber>
+      <FileNumber>463</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -6352,13 +6376,33 @@
     </File>
     <File>
       <GroupNumber>34</GroupNumber>
-      <FileNumber>462</FileNumber>
+      <FileNumber>464</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\CODE\nodes\test\uartSlaveTest.cpp</PathWithFileName>
       <FilenameWithoutPath>uartSlaveTest.cpp</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+  </Group>
+
+  <Group>
+    <GroupName>globalVars</GroupName>
+    <tvExp>0</tvExp>
+    <tvExpOptDlg>0</tvExpOptDlg>
+    <cbSel>0</cbSel>
+    <RteFlg>0</RteFlg>
+    <File>
+      <GroupNumber>35</GroupNumber>
+      <FileNumber>465</FileNumber>
+      <FileType>8</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\CODE\components\globalVars\src\GlobalVars.cpp</PathWithFileName>
+      <FilenameWithoutPath>GlobalVars.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

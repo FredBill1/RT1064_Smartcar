@@ -10,7 +10,7 @@ int main(void);
 int main(void) {
     initDevices();
     // imu.init();
-    camera.init();
+    // camera.init();
     usb_cdc_init();
 
     EnableGlobalIRQ(0);  // 启用全局中断
@@ -20,8 +20,10 @@ int main(void) {
     // imgUSBXferNode();
     // apriltagDetectNode();
     // motorControlNode();
+    uartMasterNode();
+    mainLoopNode();
 
-    testFindRectNode();
+    // testFindRectNode();
     // testRectReceiveNode();
     // testMotorNode();
     // testQTimerNode();
