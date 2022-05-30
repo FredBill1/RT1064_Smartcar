@@ -46,11 +46,18 @@ static bool try_recv(SerialIO& uart) {
 }
 
 static void testRectReceiveEntry() {
+    static SerialIO::TxArr<float, max_rect_cnt, true> rect_tx(33, "rect_tx");
     for (;;) {
         if (try_recv(uart3)) {
             for (int i = 0; i < rect_cnt_copy; ++i) draw_rect(rects_copy[i], 0xffff);
             rect_cnt_copy = rect_cnt;
             rt_memcpy(rects_copy, rects, sizeof(float_t[2]) * rect_cnt);
+
+            if (rect_tx.txFinished()) {
+                rect_tx.setArr(rects[0], rect_cnt * 2);
+                wireless.send(rect_tx);
+            }
+
             for (int i = 0; i < rect_cnt_copy; ++i) draw_rect(rects_copy[i], RED);
         }
     }
