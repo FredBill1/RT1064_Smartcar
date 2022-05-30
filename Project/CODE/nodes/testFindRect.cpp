@@ -22,7 +22,7 @@ namespace apriltag {
 
 static void testFindRectEntry() {
     // AT_DTCM_SECTION_ALIGN(static uint8_t img[N * M], 64);
-    static RectSender rectSender(0xA5);
+    static RectSender rectSender(33);
 
     int32_t pre_time = rt_tick_get();
 

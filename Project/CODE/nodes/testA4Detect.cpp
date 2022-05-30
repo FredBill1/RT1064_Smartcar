@@ -16,7 +16,7 @@ namespace edge_detect {
 using namespace apriltag;
 
 static void testA4DetectEntry() {
-    static A4Sender sender(0xA4);
+    static A4Sender sender(32);
 
     int32_t pre_time = rt_tick_get();
 

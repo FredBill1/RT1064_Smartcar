@@ -28,7 +28,7 @@ class RectSender {
             writer.set(i * 2 + 1, r->c_proj[1]);
             ++i;
         }
-        buf[SerialIO::HeaderSize + 1] = i;
+        buf[SerialIO::HeaderSize + 1] = i * 2;
         xfer.setSize(SerialIO::HeaderSize + 2 + writer.getSize(i * 2));
         uart.send(xfer);
         return true;

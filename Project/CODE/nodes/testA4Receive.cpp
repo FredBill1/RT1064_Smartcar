@@ -5,11 +5,13 @@ extern "C" {
 }
 #include "devices.hpp"
 #include "edge_detect/A4Detect.hpp"
+#include "edge_detect/A4Sender.hpp"
 
+namespace imgProc {
+using apriltag::float_t;
+namespace edge_detect {
 static Beep beep;
 
-using imgProc::apriltag::float_t;
-using imgProc::edge_detect::target_coords_corr, imgProc::edge_detect::target_coords_cnt, imgProc::edge_detect::draw_corr;
 static uint8_t id;
 
 static decltype(target_coords_corr) coords;
@@ -20,7 +22,8 @@ static bool try_recv(SerialIO& uart) {
     beep.set(true);
     if (!uart.getchar(id)) return false;
     if (!uart.getchar(id)) return false;
-    target_coords_cnt = id;
+    target_coords_cnt = id / 2;
+    if (target_coords_cnt > target_coords_maxn) return false;
     for (int i = 0; i < target_coords_cnt * 2; ++i)
         if (!uart.getData<float>(((float_t*)target_coords_corr)[i])) return false;
     beep.set(false);
@@ -28,12 +31,14 @@ static bool try_recv(SerialIO& uart) {
 }
 
 static void testA4ReceiveEntry() {
+    static A4Sender sender(32);
     for (;;) {
         if (try_recv(uart3)) {
             draw_corr(coords, cnt, 7, 5, 0xffff);
             cnt = target_coords_cnt;
             rt_memcpy(coords[0], target_coords_corr[0], sizeof(target_coords_corr));
             draw_corr(coords, cnt, 7, 5);
+            sender.send_to(wireless);
 
             rt_kprintf("%d\r\n", target_coords_cnt);
             for (int i = 0; i < target_coords_cnt; ++i) {
@@ -45,5 +50,7 @@ static void testA4ReceiveEntry() {
         }
     }
 }
+}  // namespace edge_detect
+}  // namespace imgProc
 
-bool testA4ReceiveNode() { return FuncThread(testA4ReceiveEntry, "testA4Receive", 4096, 0); }
+bool testA4ReceiveNode() { return FuncThread(imgProc::edge_detect::testA4ReceiveEntry, "testA4Receive", 4096, 0); }

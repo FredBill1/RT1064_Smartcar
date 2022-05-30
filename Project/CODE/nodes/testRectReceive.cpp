@@ -37,7 +37,8 @@ static bool try_recv(SerialIO& uart) {
     beep.set(true);
     if (!uart.getchar(id)) return false;
     if (!uart.getchar(id)) return false;
-    rect_cnt = id;
+    rect_cnt = id / 2;
+    if (rect_cnt > max_rect_cnt) return false;
     for (int i = 0; i < rect_cnt * 2; ++i)
         if (!uart.getData<float>(((float_t*)rects)[i])) return false;
     beep.set(false);

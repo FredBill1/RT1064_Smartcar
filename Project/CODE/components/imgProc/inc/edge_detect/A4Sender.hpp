@@ -20,7 +20,7 @@ class A4Sender {
     bool send_to(SerialIO& uart, int32_t timeout_ms = 0) {
         if (!xfer.txFinished(timeout_ms)) return false;
         SerialIO::TxWirter<float> writer(buf + SerialIO::HeaderSize + 2);
-        buf[SerialIO::HeaderSize + 1] = target_coords_cnt;
+        buf[SerialIO::HeaderSize + 1] = target_coords_cnt * 2;
         xfer.setSize(SerialIO::HeaderSize + 2 + writer.getSize(target_coords_cnt * 2));
         writer.setArr((float_t*)target_coords_corr, target_coords_cnt * 2);
         uart.send(xfer);
