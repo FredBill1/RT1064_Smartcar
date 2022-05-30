@@ -7,17 +7,23 @@ bool wirelessNode();
 // apriltag检测, 需要初始化mt9v03x
 bool apriltagDetectNode();
 
-// 测试矩形检测, 需要初始化mt9v03x
-bool testFindRectNode();
-
-// 测试主机接收矩形检测结果
-bool testRectReceiveNode();
-
 // 上位机传图, 需要初始化usb_cdc和mt9v03x
 bool imgUSBXferNode();
 
 // 使用rtthread timer驱动的周期性电机转速控制
 bool motorControlNode();
+
+// 卡尔曼滤波定位
+bool poseKalmanNode();
+
+// ^^^  src  ^^^
+// vvv tests vvv
+
+// 测试矩形检测, 需要初始化mt9v03x
+bool testFindRectNode();
+
+// 测试主机接收矩形检测结果
+bool testRectReceiveNode();
 
 // 用按键和ips屏幕测试电机
 bool testMotorNode();
@@ -34,9 +40,6 @@ bool testKeyNode();
 // 主从机传输测试
 bool uartMasterTest();
 bool uartSlaveTest();
-
-// 卡尔曼滤波定位
-bool poseKalmanNode();
 
 // 测试卡尔曼滤波类
 bool testPoseKalmanNode();
