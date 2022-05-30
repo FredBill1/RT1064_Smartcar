@@ -5,7 +5,6 @@ extern "C" {
 }
 #include "devices.hpp"
 #include "edge_detect/A4Detect.hpp"
-#include "edge_detect/A4Sender.hpp"
 
 namespace imgProc {
 using apriltag::float_t;
@@ -31,14 +30,18 @@ static bool try_recv(SerialIO& uart) {
 }
 
 static void testA4ReceiveEntry() {
-    static A4Sender sender(32);
+    static SerialIO::TxArr<float, target_coords_maxn, true> a4_tx(32, "a4_tx");
+
     for (;;) {
         if (try_recv(uart3)) {
             draw_corr(coords, cnt, 7, 5, 0xffff);
             cnt = target_coords_cnt;
             rt_memcpy(coords[0], target_coords_corr[0], sizeof(target_coords_corr));
             draw_corr(coords, cnt, 7, 5);
-            sender.send_to(wireless);
+
+            a4_tx.txFinished(-1);
+            a4_tx.setArr(target_coords_corr[0], target_coords_cnt * 2);
+            wireless.send(a4_tx);
 
             rt_kprintf("%d\r\n", target_coords_cnt);
             for (int i = 0; i < target_coords_cnt; ++i) {

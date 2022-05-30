@@ -59,6 +59,40 @@ class SerialIO {
             for (int i = 0; i < cnt; ++i) set(i, arr[i]);
         }
     };
+    template <typename T, int max_cnt, bool withID = false, bool checkSum = true> class TxArr : public TxXfer {
+        uint8_t _data[HeaderSize + withID + 1 + max_cnt * (sizeof(T) + checkSum)];
+
+     public:
+        TxArr(const char *name) : TxXfer(_data, sizeof(_data), name) {
+            static_assert(!withID, "if `withID` is set `true`, you should specify the `id` using the other ctor");
+            applyHeader(_data);
+        }
+        TxArr(uint8_t id, const char *name = "xfer") : TxXfer(_data, sizeof(_data), name) {
+            static_assert(
+                withID,
+                "if `withID` is set `false`, you should not specify the `id` using this ctor, use the other ctor instead");
+            applyHeader(_data);
+            _data[HeaderSize] = id;
+        }
+        void set(int i, T val) {
+            uint8_t *buf = (uint8_t *)&val;
+            int I = HeaderSize + withID + 1 + i * (sizeof(T) + checkSum);
+            uint8_t &sum = _data[I + sizeof(T)];
+            if constexpr (checkSum) sum = 0;
+            for (int j = 0; j < sizeof(T); ++j) {
+                _data[I + j] = buf[j];
+                if constexpr (checkSum) sum += buf[j];
+            }
+        }
+        void setCnt(int cnt) {
+            _data[HeaderSize + withID] = cnt;
+            setSize(HeaderSize + withID + 1 + cnt * (sizeof(T) + checkSum));
+        }
+        template <typename U> inline void setArr(const U *arr, int cnt) {
+            setCnt(cnt);
+            for (int i = 0; i < cnt; ++i) set(i, arr[i]);
+        }
+    };
 
     template <typename T, int cnt, bool withID = false, bool checkSum = true> class TxUtil : public TxXfer {
      private:

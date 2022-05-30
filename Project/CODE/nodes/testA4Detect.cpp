@@ -8,7 +8,6 @@ extern "C" {
 #include "apriltag/visualization.hpp"
 #include "devices.hpp"
 #include "edge_detect/A4Detect.hpp"
-#include "edge_detect/A4Sender.hpp"
 #include "edge_detect/show_edge.hpp"
 
 namespace imgProc {
@@ -16,7 +15,7 @@ namespace edge_detect {
 using namespace apriltag;
 
 static void testA4DetectEntry() {
-    static A4Sender sender(32);
+    static SerialIO::TxArr<float, target_coords_maxn, true> a4_tx(32, "a4_tx");
 
     int32_t pre_time = rt_tick_get();
 
@@ -27,7 +26,11 @@ static void testA4DetectEntry() {
 
         if (enabled) {
             bool res = A4Detect(img, 7, 5, 50, 100);
-            if (res) sender.send_to(uart3);
+            if (res) {
+                a4_tx.txFinished(-1);
+                a4_tx.setArr(target_coords_corr[0], target_coords_cnt * 2);
+                uart3.send(a4_tx);
+            }
             show_edge(img);  // œ‘ æ±ﬂ‘µÕº∆¨
         } else {
             show_grayscale(img);  // œ‘ æª“∂»Õº
