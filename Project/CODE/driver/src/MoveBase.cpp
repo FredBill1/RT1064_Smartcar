@@ -1,10 +1,5 @@
 #include "MoveBase.hpp"
 
-enum class GoalEventFlag : rt_uint32_t {
-    reached = 1 << 0,   // 到达目标
-    disabled = 1 << 1,  // 设置禁用
-};
-
 MoveBase::MoveBase() {
     _goal.reached = true;
     rt_event_init(&_reachedEvent, "GoalReached", RT_IPC_FLAG_PRIO);
@@ -63,12 +58,13 @@ void MoveBase::send_state(const State& state) {
 bool MoveBase::get_state(State& new_state) { return _stateLoader.load(new_state); }
 bool MoveBase::get_yaw(pose_kalman::T& new_yaw) { return _yawLoader.load(new_yaw); }
 
-bool MoveBase::wait_for_result() {
-    if (!get_enabled()) return false;
+MoveBase::GoalEventFlag MoveBase::wait_for_result(rt_int32_t timeout) {
+    if (!get_enabled()) return GoalEventFlag::disabled;
     rt_uint32_t res;
-    rt_event_recv(&_reachedEvent, (rt_uint32_t)GoalEventFlag::reached | (rt_uint32_t)GoalEventFlag::disabled,
-                  RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR, RT_WAITING_FOREVER, &res);
-    return res == (rt_uint32_t)GoalEventFlag::reached;
+    if (rt_event_recv(&_reachedEvent, (rt_uint32_t)GoalEventFlag::reached | (rt_uint32_t)GoalEventFlag::disabled,
+                      RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR, timeout, &res) != RT_EOK)
+        return GoalEventFlag::timeout;
+    return res == (rt_uint32_t)GoalEventFlag::reached ? GoalEventFlag::reached : GoalEventFlag::disabled;
 }
 
 bool MoveBase::new_goal() {

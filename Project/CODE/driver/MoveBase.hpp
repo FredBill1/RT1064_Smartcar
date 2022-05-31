@@ -33,6 +33,11 @@ class MoveBase {
     rt_event _reachedEvent;
 
  public:
+    enum class GoalEventFlag : rt_uint32_t {
+        reached = 1 << 0,   // 到达目标
+        disabled = 1 << 1,  // 设置禁用
+        timeout = 1 << 2,   // 超时
+    };
     MoveBase();
     void set_enabled(bool enabled);
     bool get_enabled();
@@ -44,7 +49,7 @@ class MoveBase {
     void send_state(const State& state);
     bool get_state(State& new_state);
     bool get_yaw(pose_kalman::T& new_yaw);
-    bool wait_for_result();
+    GoalEventFlag wait_for_result(rt_int32_t timeout = RT_WAITING_FOREVER);
     bool get_reached();
     bool new_goal();
 };
