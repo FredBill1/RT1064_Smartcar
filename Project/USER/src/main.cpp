@@ -19,9 +19,13 @@ int main(void) {
 
     // imgUSBXferNode();
     // apriltagDetectNode();
-    // motorControlNode();
+    motorControlNode();
     uartMasterNode();
     mainLoopNode();
+    poseKalmanNode();
+
+    moveBase.set_enabled(true);
+    baseDriver.setControlState(1, 1, 1, 1);
 
     // testFindRectNode();
     // testRectReceiveNode();
@@ -36,12 +40,6 @@ int main(void) {
     // testCannyNode();
     // testA4DetectNode();
     // testA4ReceiveNode();
-
-    // poseKalmanNode();
-
-    // moveBase.set_enabled(true);
-    // baseDriver.setControlState(1, 1, 1, 1);
-
     // uartMasterTest();
     // uartSlaveTest();
 
