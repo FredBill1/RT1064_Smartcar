@@ -115,7 +115,7 @@ static inline void Navigation() {
                        std::atan2(coords[cur][1] - coords[pre][1], coords[cur][0] - coords[pre][0]));
 }
 
-static void mainLoopEntry() {
+static void masterMainLoopEntry() {
     currentState = CurrentState::RESET;
     for (;;) {
         ips114_showint8(188, 4, (int)currentState);
@@ -130,4 +130,4 @@ static void mainLoopEntry() {
     }
 }
 
-bool mainLoopNode() { return FuncThread(mainLoopEntry, "mainLoop", 4096); }
+bool masterMainLoopNode() { return FuncThread(masterMainLoopEntry, "masterMainLoop", 4096); }

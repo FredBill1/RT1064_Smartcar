@@ -20,7 +20,7 @@ bool poseKalmanNode();
 bool uartMasterNode();
 
 // 主机的主循环
-bool mainLoopNode();
+bool masterMainLoopNode();
 
 // ^^^  src  ^^^
 // vvv tests vvv

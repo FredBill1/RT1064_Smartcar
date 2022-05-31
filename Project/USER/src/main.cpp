@@ -17,12 +17,12 @@ int main(void) {
     EnableGlobalIRQ(0);  // 启用全局中断
     // show_image::koishi();
 
-    MCU_MASTER wirelessNode();
-
     // MCU_SLAVE imgUSBXferNode();
+
+    MCU_MASTER wirelessNode();
     MCU_MASTER motorControlNode();
     MCU_MASTER uartMasterNode();
-    MCU_MASTER mainLoopNode();
+    MCU_MASTER masterMainLoopNode();
     MCU_MASTER poseKalmanNode();
 
     MCU_MASTER moveBase.set_enabled(true);

@@ -2790,9 +2790,9 @@
               <FilePath>..\CODE\nodes\src\uartMaster.cpp</FilePath>
             </File>
             <File>
-              <FileName>mainLoop.cpp</FileName>
+              <FileName>masterMainLoop.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\CODE\nodes\src\mainLoop.cpp</FilePath>
+              <FilePath>..\CODE\nodes\src\masterMainLoop.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -5804,9 +5804,9 @@
               <FilePath>..\CODE\nodes\src\uartMaster.cpp</FilePath>
             </File>
             <File>
-              <FileName>mainLoop.cpp</FileName>
+              <FileName>masterMainLoop.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\CODE\nodes\src\mainLoop.cpp</FilePath>
+              <FilePath>..\CODE\nodes\src\masterMainLoop.cpp</FilePath>
             </File>
           </Files>
         </Group>
