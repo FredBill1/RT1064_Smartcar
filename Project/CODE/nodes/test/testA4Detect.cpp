@@ -15,7 +15,7 @@ namespace edge_detect {
 using namespace apriltag;
 
 static void testA4DetectEntry() {
-    static SerialIO::TxArr<float, target_coords_maxn, true> a4_tx(32, "a4_tx");
+    static SerialIO::TxArr<float, target_coords_maxn * 2, true> a4_tx(32, "a4_tx");
 
     int32_t pre_time = rt_tick_get();
 

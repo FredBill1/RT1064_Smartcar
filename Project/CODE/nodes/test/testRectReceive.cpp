@@ -46,7 +46,7 @@ static bool try_recv(SerialIO& uart) {
 }
 
 static void testRectReceiveEntry() {
-    static SerialIO::TxArr<float, max_rect_cnt, true> rect_tx(33, "rect_tx");
+    static SerialIO::TxArr<float, max_rect_cnt * 2, true> rect_tx(33, "rect_tx");
     for (;;) {
         if (try_recv(uart3)) {
             for (int i = 0; i < rect_cnt_copy; ++i) draw_rect(rects_copy[i], 0xffff);

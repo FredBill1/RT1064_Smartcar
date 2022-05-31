@@ -30,7 +30,7 @@ static bool try_recv(SerialIO& uart) {
 }
 
 static void testA4ReceiveEntry() {
-    static SerialIO::TxArr<float, target_coords_maxn, true> a4_tx(32, "a4_tx");
+    static SerialIO::TxArr<float, target_coords_maxn * 2, true> a4_tx(32, "a4_tx");
 
     for (;;) {
         if (try_recv(uart3)) {
