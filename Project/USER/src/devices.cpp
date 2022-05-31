@@ -1,5 +1,6 @@
 #include "devices.hpp"
 
+#include "MCU_ID.hpp"
 #include "parameters.hpp"
 
 SerialIO uart2(UART2_CONFIG);
@@ -65,49 +66,49 @@ MoveBase moveBase;
 
 void initDevices() {
     // motor pwm
-    motorDrvL1.init();
-    motorDrvL2.init();
-    motorDrvR1.init();
-    motorDrvR2.init();
+    MCU_MASTER {
+        motorDrvL1.init();
+        motorDrvL2.init();
+        motorDrvR1.init();
+        motorDrvR2.init();
+    }
 
     rt_thread_mdelay(500);
-    systick.init();
+    MCU_BOTH systick.init();
 
     // screen
-    ips.init();
+    MCU_BOTH ips.init();
 
     // serial
-    uart2.init();
-    uart3.init();
-    uart4.init();
-    uart5.init();
-    wireless.init();
+    MCU_BOTH uart3.init();
+    MCU_MASTER uart2.init();
+    MCU_MASTER uart4.init();
+    MCU_MASTER uart5.init();
+    MCU_MASTER wireless.init();
 
     // gpio
-    led.init(false);
-    beep_io.init(false);
-    // btn_c4.init(true);
-    // btn_c26.init(true);
-    // btn_c27.init(true);
-    // btn_c31.init(true);
-    // switch_d27.init(true);
-    // switch_d4.init(true);
-    for (auto& gpio : master_key) gpio.init(true);
-    for (auto& gpio : master_switch) gpio.init(true);
-    for (auto& gpio : slave_key) gpio.init(true);
-    for (auto& gpio : slave_switch) gpio.init(true);
+    MCU_BOTH led.init(false);
+    MCU_MASTER beep_io.init(false);
+    MCU_MASTER for (auto& gpio : master_key) gpio.init(true);
+    MCU_MASTER for (auto& gpio : master_switch) gpio.init(true);
+    MCU_SLAVE for (auto& gpio : slave_key) gpio.init(true);
+    MCU_SLAVE for (auto& gpio : slave_switch) gpio.init(true);
 
     // qtimer
-    qtimerL1.init();
-    qtimerL2.init();
-    qtimerR1.init();
-    qtimerR2.init();
+    MCU_MASTER {
+        qtimerL1.init();
+        qtimerL2.init();
+        qtimerR1.init();
+        qtimerR2.init();
+    }
 
     // encoder
-    encoderL1.init();
-    encoderL2.init();
-    encoderR1.init();
-    encoderR2.init();
+    MCU_MASTER {
+        encoderL1.init();
+        encoderL2.init();
+        encoderR1.init();
+        encoderR2.init();
+    }
 
     ips.puts("Initialization Complete.");
 }
