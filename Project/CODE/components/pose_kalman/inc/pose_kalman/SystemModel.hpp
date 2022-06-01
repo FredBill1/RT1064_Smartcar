@@ -67,7 +67,7 @@ class SystemModel : public Kalman::LinearizedSystemModel<State, Control, Kalman:
         // relative to dt
         this->W.diagonal().setConstant(sqrt(dt));
         if constexpr (useDynamicProcessNoiseCovariance)
-            this->W.diagonal().segment(S::VELOCITY_POS, S::VELOCITY_SIZE) *= x.segment(S::VELOCITY_POS, S::VELOCITY_SIZE).norm();
+            this->W.diagonal().segment(S::VELOCITY_POS, S::VELOCITY_SIZE) *= x.velocityNorm();
     }
 };
 }  // namespace pose_kalman

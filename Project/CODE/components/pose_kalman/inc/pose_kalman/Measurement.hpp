@@ -9,7 +9,23 @@
 #include "pose_kalman/config.hpp"
 
 namespace pose_kalman {
-template <bool _x, bool _y, bool _yaw, bool _vX, bool _vY, bool _vYaw> struct Measurement {
+
+struct DefaultMeasurementNoiseJacobianUpdater {
+    template <typename NoiseJacobianType> void operator()(const State& x, NoiseJacobianType& V) const {
+        (void)x;
+        (void)V;
+    }
+};
+// Just for example. Don't use.
+struct VelocityBasedMeasurementNoiseJacobianUpdater {
+    template <typename NoiseJacobianType> void operator()(const State& x, NoiseJacobianType& V) const {
+        V.diagonal().setConstant(x.velocityNorm());
+    }
+};
+
+template <bool _x, bool _y, bool _yaw, bool _vX, bool _vY, bool _vYaw,
+          typename NoiseJacobianUpdater = DefaultMeasurementNoiseJacobianUpdater>
+struct Measurement {
     static constexpr bool X = _x, Y = _y, YAW = _yaw, V_X = _vX, V_Y = _vY, V_YAW = _vYaw;
     static constexpr int SIZE = _x + _y + _yaw + _vX + _vY + _vYaw;
     class Data : public Kalman::Vector<T, SIZE> {
@@ -77,6 +93,8 @@ template <bool _x, bool _y, bool _yaw, bool _vX, bool _vY, bool _vYaw> struct Me
         }
     };
 
+    using NoiseJacobian = Kalman::Jacobian<Data, Data>;
+
     class Model : public Kalman::LinearizedMeasurementModel<State, Data, Kalman::SquareRootBase> {
      public:
         //! State type shortcut definition
@@ -104,6 +122,8 @@ template <bool _x, bool _y, bool _yaw, bool _vX, bool _vY, bool _vYaw> struct Me
             if constexpr (_vYaw) measurement.vYaw() = x.vYaw();
             return measurement;
         }
+
+        void updateJacobians(const State& x) { NoiseJacobianUpdater()(x, this->V); }
     };
 };
 }  // namespace pose_kalman

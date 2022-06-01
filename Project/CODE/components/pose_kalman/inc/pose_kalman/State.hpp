@@ -34,6 +34,8 @@ class State : public Kalman::Vector<T, 6> {
     T& vX() { return (*this)[V_X]; }
     T& vY() { return (*this)[V_Y]; }
     T& vYaw() { return (*this)[V_YAW]; }
+
+    T velocityNorm() const { return segment(VELOCITY_POS, VELOCITY_SIZE).norm(); }
 };
 }  // namespace pose_kalman
 
