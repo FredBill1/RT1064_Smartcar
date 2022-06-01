@@ -27,24 +27,17 @@ static TSP::TSP_Solver tsp;
 
 constexpr int mainloop_timeout = 500;
 
-enum class CurrentState {
-    IDLE,
-    RESET,
-    GET_COORDS,
-    SOLVE_TSP,
-    NAVIGATION,
-};
-
-static CurrentState currentState;
-
 static constexpr float borderWidth = 7, borderHeight = 5;
 constexpr float tsp_k = std::min((M / 4) / borderWidth, (N / 4) / borderHeight);
 
 static inline void Reset() {
+    MoveBase::State state(systick.get_us(), 0, 0, 0, 0, 0, 0);
+    moveBase.send_set_state(state);
+
     ips114_clear(WHITE);
     navigationStarted = false;
     // TODO: 让从机也重置
-    currentState = CurrentState::GET_COORDS;
+    masterGlobalVars.set_state(MasterGlobalVars::GET_COORDS);
 }
 
 static inline void sendCoords() {
@@ -61,7 +54,7 @@ static inline void GetCoords() {
     sendCoords();
     draw_corr(coords, coords_cnt, 7, 5);
 
-    currentState = CurrentState::SOLVE_TSP;
+    masterGlobalVars.set_state(MasterGlobalVars::SOLVE_TSP);
 }
 
 static inline float calcDist(const float a[2], const float b[2]) {
@@ -89,7 +82,7 @@ static inline void SolveTSP() {
                  [](int x, int y) { ips114_drawpoint(x, N / 4 - y, ips.Red); });
     }
 
-    currentState = CurrentState::NAVIGATION;
+    masterGlobalVars.set_state(MasterGlobalVars::NAVIGATION);
 }
 
 static inline void Navigation() {
@@ -100,12 +93,12 @@ static inline void Navigation() {
         auto result = moveBase.wait_for_result(mainloop_timeout);
         switch (result) {
         case MoveBase::GoalEventFlag::timeout: return;
-        case MoveBase::GoalEventFlag::disabled: currentState = CurrentState::IDLE; return;
+        case MoveBase::GoalEventFlag::disabled: masterGlobalVars.set_state(MasterGlobalVars::IDLE); return;
         default: break;
         }
     }
     if (++currentTarget > coords_cnt) {
-        currentState = CurrentState::IDLE;
+        masterGlobalVars.set_state(MasterGlobalVars::IDLE);
         return;
     }
     MoveBase::State state;
@@ -117,17 +110,21 @@ static inline void Navigation() {
     moveBase.send_goal(x - dist * std::cos(yaw), y - dist * std::sin(yaw), yaw);
 }
 
+static inline void Idle() {
+    if (master_key[0].pressing()) { masterGlobalVars.set_state(MasterGlobalVars::RESET); }
+}
+
 static void masterMainLoopEntry() {
-    currentState = CurrentState::RESET;
     for (;;) {
-        ips114_showint8(188, 4, (int)currentState);
-        switch (currentState) {
-        case CurrentState::IDLE: break;
-        case CurrentState::RESET: Reset(); break;
-        case CurrentState::GET_COORDS: GetCoords(); break;
-        case CurrentState::SOLVE_TSP: SolveTSP(); break;
-        case CurrentState::NAVIGATION: Navigation(); break;
-        default: currentState = CurrentState::RESET; break;
+        auto state = masterGlobalVars.get_state();
+        ips114_showstr(188, 4, masterGlobalVars.state_str(state));
+        switch (state) {
+        case MasterGlobalVars::IDLE: Idle(); break;
+        case MasterGlobalVars::RESET: Reset(); break;
+        case MasterGlobalVars::GET_COORDS: GetCoords(); break;
+        case MasterGlobalVars::SOLVE_TSP: SolveTSP(); break;
+        case MasterGlobalVars::NAVIGATION: Navigation(); break;
+        default: masterGlobalVars.set_state(MasterGlobalVars::IDLE); break;
         }
     }
 }

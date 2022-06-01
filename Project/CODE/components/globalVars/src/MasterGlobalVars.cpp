@@ -26,4 +26,25 @@ void MasterGlobalVars::get_coord_recv() {
     rt_memcpy(coords + 1, target_coords_corr, sizeof(target_coords_corr[0]) * coords_cnt);
 }
 
+MasterGlobalVars::State MasterGlobalVars::get_state() const {
+    InterruptGuard guard;
+    return _state;
+}
+
+void MasterGlobalVars::set_state(State state) {
+    InterruptGuard guard;
+    _state = state;
+}
+
+const char* MasterGlobalVars::state_str(State state) {
+    switch (state) {
+    case IDLE: return "IDLE";
+    case RESET: return "RST ";
+    case GET_COORDS: return "GETC";
+    case SOLVE_TSP: return "TSP ";
+    case NAVIGATION: return "NAV ";
+    }
+    return "NULL";
+}
+
 MasterGlobalVars masterGlobalVars;
