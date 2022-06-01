@@ -109,10 +109,13 @@ static inline void Navigation() {
         currentState = CurrentState::IDLE;
         return;
     }
-    int cur = currentTarget < coords_cnt ? currentTarget : 0, pre = currentTarget - 1;
-    cur = tsp.hamilton_path[cur], pre = tsp.hamilton_path[pre];
-    moveBase.send_goal(coords[cur][0], coords[cur][1],
-                       std::atan2(coords[cur][1] - coords[pre][1], coords[cur][0] - coords[pre][0]));
+    MoveBase::State state;
+    moveBase.get_state(state);
+    int cur = currentTarget < coords_cnt ? currentTarget : 0;
+    cur = tsp.hamilton_path[cur];
+    float x = coords[cur][0], y = coords[cur][1], yaw = std::atan2(y - state.y(), x - state.x());
+    constexpr float dist = 0.2;
+    moveBase.send_goal(x - dist * std::cos(yaw), y - dist * std::sin(yaw), yaw);
 }
 
 static void masterMainLoopEntry() {

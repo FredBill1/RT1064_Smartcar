@@ -20,6 +20,18 @@ class MoveBase {
         State(uint64_t timestamp_us, const pose_kalman::T* state);
         State(uint64_t timestamp_us, pose_kalman::T x = 0, pose_kalman::T y = 0, pose_kalman::T yaw = 0, pose_kalman::T vX = 0,
               pose_kalman::T vY = 0, pose_kalman::T vYaw = 0);
+        pose_kalman::T& x() { return state[0]; }
+        pose_kalman::T& y() { return state[1]; }
+        pose_kalman::T& yaw() { return state[2]; }
+        pose_kalman::T& vX() { return state[3]; }
+        pose_kalman::T& vY() { return state[4]; }
+        pose_kalman::T& vYaw() { return state[5]; }
+        pose_kalman::T x() const { return state[0]; }
+        pose_kalman::T y() const { return state[1]; }
+        pose_kalman::T yaw() const { return state[2]; }
+        pose_kalman::T vX() const { return state[3]; }
+        pose_kalman::T vY() const { return state[4]; }
+        pose_kalman::T vYaw() const { return state[5]; }
     };
 
  private:
@@ -31,6 +43,7 @@ class MoveBase {
     FakeAtomicLoader<State> _stateLoader;
     FakeAtomicLoader<pose_kalman::T> _yawLoader;
     rt_event _reachedEvent;
+    State _state;
 
  public:
     enum class GoalEventFlag : rt_uint32_t {
@@ -46,8 +59,11 @@ class MoveBase {
     const Goal& get_goal();
     void set_reached(bool reached = true);
     void send_reached(bool reached = true);
+    void send_set_state(const State& state);
+    bool get_set_state(State& new_state);
+    void send_state(uint64_t timestamp_us, const pose_kalman::T* state);
     void send_state(const State& state);
-    bool get_state(State& new_state);
+    void get_state(State& state) const;
     bool get_yaw(pose_kalman::T& new_yaw);
     GoalEventFlag wait_for_result(rt_int32_t timeout = RT_WAITING_FOREVER);
     bool get_reached();

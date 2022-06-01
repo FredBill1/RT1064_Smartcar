@@ -95,12 +95,13 @@ static void poseKalmanEntry() {
     kf.setEnabled(true);
     for (;;) {
         MoveBase::State set_state;
-        if (moveBase.get_state(set_state))
+        if (moveBase.get_set_state(set_state))
             kf.enqueMeasurement(MeasurementType::SetState, set_state.state, set_state.timestamp_us);
 
         uint64_t timestamp_us = systick.get_us();
         kf.update(timestamp_us);
         const T* state = kf.getState();
+        moveBase.send_state(timestamp_us, state);
         runLocalPlanner(state);
 
         if (pose_tx.txFinished()) {

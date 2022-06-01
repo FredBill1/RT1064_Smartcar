@@ -134,7 +134,7 @@ static inline void SendState() {
     if (!wireless.getArr<float, 6>(state.state)) return;
     beep.set(false);
     state.timestamp_us = systick.get_us();
-    moveBase.send_state(state);
+    moveBase.send_set_state(state);
 }
 
 static inline void SetLocalPlannerParam() {
