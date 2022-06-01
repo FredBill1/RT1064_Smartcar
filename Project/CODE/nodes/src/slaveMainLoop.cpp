@@ -88,7 +88,7 @@ static inline void FindRect() {
 
     reconcileRects(rects);
 
-    if (!rects.empty()) rectSender.send_to(rects, uart3);
+    rectSender.send_to(rects, uart3);
 
     if (visualize) {
         plot_rects(img, rects, RED);
