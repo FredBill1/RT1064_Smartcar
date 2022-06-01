@@ -2875,9 +2875,9 @@
           <GroupName>globalVars</GroupName>
           <Files>
             <File>
-              <FileName>GlobalVars.cpp</FileName>
+              <FileName>MasterGlobalVars.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\CODE\components\globalVars\src\GlobalVars.cpp</FilePath>
+              <FilePath>..\CODE\components\globalVars\src\MasterGlobalVars.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -5889,9 +5889,9 @@
           <GroupName>globalVars</GroupName>
           <Files>
             <File>
-              <FileName>GlobalVars.cpp</FileName>
+              <FileName>MasterGlobalVars.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\CODE\components\globalVars\src\GlobalVars.cpp</FilePath>
+              <FilePath>..\CODE\components\globalVars\src\MasterGlobalVars.cpp</FilePath>
             </File>
           </Files>
         </Group>

@@ -1,11 +1,11 @@
-#ifndef _globalVars_globalVars_hpp
-#define _globalVars_globalVars_hpp
+#ifndef _globalVars_MasterGlobalVars_hpp
+#define _globalVars_MasterGlobalVars_hpp
 
 #include <rtthread.h>
 
-class GlobalVars {
+class MasterGlobalVars {
  public:
-    GlobalVars();
+    MasterGlobalVars();
 
  private:
     rt_event coord_recv_event;
@@ -16,6 +16,6 @@ class GlobalVars {
     void get_coord_recv(int& cnt, float* coords);
 };
 
-extern GlobalVars globalVars;
+extern MasterGlobalVars masterGlobalVars;
 
-#endif  // _globalVars_globalVars_hpp
+#endif  // _globalVars_MasterGlobalVars_hpp

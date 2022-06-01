@@ -3,7 +3,7 @@
 extern "C" {
 #include "SEEKFREE_IPS114_SPI.h"
 }
-#include "GlobalVars.hpp"
+#include "MasterGlobalVars.hpp"
 #include "RectConfig.hpp"
 #include "bresenham.hpp"
 #include "devices.hpp"
@@ -27,7 +27,7 @@ static inline void recvCoords() {
     if (cnt_tmp > target_coords_maxn) return;
     if (!slave_uart.getArr<float, target_coords_maxn * 2>(coords_tmp[0], cnt_tmp * 2)) return;
     beep.set(false);
-    globalVars.send_coord_recv(cnt_tmp, coords_tmp[0]);
+    masterGlobalVars.send_coord_recv(cnt_tmp, coords_tmp[0]);
 }
 
 static inline void recvRect() {

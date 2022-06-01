@@ -6,7 +6,7 @@ extern "C" {
 #include <algorithm>
 #include <cmath>
 
-#include "GlobalVars.hpp"
+#include "MasterGlobalVars.hpp"
 #include "RectConfig.hpp"
 #include "TSP/TSP.hpp"
 #include "bresenham.hpp"
@@ -55,9 +55,9 @@ static inline void sendCoords() {
 }
 
 static inline void GetCoords() {
-    if (!globalVars.wait_for_coord_recv(mainloop_timeout)) return;
+    if (!masterGlobalVars.wait_for_coord_recv(mainloop_timeout)) return;
 
-    globalVars.get_coord_recv(coords_cnt, coords[1]);
+    masterGlobalVars.get_coord_recv(coords_cnt, coords[1]);
     ++coords_cnt;
     sendCoords();
     draw_corr(coords, coords_cnt, 7, 5);
