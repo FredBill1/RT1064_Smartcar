@@ -80,7 +80,7 @@ void PoseKalman::setState(const T stateData[], uint64_t timestamp_us) {
     if (!getEnabled()) {
         State x = MapAsConst<State>(stateData);
         pimpl->kf.init(x);
-        // pimpl->kf.setCovariance(SMALL_COV);
+        pimpl->kf.setCovariance(SMALL_COV);
     } else {
         enqueMeasurement(MeasurementType::SetState, stateData, timestamp_us);
     }
@@ -174,9 +174,11 @@ void PoseKalman::update(uint64_t timestamp_us) {
         }
     }
     dt = systick.get_diff_us(pimpl->lastPredict_us, timestamp_us);
-    u.dt() = dt * 1e-6;
-    pimpl->kf.predict(pimpl->sys, u);
-    pimpl->lastPredict_us = timestamp_us;
+    if (dt > 0) {
+        u.dt() = dt * 1e-6;
+        pimpl->kf.predict(pimpl->sys, u);
+        pimpl->lastPredict_us = timestamp_us;
+    }
 }
 
 const T* PoseKalman::getState() const { return pimpl->kf.getState().data(); }

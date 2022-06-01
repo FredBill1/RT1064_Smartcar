@@ -43,6 +43,13 @@ static inline void setupYawCovariance() {
     kf.setMeasurementCovariance(MeasurementType::Yaw, yawCov[0]);
 }
 
+static inline void setupRectCovariance() {
+    T rectCov[2][2]{0};
+    rectCov[0][0] = rect_xy_sigma2;
+    rectCov[1][1] = rect_xy_sigma2;
+    kf.setMeasurementCovariance(MeasurementType::Rect, rectCov[0]);
+}
+
 static inline void setupPredictCovariance() {
     T predictCov[6][6]{0};
     predictCov[0][0] = 0.1;
@@ -84,12 +91,17 @@ static void runLocalPlanner(const T state[6]) {
 static void poseKalmanEntry() {
     static SerialIO::TxUtil<float, 6, true> pose_tx("pose", 30);
     static SerialIO::TxUtil<float, 1, true> timestamp_tx("timestamp", 23);
+
     setupSystemCovariance();
-    setupSetStateCovariance();
+
     setupOdomCovariance();
     setupGyroCovariance();
     setupYawCovariance();
-    // setupPredictCovariance();
+    setupRectCovariance();
+    setupSetStateCovariance();
+
+    setupPredictCovariance();
+
     setInitialState();
     rt_thread_mdelay(100);
     kf.setEnabled(true);
