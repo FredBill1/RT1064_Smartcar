@@ -27,7 +27,7 @@ void show_threshim(const QuadImg_t& img) {
     ips114_set_region(0, 0, M / 4 - 1, N / 4 - 1);
     rep(i, 0, N / 4) rep(j, 0, M / 4) {
         uint16_t color;
-        switch (img(i * 2, j * 2)) {
+        switch (img(i * (4 / quad_decimate), j * (4 / quad_decimate))) {
         case 0: color = BLACK; break;
         case 1: color = GRAY; break;
         case 2: color = RED; break;
