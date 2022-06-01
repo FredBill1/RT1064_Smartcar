@@ -2799,6 +2799,11 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\src\slaveMainLoop.cpp</FilePath>
             </File>
+            <File>
+              <FileName>uartSlave.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\src\uartSlave.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2883,6 +2888,11 @@
               <FileName>MasterGlobalVars.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\components\globalVars\src\MasterGlobalVars.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>SlaveGlobalVars.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\globalVars\src\SlaveGlobalVars.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -5818,6 +5828,11 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\src\slaveMainLoop.cpp</FilePath>
             </File>
+            <File>
+              <FileName>uartSlave.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\src\uartSlave.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -5902,6 +5917,11 @@
               <FileName>MasterGlobalVars.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\components\globalVars\src\MasterGlobalVars.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>SlaveGlobalVars.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\globalVars\src\SlaveGlobalVars.cpp</FilePath>
             </File>
           </Files>
         </Group>

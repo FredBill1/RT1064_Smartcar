@@ -133,6 +133,24 @@ class SerialIO {
         static constexpr size_t size() { return sizeof(_data); }
     };
 
+    template <bool withID = false> class TxFlag : public TxXfer {
+        uint8_t _data[HeaderSize + withID + 1];
+
+     public:
+        TxFlag(const char *name) : TxXfer(_data, sizeof(_data), name) {
+            static_assert(!withID, "if `withID` is set `true`, you should specify the `id` using the other ctor");
+            applyHeader(_data);
+        }
+        TxFlag(const char *name, uint8_t id) : TxXfer(_data, sizeof(_data), name) {
+            static_assert(
+                withID,
+                "if `withID` is set `false`, you should not specify the `id` using this ctor, use the other ctor instead");
+            applyHeader(_data);
+            _data[HeaderSize] = id;
+        }
+        void set(uint8_t flag) { _data[HeaderSize + withID] = flag; }
+    };
+
  private:
     const UARTN_enum _uartn;
     const uint32_t _baud;

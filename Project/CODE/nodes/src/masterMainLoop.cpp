@@ -8,6 +8,7 @@ extern "C" {
 
 #include "MasterGlobalVars.hpp"
 #include "RectConfig.hpp"
+#include "SlaveGlobalVars.hpp"
 #include "TSP/TSP.hpp"
 #include "bresenham.hpp"
 #include "devices.hpp"
@@ -25,18 +26,28 @@ static int currentTarget;
 #define debug_ips(s) ips114_showstr(188, 4, s)
 static TSP::TSP_Solver tsp;
 
+#define slave_uart uart3
+
 constexpr int mainloop_timeout = 500;
 
 static constexpr float borderWidth = 7, borderHeight = 5;
 constexpr float tsp_k = std::min((M / 4) / borderWidth, (N / 4) / borderHeight);
 
+static inline void sendTask(SlaveGlobalVars::State task, bool blocking = false) {
+    static SerialIO::TxFlag<true> task_tx("task_tx", 255);
+    if (task_tx.txFinished(blocking ? -1 : 0)) {
+        task_tx.set(task);
+        slave_uart.send(task_tx);
+    }
+}
+
 static inline void Reset() {
+    sendTask(SlaveGlobalVars::RESET);
     MoveBase::State state(systick.get_us(), 0, 0, 0, 0, 0, 0);
     moveBase.send_set_state(state);
 
     ips114_clear(WHITE);
     navigationStarted = false;
-    // TODO: 让从机也重置
     masterGlobalVars.set_state(MasterGlobalVars::GET_COORDS);
 }
 
@@ -49,6 +60,7 @@ static inline void sendCoords() {
 
 static inline void GetCoords() {
     if (!masterGlobalVars.wait_for_coord_recv(mainloop_timeout)) return;
+    sendTask(SlaveGlobalVars::RECT);
 
     masterGlobalVars.get_coord_recv();
     sendCoords();

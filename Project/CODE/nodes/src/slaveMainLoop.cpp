@@ -18,27 +18,64 @@ extern "C" {
 #include "edge_detect/show_edge.hpp"
 //
 #include "RectConfig.hpp"
+#include "SlaveGlobalVars.hpp"
 
 using namespace imgProc;
 using namespace imgProc::apriltag;
 using namespace imgProc::edge_detect;
 
+#define SWITCH_SKIP                         \
+    {                                       \
+        if (slave_switch[2].get()) {        \
+            ips114_showstr(188, 6, "SKIP"); \
+            show_grayscale(img);            \
+            return;                         \
+        } else                              \
+            ips114_showstr(188, 6, "    "); \
+    }
+
 static int32_t pre_time;
 static uint8_t* img;
+static int A4_pre_cnt = -1, A4_cnt_same = 0;
+
+static inline void Reset() {
+    ips114_clear(WHITE);
+    slaveGlobalVars.set_state(SlaveGlobalVars::A4_PREPARE);
+}
+
+static inline void A4Prepare() {
+    SWITCH_SKIP;
+    A4Detect(img, 7, 5, 50, 100);
+    show_edge(img);
+    if (slave_key[0].pressing()) {
+        slaveGlobalVars.set_state(SlaveGlobalVars::A4);
+        A4_pre_cnt = -1;
+    }
+}
 
 static inline void A4Detect() {
+    SWITCH_SKIP;
     static SerialIO::TxArr<float, target_coords_maxn * 2, true> a4_tx(32, "a4_tx");
 
     bool res = A4Detect(img, 7, 5, 50, 100);
-    if (res) {
-        a4_tx.txFinished(-1);
-        a4_tx.setArr(target_coords_corr[0], target_coords_cnt * 2);
-        uart3.send(a4_tx);
+    if (!res) A4_pre_cnt = -1;
+
+    if (target_coords_cnt == A4_pre_cnt) {
+        if (++A4_cnt_same >= 3) {
+            A4_cnt_same = 3;
+            a4_tx.txFinished(-1);
+            a4_tx.setArr(target_coords_corr[0], target_coords_cnt * 2);
+            uart3.send(a4_tx);
+        }
+    } else {
+        A4_pre_cnt = target_coords_cnt, A4_cnt_same = 1;
     }
+
     show_edge(img);  // 显示边缘图片
 }
 
 static inline void FindRect() {
+    SWITCH_SKIP;
     static RectSender rectSender(33);
 
     // bool show_thresh = slave_key[0].get();  // 是否显示二值化图
@@ -59,17 +96,24 @@ static inline void FindRect() {
     }
 }
 
+static inline void Idle() { show_grayscale(img); }
+
 static void slaveMainLoopEntry() {
     int32_t pre_time = rt_tick_get();
 
     for (;;) {
         img = camera.snapshot();
 
-        if (slave_switch[2].get()) {
-            show_grayscale(img);
-        } else {
-            A4Detect();
-            // FindRect();
+        auto state = slaveGlobalVars.get_state();
+        ips114_showstr(188, 7, slaveGlobalVars.state_str(state));
+
+        switch (state) {
+        case SlaveGlobalVars::IDLE: Idle(); break;
+        case SlaveGlobalVars::RESET: Reset(); break;
+        case SlaveGlobalVars::A4_PREPARE: A4Prepare(); break;
+        case SlaveGlobalVars::A4: A4Detect(); break;
+        case SlaveGlobalVars::RECT: FindRect(); break;
+        default: show_grayscale(img); break;
         }
 
         camera.release();

@@ -20,7 +20,7 @@ class MasterGlobalVars {
     void get_coord_recv();
 
  public:
-    enum State {
+    enum State : uint8_t {
         IDLE,
         RESET,
         GET_COORDS,

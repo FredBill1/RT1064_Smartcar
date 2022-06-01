@@ -18,6 +18,7 @@ int main(void) {
     // show_image::koishi();
 
     // MCU_SLAVE imgUSBXferNode();
+    MCU_SLAVE uartSlaveNode();
     MCU_SLAVE slaveMainLoopNode();
 
     MCU_MASTER wirelessNode();
