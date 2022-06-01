@@ -20,10 +20,10 @@ void MasterGlobalVars::send_coord_recv(int cnt, const float* coords) {
     rt_event_send(&coord_recv_event, 1);
 }
 
-void MasterGlobalVars::get_coord_recv(int& cnt, float* coords) {
+void MasterGlobalVars::get_coord_recv() {
     ScheduleGuard guard;
-    cnt = target_coords_cnt;
-    rt_memcpy(coords, target_coords_corr, sizeof(target_coords_corr[0]) * cnt);
+    coords_cnt = target_coords_cnt + 1;
+    rt_memcpy(coords + 1, target_coords_corr, sizeof(target_coords_corr[0]) * coords_cnt);
 }
 
 MasterGlobalVars masterGlobalVars;

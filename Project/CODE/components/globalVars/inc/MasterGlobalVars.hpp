@@ -3,6 +3,8 @@
 
 #include <rtthread.h>
 
+#include "edge_detect/A4Detect.hpp"
+
 class MasterGlobalVars {
  public:
     MasterGlobalVars();
@@ -11,9 +13,11 @@ class MasterGlobalVars {
     rt_event coord_recv_event;
 
  public:
+    int coords_cnt;
+    imgProc::apriltag::float_t coords[imgProc::edge_detect::target_coords_maxn + 1][2];
     bool wait_for_coord_recv(rt_int32_t timeout = RT_WAITING_FOREVER);
     void send_coord_recv(int cnt, const float* coords);
-    void get_coord_recv(int& cnt, float* coords);
+    void get_coord_recv();
 };
 
 extern MasterGlobalVars masterGlobalVars;

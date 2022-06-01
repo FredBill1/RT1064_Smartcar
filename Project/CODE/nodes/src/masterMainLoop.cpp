@@ -17,8 +17,8 @@ using namespace imgProc;
 using namespace imgProc::apriltag;
 using namespace imgProc::edge_detect;
 
-static int coords_cnt = 1;
-static float coords[target_coords_maxn + 1][2];
+static int& coords_cnt = masterGlobalVars.coords_cnt;
+static auto& coords = masterGlobalVars.coords;
 
 static bool navigationStarted = false;
 static int currentTarget;
@@ -57,8 +57,7 @@ static inline void sendCoords() {
 static inline void GetCoords() {
     if (!masterGlobalVars.wait_for_coord_recv(mainloop_timeout)) return;
 
-    masterGlobalVars.get_coord_recv(coords_cnt, coords[1]);
-    ++coords_cnt;
+    masterGlobalVars.get_coord_recv();
     sendCoords();
     draw_corr(coords, coords_cnt, 7, 5);
 
