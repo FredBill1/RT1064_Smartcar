@@ -3,6 +3,8 @@
 extern "C" {
 #include "SEEKFREE_IPS114_SPI.h"
 }
+#include <cmath>
+
 #include "MasterGlobalVars.hpp"
 #include "RectConfig.hpp"
 #include "bresenham.hpp"
@@ -24,16 +26,43 @@ static inline void recvCoords() {
 
     if (!slave_uart.getchar(id)) return;
     cnt_tmp = id / 2;
-    if (cnt_tmp > target_coords_maxn) return;
+    if (id & 1 || cnt_tmp > target_coords_maxn) return;
     if (!slave_uart.getArr<float, target_coords_maxn * 2>(coords_tmp[0], cnt_tmp * 2)) return;
     beep.set(false);
     masterGlobalVars.send_coord_recv(cnt_tmp, coords_tmp[0]);
 }
 
 static inline void recvRect() {
-    if (!slave_uart.getchar(id)) return;
+    static float rects[max_rect_cnt][2];
 
+    uint64_t timestamp_us = systick.get_us();
+    if (!slave_uart.getchar(id)) return;
+    int rect_cnt = id / 2;
+    if (id & 1 || rect_cnt > max_rect_cnt) return;
+    if (!slave_uart.getArr<float, max_rect_cnt * 2>(rects[0], rect_cnt * 2)) return;
     beep.set(false);
+    if (!rect_cnt) return;
+
+    MoveBase::State state;
+    moveBase.get_state(state);
+    float target[2];
+    if (!masterGlobalVars.get_rectTarget(target)) return;
+    float sy = std::sin(state.yaw()), cy = std::cos(state.yaw());
+
+    float min_dist = 1e9;
+    float res_x, res_y;
+    for (int i = 0; i < rect_cnt; ++i) {
+        float x = target[0] - rects[i][0] * cy + rects[i][1] * sy;
+        float y = target[1] - rects[i][0] * sy - rects[i][1] * cy;
+        float dx = x - state.x(), dy = y - state.y();
+        float dist = std::sqrt(dx * dx + dy * dy);
+        if (dist < min_dist) {
+            min_dist = dist;
+            res_x = x, res_y = y;
+        }
+    }
+    pose_kalman::T res[2]{res_x, res_y};
+    pose_kalman::kf.enqueMeasurement(pose_kalman::MeasurementType::Rect, res, timestamp_us);
 }
 
 static void uartMasterEntry() {

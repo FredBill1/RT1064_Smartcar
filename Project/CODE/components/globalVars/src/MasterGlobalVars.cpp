@@ -47,4 +47,17 @@ const char* MasterGlobalVars::state_str(State state) {
     return "NULL";
 }
 
+bool MasterGlobalVars::get_rectTarget(float target[2]) const {
+    InterruptGuard guard;
+    if (!_rectTargetEnabled) return false;
+    target[0] = _rectTarget[0], target[1] = _rectTarget[1];
+    return true;
+}
+void MasterGlobalVars::send_rectTarget(bool enabled, const float target[2]) {
+    InterruptGuard guard;
+    _rectTargetEnabled = enabled;
+    if (!enabled) return;
+    _rectTarget[0] = target[0], _rectTarget[1] = target[1];
+}
+
 MasterGlobalVars masterGlobalVars;

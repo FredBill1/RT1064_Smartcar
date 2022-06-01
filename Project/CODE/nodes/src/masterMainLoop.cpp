@@ -120,6 +120,8 @@ static inline void Navigation() {
     float x = coords[cur][0], y = coords[cur][1], yaw = std::atan2(y - state.y(), x - state.x());
     constexpr float dist = 0.2;
     moveBase.send_goal(x - dist * std::cos(yaw), y - dist * std::sin(yaw), yaw);
+    float xy[2]{x, y};
+    masterGlobalVars.send_rectTarget(true, xy);
 }
 
 static inline void Idle() {

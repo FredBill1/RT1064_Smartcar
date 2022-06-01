@@ -35,6 +35,14 @@ class MasterGlobalVars {
     State get_state() const;
     void set_state(State state);
     static const char* state_str(State state);
+
+ private:
+    bool _rectTargetEnabled = false;
+    float _rectTarget[2];
+
+ public:
+    bool get_rectTarget(float target[2]) const;
+    void send_rectTarget(bool enabled, const float target[2] = nullptr);
 };
 
 extern MasterGlobalVars masterGlobalVars;
