@@ -18,6 +18,7 @@ int main(void) {
     // show_image::koishi();
 
     // MCU_SLAVE imgUSBXferNode();
+    MCU_SLAVE slaveMainLoopNode();
 
     MCU_MASTER wirelessNode();
     MCU_MASTER motorControlNode();
@@ -28,7 +29,9 @@ int main(void) {
     MCU_MASTER moveBase.set_enabled(true);
     MCU_MASTER baseDriver.setControlState(1, 1, 1, 1);
 
-    MCU_SLAVE testA4DetectNode();
+    // MCU_BOTH testKeyNode();
+
+    // MCU_SLAVE testA4DetectNode();
     // MCU_SLAVE testFindRectNode();
     // MCU_SLAVE testCannyNode();
     // MCU_SLAVE uartSlaveTest();
@@ -43,7 +46,6 @@ int main(void) {
     // MCU_MASTER testTSPSolverNode();
     // MCU_MASTER testA4ReceiveNode();
     // MCU_MASTER uartMasterTest();
-    // MCU_BOTH testKeyNode();
 
     for (;;) {
         led.toggle();

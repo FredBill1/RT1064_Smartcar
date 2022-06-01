@@ -2794,6 +2794,11 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\src\masterMainLoop.cpp</FilePath>
             </File>
+            <File>
+              <FileName>slaveMainLoop.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\src\slaveMainLoop.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -5807,6 +5812,11 @@
               <FileName>masterMainLoop.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\src\masterMainLoop.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>slaveMainLoop.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\src\slaveMainLoop.cpp</FilePath>
             </File>
           </Files>
         </Group>

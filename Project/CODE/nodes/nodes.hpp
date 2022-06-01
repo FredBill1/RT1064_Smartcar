@@ -22,6 +22,9 @@ bool uartMasterNode();
 // 主机的主循环
 bool masterMainLoopNode();
 
+// 从机的主循环
+bool slaveMainLoopNode();
+
 // ^^^  src  ^^^
 // vvv tests vvv
 
