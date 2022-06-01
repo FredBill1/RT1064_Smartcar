@@ -33,6 +33,7 @@ static inline void recvCoords() {
 }
 
 static inline void recvRect() {
+    static SerialIO::TxArr<float, max_rect_cnt * 2, true> rect_tx(33, "rect_tx");
     static float rects[max_rect_cnt][2];
 
     uint64_t timestamp_us = systick.get_us();
@@ -63,6 +64,11 @@ static inline void recvRect() {
     }
     pose_kalman::T res[2]{res_x, res_y};
     pose_kalman::kf.enqueMeasurement(pose_kalman::MeasurementType::Rect, res, timestamp_us);
+
+    if (rect_tx.txFinished()) {
+        rect_tx.setArr(rects[0], rect_cnt * 2);
+        wireless.send(rect_tx);
+    }
 }
 
 static void uartMasterEntry() {
