@@ -145,4 +145,4 @@ static void masterMainLoopEntry() {
     }
 }
 
-bool masterMainLoopNode() { return FuncThread(masterMainLoopEntry, "masterMainLoop", 4096); }
+bool masterMainLoopNode() { return FuncThread(masterMainLoopEntry, "masterMainLoop", 4096, 31); }
