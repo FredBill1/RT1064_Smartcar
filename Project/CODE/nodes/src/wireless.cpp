@@ -1,5 +1,8 @@
 #include "utils/FuncThread.hpp"
 //
+#include <cmath>
+
+#include "MasterGlobalVars.hpp"
 #include "devices.hpp"
 
 static uint8_t id;
@@ -127,6 +130,10 @@ static inline void SendGoal() {
     if (!(wireless.getData<float>(x, y, yaw))) return;
     beep.set(false);
     moveBase.send_goal(x, y, yaw);
+
+    constexpr float dist = 0.35;
+    float xy[2]{x + dist * std::cos(yaw), y + dist * std::sin(yaw)};
+    masterGlobalVars.send_rectTarget(true, xy);
 }
 
 static inline void SendState() {
