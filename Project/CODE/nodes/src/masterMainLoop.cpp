@@ -126,6 +126,8 @@ static inline void Navigation() {
 
 static inline void Idle() {
     if (master_key[0].pressing()) { masterGlobalVars.set_state(MasterGlobalVars::RESET); }
+    if (master_key[1].pressing()) { sendTask(SlaveGlobalVars::A4_PREPARE); }
+    if (master_key[2].pressing()) { sendTask(SlaveGlobalVars::RECT); }
 }
 
 static void masterMainLoopEntry() {
