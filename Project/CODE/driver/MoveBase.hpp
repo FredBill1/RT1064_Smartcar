@@ -11,6 +11,7 @@ class MoveBase {
     struct Goal {
         pose_kalman::T x, y, yaw;
         pose_kalman::T xy_tolerance, yaw_tolerance;
+        uint64_t time_tolerance_us;
         bool reached;
     };
     struct State {
@@ -55,7 +56,7 @@ class MoveBase {
     void set_enabled(bool enabled);
     bool get_enabled();
     void send_goal(pose_kalman::T x, pose_kalman::T y, pose_kalman::T yaw, pose_kalman::T xy_tolerance = 1e-2,
-                   pose_kalman::T yaw_tolerance = (5 * 3.14 / 180));
+                   pose_kalman::T yaw_tolerance = (5 * 3.14 / 180), uint64_t time_tolerance_us = uint64_t(5e5));
     const Goal& get_goal();
     void set_reached(bool reached = true);
     void send_reached(bool reached = true);

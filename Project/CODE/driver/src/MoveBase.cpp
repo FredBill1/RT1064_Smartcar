@@ -18,8 +18,8 @@ bool MoveBase::get_enabled() {
 }
 
 void MoveBase::send_goal(pose_kalman::T x, pose_kalman::T y, pose_kalman::T yaw, pose_kalman::T xy_tolerance,
-                         pose_kalman::T yaw_tolerance) {
-    _goalLoader.store({x, y, yaw, xy_tolerance, yaw_tolerance, false});
+                         pose_kalman::T yaw_tolerance, uint64_t time_tolerance_us) {
+    _goalLoader.store({x, y, yaw, xy_tolerance, yaw_tolerance, time_tolerance_us, false});
 }
 
 const MoveBase::Goal& MoveBase::get_goal() {

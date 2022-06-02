@@ -66,20 +66,34 @@ static inline void setInitialState() {
     kf.setState(state);
 }
 
-static void runLocalPlanner(const T state[6]) {
+static void runLocalPlanner(uint64_t timestamp_us, const T state[6]) {
     static SerialIO::TxUtil<float, 6, true> goal_tx("goal", 31);
     static SerialIO::TxUtil<float, 3, true> cmd_vel_tx("cmd_vel", 22);
     if (!moveBase.get_enabled()) return;
     auto& goal = moveBase.get_goal();
     if (goal.reached) return;
 
-    if (moveBase.new_goal() && goal_tx.txFinished()) {
-        goal_tx.setAll(goal.x, goal.y, goal.yaw, 0, 0, 0);
-        wireless.send(goal_tx);
+    static bool has_reached = false;
+    static uint64_t last_reached_timestamp_us;
+    static T cmd_vel[3]{0};
+
+    if (moveBase.new_goal()) {
+        has_reached = false;
+        if (goal_tx.txFinished()) {
+            goal_tx.setAll(goal.x, goal.y, goal.yaw, 0, 0, 0);
+            wireless.send(goal_tx);
+        }
     }
 
-    static T cmd_vel[3]{0};
-    moveBase.set_reached(localPlanner.getControlCmd(state, state + 3, goal, cmd_vel));
+    if (localPlanner.getControlCmd(state, state + 3, goal, cmd_vel)) {
+        if (!has_reached) {
+            has_reached = true, last_reached_timestamp_us = timestamp_us;
+        } else if (systick.get_diff_us(last_reached_timestamp_us, timestamp_us) > goal.time_tolerance_us) {
+            moveBase.set_reached(true);
+        }
+    } else {
+        has_reached = false;
+    }
     baseDriver.cmd_vel(cmd_vel[0], cmd_vel[1], cmd_vel[2]);
 
     if (cmd_vel_tx.txFinished()) {
@@ -114,7 +128,7 @@ static void poseKalmanEntry() {
         kf.update(timestamp_us);
         const T* state = kf.getState();
         moveBase.send_state(timestamp_us, state);
-        runLocalPlanner(state);
+        runLocalPlanner(timestamp_us, state);
 
         if (pose_tx.txFinished()) {
             pose_tx.setArr(state);
