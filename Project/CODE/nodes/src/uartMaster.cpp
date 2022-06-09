@@ -20,14 +20,14 @@ using namespace imgProc::edge_detect;
 static Beep beep;
 static uint8_t id;
 
-static inline void recvCoords() {
+void recvCoords(SerialIO& uart, Beep& beep) {
     decltype(target_coords_cnt) cnt_tmp;
     decltype(target_coords_corr) coords_tmp;
 
-    if (!slave_uart.getchar(id)) return;
+    if (!uart.getchar(id)) return;
     cnt_tmp = id / 2;
     if (id & 1 || cnt_tmp > target_coords_maxn) return;
-    if (!slave_uart.getArr<float, target_coords_maxn * 2>(coords_tmp[0], cnt_tmp * 2)) return;
+    if (!uart.getArr<float, target_coords_maxn * 2>(coords_tmp[0], cnt_tmp * 2)) return;
     beep.set(false);
     masterGlobalVars.send_coord_recv(cnt_tmp, coords_tmp[0]);
 }
@@ -77,7 +77,7 @@ static void uartMasterEntry() {
         beep.set(true);
         if (!slave_uart.getchar(id)) continue;
         switch (id) {
-        case 32: recvCoords(); break;
+        case 32: recvCoords(slave_uart, beep); break;
         case 33: recvRect(); break;
         }
     }

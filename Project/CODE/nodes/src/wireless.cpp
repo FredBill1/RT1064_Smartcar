@@ -153,6 +153,8 @@ static inline void SetLocalPlannerParam() {
     localPlanner.setParams(params);
 }
 
+void recvCoords(SerialIO& uart, Beep& beep);
+
 static void wirelessEntry() {
     for (;;) {
         wireless.waitHeader();
@@ -170,6 +172,8 @@ static void wirelessEntry() {
         case 8: SendGoal(); break;
         case 9: SetLocalPlannerParam(); break;
         case 10: SendState(); break;
+
+        case 32: recvCoords(wireless, beep); break;
         }
     }
 }
