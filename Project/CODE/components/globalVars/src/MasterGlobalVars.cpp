@@ -5,7 +5,11 @@
 
 using namespace imgProc::edge_detect;
 
-MasterGlobalVars::MasterGlobalVars() { rt_event_init(&coord_recv_event, "coord_recv_event", RT_IPC_FLAG_PRIO); }
+MasterGlobalVars::MasterGlobalVars() {
+    rt_event_init(&coord_recv_event, "coord_recv_event", RT_IPC_FLAG_PRIO);
+    rt_event_init(&art_snapshot_event, "art_snapshot_event", RT_IPC_FLAG_PRIO);
+    rt_event_init(&art_result_event, "art_result_event", RT_IPC_FLAG_PRIO);
+}
 
 bool MasterGlobalVars::wait_for_coord_recv(rt_int32_t timeout) {
     return rt_event_recv(&coord_recv_event, 1, RT_EVENT_FLAG_AND | RT_EVENT_FLAG_CLEAR, timeout, RT_NULL) == RT_EOK;
@@ -58,6 +62,26 @@ void MasterGlobalVars::send_rectTarget(bool enabled, const float target[2]) {
     _rectTargetEnabled = enabled;
     if (!enabled) return;
     _rectTarget[0] = target[0], _rectTarget[1] = target[1];
+}
+
+bool MasterGlobalVars::wait_art_snapshot(rt_int32_t timeout) {
+    return rt_event_recv(&art_snapshot_event, 1, RT_EVENT_FLAG_AND | RT_EVENT_FLAG_CLEAR, timeout, RT_NULL) == RT_EOK;
+}
+void MasterGlobalVars::send_art_snapshot() { rt_event_send(&art_snapshot_event, 1); }
+bool MasterGlobalVars::wait_art_result(uint8_t& result, rt_int32_t timeout) {
+    if (rt_event_recv(&art_result_event, 1, RT_EVENT_FLAG_AND | RT_EVENT_FLAG_CLEAR, timeout, RT_NULL) != RT_EOK) return false;
+    {
+        InterruptGuard guard;
+        result = _art_result;
+    }
+    return true;
+}
+void MasterGlobalVars::send_art_result(uint8_t result) {
+    {
+        InterruptGuard guard;
+        _art_result = result;
+    }
+    rt_event_send(&art_result_event, 1);
 }
 
 MasterGlobalVars masterGlobalVars;

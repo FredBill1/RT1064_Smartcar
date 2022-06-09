@@ -43,6 +43,17 @@ class MasterGlobalVars {
  public:
     bool get_rectTarget(float target[2]) const;
     void send_rectTarget(bool enabled, const float target[2] = nullptr);
+
+ private:
+    rt_event art_snapshot_event;
+    rt_event art_result_event;
+    uint8_t _art_result;
+
+ public:
+    bool wait_art_snapshot(rt_int32_t timeout = RT_WAITING_FOREVER);
+    void send_art_snapshot();
+    bool wait_art_result(uint8_t& result, rt_int32_t timeout = RT_WAITING_FOREVER);
+    void send_art_result(uint8_t result);
 };
 
 extern MasterGlobalVars masterGlobalVars;

@@ -71,4 +71,7 @@ bool testA4DetectNode();
 // 测试主核接收A4纸检测结果
 bool testA4ReceiveNode();
 
+// 测试与art通信
+bool testArtNode();
+
 #endif  // _nodes_hpp

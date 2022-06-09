@@ -2879,6 +2879,11 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\test\uartSlaveTest.cpp</FilePath>
             </File>
+            <File>
+              <FileName>testArt.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\test\testArt.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -5907,6 +5912,11 @@
               <FileName>uartSlaveTest.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\test\uartSlaveTest.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>testArt.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\test\testArt.cpp</FilePath>
             </File>
           </Files>
         </Group>
