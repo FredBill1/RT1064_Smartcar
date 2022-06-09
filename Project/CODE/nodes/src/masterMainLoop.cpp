@@ -13,6 +13,8 @@ extern "C" {
 #include "bresenham.hpp"
 #include "devices.hpp"
 #include "edge_detect/A4Detect.hpp"
+//
+#include "mapConifg.hpp"
 
 using namespace imgProc;
 using namespace imgProc::apriltag;
@@ -30,7 +32,6 @@ static TSP::TSP_Solver tsp;
 
 constexpr int mainloop_timeout = 500;
 
-static constexpr float borderWidth = 7, borderHeight = 5;
 constexpr float tsp_k = std::min((M / 4) / borderWidth, (N / 4) / borderHeight);
 
 static inline void sendTask(SlaveGlobalVars::State task, bool blocking = false) {
@@ -64,7 +65,7 @@ static inline void GetCoords() {
 
     masterGlobalVars.get_coord_recv();
     sendCoords();
-    draw_corr(coords, coords_cnt, 7, 5);
+    draw_corr(coords, coords_cnt, borderWidth, borderHeight);
 
     masterGlobalVars.set_state(MasterGlobalVars::SOLVE_TSP);
 }

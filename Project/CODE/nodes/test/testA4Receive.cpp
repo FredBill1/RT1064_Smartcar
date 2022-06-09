@@ -5,6 +5,8 @@ extern "C" {
 }
 #include "devices.hpp"
 #include "edge_detect/A4Detect.hpp"
+//
+#include "mapConifg.hpp"
 
 namespace imgProc {
 using apriltag::float_t;
@@ -34,10 +36,10 @@ static void testA4ReceiveEntry() {
 
     for (;;) {
         if (try_recv(uart3)) {
-            draw_corr(coords, cnt, 7, 5, 0xffff);
+            draw_corr(coords, cnt, borderWidth, borderHeight, 0xffff);
             cnt = target_coords_cnt;
             rt_memcpy(coords[0], target_coords_corr[0], sizeof(target_coords_corr));
-            draw_corr(coords, cnt, 7, 5);
+            draw_corr(coords, cnt, borderWidth, borderHeight);
 
             a4_tx.txFinished(-1);
             a4_tx.setArr(target_coords_corr[0], target_coords_cnt * 2);

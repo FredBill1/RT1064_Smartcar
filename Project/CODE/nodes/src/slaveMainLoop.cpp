@@ -19,6 +19,7 @@ extern "C" {
 //
 #include "RectConfig.hpp"
 #include "SlaveGlobalVars.hpp"
+#include "mapConifg.hpp"
 
 using namespace imgProc;
 using namespace imgProc::apriltag;
@@ -45,7 +46,7 @@ static inline void Reset() {
 
 static inline void A4Prepare() {
     SWITCH_SKIP;
-    A4Detect(img, 7, 5, 50, 100);
+    A4Detect(img, borderWidth, borderHeight, 50, 100);
     show_edge(img);
     if (slave_key[0].pressing()) {
         slaveGlobalVars.set_state(SlaveGlobalVars::A4);
@@ -57,7 +58,7 @@ static inline void A4Detect() {
     SWITCH_SKIP;
     static SerialIO::TxArr<float, target_coords_maxn * 2, true> a4_tx(32, "a4_tx");
 
-    bool res = A4Detect(img, 7, 5, 50, 100);
+    bool res = A4Detect(img, borderWidth, borderHeight, 50, 100);
     if (!res) A4_pre_cnt = -1;
 
     if (target_coords_cnt == A4_pre_cnt) {

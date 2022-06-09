@@ -9,6 +9,8 @@ extern "C" {
 #include "devices.hpp"
 #include "edge_detect/A4Detect.hpp"
 #include "edge_detect/show_edge.hpp"
+//
+#include "mapConifg.hpp"
 
 namespace imgProc {
 namespace edge_detect {
@@ -25,7 +27,7 @@ static void testA4DetectEntry() {
         uint8_t* img = camera.snapshot();
 
         if (enabled) {
-            bool res = A4Detect(img, 7, 5, 50, 100);
+            bool res = A4Detect(img, borderWidth, borderHeight, 50, 100);
             if (res) {
                 a4_tx.txFinished(-1);
                 a4_tx.setArr(target_coords_corr[0], target_coords_cnt * 2);
