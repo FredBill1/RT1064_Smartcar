@@ -25,19 +25,25 @@ using namespace imgProc;
 using namespace imgProc::apriltag;
 using namespace imgProc::edge_detect;
 
-#define SWITCH_SKIP                         \
-    {                                       \
-        if (slave_switch[2].get()) {        \
-            ips114_showstr(188, 6, "SKIP"); \
-            show_grayscale(img);            \
-            return;                         \
-        } else                              \
-            ips114_showstr(188, 6, "    "); \
-    }
-
 static int32_t pre_time;
 static uint8_t* img;
 static int A4_pre_cnt = -1, A4_cnt_same = 0;
+
+namespace keys {
+static bool skip;
+static bool visualize;
+static bool binary;
+};  // namespace keys
+static inline void keyScan() {
+    using namespace keys;
+    skip = slave_switch[2].get();
+    visualize = slave_switch[1].get();
+    binary = slave_switch[0].get();
+
+    ips114_showstr(188, 6, skip ? "SKIP" : "    ");
+    ips114_showstr(188, 5, visualize ? "VIS" : "   ");
+    ips114_showstr(188, 4, binary ? "BIN" : "   ");
+}
 
 static inline void Reset() {
     ips114_clear(WHITE);
@@ -45,7 +51,7 @@ static inline void Reset() {
 }
 
 static inline void A4Prepare() {
-    SWITCH_SKIP;
+    if (keys::skip) return;
     A4Detect(img, borderWidth, borderHeight, 50, 100);
     show_edge(img);
     if (slave_key[0].pressing()) {
@@ -55,7 +61,7 @@ static inline void A4Prepare() {
 }
 
 static inline void A4Detect() {
-    SWITCH_SKIP;
+    if (keys::skip) return;
     static SerialIO::TxArr<float, target_coords_maxn * 2, true> a4_tx(32, "a4_tx");
 
     bool res = A4Detect(img, borderWidth, borderHeight, 50, 100);
@@ -76,15 +82,13 @@ static inline void A4Detect() {
 }
 
 static inline void FindRect() {
-    SWITCH_SKIP;
+    if (keys::skip) return;
     static RectSender rectSender(33);
 
-    // bool show_thresh = slave_key[0].get();  // 是否显示二值化图
-    bool show_thresh = 0;
-    bool visualize = !show_thresh && slave_switch[1].get();  // 是否显示效果
+    bool visualize = !keys::binary && keys::visualize;  // 是否显示效果
 
     rects_t& rects = find_rects(img, min_magnitude,
-                                show_thresh ? apriltag_detect_visualize_flag::threshim : apriltag_detect_visualize_flag::None);
+                                keys::binary ? apriltag_detect_visualize_flag::threshim : apriltag_detect_visualize_flag::None);
     if (visualize) plot_rects(img, rects, GREEN);
 
     reconcileRects(rects);
@@ -107,6 +111,7 @@ static void slaveMainLoopEntry() {
 
         auto state = slaveGlobalVars.get_state();
         ips114_showstr(188, 7, slaveGlobalVars.state_str(state));
+        keyScan();
 
         switch (state) {
         case SlaveGlobalVars::IDLE: Idle(); break;
