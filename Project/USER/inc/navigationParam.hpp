@@ -1,5 +1,5 @@
-#ifndef _mapConfig_hpp
-#define _mapConfig_hpp
+#ifndef _navigationParam_hpp
+#define _navigationParam_hpp
 
 #include <cstdint>
 
@@ -8,4 +8,4 @@ constexpr float borderHeight = 5;
 
 constexpr int64_t rectCooldown_us = 1e6;
 
-#endif
+#endif  // _navigationParam_hpp

@@ -19,7 +19,7 @@ extern "C" {
 //
 #include "RectConfig.hpp"
 #include "SlaveGlobalVars.hpp"
-#include "mapConifg.hpp"
+#include "navigationParam.hpp"
 
 using namespace imgProc;
 using namespace imgProc::apriltag;

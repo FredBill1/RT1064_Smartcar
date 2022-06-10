@@ -14,7 +14,7 @@ extern "C" {
 #include "devices.hpp"
 #include "edge_detect/A4Detect.hpp"
 //
-#include "mapConifg.hpp"
+#include "navigationParam.hpp"
 
 using namespace imgProc;
 using namespace imgProc::apriltag;
