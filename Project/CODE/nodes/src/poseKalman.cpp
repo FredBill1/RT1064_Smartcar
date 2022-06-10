@@ -148,4 +148,4 @@ static void poseKalmanEntry() {
 
 }  // namespace pose_kalman
 
-bool poseKalmanNode() { return FuncThread(pose_kalman::poseKalmanEntry, "poseKalman", 15360); }
+bool poseKalmanNode() { return FuncThread(pose_kalman::poseKalmanEntry, "poseKalman", 15360, Thread::default_priority); }

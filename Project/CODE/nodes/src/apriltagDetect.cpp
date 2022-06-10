@@ -53,4 +53,4 @@ static void apriltagDetectEntry() {
     }
 }
 
-bool apriltagDetectNode() { return FuncThread(apriltagDetectEntry, "apriltagDetect", 4096, 2, 1000); }
+bool apriltagDetectNode() { return FuncThread(apriltagDetectEntry, "apriltagDetect", 4096, Thread::highest_priority + 2, 1000); }

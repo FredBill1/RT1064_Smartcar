@@ -129,4 +129,4 @@ static void slaveMainLoopEntry() {
     }
 }
 
-bool slaveMainLoopNode() { return FuncThread(slaveMainLoopEntry, "slaveMainLoop", 4096, 2, 1000); }
+bool slaveMainLoopNode() { return FuncThread(slaveMainLoopEntry, "slaveMainLoop", 4096, Thread::highest_priority + 2, 1000); }

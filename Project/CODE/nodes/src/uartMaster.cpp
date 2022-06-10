@@ -83,4 +83,4 @@ static void uartMasterEntry() {
     }
 }
 
-bool uartMasterNode() { return FuncThread(uartMasterEntry, "uartMaster", 4096, 0); }
+bool uartMasterNode() { return FuncThread(uartMasterEntry, "uartMaster", 4096, Thread::highest_priority); }

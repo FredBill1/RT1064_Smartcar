@@ -146,4 +146,4 @@ static void masterMainLoopEntry() {
     }
 }
 
-bool masterMainLoopNode() { return FuncThread(masterMainLoopEntry, "masterMainLoop", 4096, 31); }
+bool masterMainLoopNode() { return FuncThread(masterMainLoopEntry, "masterMainLoop", 4096, Thread::lowest_priority); }

@@ -178,4 +178,4 @@ static void wirelessEntry() {
     }
 }
 
-bool wirelessNode() { return FuncThread(wirelessEntry, "wireless", 4096, 0); }
+bool wirelessNode() { return FuncThread(wirelessEntry, "wireless", 4096, Thread::highest_priority); }
