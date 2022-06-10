@@ -46,7 +46,7 @@ static inline void recvRect() {
         MoveBase::State state;
         moveBase.get_state(state);
         float target[2];
-        if (!masterGlobalVars.get_rectTarget(target)) return;
+        if (!masterGlobalVars.get_rectTarget(target, timestamp_us)) return;
         float sy = std::sin(state.yaw()), cy = std::cos(state.yaw());
 
         float min_dist = 1e9;

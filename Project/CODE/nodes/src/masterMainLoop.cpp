@@ -122,7 +122,7 @@ static inline void Navigation() {
     constexpr float dist = 0.2;
     moveBase.send_goal(x - dist * std::cos(yaw), y - dist * std::sin(yaw), yaw);
     float xy[2]{x, y};
-    masterGlobalVars.send_rectTarget(true, xy);
+    masterGlobalVars.send_rectTarget(true, systick.get_us(), rectCooldown_us, xy);
 }
 
 static inline void Idle() {

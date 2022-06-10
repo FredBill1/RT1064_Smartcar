@@ -1,5 +1,6 @@
 #include "MasterGlobalVars.hpp"
 
+#include "Systick.hpp"
 #include "edge_detect/A4Detect.hpp"
 #include "utils/InterruptGuard.hpp"
 
@@ -51,16 +52,26 @@ const char* MasterGlobalVars::state_str(State state) {
     return "NULL";
 }
 
-bool MasterGlobalVars::get_rectTarget(float target[2]) const {
+bool MasterGlobalVars::get_rectTarget(float target[2], uint64_t timestamp_us) {
     InterruptGuard guard;
     if (!_rectTargetEnabled) return false;
+    if (!_rectStarted) {
+        if (systick.get_diff_us(_rectStartTimestamp_us, timestamp_us) >= _rectCooldown_us) _rectStarted = true;
+        else
+            return false;
+    }
+
     target[0] = _rectTarget[0], target[1] = _rectTarget[1];
     return true;
 }
-void MasterGlobalVars::send_rectTarget(bool enabled, const float target[2]) {
+void MasterGlobalVars::send_rectTarget(bool enabled, uint64_t timestamp_us, int64_t cooldown_us, const float target[2]) {
     InterruptGuard guard;
     _rectTargetEnabled = enabled;
     if (!enabled) return;
+
+    _rectStarted = false;
+    _rectStartTimestamp_us = timestamp_us;
+    _rectCooldown_us = cooldown_us;
     _rectTarget[0] = target[0], _rectTarget[1] = target[1];
 }
 

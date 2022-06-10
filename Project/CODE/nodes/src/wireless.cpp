@@ -133,7 +133,7 @@ static inline void SendGoal() {
 
     constexpr float dist = 0.35;
     float xy[2]{x + dist * std::cos(yaw), y + dist * std::sin(yaw)};
-    masterGlobalVars.send_rectTarget(true, xy);
+    masterGlobalVars.send_rectTarget(true, systick.get_us(), 0, xy);
 }
 
 static inline void SendState() {
