@@ -1,9 +1,10 @@
 #include "MasterGlobalVars.hpp"
 
+#include <algorithm>
+
 #include "Systick.hpp"
 #include "edge_detect/A4Detect.hpp"
 #include "utils/InterruptGuard.hpp"
-
 using namespace imgProc::edge_detect;
 
 MasterGlobalVars::MasterGlobalVars() {
@@ -52,7 +53,7 @@ const char* MasterGlobalVars::state_str(State state) {
     return "NULL";
 }
 
-bool MasterGlobalVars::get_rectTarget(float target[2], uint64_t timestamp_us) {
+bool MasterGlobalVars::get_rectTarget(float target[3], uint64_t timestamp_us) {
     InterruptGuard guard;
     if (!_rectTargetEnabled) return false;
     if (!_rectStarted) {
@@ -61,10 +62,10 @@ bool MasterGlobalVars::get_rectTarget(float target[2], uint64_t timestamp_us) {
             return false;
     }
 
-    target[0] = _rectTarget[0], target[1] = _rectTarget[1];
+    std::copy(_rectTarget, _rectTarget + 3, target);
     return true;
 }
-void MasterGlobalVars::send_rectTarget(bool enabled, uint64_t timestamp_us, int64_t cooldown_us, const float target[2]) {
+void MasterGlobalVars::send_rectTarget(bool enabled, uint64_t timestamp_us, int64_t cooldown_us, const float target[3]) {
     InterruptGuard guard;
     _rectTargetEnabled = enabled;
     if (!enabled) return;
@@ -72,7 +73,7 @@ void MasterGlobalVars::send_rectTarget(bool enabled, uint64_t timestamp_us, int6
     _rectStarted = false;
     _rectStartTimestamp_us = timestamp_us;
     _rectCooldown_us = cooldown_us;
-    _rectTarget[0] = target[0], _rectTarget[1] = target[1];
+    std::copy(target, target + 3, _rectTarget);
 }
 
 bool MasterGlobalVars::wait_art_snapshot(rt_int32_t timeout) {

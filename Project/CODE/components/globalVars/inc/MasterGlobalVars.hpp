@@ -40,11 +40,11 @@ class MasterGlobalVars {
     bool _rectTargetEnabled = false;
     uint64_t _rectStartTimestamp_us, _rectCooldown_us;
     bool _rectStarted;
-    float _rectTarget[2];
+    float _rectTarget[3];  // [x, y, 与当前所推断距离的最大值]
 
  public:
-    bool get_rectTarget(float target[2], uint64_t timestamp_us);
-    void send_rectTarget(bool enabled, uint64_t timestamp_us = 0, int64_t cooldown_us = 0, const float target[2] = nullptr);
+    bool get_rectTarget(float target[3], uint64_t timestamp_us);
+    void send_rectTarget(bool enabled, uint64_t timestamp_us = 0, int64_t cooldown_us = 0, const float target[3] = nullptr);
 
  private:
     rt_event art_snapshot_event;

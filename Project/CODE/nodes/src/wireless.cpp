@@ -132,8 +132,8 @@ static inline void SendGoal() {
     moveBase.send_goal(x, y, yaw);
 
     constexpr float dist = 0.35;
-    float xy[2]{x + dist * std::cos(yaw), y + dist * std::sin(yaw)};
-    masterGlobalVars.send_rectTarget(true, systick.get_us(), 0, xy);
+    float xyd[3]{x + dist * std::cos(yaw), y + dist * std::sin(yaw), 1};
+    masterGlobalVars.send_rectTarget(true, systick.get_us(), 0, xyd);
 }
 
 static inline void SendState() {

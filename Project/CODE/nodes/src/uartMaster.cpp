@@ -45,7 +45,7 @@ static inline void recvRect() {
     if (rect_cnt) {
         MoveBase::State state;
         moveBase.get_state(state);
-        float target[2];
+        float target[3];
         if (!masterGlobalVars.get_rectTarget(target, timestamp_us)) return;
         float sy = std::sin(state.yaw()), cy = std::cos(state.yaw());
 
@@ -61,8 +61,10 @@ static inline void recvRect() {
                 res_x = x, res_y = y;
             }
         }
-        pose_kalman::T res[2]{res_x, res_y};
-        pose_kalman::kf.enqueMeasurement(pose_kalman::MeasurementType::Rect, res, timestamp_us);
+        if (min_dist <= target[2]) {
+            pose_kalman::T res[2]{res_x, res_y};
+            pose_kalman::kf.enqueMeasurement(pose_kalman::MeasurementType::Rect, res, timestamp_us);
+        }
     }
 
     if (rect_tx.txFinished()) {
