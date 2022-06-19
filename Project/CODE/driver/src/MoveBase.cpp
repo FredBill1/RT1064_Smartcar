@@ -9,7 +9,16 @@ MoveBase::MoveBase() {
 
 void MoveBase::set_enabled(bool enabled) {
     _enabledLoader.store(enabled);
-    if (!enabled) rt_event_send(&_reachedEvent, (rt_uint32_t)GoalEventFlag::disabled);
+    if (enabled) {
+        rt_event_recv(&_reachedEvent, (rt_uint32_t)GoalEventFlag::disabled, RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR, RT_WAITING_NO,
+                      RT_NULL);
+    } else {
+        {
+            InterruptGuard guard;
+            _goal.reached = true;
+        }
+        rt_event_send(&_reachedEvent, (rt_uint32_t)GoalEventFlag::disabled);
+    }
 }
 
 bool MoveBase::get_enabled() {

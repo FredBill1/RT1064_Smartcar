@@ -26,6 +26,7 @@ class MasterGlobalVars {
         GET_COORDS,
         SOLVE_TSP,
         NAVIGATION,
+        __Size,
     };
 
  private:

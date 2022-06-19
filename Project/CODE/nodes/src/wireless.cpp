@@ -4,6 +4,7 @@
 
 #include "MasterGlobalVars.hpp"
 #include "devices.hpp"
+#include "pose_kalman/params.hpp"
 
 static uint8_t id;
 static Beep beep;
@@ -155,6 +156,14 @@ static inline void SetLocalPlannerParam() {
 
 void recvCoords(SerialIO& uart, Beep& beep);
 
+static inline void SendMasterStop() {
+    beep.set(false);
+    moveBase.set_enabled(false);
+    baseDriver.cmd_vel(0, 0, 0, 0);
+    rt_thread_mdelay(pose_kalman::predict_period_us * 10 / 1000);
+    moveBase.set_enabled(true);
+}
+
 static void wirelessEntry() {
     for (;;) {
         wireless.waitHeader();
@@ -174,6 +183,7 @@ static void wirelessEntry() {
         case 10: SendState(); break;
 
         case 32: recvCoords(wireless, beep); break;
+        case 253: SendMasterStop(); break;
         }
     }
 }

@@ -94,6 +94,7 @@ static void runLocalPlanner(uint64_t timestamp_us, const T state[6]) {
     } else {
         has_reached = false;
     }
+    if (!moveBase.get_enabled()) return;
     baseDriver.cmd_vel(cmd_vel[0], cmd_vel[1], cmd_vel[2]);
 
     if (cmd_vel_tx.txFinished()) {

@@ -49,8 +49,8 @@ const char* MasterGlobalVars::state_str(State state) {
     case GET_COORDS: return "GETC";
     case SOLVE_TSP: return "TSP ";
     case NAVIGATION: return "NAV ";
+    default: return "NULL";
     }
-    return "NULL";
 }
 
 bool MasterGlobalVars::get_rectTarget(float target[3], uint64_t timestamp_us) {
