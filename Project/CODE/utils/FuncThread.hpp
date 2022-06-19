@@ -11,7 +11,7 @@ constexpr rt_uint8_t main_thread_priority = RT_MAIN_THREAD_PRIORITY;
 constexpr rt_uint8_t terminal_thread_priority = FINSH_THREAD_PRIORITY;
 
 constexpr rt_uint8_t highest_priority = 0;
-constexpr rt_uint8_t lowest_priority = RT_THREAD_PRIORITY_MAX - 1;
+constexpr rt_uint8_t lowest_priority = RT_THREAD_PRIORITY_MAX - 2;
 constexpr rt_uint8_t default_priority = terminal_thread_priority + 1;
 
 }  // namespace Thread
