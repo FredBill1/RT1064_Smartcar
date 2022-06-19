@@ -33,7 +33,7 @@ static inline void send_art_snapshot_task() {
 
 static void testArtMainLoopEntry() {
     for (;;) {
-        if (!master_key[0].pressing()) {
+        if (!master_key[3].pressing()) {
             rt_thread_mdelay(200);
             continue;
         }
