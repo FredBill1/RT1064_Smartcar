@@ -21,14 +21,14 @@ int main(void) {
     MCU_SLAVE uartSlaveNode();
     MCU_SLAVE slaveMainLoopNode();
 
-    // MCU_MASTER wirelessNode();
-    // MCU_MASTER motorControlNode();
-    // MCU_MASTER uartMasterNode();
-    // MCU_MASTER masterMainLoopNode();
-    // MCU_MASTER poseKalmanNode();
+    MCU_MASTER wirelessNode();
+    MCU_MASTER motorControlNode();
+    MCU_MASTER uartMasterNode();
+    MCU_MASTER masterMainLoopNode();
+    MCU_MASTER poseKalmanNode();
 
-    // MCU_MASTER moveBase.set_enabled(true);
-    // MCU_MASTER baseDriver.setControlState(1, 1, 1, 1);
+    MCU_MASTER moveBase.set_enabled(true);
+    MCU_MASTER baseDriver.setControlState(1, 1, 1, 1);
 
     // MCU_BOTH testKeyNode();
 
@@ -47,7 +47,7 @@ int main(void) {
     // MCU_MASTER testTSPSolverNode();
     // MCU_MASTER testA4ReceiveNode();
     // MCU_MASTER uartMasterTest();
-    MCU_MASTER testArtNode();
+    // MCU_MASTER testArtNode();
 
     for (;;) {
         led.toggle();

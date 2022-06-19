@@ -54,14 +54,14 @@ class BaseDriver {
 
  public:
     // 车底盘中心到轮子中心的距离的分量, 单位是m
-    static constexpr double r_x = 0.198 / 2, r_y = (0.21 - 0.0325) / 2;
+    static constexpr double r_x = 0.198 / 2, r_y = (0.21 - 0.0325) / 2, r_k = r_x + r_y + 0.001;
 
     static inline WheelSpeed calc_vel(double x, double y, double yaw) {
         WheelSpeed res;
-        res.L1 = x - y - yaw * (r_x + r_y);
-        res.L2 = x + y - yaw * (r_x + r_y);
-        res.R1 = x + y + yaw * (r_x + r_y);
-        res.R2 = x - y + yaw * (r_x + r_y);
+        res.L1 = x - y - yaw * r_k;
+        res.L2 = x + y - yaw * r_k;
+        res.R1 = x + y + yaw * r_k;
+        res.R2 = x - y + yaw * r_k;
         return res;
     }
 
@@ -69,7 +69,7 @@ class BaseDriver {
         BaseSpeed res;
         res.x = (L1 + L2 + R1 + R2) / 4;
         res.y = (-L1 + L2 + R1 - R2) / 4;
-        res.yaw = (-L1 - L2 + R1 + R2) / (4 * (r_x + r_y));
+        res.yaw = (-L1 - L2 + R1 + R2) / (4 * r_k);
         return res;
     }
 

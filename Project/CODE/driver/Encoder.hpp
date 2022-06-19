@@ -18,7 +18,8 @@ class Encoder {
             3.14159265358979323846 / 1024. *  // 编码器转1周产生1024个脉冲
             30. / 70. *                       // 车轮齿数为70, 编码器齿数为30
             6.3 / 100. *                      // 车轮直径6.3cm
-            1e6;                              // 时间戳单位是us
+            1e6 *                             // 时间戳单位是us
+            441. / 450.;                      // 实际测量得到的系数
         uint64_t cur_time = systick.get_us();
         int64_t dt = systick.get_diff_us(_last_time, cur_time);
         _last_time = cur_time;
