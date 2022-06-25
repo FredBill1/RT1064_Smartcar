@@ -1,6 +1,10 @@
 #include "utils/FuncThread.hpp"
 //
 
+#include <cmath>
+#include <limits>
+
+#include "MasterGlobalVars.hpp"
 #include "devices.hpp"
 #include "pose_kalman/params.hpp"
 
@@ -103,6 +107,43 @@ static void runLocalPlanner(uint64_t timestamp_us, const T state[6]) {
     }
 }
 
+static inline void processSetState() {
+    MoveBase::State set_state;
+    if (moveBase.get_set_state(set_state))
+        kf.enqueMeasurement(MeasurementType::SetState, set_state.state, set_state.timestamp_us);
+}
+
+static inline void processRects() {
+    float state[3];
+    float rects[imgProc::apriltag::max_rect_cnt][2];
+    int cnt;
+    float maxDistErrorSquared;
+    uint64_t timestamp_us;
+    masterGlobalVars.get_rects(state, rects[0], cnt, maxDistErrorSquared, timestamp_us);
+    if (!cnt) return;
+    float sy = std::sin(state[2]), cy = std::cos(state[2]);
+    float min_dist2 = std::numeric_limits<float>::infinity();
+    float res_x, res_y;
+    for (int i = 1; i <= masterGlobalVars.coords_cnt; ++i) {
+        if (!masterGlobalVars.coord_valid.test(i)) continue;
+        for (int j = 0; j < cnt; ++j) {
+            float x = masterGlobalVars.coords[i][0], y = masterGlobalVars.coords[i][1];
+            x -= rects[j][0] * cy - rects[j][1] * sy;
+            y -= rects[j][0] * sy + rects[j][1] * cy;
+            float dx = x - state[0], dy = y - state[1];
+            float dist2 = dx * dx + dy * dy;
+            if (dist2 < min_dist2) {
+                min_dist2 = dist2;
+                res_x = x, res_y = y;
+            }
+        }
+    }
+    if (min_dist2 <= maxDistErrorSquared) {
+        T res[2]{res_x, res_y};
+        kf.enqueMeasurement(MeasurementType::Rect, res, timestamp_us);
+    }
+}
+
 static void poseKalmanEntry() {
     static SerialIO::TxUtil<float, 6, true> pose_tx("pose", 30);
     static SerialIO::TxUtil<float, 1, true> timestamp_tx("timestamp", 23);
@@ -121,9 +162,8 @@ static void poseKalmanEntry() {
     rt_thread_mdelay(100);
     kf.setEnabled(true);
     for (;;) {
-        MoveBase::State set_state;
-        if (moveBase.get_set_state(set_state))
-            kf.enqueMeasurement(MeasurementType::SetState, set_state.state, set_state.timestamp_us);
+        processSetState();
+        processRects();
 
         uint64_t timestamp_us = systick.get_us();
         kf.update(timestamp_us);

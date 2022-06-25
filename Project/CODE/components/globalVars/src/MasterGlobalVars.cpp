@@ -34,6 +34,7 @@ void MasterGlobalVars::send_coord_recv(int cnt, const float* coords) {
         ScheduleGuard guard;
         target_coords_cnt = cnt;
         rt_memcpy(target_coords_corr, coords, sizeof(target_coords_corr[0]) * cnt);
+        coord_valid.set();
     }
     rt_event_send(&coord_recv_event, 1);
 }
@@ -44,27 +45,33 @@ void MasterGlobalVars::get_coord_recv() {
     rt_memcpy(coords + 1, target_coords_corr, sizeof(target_coords_corr[0]) * coords_cnt);
 }
 
-bool MasterGlobalVars::get_rectTarget(float target[3], uint64_t timestamp_us) {
+void MasterGlobalVars::send_rects_enabled(bool enabled, float maxDistErrorSquared) {
     InterruptGuard guard;
-    if (!_rectTargetEnabled) return false;
-    if (!_rectStarted) {
-        if (systick.get_diff_us(_rectStartTimestamp_us, timestamp_us) >= _rectCooldown_us) _rectStarted = true;
-        else
-            return false;
-    }
-
-    std::copy(_rectTarget, _rectTarget + 3, target);
-    return true;
-}
-void MasterGlobalVars::send_rectTarget(bool enabled, uint64_t timestamp_us, int64_t cooldown_us, const float target[3]) {
-    InterruptGuard guard;
-    _rectTargetEnabled = enabled;
+    _rectEnabled = enabled;
     if (!enabled) return;
+    _rectMaxDistErrorSquared = maxDistErrorSquared;
+}
 
-    _rectStarted = false;
-    _rectStartTimestamp_us = timestamp_us;
-    _rectCooldown_us = cooldown_us;
-    std::copy(target, target + 3, _rectTarget);
+void MasterGlobalVars::send_rects(const float state[3], const float* rects, int cnt, uint64_t timestamp_us) {
+    InterruptGuard guard;
+    if (!_rectEnabled) return;
+    _rectCnt = cnt;
+    _rectTimestamp_us = timestamp_us;
+    rt_memcpy(_rectRecvingState, state, sizeof(_rectRecvingState[0]) * 3);
+    rt_memcpy(_rectCoords[0], rects, sizeof(_rectCoords[0]) * cnt);
+}
+
+void MasterGlobalVars::get_rects(float state[3], float* rects, int& cnt, float& maxDistErrorSquared, uint64_t& timestamp_us) {
+    InterruptGuard guard;
+    if (!_rectEnabled || _rectCnt == 0) {
+        cnt = 0;
+        return;
+    }
+    cnt = _rectCnt;
+    rt_memcpy(state, _rectRecvingState, sizeof(_rectRecvingState[0]) * 3);
+    rt_memcpy(rects, _rectCoords[0], sizeof(_rectCoords[0]) * cnt);
+    maxDistErrorSquared = _rectMaxDistErrorSquared;
+    _rectCnt = 0;
 }
 
 bool MasterGlobalVars::wait_art_snapshot(int index, rt_int32_t timeout) {

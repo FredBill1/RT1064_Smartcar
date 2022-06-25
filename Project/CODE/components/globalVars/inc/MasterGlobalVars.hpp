@@ -3,6 +3,9 @@
 
 #include <rtthread.h>
 
+#include <bitset>
+
+#include "RectConfig.hpp"
 #include "edge_detect/A4Detect.hpp"
 
 class MasterGlobalVars {
@@ -22,19 +25,23 @@ class MasterGlobalVars {
  public:
     int coords_cnt;
     imgProc::apriltag::float_t coords[imgProc::edge_detect::target_coords_maxn + 1][2];  // start from index 1
+    std::bitset<imgProc::edge_detect::target_coords_maxn + 1> coord_valid;
     bool wait_for_coord_recv(rt_int32_t timeout = RT_WAITING_FOREVER);
     void send_coord_recv(int cnt, const float* coords);
     void get_coord_recv();
 
  private:
-    bool _rectTargetEnabled = false;
-    uint64_t _rectStartTimestamp_us, _rectCooldown_us;
-    bool _rectStarted;
-    float _rectTarget[3];  // [x, y, 与当前所推断距离的最大值]
+    bool _rectEnabled = false;
+    float _rectCoords[imgProc::apriltag::max_rect_cnt][2];
+    float _rectRecvingState[3];
+    float _rectMaxDistErrorSquared;
+    uint8_t _rectCnt = 0;
+    uint64_t _rectTimestamp_us;
 
  public:
-    bool get_rectTarget(float target[3], uint64_t timestamp_us);
-    void send_rectTarget(bool enabled, uint64_t timestamp_us = 0, int64_t cooldown_us = 0, const float target[3] = nullptr);
+    void send_rects_enabled(bool enabled, float maxDistErrorSquared = 0);
+    void send_rects(const float state[3], const float* rects, int cnt, uint64_t timestamp_us);
+    void get_rects(float state[3], float* rects, int& cnt, float& maxDistErrorSquared, uint64_t& timestamp_us);
 
  private:
     rt_event art_snapshot_event;

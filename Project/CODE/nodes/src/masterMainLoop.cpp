@@ -50,10 +50,10 @@ Task_t TraverseAndDetect() {
         int cur = tsp.hamilton_path[i];
         float x = coords[cur][0], y = coords[cur][1], yaw = std::atan2(y - state.y(), x - state.x());
         moveBase.send_goal(x - art_cam_dist * std::cos(yaw), y - art_cam_dist * std::sin(yaw), yaw);
-        float xyd[3]{x, y, rectMaxDistError};
-        masterGlobalVars.send_rectTarget(true, systick.get_us(), rectCooldown_us, xyd);
+
+        masterGlobalVars.send_rects_enabled(true, rectMaxDistErrorSquared);
         GUARD_COND(utils::moveBaseReachedCheck());
-        masterGlobalVars.send_rectTarget(false);
+        masterGlobalVars.send_rects_enabled(false);
 
         utils::send_art_snapshot_task();
         if constexpr (use_art) GUARD_COND(utils::waitArtSnapshot(i));

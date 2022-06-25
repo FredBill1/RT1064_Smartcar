@@ -21,7 +21,7 @@ constexpr int MeasurementQueueSize(MeasurementType type) {
     case MeasurementType::Odom: return 20;
     case MeasurementType::Gyro: return 20;
     case MeasurementType::Yaw: return 20;
-    case MeasurementType::Rect: return 5;
+    case MeasurementType::Rect: return 1;
     case MeasurementType::SetState: return 1;
     default: return 0;
     }

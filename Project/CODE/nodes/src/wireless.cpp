@@ -131,10 +131,6 @@ static inline void SendGoal() {
     if (!(wireless.getData<float>(x, y, yaw))) return;
     beep.set(false);
     moveBase.send_goal(x, y, yaw);
-
-    constexpr float dist = 0.35;
-    float xyd[3]{x + dist * std::cos(yaw), y + dist * std::sin(yaw), 1};
-    masterGlobalVars.send_rectTarget(true, systick.get_us(), 0, xyd);
 }
 
 static inline void SendState() {
