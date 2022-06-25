@@ -55,7 +55,7 @@ Task_t TraverseAndDetect() {
         GUARD_COND(utils::moveBaseReachedCheck());
         masterGlobalVars.send_rects_enabled(false);
 
-        utils::send_art_snapshot_task();
+        utils::sendArtSnapshotTask();
         if constexpr (use_art) GUARD_COND(utils::waitArtSnapshot(i));
     }
     return true;
@@ -65,9 +65,10 @@ static inline void Idle() {
     SHOW_STATE("IDLE");
     for (;;) {
         keyScan();
-        if (key_pressing[3]) break;
+        if (key_pressing[4]) break;
         if (key_pressing[1]) utils::sendSlaveTask(SlaveGlobalVars::A4_PREPARE);
         if (key_pressing[2]) utils::sendSlaveTask(SlaveGlobalVars::RECT);
+        if (key_pressing[3]) utils::sendArtSnapshotTask();
     }
     masterGlobalVars.reset_requested();  // clear the reset flag
 }

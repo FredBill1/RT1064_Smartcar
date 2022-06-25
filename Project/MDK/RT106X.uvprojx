@@ -2804,6 +2804,11 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\src\uartSlave.cpp</FilePath>
             </File>
+            <File>
+              <FileName>uartArt.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\src\uartArt.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -5837,6 +5842,11 @@
               <FileName>uartSlave.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\src\uartSlave.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>uartArt.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\src\uartArt.cpp</FilePath>
             </File>
           </Files>
         </Group>

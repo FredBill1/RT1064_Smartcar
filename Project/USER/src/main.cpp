@@ -24,6 +24,7 @@ int main(void) {
     MCU_MASTER wirelessNode();
     MCU_MASTER motorControlNode();
     MCU_MASTER uartMasterNode();
+    MCU_MASTER uartArtNode();
     MCU_MASTER masterMainLoopNode();
     MCU_MASTER poseKalmanNode();
 

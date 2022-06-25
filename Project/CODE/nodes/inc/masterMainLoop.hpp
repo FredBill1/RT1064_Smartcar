@@ -67,7 +67,7 @@ static inline void sendCoords() {
     a4_tx.setArr(coords[1], coords_cnt * 2);
     wireless.send(a4_tx);
 }
-static inline void send_art_snapshot_task() {
+static inline void sendArtSnapshotTask() {
     static uint8_t cmd_id = 0xA5;
     static SerialIO::TxXfer art_xfer(&cmd_id, 1, "art_snapshot");
     art_xfer.txFinished(-1);

@@ -19,6 +19,9 @@ bool poseKalmanNode();
 // 主机接收从机数据
 bool uartMasterNode();
 
+// 主机接收art数据
+bool uartArtNode();
+
 // 主机的主循环
 bool masterMainLoopNode();
 
