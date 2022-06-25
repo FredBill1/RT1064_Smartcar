@@ -154,6 +154,7 @@ void recvCoords(SerialIO& uart, Beep& beep);
 
 static inline void SendMasterStop() {
     beep.set(false);
+    masterGlobalVars.signal_reset();
     moveBase.set_enabled(false);
     baseDriver.cmd_vel(0, 0, 0, 0);
     rt_thread_mdelay(pose_kalman::predict_period_us * 10 / 1000);
