@@ -10,32 +10,21 @@ class MasterGlobalVars {
     MasterGlobalVars();
 
  private:
+    bool reset_flag = false;
+
+ public:
+    void signal_reset();
+    bool reset_requested();
+
+ private:
     rt_event coord_recv_event;
 
  public:
     int coords_cnt;
-    imgProc::apriltag::float_t coords[imgProc::edge_detect::target_coords_maxn + 1][2];
+    imgProc::apriltag::float_t coords[imgProc::edge_detect::target_coords_maxn + 1][2];  // start from index 1
     bool wait_for_coord_recv(rt_int32_t timeout = RT_WAITING_FOREVER);
     void send_coord_recv(int cnt, const float* coords);
     void get_coord_recv();
-
- public:
-    enum State : uint8_t {
-        IDLE,
-        RESET,
-        GET_COORDS,
-        SOLVE_TSP,
-        NAVIGATION,
-        __Size,
-    };
-
- private:
-    State _state = IDLE;
-
- public:
-    State get_state() const;
-    void set_state(State state);
-    static const char* state_str(State state);
 
  private:
     bool _rectTargetEnabled = false;
@@ -50,10 +39,12 @@ class MasterGlobalVars {
  private:
     rt_event art_snapshot_event;
     rt_event art_result_event;
+    uint8_t _art_cur_index = 0;
     uint8_t _art_result;
 
  public:
-    bool wait_art_snapshot(rt_int32_t timeout = RT_WAITING_FOREVER);
+    uint8_t art_results[imgProc::edge_detect::target_coords_maxn + 1];
+    bool wait_art_snapshot(int index = 0, rt_int32_t timeout = RT_WAITING_FOREVER);
     void send_art_snapshot();
     bool wait_art_result(uint8_t& result, rt_int32_t timeout = RT_WAITING_FOREVER);
     void send_art_result(uint8_t result);

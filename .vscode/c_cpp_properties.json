@@ -55,10 +55,11 @@
                 "${workspaceFolder}\\Project\\CODE\\components\\pose_kalman\\inc",
                 "${workspaceFolder}\\Libraries\\TSP\\inc",
                 "${workspaceFolder}\\Project\\CODE\\components\\show_image\\inc",
-                "${workspaceFolder}\\Project\\CODE\\components\\globalVars\\inc"
+                "${workspaceFolder}\\Project\\CODE\\components\\globalVars\\inc",
+                "${workspaceFolder}\\Project\\CODE\\nodes\\inc"
             ],
             "defines": [
-                "TSP_MAX_POINT_NUM=21",
+                "TSP_MAX_POINT_NUM=22",
                 "CPU_MIMXRT1064DVL6A",
                 "SKIP_SYSCLK_INIT",
                 "XIP_EXTERNAL_FLASH=1",

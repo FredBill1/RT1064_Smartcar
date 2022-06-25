@@ -13,6 +13,18 @@ MasterGlobalVars::MasterGlobalVars() {
     rt_event_init(&art_result_event, "art_result_event", RT_IPC_FLAG_PRIO);
 }
 
+void MasterGlobalVars::signal_reset() {
+    InterruptGuard guard;
+    reset_flag = true;
+}
+
+bool MasterGlobalVars::reset_requested() {
+    InterruptGuard guard;
+    bool flag = reset_flag;
+    reset_flag = false;
+    return flag;
+}
+
 bool MasterGlobalVars::wait_for_coord_recv(rt_int32_t timeout) {
     return rt_event_recv(&coord_recv_event, 1, RT_EVENT_FLAG_AND | RT_EVENT_FLAG_CLEAR, timeout, RT_NULL) == RT_EOK;
 }
@@ -28,29 +40,8 @@ void MasterGlobalVars::send_coord_recv(int cnt, const float* coords) {
 
 void MasterGlobalVars::get_coord_recv() {
     ScheduleGuard guard;
-    coords_cnt = target_coords_cnt + 1;
+    coords_cnt = target_coords_cnt;
     rt_memcpy(coords + 1, target_coords_corr, sizeof(target_coords_corr[0]) * coords_cnt);
-}
-
-MasterGlobalVars::State MasterGlobalVars::get_state() const {
-    InterruptGuard guard;
-    return _state;
-}
-
-void MasterGlobalVars::set_state(State state) {
-    InterruptGuard guard;
-    _state = state;
-}
-
-const char* MasterGlobalVars::state_str(State state) {
-    switch (state) {
-    case IDLE: return "IDLE";
-    case RESET: return "RST ";
-    case GET_COORDS: return "GETC";
-    case SOLVE_TSP: return "TSP ";
-    case NAVIGATION: return "NAV ";
-    default: return "NULL";
-    }
 }
 
 bool MasterGlobalVars::get_rectTarget(float target[3], uint64_t timestamp_us) {
@@ -76,7 +67,12 @@ void MasterGlobalVars::send_rectTarget(bool enabled, uint64_t timestamp_us, int6
     std::copy(target, target + 3, _rectTarget);
 }
 
-bool MasterGlobalVars::wait_art_snapshot(rt_int32_t timeout) {
+bool MasterGlobalVars::wait_art_snapshot(int index, rt_int32_t timeout) {
+    if (index) {
+        InterruptGuard guard;
+        _art_cur_index = index;
+    }
+    rt_event_recv(&art_result_event, 1, RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR, RT_WAITING_NO, RT_NULL);  // 清除接收标志位
     return rt_event_recv(&art_snapshot_event, 1, RT_EVENT_FLAG_AND | RT_EVENT_FLAG_CLEAR, timeout, RT_NULL) == RT_EOK;
 }
 void MasterGlobalVars::send_art_snapshot() { rt_event_send(&art_snapshot_event, 1); }
@@ -89,11 +85,17 @@ bool MasterGlobalVars::wait_art_result(uint8_t& result, rt_int32_t timeout) {
     return true;
 }
 void MasterGlobalVars::send_art_result(uint8_t result) {
+    bool need_result;
     {
         InterruptGuard guard;
-        _art_result = result;
+        need_result = _art_cur_index;
+        if (need_result) {
+            _art_result = result;
+            art_results[_art_cur_index] = result;
+            _art_cur_index = 0;
+        }
     }
-    rt_event_send(&art_result_event, 1);
+    if (need_result) rt_event_send(&art_result_event, 1);
 }
 
 MasterGlobalVars masterGlobalVars;
