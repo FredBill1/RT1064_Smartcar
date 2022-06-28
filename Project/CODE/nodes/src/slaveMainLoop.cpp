@@ -34,6 +34,12 @@ static bool skip;
 static bool visualize;
 static bool binary;
 };  // namespace keys
+#define SKIP_CHECK           \
+    if (keys::skip) {        \
+        show_grayscale(img); \
+        return;              \
+    }
+
 static inline void keyScan() {
     using namespace keys;
     skip = slave_switch[2].get();
@@ -51,7 +57,7 @@ static inline void Reset() {
 }
 
 static inline void A4Prepare() {
-    if (keys::skip) return;
+    SKIP_CHECK;
     A4Detect(img, borderWidth, borderHeight, 50, 100);
     show_edge(img);
     if (slave_key[0].pressing()) {
@@ -61,7 +67,7 @@ static inline void A4Prepare() {
 }
 
 static inline void A4Detect() {
-    if (keys::skip) return;
+    SKIP_CHECK;
     static SerialIO::TxArr<float, target_coords_maxn * 2, true> a4_tx(32, "a4_tx");
 
     bool res = A4Detect(img, borderWidth, borderHeight, 50, 100);
@@ -82,7 +88,7 @@ static inline void A4Detect() {
 }
 
 static inline void FindRect() {
-    if (keys::skip) return;
+    SKIP_CHECK;
     static RectSender rectSender(33);
 
     bool visualize = !keys::binary && keys::visualize;  // 是否显示效果
