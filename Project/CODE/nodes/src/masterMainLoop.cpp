@@ -20,7 +20,7 @@ Task_t GetCoords() {
     utils::sendSlaveTask(SlaveGlobalVars::RECT);
     masterGlobalVars.get_coord_recv();
     utils::sendCoords();
-    draw_corr(coords, coords_cnt, borderWidth, borderHeight);
+    draw_corr(coords + 1, coords_cnt, borderWidth, borderHeight);
     return true;
 }
 
@@ -34,7 +34,7 @@ Task_t SolveFirstTSP() {
     }
     tsp.solve_without_returning();
 
-    for (int i = 1; i < coords_cnt; ++i) {
+    for (int i = 1; i <= coords_cnt; ++i) {
         int u = tsp.hamilton_path[i - 1], v = tsp.hamilton_path[i];
         drawLine(coords[u][0] * tsp_k, coords[u][1] * tsp_k, coords[v][0] * tsp_k, coords[v][1] * tsp_k,
                  [](int x, int y) { ips114_drawpoint(x, N / 4 - y, ips.Red); });
