@@ -71,6 +71,7 @@ void MasterGlobalVars::get_rects(float state[3], float* rects, int& cnt, float& 
     rt_memcpy(state, _rectRecvingState, sizeof(_rectRecvingState[0]) * 3);
     rt_memcpy(rects, _rectCoords[0], sizeof(_rectCoords[0]) * cnt);
     maxDistErrorSquared = _rectMaxDistErrorSquared;
+    timestamp_us = _rectTimestamp_us;
     _rectCnt = 0;
 }
 
