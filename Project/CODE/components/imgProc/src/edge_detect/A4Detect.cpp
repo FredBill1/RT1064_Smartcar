@@ -16,7 +16,7 @@ extern "C" {
 #include "SEEKFREE_IPS114_SPI.h"
 }
 
-#define debug_ips(s) ips114_showstr(188, 4, s)
+#define debug_ips(s) ips114_showstr(188, 3, s)
 
 namespace imgProc {
 using namespace apriltag;
