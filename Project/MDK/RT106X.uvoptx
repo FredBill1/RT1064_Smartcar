@@ -507,22 +507,6 @@
         <Bp>
           <Number>7</Number>
           <Type>0</Type>
-          <LineNumber>93</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>-2147242180</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948MPUFifoControl.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\RT106X\../../Libraries/eMD-SmartMotion-ICM20948-1.1.0-MP/Invn/Devices/Drivers/ICM20948/Icm20948MPUFifoControl.c\93</Expression>
-        </Bp>
-        <Bp>
-          <Number>8</Number>
-          <Type>0</Type>
           <LineNumber>207</LineNumber>
           <EnabledFlag>1</EnabledFlag>
           <Address>252</Address>
@@ -535,22 +519,6 @@
           <Filename>..\..\Libraries\eigen\Eigen\src\Core\CoreEvaluators.h</Filename>
           <ExecCommand></ExecCommand>
           <Expression>\\RT106X\../CODE/components/imgProc/src/apriltag/apriltag_pose.cpp\207</Expression>
-        </Bp>
-        <Bp>
-          <Number>9</Number>
-          <Type>0</Type>
-          <LineNumber>99</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>-2147242168</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\..\Libraries\eMD-SmartMotion-ICM20948-1.1.0-MP\Invn\Devices\Drivers\ICM20948\Icm20948MPUFifoControl.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\\../../Libraries/eMD-SmartMotion-ICM20948-1.1.0-MP/Invn/Devices/Drivers/ICM20948/Icm20948MPUFifoControl.c\99</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>

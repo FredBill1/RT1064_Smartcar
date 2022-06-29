@@ -13,6 +13,7 @@
 #include "MoveBase.hpp"
 #include "QTimer.hpp"
 #include "SerialIO.hpp"
+#include "Servo.hpp"
 #include "Systick.hpp"
 #include "controller/LADRC.hpp"
 #include "pose_kalman/LocalPlanner.hpp"
@@ -35,6 +36,9 @@ extern const GPIO master_key[5];
 extern const GPIO master_switch[3];
 extern const GPIO slave_key[5];
 extern const GPIO slave_switch[3];
+
+extern const Servo srv1;
+extern const Servo srv2;
 
 extern SerialIO uart2;
 extern SerialIO uart3;

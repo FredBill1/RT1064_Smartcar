@@ -28,4 +28,11 @@
 #define SLAVE_KEY C4, C26, C27, C31, C25
 #define SLAVE_SWITCH C24, D4, D27
 
+#define SRV1_CONFIG PWM4_MODULE0_CHA_B24, 50, 500, 2500, 270
+#define SRV2_CONFIG PWM4_MODULE1_CHA_B25, 50, 500, 2500, 270
+#define SRV1_UP 10
+#define SRV1_DOWN 90
+#define SRV2_UP 10
+#define SRV2_DOWN 10
+
 #endif  // _PinConfig_h
