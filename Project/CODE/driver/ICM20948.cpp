@@ -9,7 +9,8 @@
 #include "ICM20948CFG.hpp"
 #include "Invn/Devices/Drivers/ICM20948/Icm20948MPUFifoControl.h"
 #include "Invn/Devices/SensorTypes.h"
-
+#include "utils/FuncThread.hpp"
+#include "utils/InterruptGuard.hpp"
 extern "C" {
 #include "fsl_debug_console.h"
 #include "zf_gpio.h"
@@ -55,6 +56,7 @@ RT_WEAK void ICM20948::setupCallbacks() {}
 
 void ICM20948::init() {
     setupCallbacks();
+    rt_sem_init(&sem, "icm", 0, RT_IPC_FLAG_PRIO);
     systick_delay_ms(10);
     spi_init(SPI_N, SCK, MOSI, MISO, CS, 3, 7 * 1000 * 1000);
 
@@ -70,7 +72,21 @@ void ICM20948::init() {
     enableSetSensors();
 
     gpio_interrupt_init(INT, RISING, GPIO_INT_CONFIG);
+    NVIC_SetPriority((IRQn_Type)((IRQn_Type)((INT >> 4) - 2) + GPIO1_Combined_0_15_IRQn), 0);
+    FuncThread(
+        [this]() {
+            for (;;) {
+                rt_sem_take(&sem, sample_timeout);
+                {
+                    ScheduleGuard guard;
+                    readSensor();
+                }
+            }
+        },
+        "icm", 2048, Thread::imu_priority);
 }
+
+void ICM20948::newData() { rt_sem_release(&sem); }
 
 static uint8_t convert_to_generic_ids[INV_ICM20948_SENSOR_MAX]  //
     {INV_SENSOR_TYPE_ACCELEROMETER,
@@ -107,10 +123,8 @@ int ICM20948::spi_read(void* context, uint8_t reg, uint8_t* buf, uint32_t len) {
     ICM20948& self = *(ICM20948*)context;
     reg |= READ_BIT_MASK;
     self._buf[0] = reg;
-    rt_base_t level = rt_hw_interrupt_disable();
     spi_mosi(self.SPI_N, self.CS, self._buf, self._buf, len + 1, 1);
-    rt_hw_interrupt_enable(level);
-    memcpy(buf, self._buf + 1, len);
+    rt_memcpy(buf, self._buf + 1, len);
     return 0;
 }
 
@@ -118,10 +132,8 @@ int ICM20948::spi_write(void* context, uint8_t reg, const uint8_t* buf, uint32_t
     ICM20948& self = *(ICM20948*)context;
     reg &= WRITE_BIT_MASK;
     self._buf[0] = reg;
-    memcpy(self._buf + 1, buf, len);
-    rt_base_t level = rt_hw_interrupt_disable();
-    spi_mosi(self.SPI_N, self.CS, self._buf, self._buf, len + 1, 1);
-    rt_hw_interrupt_enable(level);
+    rt_memcpy(self._buf + 1, buf, len);
+    spi_mosi(self.SPI_N, self.CS, self._buf, 0, len + 1, 1);
     return 0;
 }
 

@@ -21,4 +21,4 @@ static void uartSlaveEntry() {
     }
 }
 
-bool uartSlaveNode() { return FuncThread(uartSlaveEntry, "uartSlave", 4096, Thread::highest_priority); }
+bool uartSlaveNode() { return FuncThread(uartSlaveEntry, "uartSlave", 4096, Thread::uart_priority); }

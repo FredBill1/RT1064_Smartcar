@@ -50,14 +50,15 @@ static constexpr bool use_mag_orientation  = 0; // 地磁位姿
 static constexpr uint32_t period_uncal_mag        = 100; // 未校准磁场 1~255Hz
 static constexpr uint32_t period_uncal_gyro       = 100; // 未校准陀螺仪 1~255Hz
 static constexpr uint32_t period_accel            = 100; // 加速度计 1~225Hz
-static constexpr uint32_t period_gyro             = 1 ; // 陀螺仪 1~225Hz
+static constexpr uint32_t period_gyro             = 1  ; // 陀螺仪 1~225Hz
 static constexpr uint32_t period_mag              = 100; // 磁场 1~70Hz
 static constexpr uint32_t period_gravity          = 20 ; // 重力 50~255Hz (基于6DOF位姿)
 static constexpr uint32_t period_linear_accel     = 20 ; // 线加速度 50~255Hz (基于6DOF位姿和加速度计)
 static constexpr uint32_t period_rpy_orientation  = 20 ; // 9DOF RPY 50~255Hz (基于9DOF位姿)
-static constexpr uint32_t period_6DOF_orientation = 1 ; // 6DOF位姿 50~255Hz
-static constexpr uint32_t period_9DOF_orientation = 1 ; // 9DOF位姿 50~255Hz
+static constexpr uint32_t period_6DOF_orientation = 1  ; // 6DOF位姿 50~255Hz
+static constexpr uint32_t period_9DOF_orientation = 1  ; // 9DOF位姿 50~255Hz
 static constexpr uint32_t period_mag_orientation  = 20 ; // 地磁位姿 1~255Hz
 // clang-format on
+static constexpr uint32_t sample_timeout = 5;
 
 #endif  // _ICM20948CFG_hpp

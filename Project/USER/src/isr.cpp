@@ -33,7 +33,8 @@ void GPIO2_Combined_16_31_IRQHandler(void) {
     }
     if (GET_GPIO_FLAG(C30)) {
         CLEAR_GPIO_FLAG(C30);
-        imu.readSensor();
+        // imu.readSensor();
+        imu.newData();
         // PRINTF("%d\n\r", rt_tick_get());
     }
     rt_interrupt_leave();

@@ -14,6 +14,9 @@ constexpr rt_uint8_t highest_priority = 0;
 constexpr rt_uint8_t lowest_priority = RT_THREAD_PRIORITY_MAX - 2;
 constexpr rt_uint8_t default_priority = terminal_thread_priority + 1;
 
+constexpr rt_uint8_t imu_priority = highest_priority;
+constexpr rt_uint8_t uart_priority = highest_priority + 1;
+
 }  // namespace Thread
 
 bool FuncThread(std::function<void()> func, const char* name, rt_uint32_t stack_size = 2048,

@@ -33,6 +33,7 @@ class ICM20948 : private inv_icm20948_serif, protected inv_icm20948 {
     // clang-format on
 
  private:
+    rt_semaphore sem;
     const SPIN_enum SPI_N;
     const SPI_PIN_enum SCK, MOSI, MISO, CS;
     const PIN_enum INT;
@@ -59,6 +60,7 @@ class ICM20948 : private inv_icm20948_serif, protected inv_icm20948 {
     void enableSetSensors();
 
     int readSensor();
+    void newData();
 };
 
 #endif  // _ICM20948_hpp

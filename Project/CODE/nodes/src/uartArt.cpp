@@ -23,4 +23,4 @@ void uartArtEntry() {
     }
 }
 
-bool uartArtNode() { return FuncThread(uartArtEntry, "uartArt", 2048, 0); }
+bool uartArtNode() { return FuncThread(uartArtEntry, "uartArt", 2048, Thread::uart_priority); }

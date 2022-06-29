@@ -10,7 +10,7 @@ int main(void);
 
 int main(void) {
     initDevices();
-    // MCU_MASTER imu.init();
+    MCU_MASTER imu.init();
     MCU_SLAVE camera.init();
     MCU_SLAVE usb_cdc_init();
 
