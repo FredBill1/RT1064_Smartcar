@@ -32,6 +32,16 @@ extern const GPIO btn_c31;
 extern const GPIO switch_d27;
 extern const GPIO switch_d4;
 
+namespace key {
+enum keys {
+    front,
+    back,
+    left,
+    right,
+    middle,
+};
+}  // namespace key
+
 extern const GPIO master_key[5];
 extern const GPIO master_switch[3];
 extern const GPIO slave_key[5];
