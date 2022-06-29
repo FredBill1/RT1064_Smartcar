@@ -47,6 +47,8 @@ extern const GPIO master_switch[3];
 extern const GPIO slave_key[5];
 extern const GPIO slave_switch[3];
 
+extern const GPIO magnet[6];
+
 extern const Servo srv1;
 extern const Servo srv2;
 

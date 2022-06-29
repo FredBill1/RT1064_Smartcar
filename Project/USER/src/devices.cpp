@@ -62,6 +62,8 @@ extern const GPIO master_switch[3]{MASTER_SWITCH};
 extern const GPIO slave_key[5]{SLAVE_KEY};
 extern const GPIO slave_switch[3]{SLAVE_SWITCH};
 
+extern const GPIO magnet[6]{MAGNET_CONFIG};
+
 extern const Servo srv1(SRV1_CONFIG);
 extern const Servo srv2(SRV2_CONFIG);
 
@@ -96,6 +98,9 @@ void initDevices() {
     MCU_MASTER for (auto& gpio : master_switch) gpio.init(true);
     MCU_SLAVE for (auto& gpio : slave_key) gpio.init(true);
     MCU_SLAVE for (auto& gpio : slave_switch) gpio.init(true);
+
+    // magnet
+    MCU_MASTER for (auto& gpio : magnet) gpio.init(false, false);
 
     // servo
     srv1.init(SRV1_UP);

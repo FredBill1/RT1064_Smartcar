@@ -35,4 +35,6 @@
 #define SRV2_UP   10
 #define SRV2_DOWN 10
 
+#define MAGNET_CONFIG B21, B20, B23, B22, B10, B14
+
 #endif  // _PinConfig_h
