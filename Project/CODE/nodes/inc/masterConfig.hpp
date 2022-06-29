@@ -9,7 +9,7 @@ constexpr float initial_position[3]{0, 0, 0};
 constexpr float art_cam_dist = 0.2;
 constexpr bool use_art = false;
 
-#define slave_uart uart3
+#define slave_uart uart2
 #define art_uart uart4
 
 #endif

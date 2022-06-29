@@ -2,8 +2,8 @@
 //
 #include "SlaveGlobalVars.hpp"
 #include "devices.hpp"
+#include "slaveConfig.hpp"
 
-#define master_uart uart3
 static uint8_t id;
 
 static inline void RecvTask() {

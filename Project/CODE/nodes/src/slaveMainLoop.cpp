@@ -20,6 +20,7 @@ extern "C" {
 #include "RectConfig.hpp"
 #include "SlaveGlobalVars.hpp"
 #include "navigationParam.hpp"
+#include "slaveConfig.hpp"
 
 using namespace imgProc;
 using namespace imgProc::apriltag;
@@ -78,7 +79,7 @@ static inline void A4Detect() {
             A4_cnt_same = 3;
             a4_tx.txFinished(-1);
             a4_tx.setArr(target_coords_corr[0], target_coords_cnt * 2);
-            uart3.send(a4_tx);
+            master_uart.send(a4_tx);
         }
     } else {
         A4_pre_cnt = target_coords_cnt, A4_cnt_same = 1;
@@ -99,7 +100,7 @@ static inline void FindRect() {
 
     reconcileRects(rects);
 
-    rectSender.send_to(rects, uart3);
+    rectSender.send_to(rects, master_uart);
 
     if (visualize) {
         plot_rects(img, rects, RED);

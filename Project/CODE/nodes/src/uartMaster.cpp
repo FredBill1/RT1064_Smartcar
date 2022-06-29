@@ -10,12 +10,11 @@ extern "C" {
 #include "bresenham.hpp"
 #include "devices.hpp"
 #include "edge_detect/A4Detect.hpp"
+#include "masterConfig.hpp"
 
 using namespace imgProc;
 using namespace imgProc::apriltag;
 using namespace imgProc::edge_detect;
-
-#define slave_uart uart3
 
 static Beep beep;
 static uint8_t id;
