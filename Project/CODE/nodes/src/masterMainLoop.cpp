@@ -6,6 +6,7 @@ Task_t Init() {
 }
 
 Task_t Reset() {
+    masterGlobalVars.clear_events();
     utils::sendSlaveTask(SlaveGlobalVars::RESET);
     MoveBase::State state(systick.get_us(), initial_position[0], initial_position[1], initial_position[2], 0, 0, 0);
     moveBase.send_set_state(state);

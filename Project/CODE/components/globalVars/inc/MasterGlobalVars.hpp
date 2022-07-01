@@ -11,6 +11,7 @@
 class MasterGlobalVars {
  public:
     MasterGlobalVars();
+    void clear_events();
 
  private:
     bool reset_flag = false;
