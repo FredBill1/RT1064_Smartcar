@@ -328,6 +328,8 @@ bool fit_quad_simple(Coordinate cluster[], int sz, quad& quad, const edge_detect
         return quadrant + dy / dx;
     };
     std::sort(cluster, cluster + sz, [&](Coordinate a, Coordinate b) { return slope(a) < slope(b); });
+    sz = std::unique(cluster, cluster + sz, [&](Coordinate a, Coordinate b) { return std::abs(slope(a) - slope(b)) < 1e-3f; }) -
+         cluster;
 
     line_fit_pt* lfps = compute_lfps_simple(sz, cluster, g);
     int indices[4];
