@@ -18,8 +18,10 @@ void uartArtEntry() {
             masterGlobalVars.send_art_snapshot();
         } else if (id < 15) {
             masterGlobalVars.send_art_result(id);
-        } else
-            beep.set(1);
+        } else {
+            continue;
+        }
+        beep.set(0);
     }
 }
 
