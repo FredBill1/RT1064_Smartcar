@@ -8,8 +8,6 @@ Task_t Init() {
 Task_t Reset() {
     masterGlobalVars.clear_events();
     utils::sendSlaveTask(SlaveGlobalVars::RESET);
-    MoveBase::State state(systick.get_us(), initial_position[0], initial_position[1], initial_position[2], 0, 0, 0);
-    moveBase.send_set_state(state);
 
     utils::clear_screen();
     return true;
@@ -45,6 +43,10 @@ Task_t SolveFirstTSP() {
 
 Task_t TraverseAndDetect() {
     SHOW_STATE("TRAV");
+    {
+        MoveBase::State state(systick.get_us(), initial_position[0], initial_position[1], initial_position[2], 0, 0, 0);
+        moveBase.send_set_state(state);
+    }
     for (int i = 1; i < tsp.N; ++i) {
         MoveBase::State state;
         moveBase.get_state(state);
