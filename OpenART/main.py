@@ -46,8 +46,7 @@ def thresh_find_rect(img):
     threshim = sensor.alloc_extra_fb(W, H, sensor.RGB565)
     threshim.replace(img)
     threshim.binary([(0, 100, -128, 127, -10, 127)])
-    # threshim.to_grayscale(rgb_channel=5)
-    rects = threshim.find_rects(threshold=10000)
+    rects = threshim.find_rects(threshold=120000)
     sensor.dealloc_extra_fb()  # threshim
     rects = [r for r in rects if check_rect(r.corners())]
     return max(rects, key=lambda x: x.magnitude()) if rects else None
