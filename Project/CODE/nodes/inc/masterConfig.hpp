@@ -6,7 +6,7 @@
 constexpr int mainloop_timeout = 500;
 constexpr rt_tick_t art_snapshot_timeout_ms = 1000;
 constexpr float initial_position[3]{0, 0, 0};
-constexpr float art_cam_dist = 0.2;
+constexpr float art_cam_dist = 0.30;
 constexpr bool use_art = false;
 
 #define slave_uart uart2
