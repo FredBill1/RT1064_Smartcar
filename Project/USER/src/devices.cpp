@@ -1,6 +1,7 @@
 #include "devices.hpp"
 
 #include "MCU_ID.hpp"
+#include "localPlannerParam.hpp"
 #include "parameters.hpp"
 
 SerialIO uart2(UART2_CONFIG);
@@ -121,6 +122,8 @@ void initDevices() {
         encoderR1.init();
         encoderR2.init();
     }
+
+    MCU_MASTER pose_kalman::localPlanner.setParams(Param::localPlannerParam);
 
     ips.puts("Initialization Complete.");
 }
