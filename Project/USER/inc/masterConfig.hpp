@@ -11,5 +11,6 @@ constexpr bool use_art = false;
 
 #define slave_uart uart2
 #define art_uart uart4
+#define upload_uart uart5
 
 #endif

@@ -18,8 +18,8 @@ extern "C" {
 #include "devices.hpp"
 #include "edge_detect/A4Detect.hpp"
 //
+#include "fieldParam.hpp"
 #include "masterConfig.hpp"
-#include "navigationParam.hpp"
 
 using namespace imgProc;
 using namespace imgProc::apriltag;
@@ -94,7 +94,7 @@ Task_t waitArtSnapshot(int index) {
         if (masterGlobalVars.wait_art_snapshot(index, mainloop_timeout)) break;
         if (rt_tick_get_millisecond() - start_ms > art_snapshot_timeout_ms) {
             masterGlobalVars.send_art_snapshot();
-            masterGlobalVars.send_art_result(rand() % 15);
+            masterGlobalVars.send_art_result(ResultCatgory::Minor(rand() % 15));
         }
     }
     return true;

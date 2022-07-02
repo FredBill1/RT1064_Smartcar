@@ -56,7 +56,8 @@
                 "${workspaceFolder}\\Libraries\\TSP\\inc",
                 "${workspaceFolder}\\Project\\CODE\\components\\show_image\\inc",
                 "${workspaceFolder}\\Project\\CODE\\components\\globalVars\\inc",
-                "${workspaceFolder}\\Project\\CODE\\nodes\\inc"
+                "${workspaceFolder}\\Project\\CODE\\nodes\\inc",
+                "${workspaceFolder}\\Project\\CODE\\components\\artResult\\inc"
             ],
             "defines": [
                 "TSP_MAX_POINT_NUM=22",

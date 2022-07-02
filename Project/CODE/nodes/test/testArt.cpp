@@ -19,8 +19,10 @@ static void testArtRecvEntry() {
         beep.set(0);
 
         if (id == 0xFF) masterGlobalVars.send_art_snapshot();
-        else
-            masterGlobalVars.send_art_result(id);
+        else {
+            auto catgory = ResultCatgory::id_to_minor(id);
+            masterGlobalVars.send_art_result(catgory);
+        }
     }
 }
 
@@ -41,9 +43,9 @@ static void testArtMainLoopEntry() {
         ips.printf("send art snapshot\n");
         masterGlobalVars.wait_art_snapshot();
         ips.printf("snapshot finished\n");
-        uint8_t result;
+        ResultCatgory::Major result;
         masterGlobalVars.wait_art_result(result);
-        ips.printf("result is %d\n\n", result);
+        ips.printf("result is %d\n\n", (int)result);
     }
 }
 

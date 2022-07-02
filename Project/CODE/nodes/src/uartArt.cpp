@@ -2,6 +2,7 @@
 //
 
 #include "MasterGlobalVars.hpp"
+#include "artResult/ResultSender.hpp"
 #include "devices.hpp"
 #include "masterConfig.hpp"
 
@@ -9,6 +10,7 @@ static Beep beep;
 static uint8_t id;
 
 void uartArtEntry() {
+    static ResultSender resultSender(upload_uart, "art_result");
     for (;;) {
         art_uart.waitHeader();
         beep.set(1);
@@ -17,7 +19,12 @@ void uartArtEntry() {
         if (id == 0xFF) {
             masterGlobalVars.send_art_snapshot();
         } else if (id < 15) {
-            masterGlobalVars.send_art_result(id);
+            auto catgory = ResultCatgory::id_to_minor(id);
+            if (masterGlobalVars.send_art_result(catgory)) {
+                uint8_t xy[2];
+                masterGlobalVars.get_upload_xy(xy);
+                resultSender.send(xy[0], xy[1], catgory, RT_WAITING_FOREVER);
+            }
         } else {
             continue;
         }

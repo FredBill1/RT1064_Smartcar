@@ -10,7 +10,7 @@ extern "C" {
 #include "edge_detect/A4Detect.hpp"
 #include "edge_detect/show_edge.hpp"
 //
-#include "navigationParam.hpp"
+#include "fieldParam.hpp"
 
 namespace imgProc {
 namespace edge_detect {

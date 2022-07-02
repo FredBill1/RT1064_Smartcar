@@ -6,7 +6,7 @@ extern "C" {
 #include "devices.hpp"
 #include "edge_detect/A4Detect.hpp"
 //
-#include "navigationParam.hpp"
+#include "fieldParam.hpp"
 
 namespace imgProc {
 using apriltag::float_t;

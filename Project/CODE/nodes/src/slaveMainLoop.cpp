@@ -19,7 +19,7 @@ extern "C" {
 //
 #include "RectConfig.hpp"
 #include "SlaveGlobalVars.hpp"
-#include "navigationParam.hpp"
+#include "fieldParam.hpp"
 #include "slaveConfig.hpp"
 
 using namespace imgProc;

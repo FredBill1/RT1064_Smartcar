@@ -6,6 +6,7 @@
 #include <bitset>
 
 #include "RectConfig.hpp"
+#include "artResult/ResultCatgory.hpp"
 #include "edge_detect/A4Detect.hpp"
 
 class MasterGlobalVars {
@@ -48,14 +49,20 @@ class MasterGlobalVars {
     rt_event art_snapshot_event;
     rt_event art_result_event;
     uint8_t _art_cur_index = 0;
-    uint8_t _art_result;
 
  public:
-    uint8_t art_results[imgProc::edge_detect::target_coords_maxn + 1];
+    ResultCatgory::Major art_results[imgProc::edge_detect::target_coords_maxn + 1];
     bool wait_art_snapshot(int index = 0, rt_int32_t timeout = RT_WAITING_FOREVER);
     void send_art_snapshot();
-    bool wait_art_result(uint8_t& result, rt_int32_t timeout = RT_WAITING_FOREVER);
-    void send_art_result(uint8_t result);
+    bool wait_art_result(ResultCatgory::Major& result, rt_int32_t timeout = RT_WAITING_FOREVER);
+    bool send_art_result(ResultCatgory::Minor result);
+
+ private:
+    uint8_t _upload_xy[2]{0};
+
+ public:
+    void send_upload_xy(const uint8_t xy[2]);
+    void get_upload_xy(uint8_t xy[2]) const;
 };
 
 extern MasterGlobalVars masterGlobalVars;

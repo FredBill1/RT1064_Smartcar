@@ -6,6 +6,7 @@
 
 #include "MasterGlobalVars.hpp"
 #include "devices.hpp"
+#include "fieldParam.hpp"
 #include "pose_kalman/params.hpp"
 
 namespace pose_kalman {
@@ -169,6 +170,11 @@ static void poseKalmanEntry() {
         kf.update(timestamp_us);
         const T* state = kf.getState();
         moveBase.send_state(timestamp_us, state);
+        {
+            uint8_t xy[2]{(uint8_t)std::max(0, int(state[0] / squareSize) + 1),
+                          (uint8_t)std::max(0, int(state[1] / squareSize) + 1)};
+            masterGlobalVars.send_upload_xy(xy);
+        }
         runLocalPlanner(timestamp_us, state);
 
         if (pose_tx.txFinished()) {
