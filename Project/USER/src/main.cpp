@@ -27,6 +27,7 @@ int main(void) {
     MCU_MASTER uartArtNode();
     MCU_MASTER masterMainLoopNode();
     MCU_MASTER poseKalmanNode();
+    MCU_MASTER sendTraverseNode();
 
     MCU_MASTER moveBase.set_enabled(true);
     MCU_MASTER baseDriver.setControlState(1, 1, 1, 1);

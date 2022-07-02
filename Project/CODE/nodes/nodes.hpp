@@ -31,6 +31,9 @@ bool uartSlaveNode();
 // 从机的主循环
 bool slaveMainLoopNode();
 
+// 向裁判系统发坐标
+bool sendTraverseNode();
+
 // ^^^  src  ^^^
 // vvv tests vvv
 

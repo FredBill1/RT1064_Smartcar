@@ -8,32 +8,13 @@ class ResultSender {
     uint8_t buf[18] = "000.000 00 00 0 0";
     SerialIO::TxXfer xfer;
     SerialIO& serial;
+    void apply_time();
+    void apply_xy();
 
  public:
-    ResultSender(SerialIO& serial, const char* name) : serial(serial), xfer(buf, sizeof(buf), name) { buf[17] = '\n'; }
-    bool send(int x, int y, ResultCatgory::Minor catgory, int32_t timeout_ms = RT_WAITING_FOREVER) {
-        if (!xfer.txFinished(timeout_ms)) return false;
-        rt_tick_t ms = rt_tick_get_millisecond();
-        buf[6] = ms % 10 + '0', ms /= 10;
-        buf[5] = ms % 10 + '0', ms /= 10;
-        buf[4] = ms % 10 + '0', ms /= 10;
-        buf[2] = ms % 10 + '0', ms /= 10;
-        buf[1] = ms % 10 + '0', ms /= 10;
-        buf[0] = ms % 10 + '0';
-
-        buf[9] = x % 10 + '0', x /= 10;
-        buf[8] = x % 10 + '0';
-
-        buf[11] = y % 10 + '0', y /= 10;
-        buf[10] = y % 10 + '0';
-
-        using namespace ResultCatgory;
-        buf[16] = minor_to_index(catgory) + '0';
-        buf[14] = major_to_index(minor_to_major(catgory)) + '0';
-
-        serial.send(xfer);
-        return true;
-    }
+    ResultSender(SerialIO& serial, const char* name);
+    bool send_catgory(ResultCatgory::Minor catgory, int32_t timeout_ms = RT_WAITING_FOREVER);
+    bool send_traverse(bool carrying, int32_t timeout_ms = RT_WAITING_FOREVER);
 };
 
 #endif  // _artResult_ResultSender_hpp

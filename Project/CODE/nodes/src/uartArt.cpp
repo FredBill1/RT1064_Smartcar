@@ -9,7 +9,7 @@
 static Beep beep;
 static uint8_t id;
 
-void uartArtEntry() {
+static void uartArtEntry() {
     static ResultSender resultSender(upload_uart, "art_result");
     for (;;) {
         art_uart.waitHeader();
@@ -20,11 +20,7 @@ void uartArtEntry() {
             masterGlobalVars.send_art_snapshot();
         } else if (id < 15) {
             auto catgory = ResultCatgory::id_to_minor(id);
-            if (masterGlobalVars.send_art_result(catgory)) {
-                uint8_t xy[2];
-                masterGlobalVars.get_upload_xy(xy);
-                resultSender.send(xy[0], xy[1], catgory, RT_WAITING_FOREVER);
-            }
+            if (masterGlobalVars.send_art_result(catgory)) resultSender.send_catgory(catgory, RT_WAITING_FOREVER);
         } else {
             continue;
         }

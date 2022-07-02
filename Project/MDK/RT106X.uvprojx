@@ -2809,6 +2809,11 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\src\uartArt.cpp</FilePath>
             </File>
+            <File>
+              <FileName>sendTraverse.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\src\sendTraverse.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2903,6 +2908,16 @@
               <FileName>SlaveGlobalVars.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\components\globalVars\src\SlaveGlobalVars.cpp</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>artResult</GroupName>
+          <Files>
+            <File>
+              <FileName>ResultSender.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\artResult\src\ResultSender.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -5848,6 +5863,11 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\src\uartArt.cpp</FilePath>
             </File>
+            <File>
+              <FileName>sendTraverse.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\src\sendTraverse.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -5942,6 +5962,16 @@
               <FileName>SlaveGlobalVars.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\components\globalVars\src\SlaveGlobalVars.cpp</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>artResult</GroupName>
+          <Files>
+            <File>
+              <FileName>ResultSender.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\artResult\src\ResultSender.cpp</FilePath>
             </File>
           </Files>
         </Group>
