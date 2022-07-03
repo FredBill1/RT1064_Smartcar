@@ -87,14 +87,14 @@ Task_t moveBaseReachedCheck() {
         }
     }
 }
-Task_t waitArtSnapshot(int index) {
+Task_t waitArtSnapshot() {
     rt_tick_t start_ms = rt_tick_get_millisecond();
     for (;;) {
         CHECK_RESET_SIGNAL();
-        if (masterGlobalVars.wait_art_snapshot(index, mainloop_timeout)) break;
+        if (masterGlobalVars.wait_art_snapshot(mainloop_timeout)) break;
         if (rt_tick_get_millisecond() - start_ms > art_snapshot_timeout_ms) {
             masterGlobalVars.send_art_snapshot();
-            masterGlobalVars.send_art_result(ResultCatgory::Minor(rand() % 15));
+            masterGlobalVars.send_art_result(ResultCatgory::Major(rand() % 3));
         }
     }
     return true;

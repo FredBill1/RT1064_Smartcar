@@ -49,13 +49,15 @@ class MasterGlobalVars {
     rt_event art_snapshot_event;
     rt_event art_result_event;
     uint8_t _art_cur_index = 0;
+    bool _art_need_result = false;
 
  public:
     ResultCatgory::Major art_results[imgProc::edge_detect::target_coords_maxn + 1];
-    bool wait_art_snapshot(int index = 0, rt_int32_t timeout = RT_WAITING_FOREVER);
+    void send_art_cur_index(int index);
+    bool wait_art_snapshot(rt_int32_t timeout = RT_WAITING_FOREVER);
     void send_art_snapshot();
     bool wait_art_result(ResultCatgory::Major& result, rt_int32_t timeout = RT_WAITING_FOREVER);
-    bool send_art_result(ResultCatgory::Minor result);
+    bool send_art_result(ResultCatgory::Major result);
 
  private:
     uint8_t _upload_xy[2]{0};

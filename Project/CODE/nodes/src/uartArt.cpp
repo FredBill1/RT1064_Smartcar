@@ -19,8 +19,9 @@ static void uartArtEntry() {
         if (id == 0xFF) {
             masterGlobalVars.send_art_snapshot();
         } else if (id < 15) {
-            auto catgory = ResultCatgory::id_to_minor(id);
-            if (masterGlobalVars.send_art_result(catgory)) resultSender.send_catgory(catgory, RT_WAITING_FOREVER);
+            auto minor = ResultCatgory::id_to_minor(id);
+            auto major = ResultCatgory::minor_to_major(minor);
+            if (masterGlobalVars.send_art_result(major)) resultSender.send_catgory(minor, RT_WAITING_FOREVER);
         } else {
             continue;
         }

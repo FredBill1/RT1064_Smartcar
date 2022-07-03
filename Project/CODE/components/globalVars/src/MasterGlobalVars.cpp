@@ -81,11 +81,13 @@ void MasterGlobalVars::get_rects(float state[3], float* rects, int& cnt, float& 
     _rectCnt = 0;
 }
 
-bool MasterGlobalVars::wait_art_snapshot(int index, rt_int32_t timeout) {
-    if (index) {
-        InterruptGuard guard;
-        _art_cur_index = index;
-    }
+void MasterGlobalVars::send_art_cur_index(int index) {
+    InterruptGuard guard;
+    _art_cur_index = index;
+    _art_need_result = true;
+}
+
+bool MasterGlobalVars::wait_art_snapshot(rt_int32_t timeout) {
     rt_event_recv(&art_result_event, 1, RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR, RT_WAITING_NO, RT_NULL);  // 清除接收标志位
     return rt_event_recv(&art_snapshot_event, 1, RT_EVENT_FLAG_AND | RT_EVENT_FLAG_CLEAR, timeout, RT_NULL) == RT_EOK;
 }
@@ -98,15 +100,14 @@ bool MasterGlobalVars::wait_art_result(ResultCatgory::Major& result, rt_int32_t 
     }
     return true;
 }
-bool MasterGlobalVars::send_art_result(ResultCatgory::Minor result) {
+bool MasterGlobalVars::send_art_result(ResultCatgory::Major result) {
     bool need_result;
     {
         InterruptGuard guard;
-        need_result = _art_cur_index;
+        need_result = _art_need_result;
         if (need_result) {
-            ResultCatgory::Major major_res = ResultCatgory::minor_to_major(result);
-            art_results[_art_cur_index] = major_res;
-            _art_cur_index = 0;
+            art_results[_art_cur_index] = result;
+            _art_need_result = false;
         }
     }
     if (need_result) rt_event_send(&art_result_event, 1);

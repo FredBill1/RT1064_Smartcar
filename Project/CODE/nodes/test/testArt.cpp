@@ -20,8 +20,9 @@ static void testArtRecvEntry() {
 
         if (id == 0xFF) masterGlobalVars.send_art_snapshot();
         else {
-            auto catgory = ResultCatgory::id_to_minor(id);
-            masterGlobalVars.send_art_result(catgory);
+            auto minor = ResultCatgory::id_to_minor(id);
+            auto major = ResultCatgory::minor_to_major(minor);
+            masterGlobalVars.send_art_result(major);
         }
     }
 }
@@ -39,6 +40,7 @@ static void testArtMainLoopEntry() {
             rt_thread_mdelay(200);
             continue;
         }
+        masterGlobalVars.send_art_cur_index(0);
         send_art_snapshot_task();
         ips.printf("send art snapshot\n");
         masterGlobalVars.wait_art_snapshot();

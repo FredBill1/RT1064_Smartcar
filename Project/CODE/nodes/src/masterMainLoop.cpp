@@ -58,8 +58,9 @@ Task_t TraverseAndDetect() {
         GUARD_COND(utils::moveBaseReachedCheck());
         masterGlobalVars.send_rects_enabled(false);
 
+        masterGlobalVars.send_art_cur_index(i);
         utils::sendArtSnapshotTask();
-        if constexpr (use_art) GUARD_COND(utils::waitArtSnapshot(i));
+        if constexpr (use_art) GUARD_COND(utils::waitArtSnapshot());
     }
     return true;
 }
