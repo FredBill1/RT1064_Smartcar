@@ -12,7 +12,7 @@
 class MasterGlobalVars {
  public:
     MasterGlobalVars();
-    void clear_events();
+    void reset_states();
 
  private:
     bool reset_flag = false;

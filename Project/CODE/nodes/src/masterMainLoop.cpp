@@ -6,7 +6,7 @@ Task_t Init() {
 }
 
 Task_t Reset() {
-    masterGlobalVars.clear_events();
+    masterGlobalVars.reset_states();
     utils::sendSlaveTask(SlaveGlobalVars::RESET);
 
     utils::clear_screen();

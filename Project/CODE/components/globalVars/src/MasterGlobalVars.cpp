@@ -13,10 +13,16 @@ MasterGlobalVars::MasterGlobalVars() {
     rt_event_init(&art_result_event, "art_result_event", RT_IPC_FLAG_PRIO);
 }
 
-void MasterGlobalVars::clear_events() {
+void MasterGlobalVars::reset_states() {
     rt_event_recv(&coord_recv_event, 1, RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR, RT_WAITING_NO, RT_NULL);
     rt_event_recv(&art_snapshot_event, 1, RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR, RT_WAITING_NO, RT_NULL);
     rt_event_recv(&art_result_event, 1, RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR, RT_WAITING_NO, RT_NULL);
+    {
+        InterruptGuard guard;
+        reset_flag = false;
+        _rectEnabled = false;
+        _art_need_result = false;
+    }
 }
 
 void MasterGlobalVars::signal_reset() {
