@@ -77,6 +77,9 @@ static inline void A4Detect() {
     if (target_coords_cnt == A4_pre_cnt) {
         if (++A4_cnt_same >= 3) {
             A4_cnt_same = 3;
+            for (int i = 0; i < target_coords_cnt; ++i)
+                for (int j = 0; j < 2; ++j)
+                    target_coords_corr[i][j] = (int(target_coords_corr[i][j] / squareSize) + 0.5f) * squareSize;
             a4_tx.txFinished(-1);
             a4_tx.setArr(target_coords_corr[0], target_coords_cnt * 2);
             master_uart.send(a4_tx);
