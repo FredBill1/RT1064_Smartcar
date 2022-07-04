@@ -40,6 +40,7 @@ int main(void) {
     // MCU_SLAVE uartSlaveTest();
     // MCU_SLAVE apriltagDetectNode();
 
+    // MCU_MASTER testRectGrabNode();
     // MCU_MASTER testRectReceiveNode();
     // MCU_MASTER testMotorNode();
     // MCU_MASTER testQTimerNode();

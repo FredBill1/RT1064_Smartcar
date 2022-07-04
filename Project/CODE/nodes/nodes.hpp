@@ -37,6 +37,9 @@ bool sendTraverseNode();
 // ^^^  src  ^^^
 // vvv tests vvv
 
+// 测试抓取
+bool testRectGrabNode();
+
 // 测试矩形检测, 需要初始化mt9v03x
 bool testFindRectNode();
 

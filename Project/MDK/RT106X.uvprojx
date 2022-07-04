@@ -2539,6 +2539,11 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\components\pose_kalman\src\LocalPlanner.cpp</FilePath>
             </File>
+            <File>
+              <FileName>magnetAlign.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\pose_kalman\src\magnetAlign.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2893,6 +2898,11 @@
               <FileName>testArt.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\test\testArt.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>testRectGrab.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\test\testRectGrab.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -5524,6 +5534,11 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\components\pose_kalman\src\LocalPlanner.cpp</FilePath>
             </File>
+            <File>
+              <FileName>magnetAlign.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\components\pose_kalman\src\magnetAlign.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -5947,6 +5962,11 @@
               <FileName>testArt.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\test\testArt.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>testRectGrab.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\test\testRectGrab.cpp</FilePath>
             </File>
           </Files>
         </Group>
