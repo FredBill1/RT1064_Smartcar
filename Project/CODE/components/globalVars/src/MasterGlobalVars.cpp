@@ -62,6 +62,7 @@ void MasterGlobalVars::send_rects_enabled(bool enabled, float maxDistErrorSquare
     _rectEnabled = enabled;
     if (!enabled) return;
     _rectMaxDistErrorSquared = maxDistErrorSquared;
+    _rectCnt = 0;
 }
 
 void MasterGlobalVars::send_rects(const float state[3], const float* rects, int cnt, uint64_t timestamp_us) {
