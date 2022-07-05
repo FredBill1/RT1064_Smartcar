@@ -64,6 +64,7 @@ MoveBase::State::State(uint64_t timestamp_us, pose_kalman::T x, pose_kalman::T y
 void MoveBase::send_set_state(const State& state) {
     _stateLoader.store(state);
     _yawLoader.store(state.state[2]);
+    send_state(state);
 }
 
 bool MoveBase::get_set_state(State& new_state) { return _stateLoader.load(new_state); }
