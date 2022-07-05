@@ -17,6 +17,7 @@ extern "C" {
 #include "bresenham.hpp"
 #include "devices.hpp"
 #include "edge_detect/A4Detect.hpp"
+#include "pose_kalman/magnetAlign.hpp"
 //
 #include "fieldParam.hpp"
 #include "masterConfig.hpp"
