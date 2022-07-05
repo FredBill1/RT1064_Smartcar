@@ -49,8 +49,8 @@ extern const GPIO slave_switch[3];
 
 extern const GPIO magnets[6];
 
-extern const Servo srv1;
-extern const Servo srv2;
+extern const Servo srv_l;
+extern const Servo srv_r;
 
 extern SerialIO uart2;
 extern SerialIO uart3;

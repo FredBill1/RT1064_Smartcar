@@ -65,8 +65,8 @@ extern const GPIO slave_switch[3]{SLAVE_SWITCH};
 
 extern const GPIO magnets[6]{MAGNET_CONFIG};
 
-extern const Servo srv1(SRV1_CONFIG);
-extern const Servo srv2(SRV2_CONFIG);
+extern const Servo srv_l(SRV1_CONFIG);
+extern const Servo srv_r(SRV2_CONFIG);
 
 MoveBase moveBase;
 
@@ -104,8 +104,8 @@ void initDevices() {
     MCU_MASTER for (auto& gpio : magnets) gpio.init(false, false);
 
     // servo
-    srv1.init(SRV1_UP);
-    srv2.init(SRV2_UP);
+    srv_l.init_min();
+    srv_r.init_min();
 
     // qtimer
     MCU_MASTER {

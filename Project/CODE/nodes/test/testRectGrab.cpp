@@ -51,10 +51,10 @@ void testRectGrabEntry() {
 
         moveBase.send_goal(target_pos[0], target_pos[1], target_pos[2]);
         moveBase.wait_for_result();
-        auto& srv = (magnet_idx & 1 ? srv2 : srv1);
-        srv.set(90);
-        rt_thread_mdelay(500);
-        srv.set(10);
+        auto& srv = (magnet_idx & 1 ? srv_r : srv_l);
+        srv.max();
+        rt_thread_mdelay(grab_srv_down_delay_ms);
+        srv.min();
 
         if (++magnet_idx == magnet::cnt) magnet_idx = 0;
     }
