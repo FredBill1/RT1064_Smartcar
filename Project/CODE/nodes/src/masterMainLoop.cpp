@@ -67,6 +67,15 @@ Task_t TraverseAndDetect() {
     return true;
 }
 
+Task_t carryRects(int rect_cnt) {
+    {
+        ResultCatgory::Major tmp;
+        WAIT_FOR(masterGlobalVars.wait_art_result(tmp, mainloop_timeout));
+    }
+    // TODO
+    return true;
+}
+
 Task_t MainProcess() {
     SHOW_STATE("MAIN");
 
@@ -94,7 +103,7 @@ Task_t MainProcess() {
         masterGlobalVars.send_rects_enabled(false);
 
         // 发送art拍照指令
-        masterGlobalVars.send_art_cur_index(cur_target);
+        masterGlobalVars.send_art_cur_index(magnet_index);
         utils::sendArtSnapshotTask();
         if constexpr (use_art) GUARD_COND(utils::waitArtSnapshot());
 
@@ -109,16 +118,20 @@ Task_t MainProcess() {
         GUARD_COND(utils::moveBaseReachedCheck());
 
         // 拾取卡片
+        magnets[magnet_index].set(true);
         auto& srv = (magnet_index & 1 ? srv_r : srv_l);
         srv.max();
-        magnets[magnet_index].set(true);
         rt_thread_mdelay(grab_srv_down_delay_ms);
         srv.min();
 
         // 删去当前目标点
         masterGlobalVars.coord_valid.reset(cur_target);
-        if (++magnet_index == 6) return true;
+        if (++magnet_index == magnet::cnt) {
+            RUN_TASK(carryRects(magnet_index));
+            magnet_index = 0;
+        }
     }
+    if (magnet_index) RUN_TASK(carryRects(magnet_index));
     return true;
 }
 
@@ -134,13 +147,15 @@ static inline void Idle() {
     masterGlobalVars.reset_requested();  // clear the reset flag
 }
 
-static inline void LoopIter() {
-    RUN_TASK(Reset);
-    RUN_TASK(GetCoords);
-    // RUN_TASK(SolveFirstTSP);
-    RUN_TASK(ResetPos);
-    // RUN_TASK(TraverseAndDetect);
-    RUN_TASK(MainProcess);
+Task_t LoopIter() {
+    RUN_TASK(Reset());
+    RUN_TASK(GetCoords());
+    // RUN_TASK(SolveFirstTSP());
+    RUN_TASK(ResetPos());
+    // RUN_TASK(TraverseAndDetect());
+    RUN_TASK(MainProcess());
+
+    return true;
 }
 
 static inline void CleanUp() {}

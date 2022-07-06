@@ -8,6 +8,7 @@
 #include "RectConfig.hpp"
 #include "artResult/ResultCatgory.hpp"
 #include "edge_detect/A4Detect.hpp"
+#include "magnetConfig.hpp"
 
 class MasterGlobalVars {
  public:
@@ -52,7 +53,7 @@ class MasterGlobalVars {
     bool _art_need_result = false;
 
  public:
-    ResultCatgory::Major art_results[imgProc::edge_detect::target_coords_maxn + 1];
+    ResultCatgory::Major art_results[magnet::cnt];
     void send_art_cur_index(int index);
     bool wait_art_snapshot(rt_int32_t timeout = RT_WAITING_FOREVER);
     void send_art_snapshot();
