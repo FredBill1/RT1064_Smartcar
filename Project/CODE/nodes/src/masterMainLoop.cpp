@@ -84,18 +84,18 @@ Task_t carryRects(int& carrying_cnt) {
 
     if (catgory_cnt[int(Major::vehicle)]) {                                                     // 有交通工具
         if (catgory_cnt[int(Major::vehicle)] + catgory_cnt[int(Major::None)] == magnet::cnt) {  // 只有交通工具，上
-            moveBase.send_goal(state.x(), fieldHeight + carryPadding, PI_2);
+            moveBase.send_goal(state.x(), fieldHeight + carryExtendPadding, PI_2);
             WAIT_MOVE_BASE_REACHED;
             carrying_cnt -= utils::dropCatgory(Major::vehicle);
         } else {
             float cur_pos[2]{float(state.x()), float(state.y())};
             constexpr float POS[4][2]{
                 // 左上
-                {carryPadding, fieldHeight + carryPadding},   // 上，交通工具
-                {-carryPadding, fieldHeight - carryPadding},  // 左，动物
+                {carrySidePadding, fieldHeight + carryExtendPadding},   // 上，交通工具
+                {-carryExtendPadding, fieldHeight - carrySidePadding},  // 左，动物
                 // 右上
-                {fieldWidth - carryPadding, fieldHeight + carryPadding},  // 上，交通工具
-                {fieldWidth + carryPadding, fieldHeight - carryPadding},  // 右，水果
+                {fieldWidth - carrySidePadding, fieldHeight + carryExtendPadding},  // 上，交通工具
+                {fieldWidth + carryExtendPadding, fieldHeight - carrySidePadding},  // 右，水果
             };
             constexpr Major CATGORY[4]{Major::vehicle, Major::animal, Major::vehicle, Major::fruit};
             int idx = int(catgory_cnt[int(Major::animal)] < catgory_cnt[int(Major::fruit)] ||
@@ -113,7 +113,7 @@ Task_t carryRects(int& carrying_cnt) {
             carrying_cnt -= utils::dropCatgory(CATGORY[idx ^ 1]);
         }
     } else {  // 没有交通工具
-        constexpr float POS[2][2]{{-carryPadding, PI}, {fieldWidth + carryPadding, 0}};
+        constexpr float POS[2][2]{{-carryExtendPadding, PI}, {fieldWidth + carryExtendPadding, 0}};
         constexpr Major CATGORY[2]{Major::animal, Major::fruit};
         int idx = catgory_cnt[int(Major::animal)] < catgory_cnt[int(Major::fruit)] ||
                   (catgory_cnt[int(Major::animal)] == catgory_cnt[int(Major::fruit)] && state.x() > (fieldWidth / 2));
