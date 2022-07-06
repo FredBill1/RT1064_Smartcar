@@ -1,6 +1,7 @@
 #include "masterMainLoop.hpp"
 
 Task_t Init() {
+    for (auto mag : magnets) mag.set(1);
     utils::clear_screen();
     return true;
 }
@@ -115,7 +116,6 @@ Task_t MainProcess() {
         GUARD_COND(utils::moveBaseReachedCheck());
 
         // Ê°È¡¿¨Æ¬
-        magnets[magnet_index].set(true);
         auto& srv = (magnet_index & 1 ? srv_r : srv_l);
         srv.max();
         rt_thread_mdelay(grab_srv_down_delay_ms);
