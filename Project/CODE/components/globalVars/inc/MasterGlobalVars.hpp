@@ -57,8 +57,9 @@ class MasterGlobalVars {
     void send_art_cur_index(int index);
     bool wait_art_snapshot(rt_int32_t timeout = RT_WAITING_FOREVER);
     void send_art_snapshot();
-    bool wait_art_result(ResultCatgory::Major& result, rt_int32_t timeout = RT_WAITING_FOREVER);
+    bool wait_art_result(rt_int32_t timeout = RT_WAITING_FOREVER);
     bool send_art_result(ResultCatgory::Major result);
+    ResultCatgory::Major get_art_result() const;
 
  private:
     uint8_t _upload_xy[2]{0};

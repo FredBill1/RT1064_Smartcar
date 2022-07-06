@@ -45,8 +45,8 @@ static void testArtMainLoopEntry() {
         ips.printf("send art snapshot\n");
         masterGlobalVars.wait_art_snapshot();
         ips.printf("snapshot finished\n");
-        ResultCatgory::Major result;
-        masterGlobalVars.wait_art_result(result);
+        masterGlobalVars.wait_art_result();
+        ResultCatgory::Major result = masterGlobalVars.get_art_result();
         ips.printf("result is %d\n\n", (int)result);
     }
 }

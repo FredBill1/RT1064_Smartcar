@@ -68,10 +68,7 @@ Task_t TraverseAndDetect() {
 }
 
 Task_t carryRects(int rect_cnt) {
-    {
-        ResultCatgory::Major tmp;
-        WAIT_FOR(masterGlobalVars.wait_art_result(tmp, mainloop_timeout));
-    }
+    WAIT_FOR(masterGlobalVars.wait_art_result(mainloop_timeout));
     // TODO
     return true;
 }

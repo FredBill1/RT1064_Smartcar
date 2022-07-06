@@ -102,14 +102,11 @@ bool MasterGlobalVars::wait_art_snapshot(rt_int32_t timeout) {
     return rt_event_recv(&art_snapshot_event, 1, RT_EVENT_FLAG_AND | RT_EVENT_FLAG_CLEAR, timeout, RT_NULL) == RT_EOK;
 }
 void MasterGlobalVars::send_art_snapshot() { rt_event_send(&art_snapshot_event, 1); }
-bool MasterGlobalVars::wait_art_result(ResultCatgory::Major& result, rt_int32_t timeout) {
-    if (rt_event_recv(&art_result_event, 1, RT_EVENT_FLAG_AND | RT_EVENT_FLAG_CLEAR, timeout, RT_NULL) != RT_EOK) return false;
-    {
-        InterruptGuard guard;
-        result = art_results[_art_cur_index];
-    }
-    return true;
+
+bool MasterGlobalVars::wait_art_result(rt_int32_t timeout) {
+    return rt_event_recv(&art_result_event, 1, RT_EVENT_FLAG_AND | RT_EVENT_FLAG_CLEAR, timeout, RT_NULL) == RT_EOK;
 }
+
 bool MasterGlobalVars::send_art_result(ResultCatgory::Major result) {
     bool need_result;
     {
@@ -122,6 +119,10 @@ bool MasterGlobalVars::send_art_result(ResultCatgory::Major result) {
     }
     if (need_result) rt_event_send(&art_result_event, 1);
     return need_result;
+}
+ResultCatgory::Major MasterGlobalVars::get_art_result() const {
+    InterruptGuard guard;
+    return art_results[_art_cur_index];
 }
 
 void MasterGlobalVars::send_upload_xy(const uint8_t xy[2]) {
