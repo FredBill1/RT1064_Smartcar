@@ -304,6 +304,11 @@ static inline line_fit_pt* compute_lfps_simple(int_fast32_t sz, const Coordinate
 
 bool fit_quad_simple(Coordinate cluster[], int sz, quad& quad, const edge_detect::gvec_t* g) {
     if (sz < 24) return false;
+    {
+        Coordinate* cluster_copy = (Coordinate*)staticBuffer.allocate(sizeof(Coordinate) * sz);
+        rt_memcpy(cluster_copy, cluster, sizeof(Coordinate) * sz);
+        cluster = cluster_copy;
+    }
 
     int xmax = 0, xmin = std::numeric_limits<int>::max(), ymax = 0, ymin = xmin;
     rep(i, 0, sz) {
@@ -328,13 +333,14 @@ bool fit_quad_simple(Coordinate cluster[], int sz, quad& quad, const edge_detect
         return quadrant + dy / dx;
     };
     std::sort(cluster, cluster + sz, [&](Coordinate a, Coordinate b) { return slope(a) < slope(b); });
-    sz = std::unique(cluster, cluster + sz, [&](Coordinate a, Coordinate b) { return std::abs(slope(a) - slope(b)) < 1e-3f; }) -
-         cluster;
-
+    int old_sz = sz;
+    auto Equal = [&slope](Coordinate a, Coordinate b) { return std::abs(slope(a) - slope(b)) < 1e-2; };
+    sz = std::unique(cluster, cluster + sz, Equal) - cluster;
     line_fit_pt* lfps = compute_lfps_simple(sz, cluster, g);
+
     int indices[4];
     bool res = false;
-    if (!quad_segment_maxima(sz, lfps, indices, 100)) goto finish_simple;
+    if (!quad_segment_maxima(sz, lfps, indices, 20)) goto finish_simple;
 
     float_t lines[4][4];
     rep(i, 0, 4) {
@@ -361,7 +367,8 @@ bool fit_quad_simple(Coordinate cluster[], int sz, quad& quad, const edge_detect
     }
 
 finish_simple:
-    staticBuffer.pop(sizeof(line_fit_pt) * sz);  // line_fit_pt lfps[sz];
+    staticBuffer.pop(sizeof(line_fit_pt) * sz);     // line_fit_pt lfps[sz];
+    staticBuffer.pop(sizeof(Coordinate) * old_sz);  // Coordinate cluster_copy[sz]
     return res;
 }
 
