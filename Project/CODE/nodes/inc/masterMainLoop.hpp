@@ -88,6 +88,7 @@ Task_t moveBaseReachedCheck() {
         }
     }
 }
+#define WAIT_MOVE_BASE_REACHED GUARD_COND(utils::moveBaseReachedCheck());
 Task_t waitArtSnapshot() {
     rt_tick_t start_ms = rt_tick_get_millisecond();
     for (;;) {
@@ -100,6 +101,27 @@ Task_t waitArtSnapshot() {
         }
     }
     return true;
+}
+
+static inline int find_idle_magnet_index() {
+    for (int i = 0; i < magnet::cnt; ++i)
+        if (masterGlobalVars.art_results[i] == ResultCatgory::Major::None) return i;
+    return -1;
+}
+
+static inline int dropCatgory(ResultCatgory::Major catgory) {
+    srv_l.max(), srv_r.max();
+    for (int i = 0; i < magnet::cnt; ++i)
+        if (masterGlobalVars.art_results[i] == catgory) magnets[i].set(0);
+
+    rt_thread_mdelay(magnet_drop_delay_ms);
+
+    int res = 0;
+    for (int i = 0; i < magnet::cnt; ++i)
+        if (masterGlobalVars.art_results[i] == catgory)
+            ++res, magnets[i].set(1), masterGlobalVars.art_results[i] = ResultCatgory::Major::None;
+    srv_l.min(), srv_r.min();
+    return res;
 }
 }  // namespace utils
 

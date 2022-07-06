@@ -58,7 +58,7 @@ Task_t TraverseAndDetect() {
         moveBase.send_goal(x - art_cam_dist * std::cos(yaw), y - art_cam_dist * std::sin(yaw), yaw);
 
         masterGlobalVars.send_rects_enabled(true, rectMaxDistErrorSquared);
-        GUARD_COND(utils::moveBaseReachedCheck());
+        WAIT_MOVE_BASE_REACHED;
         masterGlobalVars.send_rects_enabled(false);
 
         masterGlobalVars.send_art_cur_index(cur);
@@ -68,9 +68,59 @@ Task_t TraverseAndDetect() {
     return true;
 }
 
-Task_t carryRects(int rect_cnt) {
+Task_t carryRects(int& carrying_cnt) {
+    if constexpr (!use_art) return true;
+    // 动物：左
+    // 交通工具：上
+    // 水果：右
+    using namespace ResultCatgory;
+
     WAIT_FOR(masterGlobalVars.wait_art_result(mainloop_timeout));
-    // TODO
+    int catgory_cnt[4]{0};
+    for (int i = 0; i < magnet::cnt; ++i) ++catgory_cnt[int(masterGlobalVars.art_results[i])];
+
+    MoveBase::State state;
+    moveBase.get_state(state);
+
+    if (catgory_cnt[int(Major::vehicle)]) {                                                     // 有交通工具
+        if (catgory_cnt[int(Major::vehicle)] + catgory_cnt[int(Major::None)] == magnet::cnt) {  // 只有交通工具，上
+            moveBase.send_goal(state.x(), fieldHeight + carryPadding, PI_2);
+            WAIT_MOVE_BASE_REACHED;
+            carrying_cnt -= utils::dropCatgory(Major::vehicle);
+        } else {
+            float cur_pos[2]{float(state.x()), float(state.y())};
+            constexpr float POS[4][2]{
+                // 左上
+                {carryPadding, fieldHeight + carryPadding},   // 上，交通工具
+                {-carryPadding, fieldHeight - carryPadding},  // 左，动物
+                // 右上
+                {fieldWidth - carryPadding, fieldHeight + carryPadding},  // 上，交通工具
+                {fieldWidth + carryPadding, fieldHeight - carryPadding},  // 右，水果
+            };
+            constexpr Major CATGORY[4]{Major::vehicle, Major::animal, Major::vehicle, Major::fruit};
+            int idx = int(catgory_cnt[int(Major::animal)] < catgory_cnt[int(Major::fruit)] ||
+                          (catgory_cnt[int(Major::animal)] == catgory_cnt[int(Major::fruit)] && cur_pos[0] > (fieldWidth / 2)))
+                      << 1;
+            idx |= utils::calcDist(cur_pos, POS[idx]) < utils::calcDist(cur_pos, POS[idx | 1]);
+
+            moveBase.send_goal(POS[idx][0], POS[idx][1], std::atan2(POS[idx][1] - cur_pos[1], POS[idx][0] - cur_pos[0]));
+            WAIT_MOVE_BASE_REACHED;
+            carrying_cnt -= utils::dropCatgory(CATGORY[idx]);
+
+            moveBase.send_goal(POS[idx ^ 1][0], POS[idx ^ 1][1],
+                               std::atan2(POS[idx ^ 1][1] - POS[idx][1], POS[idx ^ 1][0] - POS[idx][0]));
+            WAIT_MOVE_BASE_REACHED;
+            carrying_cnt -= utils::dropCatgory(CATGORY[idx ^ 1]);
+        }
+    } else {  // 没有交通工具
+        constexpr float POS[2][2]{{-carryPadding, PI}, {fieldWidth + carryPadding, 0}};
+        constexpr Major CATGORY[2]{Major::animal, Major::fruit};
+        int idx = catgory_cnt[int(Major::animal)] < catgory_cnt[int(Major::fruit)] ||
+                  (catgory_cnt[int(Major::animal)] == catgory_cnt[int(Major::fruit)] && state.x() > (fieldWidth / 2));
+        moveBase.send_goal(POS[idx][0], state.y(), POS[idx][1]);
+        WAIT_MOVE_BASE_REACHED;
+        carrying_cnt -= utils::dropCatgory(CATGORY[idx]);
+    }
     return true;
 }
 
@@ -78,7 +128,7 @@ Task_t MainProcess() {
     SHOW_STATE("MAIN");
 
     MoveBase::State state;
-    int magnet_index = 0;
+    int carrying_cnt = 0;
     for (int rect_index = 1; rect_index <= coords_cnt; ++rect_index) {
         // 获取距离最近的卡片作为目标点
         moveBase.get_state(state);
@@ -97,10 +147,11 @@ Task_t MainProcess() {
 
         // 导航到目标位置
         masterGlobalVars.send_rects_enabled(true, rectMaxDistErrorSquared);
-        GUARD_COND(utils::moveBaseReachedCheck());
+        WAIT_MOVE_BASE_REACHED;
         masterGlobalVars.send_rects_enabled(false);
 
         // 发送art拍照指令
+        int magnet_index = utils::find_idle_magnet_index();
         masterGlobalVars.send_art_cur_index(magnet_index);
         utils::sendArtSnapshotTask();
         if constexpr (use_art) GUARD_COND(utils::waitArtSnapshot());
@@ -113,7 +164,7 @@ Task_t MainProcess() {
 
         // 发布拾取卡片位姿的指令
         moveBase.send_goal(target_pos[0], target_pos[1], target_pos[2]);
-        GUARD_COND(utils::moveBaseReachedCheck());
+        WAIT_MOVE_BASE_REACHED;
 
         // 拾取卡片
         auto& srv = (magnet_index & 1 ? srv_r : srv_l);
@@ -123,12 +174,11 @@ Task_t MainProcess() {
 
         // 删去当前目标点
         masterGlobalVars.coord_valid.reset(cur_target);
-        if (++magnet_index == magnet::cnt) {
-            RUN_TASK(carryRects(magnet_index));
-            magnet_index = 0;
-        }
+        if (++carrying_cnt == magnet::cnt) RUN_TASK(carryRects(carrying_cnt));
     }
-    if (magnet_index) RUN_TASK(carryRects(magnet_index));
+    if (carrying_cnt) {  // 还有卡片没搬运完
+        // TODO
+    }
     return true;
 }
 
