@@ -89,13 +89,16 @@ void MasterGlobalVars::get_rects(float state[3], float* rects, int& cnt, float& 
 }
 
 void MasterGlobalVars::send_art_cur_index(int index) {
-    InterruptGuard guard;
-    _art_cur_index = index;
-    _art_need_result = true;
+    {
+        InterruptGuard guard;
+        _art_cur_index = index;
+        _art_need_result = true;
+    }
+    rt_event_recv(&art_snapshot_event, 1, RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR, RT_WAITING_NO, RT_NULL);  // 清除snapshot事件
+    rt_event_recv(&art_result_event, 1, RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR, RT_WAITING_NO, RT_NULL);  // 清除art接收事件
 }
 
 bool MasterGlobalVars::wait_art_snapshot(rt_int32_t timeout) {
-    rt_event_recv(&art_result_event, 1, RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR, RT_WAITING_NO, RT_NULL);  // 清除接收标志位
     return rt_event_recv(&art_snapshot_event, 1, RT_EVENT_FLAG_AND | RT_EVENT_FLAG_CLEAR, timeout, RT_NULL) == RT_EOK;
 }
 void MasterGlobalVars::send_art_snapshot() { rt_event_send(&art_snapshot_event, 1); }
