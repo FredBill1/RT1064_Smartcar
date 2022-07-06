@@ -22,6 +22,7 @@ void MasterGlobalVars::reset_states() {
         reset_flag = false;
         _rectEnabled = false;
         _art_need_result = false;
+        for (auto& res : art_results) res = ResultCatgory::Major::None;
     }
 }
 
