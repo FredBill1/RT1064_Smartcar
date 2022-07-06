@@ -10,6 +10,7 @@ constexpr float borderWidth = 7;
 constexpr float borderHeight = 5;
 
 // 赛场一格的大小，用于对齐A4纸识别结果
+constexpr bool squareAlign = true;  // 是否对A4识别结果进行对齐
 constexpr float squareSize = 0.2;
 
 // 实际赛场的宽高
