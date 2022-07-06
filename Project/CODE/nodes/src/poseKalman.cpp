@@ -122,15 +122,30 @@ static inline void processRects() {
     uint64_t timestamp_us;
     masterGlobalVars.get_rects(state, rects[0], cnt, maxDistErrorSquared, timestamp_us);
     if (!cnt) return;
+
+    // 车在场地内使rect生效的最小距离
+    if (!(rectBasePadding <= state[0] && state[0] <= fieldWidth - rectBasePadding && rectBasePadding <= state[1] &&
+          state[1] <= fieldHeight - rectBasePadding))
+        return;
+
     float sy = std::sin(state[2]), cy = std::cos(state[2]);
     float min_dist2 = std::numeric_limits<float>::infinity();
     float res_x, res_y;
     for (int i = 1; i <= masterGlobalVars.coords_cnt; ++i) {
         if (!masterGlobalVars.coord_valid.test(i)) continue;
         for (int j = 0; j < cnt; ++j) {
-            float x = masterGlobalVars.coords[i][0], y = masterGlobalVars.coords[i][1];
-            x -= rects[j][0] * cy - rects[j][1] * sy;
-            y -= rects[j][0] * sy + rects[j][1] * cy;
+            float rect_dx = rects[j][0] * cy - rects[j][1] * sy;
+            float rect_dy = rects[j][0] * sy + rects[j][1] * cy;
+
+            {  // 场地内rect距离边界的最小距离
+                float x_ = state[0] + rect_dx, y_ = state[1] + rect_dy;
+                if (!(rectPadding <= x_ && x_ <= fieldWidth - rectPadding && rectPadding <= y_ &&
+                      y_ <= fieldHeight - rectPadding))
+                    continue;
+            }
+
+            // 推算出的底盘的坐标
+            float x = masterGlobalVars.coords[i][0] - rect_dx, y = masterGlobalVars.coords[i][1] - rect_dy;
             float dx = x - state[0], dy = y - state[1];
             float dist2 = dx * dx + dy * dy;
             if (dist2 < min_dist2) {

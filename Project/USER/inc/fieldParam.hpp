@@ -19,6 +19,12 @@ constexpr float fieldHeight = 4;
 // 搬运时边界外的距离
 constexpr float carryPadding = 0.3;
 
+// 场地内rect距离边界的最小距离
+constexpr float rectPadding = 0.1;
+
+// 车在场地内使rect生效的最小距离
+constexpr float rectBasePadding = 0.1;
+
 // rect识别坐标的最大偏移距离
 constexpr float rectMaxDistErrorSquared = 0.5 * 0.5;
 
