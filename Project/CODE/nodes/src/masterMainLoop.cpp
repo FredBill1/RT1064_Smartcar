@@ -69,13 +69,11 @@ Task_t TraverseAndDetect() {
 }
 
 Task_t carryRects(int& carrying_cnt) {
-    if constexpr (!use_art) return true;
     // 动物：左
     // 交通工具：上
     // 水果：右
     using namespace ResultCatgory;
 
-    WAIT_FOR(masterGlobalVars.wait_art_result(mainloop_timeout));
     int catgory_cnt[4]{0};
     for (int i = 0; i < magnet::cnt; ++i) ++catgory_cnt[int(masterGlobalVars.art_results[i])];
 
@@ -120,6 +118,55 @@ Task_t carryRects(int& carrying_cnt) {
         moveBase.send_goal(POS[idx][0], state.y(), POS[idx][1]);
         WAIT_MOVE_BASE_REACHED;
         carrying_cnt -= utils::dropCatgory(CATGORY[idx]);
+    }
+    return true;
+}
+
+Task_t finalCarry() {
+    // 动物：左
+    // 交通工具：上
+    // 水果：右
+    using namespace ResultCatgory;
+    float _targets[4][2];
+    float* cur_pos = _targets[0];
+    float(*targets)[2] = _targets + 1;
+    Major catgory[3];
+    MoveBase::State state;
+    moveBase.get_state(state);
+    cur_pos[0] = state.x(), cur_pos[1] = state.y();
+
+    int catgory_cnt[4]{0};
+    for (int i = 0; i < magnet::cnt; ++i) ++catgory_cnt[int(masterGlobalVars.art_results[i])];
+
+    if (catgory_cnt[int(Major::vehicle)] && catgory_cnt[int(Major::fruit)]) {  // 右上
+        float dx = 2 * fieldWidth - cur_pos[0], dy = 2 * fieldHeight - cur_pos[1];
+        float x = cur_pos[0] + dx * (fieldHeight - cur_pos[1]) / dy, y = cur_pos[1] + dy * (fieldWidth - cur_pos[0]) / dx;
+        int idx = x > fieldWidth;
+        idx ? (x = 2 * fieldWidth - x) : (y = 2 * fieldHeight - y);
+        targets[idx][0] = std::min(x, fieldWidth - carryExtendPadding), targets[idx][1] = fieldHeight + carryExtendPadding;
+        targets[idx ^ 1][0] = fieldWidth + carryExtendPadding, targets[idx ^ 1][1] = std::min(y, fieldHeight - carrySidePadding);
+        catgory[idx] = Major::vehicle, catgory[idx ^ 1] = Major::fruit;
+    } else if (catgory_cnt[int(Major::vehicle)]) {  // 上
+        float x = cur_pos[0] - cur_pos[0] * (fieldHeight - cur_pos[1]) / (2 * fieldHeight - cur_pos[1]);
+        targets[0][0] = std::max(x, carrySidePadding), targets[0][1] = fieldHeight + carryExtendPadding;
+        catgory[0] = Major::vehicle;
+    } else if (catgory_cnt[int(Major::fruit)]) {  // 右
+        float y = cur_pos[1] - cur_pos[1] * (fieldWidth - cur_pos[0]) / (2 * fieldWidth - cur_pos[0]);
+        targets[0][0] = fieldWidth + carryExtendPadding, targets[0][1] = std::max(y, carrySidePadding);
+        catgory[0] = Major::fruit;
+    }
+
+    int target_cnt = bool(catgory_cnt[int(Major::vehicle)]) + bool(catgory_cnt[int(Major::fruit)]);
+    if (catgory_cnt[int(Major::animal)]) {  // 左
+        targets[target_cnt][0] = -carryExtendPadding, targets[target_cnt][1] = carrySidePadding;
+        catgory[target_cnt] = Major::animal;
+        ++target_cnt;
+    }
+    for (int i = 0; i < target_cnt; ++i) {
+        moveBase.send_goal(targets[i][0], targets[i][1],
+                           std::atan2(targets[i][1] - targets[i - 1][1], targets[i][0] - targets[i - 1][0]));
+        WAIT_MOVE_BASE_REACHED;
+        utils::dropCatgory(catgory[i]);
     }
     return true;
 }
@@ -174,10 +221,21 @@ Task_t MainProcess() {
 
         // 删去当前目标点
         masterGlobalVars.coord_valid.reset(cur_target);
-        if (++carrying_cnt == magnet::cnt) RUN_TASK(carryRects(carrying_cnt));
+
+        if (rect_index == coords_cnt) break;
+        if (++carrying_cnt == magnet::cnt) {
+            if constexpr (!use_art) {
+                carrying_cnt = 0;
+                continue;
+            }
+            WAIT_FOR(masterGlobalVars.wait_art_result(mainloop_timeout));
+            RUN_TASK(carryRects(carrying_cnt));
+        }
     }
-    if (carrying_cnt) {  // 还有卡片没搬运完
-        // TODO
+    if constexpr (!use_art) return true;
+    if (carrying_cnt) {
+        WAIT_FOR(masterGlobalVars.wait_art_result(mainloop_timeout));
+        RUN_TASK(finalCarry());
     }
     return true;
 }
