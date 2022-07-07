@@ -1,7 +1,7 @@
 #include "devices.hpp"
 
 #include "MCU_ID.hpp"
-#include "localPlannerParam.hpp"
+#include "naviParam.hpp"
 #include "parameters.hpp"
 
 SerialIO uart2(UART2_CONFIG);

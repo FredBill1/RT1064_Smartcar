@@ -20,8 +20,8 @@ extern "C" {
 #include "pose_kalman/magnetAlign.hpp"
 //
 #include "fieldParam.hpp"
-#include "localPlannerParam.hpp"
 #include "masterConfig.hpp"
+#include "naviParam.hpp"
 
 using namespace imgProc;
 using namespace imgProc::apriltag;
