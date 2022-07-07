@@ -49,7 +49,7 @@ Task_t carryRects(int& carrying_cnt) {
             goal_carry.y = fieldHeight + carryExtendPadding;
             goal_carry.yaw = PI_2;
             moveBase.send_goal(goal_carry);
-            WAIT_MOVE_BASE_REACHED;
+            WAIT_MOVE_BASE_GOAL_REACHED;
             carrying_cnt -= utils::dropCatgory(Major::vehicle);
         } else {
             float cur_pos[2]{float(state.x()), float(state.y())};
@@ -71,7 +71,7 @@ Task_t carryRects(int& carrying_cnt) {
             goal_carry.y = POS[idx][1];
             goal_carry.yaw = std::atan2(POS[idx][1] - cur_pos[1], POS[idx][0] - cur_pos[0]);
             moveBase.send_goal(goal_carry);
-            WAIT_MOVE_BASE_REACHED;
+            WAIT_MOVE_BASE_GOAL_REACHED;
             carrying_cnt -= utils::dropCatgory(CATGORY[idx]);
 
             goal_carry.x = POS[idx ^ 1][0];
@@ -79,7 +79,7 @@ Task_t carryRects(int& carrying_cnt) {
             goal_carry.yaw = std::atan2(POS[idx ^ 1][1] - POS[idx][1], POS[idx ^ 1][0] - POS[idx][0]);
             moveBase.send_goal(goal_carry);
 
-            WAIT_MOVE_BASE_REACHED;
+            WAIT_MOVE_BASE_GOAL_REACHED;
             carrying_cnt -= utils::dropCatgory(CATGORY[idx ^ 1]);
         }
     } else {  // 没有交通工具
@@ -91,7 +91,7 @@ Task_t carryRects(int& carrying_cnt) {
         goal_carry.y = state.y();
         goal_carry.yaw = POS[idx][1];
         moveBase.send_goal(goal_carry);
-        WAIT_MOVE_BASE_REACHED;
+        WAIT_MOVE_BASE_GOAL_REACHED;
         carrying_cnt -= utils::dropCatgory(CATGORY[idx]);
     }
     return true;
@@ -143,7 +143,7 @@ Task_t finalCarry() {
         goal_carry.x = targets[i][0], goal_carry.y = targets[i][1];
         goal_carry.yaw = std::atan2(targets[i][1] - targets[i - 1][1], targets[i][0] - targets[i - 1][0]);
         moveBase.send_goal(goal_carry);
-        WAIT_MOVE_BASE_REACHED;
+        WAIT_MOVE_BASE_GOAL_REACHED;
         utils::dropCatgory(catgory[i]);
     }
     return true;
@@ -178,7 +178,7 @@ Task_t MainProcess() {
 
         // 导航到目标位置
         masterGlobalVars.send_rects_enabled(true, rectMaxDistError * rectMaxDistError);
-        WAIT_MOVE_BASE_REACHED;
+        WAIT_MOVE_BASE_GOAL_REACHED;
         masterGlobalVars.send_rects_enabled(false);
 
         // 发送art拍照指令
@@ -198,7 +198,7 @@ Task_t MainProcess() {
         goal_pick.y = target_pos[1];
         goal_pick.yaw = target_pos[2];
         moveBase.send_goal(goal_pick);
-        WAIT_MOVE_BASE_REACHED;
+        WAIT_MOVE_BASE_GOAL_REACHED;
 
         // 拾取卡片
         auto& srv = (magnet_index & 1 ? srv_r : srv_l);
@@ -236,7 +236,7 @@ Task_t ReturnGarage() {
     goal.y = initial_position[1];
     goal.yaw = std::atan2(initial_position[1] - float(state.y()), initial_position[0] - float(state.x()));
     moveBase.send_goal(goal);
-    WAIT_MOVE_BASE_REACHED;
+    WAIT_MOVE_BASE_GOAL_REACHED;
     return true;
 }
 

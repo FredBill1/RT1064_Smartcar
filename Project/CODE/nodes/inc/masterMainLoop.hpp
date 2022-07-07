@@ -89,7 +89,7 @@ Task_t moveBaseReachedCheck() {
         }
     }
 }
-#define WAIT_MOVE_BASE_REACHED GUARD_COND(utils::moveBaseReachedCheck());
+#define WAIT_MOVE_BASE_GOAL_REACHED GUARD_COND(utils::moveBaseReachedCheck());
 Task_t waitArtSnapshot() {
     rt_tick_t start_ms = rt_tick_get_millisecond();
     for (;;) {
