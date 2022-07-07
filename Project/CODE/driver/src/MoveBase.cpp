@@ -48,6 +48,8 @@ const MoveBase::Goal& MoveBase::get_goal() {
 
 bool MoveBase::get_reached() { return get_goal().reached; }
 void MoveBase::set_reached(bool reached) {
+    get_goal();
+    if (_new_goal) return;
     _goal.reached = reached;
     if (reached) rt_event_send(&_reachedEvent, (rt_uint32_t)GoalEventFlag::reached);
 }
