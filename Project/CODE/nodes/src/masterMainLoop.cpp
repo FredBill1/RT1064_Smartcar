@@ -227,6 +227,19 @@ Task_t MainProcess() {
     return true;
 }
 
+Task_t ReturnGarage() {
+    MoveBase::State state;
+    moveBase.get_state(state);
+
+    MoveBase::Goal goal = GOAL_CARRY;
+    goal.x = initial_position[0];
+    goal.y = initial_position[1];
+    goal.yaw = std::atan2(initial_position[1] - float(state.y()), initial_position[0] - float(state.x()));
+    moveBase.send_goal(goal);
+    WAIT_MOVE_BASE_REACHED;
+    return true;
+}
+
 static inline void Idle() {
     SHOW_STATE("IDLE");
     for (;;) {
@@ -242,10 +255,9 @@ static inline void Idle() {
 Task_t LoopIter() {
     RUN_TASK(Reset());
     RUN_TASK(GetCoords());
-    // RUN_TASK(SolveFirstTSP());
     RUN_TASK(ResetPos());
-    // RUN_TASK(TraverseAndDetect());
     RUN_TASK(MainProcess());
+    RUN_TASK(ReturnGarage());
 
     return true;
 }
