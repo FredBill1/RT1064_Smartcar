@@ -57,7 +57,7 @@ Task_t TraverseAndDetect() {
         float x = coords[cur][0], y = coords[cur][1], yaw = std::atan2(y - state.y(), x - state.x());
         moveBase.send_goal(x - art_cam_dist * std::cos(yaw), y - art_cam_dist * std::sin(yaw), yaw);
 
-        masterGlobalVars.send_rects_enabled(true, rectMaxDistErrorSquared);
+        masterGlobalVars.send_rects_enabled(true, rectMaxDistError * rectMaxDistError);
         WAIT_MOVE_BASE_REACHED;
         masterGlobalVars.send_rects_enabled(false);
 
@@ -193,7 +193,7 @@ Task_t MainProcess() {
         moveBase.send_goal(x - art_cam_dist * std::cos(yaw), y - art_cam_dist * std::sin(yaw), yaw);
 
         // 导航到目标位置
-        masterGlobalVars.send_rects_enabled(true, rectMaxDistErrorSquared);
+        masterGlobalVars.send_rects_enabled(true, rectMaxDistError * rectMaxDistError);
         WAIT_MOVE_BASE_REACHED;
         masterGlobalVars.send_rects_enabled(false);
 

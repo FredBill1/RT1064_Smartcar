@@ -3,6 +3,9 @@
 
 #include <cstdint>
 
+#include "pose_kalman/utils.hpp"
+using pose_kalman::PI, pose_kalman::PI_2;
+
 // 单位都是米
 
 // A4纸上边界的宽高
@@ -28,6 +31,9 @@ constexpr float rectPadding = 0.1;
 constexpr float rectBasePadding = 0.1;
 
 // rect识别坐标的最大偏移距离
-constexpr float rectMaxDistErrorSquared = 0.5 * 0.5;
+constexpr float rectMaxDistError = 0.5;
+
+// 初始位置
+constexpr float initial_position[3]{0, 0, 0};
 
 #endif  // _fieldParam_hpp
