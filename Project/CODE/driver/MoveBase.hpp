@@ -8,11 +8,23 @@
 
 class MoveBase {
  public:
+    static constexpr pose_kalman::T default_xy_tolerance = 1e-2;
+    static constexpr pose_kalman::T default_yaw_tolerance = (5 * 3.14 / 180);
+    static constexpr uint64_t default_time_tolerance_us = uint64_t(15e4);
     struct Goal {
         pose_kalman::T x, y, yaw;
-        pose_kalman::T xy_tolerance, yaw_tolerance;
+        pose_kalman::T xy_tolerance;
+        pose_kalman::T yaw_tolerance;
         uint64_t time_tolerance_us;
         bool reached;
+        static constexpr Goal getDefault() {
+            return {
+                .xy_tolerance = default_xy_tolerance,
+                .yaw_tolerance = default_yaw_tolerance,
+                .time_tolerance_us = default_time_tolerance_us,
+                .reached = false,
+            };
+        }
     };
     struct State {
         uint64_t timestamp_us;
@@ -55,8 +67,9 @@ class MoveBase {
     MoveBase();
     void set_enabled(bool enabled);
     bool get_enabled();
-    void send_goal(pose_kalman::T x, pose_kalman::T y, pose_kalman::T yaw, pose_kalman::T xy_tolerance = 1e-2,
-                   pose_kalman::T yaw_tolerance = (5 * 3.14 / 180), uint64_t time_tolerance_us = uint64_t(15e4));
+    void send_goal(const Goal& goal);
+    void send_goal(pose_kalman::T x, pose_kalman::T y, pose_kalman::T yaw, pose_kalman::T xy_tolerance = default_xy_tolerance,
+                   pose_kalman::T yaw_tolerance = default_yaw_tolerance, uint64_t time_tolerance_us = default_time_tolerance_us);
     const Goal& get_goal();
     void set_reached(bool reached = true);
     void send_reached(bool reached = true);

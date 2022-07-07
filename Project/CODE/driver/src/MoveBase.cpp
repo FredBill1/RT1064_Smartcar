@@ -26,9 +26,19 @@ bool MoveBase::get_enabled() {
     return _enabled;
 }
 
+void MoveBase::send_goal(const Goal& goal) { _goalLoader.store(goal); }
+
 void MoveBase::send_goal(pose_kalman::T x, pose_kalman::T y, pose_kalman::T yaw, pose_kalman::T xy_tolerance,
                          pose_kalman::T yaw_tolerance, uint64_t time_tolerance_us) {
-    _goalLoader.store({x, y, yaw, xy_tolerance, yaw_tolerance, time_tolerance_us, false});
+    _goalLoader.store({
+        .x = x,
+        .y = y,
+        .yaw = yaw,
+        .xy_tolerance = xy_tolerance,
+        .yaw_tolerance = yaw_tolerance,
+        .time_tolerance_us = time_tolerance_us,
+        .reached = false,
+    });
 }
 
 const MoveBase::Goal& MoveBase::get_goal() {
