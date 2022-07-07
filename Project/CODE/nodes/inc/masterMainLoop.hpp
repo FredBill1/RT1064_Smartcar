@@ -122,6 +122,7 @@ static inline int dropCatgory(ResultCatgory::Major catgory) {
         if (masterGlobalVars.art_results[i] == catgory)
             ++res, magnets[i].set(1), masterGlobalVars.art_results[i] = ResultCatgory::Major::None;
     srv_l.min(), srv_r.min();
+    rt_thread_mdelay(magnet_drop_wait_ms);
     return res;
 }
 }  // namespace utils
