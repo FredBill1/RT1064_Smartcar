@@ -24,47 +24,9 @@ Task_t GetCoords() {
     return true;
 }
 
-Task_t SolveFirstTSP() {
-    SHOW_STATE("TSP1");
-    tsp.N = coords_cnt + 1;
-    coords[0][0] = initial_position[0], coords[0][1] = initial_position[1];
-    for (int i = 0; i <= coords_cnt; ++i) {
-        tsp.dist[i][i] = 0;
-        for (int j = i + 1; j <= coords_cnt; ++j) tsp.dist[i][j] = tsp.dist[j][i] = utils::calcDist(coords[i], coords[j]);
-    }
-    tsp.solve_without_returning();
-
-    for (int i = 1; i <= coords_cnt; ++i) {
-        int u = tsp.hamilton_path[i - 1], v = tsp.hamilton_path[i];
-        drawLine(coords[u][0] * tsp_k, coords[u][1] * tsp_k, coords[v][0] * tsp_k, coords[v][1] * tsp_k,
-                 [](int x, int y) { ips114_drawpoint(x, N / 4 - y, ips.Red); });
-    }
-    return true;
-}
-
 Task_t ResetPos() {
     MoveBase::State state(systick.get_us(), initial_position[0], initial_position[1], initial_position[2], 0, 0, 0);
     moveBase.send_set_state(state);
-    return true;
-}
-
-Task_t TraverseAndDetect() {
-    SHOW_STATE("TRAV");
-    for (int i = 1; i < tsp.N; ++i) {
-        MoveBase::State state;
-        moveBase.get_state(state);
-        int cur = tsp.hamilton_path[i];
-        float x = coords[cur][0], y = coords[cur][1], yaw = std::atan2(y - state.y(), x - state.x());
-        moveBase.send_goal(x - art_cam_dist * std::cos(yaw), y - art_cam_dist * std::sin(yaw), yaw);
-
-        masterGlobalVars.send_rects_enabled(true, rectMaxDistError * rectMaxDistError);
-        WAIT_MOVE_BASE_REACHED;
-        masterGlobalVars.send_rects_enabled(false);
-
-        masterGlobalVars.send_art_cur_index(cur);
-        utils::sendArtSnapshotTask();
-        if constexpr (use_art) GUARD_COND(utils::waitArtSnapshot());
-    }
     return true;
 }
 
@@ -79,10 +41,14 @@ Task_t carryRects(int& carrying_cnt) {
 
     MoveBase::State state;
     moveBase.get_state(state);
+    MoveBase::Goal goal_carry = GOAL_CARRY;
 
     if (catgory_cnt[int(Major::vehicle)]) {                                                     // 有交通工具
         if (catgory_cnt[int(Major::vehicle)] + catgory_cnt[int(Major::None)] == magnet::cnt) {  // 只有交通工具，上
-            moveBase.send_goal(state.x(), fieldHeight + carryExtendPadding, PI_2);
+            goal_carry.x = state.x();
+            goal_carry.y = fieldHeight + carryExtendPadding;
+            goal_carry.yaw = PI_2;
+            moveBase.send_goal(goal_carry);
             WAIT_MOVE_BASE_REACHED;
             carrying_cnt -= utils::dropCatgory(Major::vehicle);
         } else {
@@ -101,12 +67,18 @@ Task_t carryRects(int& carrying_cnt) {
                       << 1;
             idx |= utils::calcDist(cur_pos, POS[idx]) < utils::calcDist(cur_pos, POS[idx | 1]);
 
-            moveBase.send_goal(POS[idx][0], POS[idx][1], std::atan2(POS[idx][1] - cur_pos[1], POS[idx][0] - cur_pos[0]));
+            goal_carry.x = POS[idx][0];
+            goal_carry.y = POS[idx][1];
+            goal_carry.yaw = std::atan2(POS[idx][1] - cur_pos[1], POS[idx][0] - cur_pos[0]);
+            moveBase.send_goal(goal_carry);
             WAIT_MOVE_BASE_REACHED;
             carrying_cnt -= utils::dropCatgory(CATGORY[idx]);
 
-            moveBase.send_goal(POS[idx ^ 1][0], POS[idx ^ 1][1],
-                               std::atan2(POS[idx ^ 1][1] - POS[idx][1], POS[idx ^ 1][0] - POS[idx][0]));
+            goal_carry.x = POS[idx ^ 1][0];
+            goal_carry.y = POS[idx ^ 1][1];
+            goal_carry.yaw = std::atan2(POS[idx ^ 1][1] - POS[idx][1], POS[idx ^ 1][0] - POS[idx][0]);
+            moveBase.send_goal(goal_carry);
+
             WAIT_MOVE_BASE_REACHED;
             carrying_cnt -= utils::dropCatgory(CATGORY[idx ^ 1]);
         }
@@ -115,7 +87,10 @@ Task_t carryRects(int& carrying_cnt) {
         constexpr Major CATGORY[2]{Major::animal, Major::fruit};
         int idx = catgory_cnt[int(Major::animal)] < catgory_cnt[int(Major::fruit)] ||
                   (catgory_cnt[int(Major::animal)] == catgory_cnt[int(Major::fruit)] && state.x() > (fieldWidth / 2));
-        moveBase.send_goal(POS[idx][0], state.y(), POS[idx][1]);
+        goal_carry.x = POS[idx][0];
+        goal_carry.y = state.y();
+        goal_carry.yaw = POS[idx][1];
+        moveBase.send_goal(goal_carry);
         WAIT_MOVE_BASE_REACHED;
         carrying_cnt -= utils::dropCatgory(CATGORY[idx]);
     }
@@ -162,9 +137,12 @@ Task_t finalCarry() {
         catgory[target_cnt] = Major::animal;
         ++target_cnt;
     }
+
+    MoveBase::Goal goal_carry = GOAL_CARRY;
     for (int i = 0; i < target_cnt; ++i) {
-        moveBase.send_goal(targets[i][0], targets[i][1],
-                           std::atan2(targets[i][1] - targets[i - 1][1], targets[i][0] - targets[i - 1][0]));
+        goal_carry.x = targets[i][0], goal_carry.y = targets[i][1];
+        goal_carry.yaw = std::atan2(targets[i][1] - targets[i - 1][1], targets[i][0] - targets[i - 1][0]);
+        moveBase.send_goal(goal_carry);
         WAIT_MOVE_BASE_REACHED;
         utils::dropCatgory(catgory[i]);
     }
@@ -176,6 +154,9 @@ Task_t MainProcess() {
 
     MoveBase::State state;
     int carrying_cnt = 0;
+    MoveBase::Goal goal_navi = GOAL_NAVI;
+    MoveBase::Goal goal_pick = GOAL_PICK;
+
     for (int rect_index = 1; rect_index <= coords_cnt; ++rect_index) {
         // 获取距离最近的卡片作为目标点
         moveBase.get_state(state);
@@ -190,7 +171,10 @@ Task_t MainProcess() {
 
         // 发布目标位置指令
         float x = coords[cur_target][0], y = coords[cur_target][1], yaw = std::atan2(y - state.y(), x - state.x());
-        moveBase.send_goal(x - art_cam_dist * std::cos(yaw), y - art_cam_dist * std::sin(yaw), yaw);
+        goal_navi.x = x - art_cam_dist * std::cos(yaw);
+        goal_navi.y = y - art_cam_dist * std::sin(yaw);
+        goal_navi.yaw = yaw;
+        moveBase.send_goal(goal_navi);
 
         // 导航到目标位置
         masterGlobalVars.send_rects_enabled(true, rectMaxDistError * rectMaxDistError);
@@ -210,7 +194,10 @@ Task_t MainProcess() {
         pose_kalman::magnetAlign(pose_xy, coords[cur_target], magnet_index, target_pos);
 
         // 发布拾取卡片位姿的指令
-        moveBase.send_goal(target_pos[0], target_pos[1], target_pos[2]);
+        goal_pick.x = target_pos[0];
+        goal_pick.y = target_pos[1];
+        goal_pick.yaw = target_pos[2];
+        moveBase.send_goal(goal_pick);
         WAIT_MOVE_BASE_REACHED;
 
         // 拾取卡片
