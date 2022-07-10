@@ -64,7 +64,7 @@ while True:
     rect = thresh_find_rect(img)
     if rect is not None:
         if do_classify:
-            uart.write(HEADER + b"\xFF")  # 通知主板拍到矩形, 可以开始搬运
+            uart.write((HEADER + b"\xFF") * 2)  # 通知主板拍到矩形, 可以开始搬运
 
         corners = rect.corners()
         img.rotation_corr(x_translation=CROP_SIZE, y_translation=CROP_SIZE, corners=corners)
@@ -77,7 +77,7 @@ while True:
             res = obj.output()
             m = max(res)
             result_index = res.index(m)
-            uart.write(HEADER + result_index.to_bytes(1, "little"))  # 发送识别结果
+            uart.write((HEADER + result_index.to_bytes(1, "little")) * 2)  # 发送识别结果
             print("%s: %f" % (labels[result_index], m))
             do_classify = False
 
