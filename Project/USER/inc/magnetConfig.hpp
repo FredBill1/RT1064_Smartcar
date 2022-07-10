@@ -3,12 +3,12 @@
 
 namespace magnet {
 
-constexpr int cnt = 6;
+constexpr int cnt = 4;
 constexpr float T_length = 0.3;
 constexpr float T_shift = 0.025;
 constexpr float T_extend = 0.25;
 
-constexpr float pos[cnt][2]{
+constexpr float pos[][2]{
     // ǰ
     {T_length / 2 + T_shift, T_extend},
     {T_length / 2 + T_shift, -T_extend},
