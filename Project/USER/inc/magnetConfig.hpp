@@ -3,7 +3,7 @@
 
 namespace magnet {
 
-constexpr int cnt = 4;
+constexpr int cnt = 6;
 constexpr float T_length = 0.3;
 constexpr float T_shift = 0.025;
 constexpr float T_extend = 0.25;

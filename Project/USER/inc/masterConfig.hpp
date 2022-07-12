@@ -12,7 +12,7 @@ constexpr float art_cam_dist = 0.30;
 constexpr bool use_art = true;
 
 #define slave_uart uart2
-#define art_uart uart4
-#define upload_uart uart5
+#define art_uart uart5
+#define upload_uart uart4
 
 #endif

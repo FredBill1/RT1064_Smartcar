@@ -23,7 +23,7 @@ static inline void sendSlaveTask(SlaveGlobalVars::State task) {
 
 void testRectGrabEntry() {
     int magnet_idx = 0;
-    for (auto mag : magnets) mag.set(1);
+    for (auto& mag : magnets) mag.set(1);
     for (;;) {
         if (!master_key[0].pressing()) continue;
         sendSlaveTask(SlaveGlobalVars::RECT);

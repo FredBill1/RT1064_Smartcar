@@ -1,7 +1,7 @@
 #include "masterMainLoop.hpp"
 
 Task_t Init() {
-    for (auto mag : magnets) mag.set(1);
+    for (auto& mag : magnets) mag.set(1);
     utils::clear_screen();
     return true;
 }
