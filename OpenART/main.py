@@ -30,28 +30,6 @@ H = sensor.height()
 W = sensor.width()
 HEADER = b"\x00\xFF\x80\x7F\xF0"
 
-
-def dist(p1, p2):
-    dx, dy = p1[0] - p2[0], p1[1] - p2[1]
-    return math.sqrt(dx * dx + dy * dy)
-
-
-def check_rect(corners):
-    dists = [dist(corners[(i + 3) & 3], corners[i]) for i in range(4)]
-    Min, Max = min(dists), max(dists)
-    return (Max - Min) <= Min * 0.2  # 最长边与最短边的差值不大于0.2倍最短边
-
-
-def thresh_find_rect(img):
-    threshim = sensor.alloc_extra_fb(W, H, sensor.RGB565)
-    threshim.replace(img)
-    threshim.binary([(0, 100, -128, 127, -10, 127)])
-    rects = threshim.find_rects(threshold=120000)
-    sensor.dealloc_extra_fb()  # threshim
-    rects = [r for r in rects if check_rect(r.corners())]
-    return max(rects, key=lambda x: x.magnitude()) if rects else None
-
-
 do_classify = False
 result_index = -1
 
@@ -61,8 +39,9 @@ while True:
     clock.tick()
     do_classify = b"\xA5" in uart.read() or do_classify
     img = sensor.snapshot()
-    rect = thresh_find_rect(img)
-    if rect is not None:
+    rects = img.find_rects(threshold=-10, quality=150)  # 代表二值化阈值和四边形最小周长
+    if rects:
+        rect = rects[0]
         if do_classify:
             uart.write((HEADER + b"\xFF") * 2)  # 通知主板拍到矩形, 可以开始搬运
 
