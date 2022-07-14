@@ -232,9 +232,13 @@ Task_t ReturnGarage() {
     moveBase.get_state(state);
 
     MoveBase::Goal goal = GOAL_CARRY;
+    goal.x = garage_position[0];
+    goal.y = garage_position[1];
+    goal.yaw = std::atan2(garage_position[1] - state.y(), garage_position[0] - state.x());
+    WAIT_MOVE_BASE_GOAL_REACHED;
+
     goal.x = initial_position[0];
     goal.y = initial_position[1];
-    goal.yaw = std::atan2(initial_position[1] - float(state.y()), initial_position[0] - float(state.x()));
     moveBase.send_goal(goal);
     WAIT_MOVE_BASE_GOAL_REACHED;
     return true;
