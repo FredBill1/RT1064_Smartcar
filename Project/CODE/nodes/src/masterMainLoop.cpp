@@ -97,6 +97,46 @@ Task_t carryRects(int& carrying_cnt) {
     return true;
 }
 
+Task_t carryRects_only1(int& carrying_cnt) {
+    // 动物：左
+    // 交通工具：上
+    // 水果：右
+    using namespace ResultCatgory;
+    using std::max, std::min;
+
+    int catgory_cnt[4]{0};
+    for (int i = 0; i < magnet::cnt; ++i) ++catgory_cnt[int(masterGlobalVars.art_results[i])];
+
+    MoveBase::State state;
+    moveBase.get_state(state);
+    MoveBase::Goal goal_carry = GOAL_CARRY;
+
+    float CUR_POS[2]{float(state.x()), float(state.y())};
+    float X = max(min(CUR_POS[0], fieldWidth - carrySidePadding), carrySidePadding);
+    float Y = max(min(CUR_POS[1], fieldHeight - carrySidePadding), carrySidePadding);
+    float POS[][2]{
+        {-carryExtendPadding, Y},               // 左，动物
+        {X, fieldHeight + carryExtendPadding},  // 上，交通工具
+        {fieldWidth + carryExtendPadding, Y},   // 右，水果
+    };
+    constexpr pose_kalman::T YAW[3]{0, -PI_2, PI};
+    constexpr Major CATGORY[3]{Major::animal, Major::vehicle, Major::fruit};
+    float min_dist2 = std::numeric_limits<float>::infinity();
+    int idx = 0;
+    for (int i = 0; i < 3; ++i)
+        if (catgory_cnt[int(CATGORY[i])])
+            if (float dist2 = utils::calcDist2(CUR_POS, POS[i]); dist2 < min_dist2) min_dist2 = dist2, idx = i;
+
+    goal_carry.x = POS[idx][0];
+    goal_carry.y = POS[idx][1];
+    goal_carry.yaw = YAW[idx];
+    moveBase.send_goal(goal_carry);
+    WAIT_MOVE_BASE_GOAL_REACHED;
+    carrying_cnt -= utils::dropCatgory(CATGORY[idx]);
+
+    return true;
+}
+
 Task_t finalCarry() {
     // 动物：左
     // 交通工具：上
@@ -216,7 +256,8 @@ Task_t MainProcess() {
                 continue;
             }
             WAIT_FOR(masterGlobalVars.wait_art_result(mainloop_timeout));
-            RUN_TASK(carryRects(carrying_cnt));
+            // RUN_TASK(carryRects(carrying_cnt));
+            RUN_TASK(carryRects_only1(carrying_cnt));
         }
     }
     if constexpr (!use_art) return true;
@@ -232,14 +273,15 @@ Task_t ReturnGarage() {
     moveBase.get_state(state);
 
     MoveBase::Goal goal = GOAL_CARRY;
-    goal.x = garage_position[0];
-    goal.y = garage_position[1];
-    goal.yaw = std::atan2(garage_position[1] - state.y(), garage_position[0] - state.x());
+    goal.x = garage_position1[0];
+    goal.y = garage_position1[1];
+    goal.yaw = std::atan2(garage_position1[1] - state.y(), garage_position1[0] - state.x());
     moveBase.send_goal(goal);
     WAIT_MOVE_BASE_GOAL_REACHED;
 
-    goal.x = initial_position[0];
-    goal.y = initial_position[1];
+    goal.x = garage_position2[0];
+    goal.y = garage_position2[1];
+    goal.yaw = -PI_2;
     moveBase.send_goal(goal);
     WAIT_MOVE_BASE_GOAL_REACHED;
     return true;

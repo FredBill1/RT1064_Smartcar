@@ -10,8 +10,8 @@ namespace Param {
 constexpr pose_kalman::LocalPlanner::Params localPlannerParam{
     .vel_lim_xy = 2.5,
     .vel_lim_yaw = 7,
-    .acc_lim_xy = 1.0,
-    .acc_lim_yaw = 10,
+    .acc_lim_xy = 1.1,
+    .acc_lim_yaw = 11,
     .dt_ref = 0.33,
 };
 }

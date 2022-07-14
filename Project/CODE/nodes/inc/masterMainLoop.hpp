@@ -75,10 +75,11 @@ static inline void sendArtSnapshotTask() {
     art_xfer.txFinished(-1);
     art_uart.send(art_xfer);
 }
-static inline float calcDist(const float a[2], const float b[2]) {
+static inline float calcDist2(const float a[2], const float b[2]) {
     float dx = a[0] - b[0], dy = a[1] - b[1];
-    return std::sqrt(dx * dx + dy * dy);
+    return dx * dx + dy * dy;
 }
+static inline float calcDist(const float a[2], const float b[2]) { return calcDist2(a, b); }
 Task_t moveBaseReachedCheck() {
     for (;;) {
         CHECK_RESET_SIGNAL();
