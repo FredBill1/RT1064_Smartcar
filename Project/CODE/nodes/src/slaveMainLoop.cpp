@@ -28,7 +28,9 @@ using namespace imgProc::edge_detect;
 
 static int32_t pre_time;
 static uint8_t* img;
+static SlaveGlobalVars::State state;
 static int A4_pre_cnt = -1, A4_cnt_same = 0;
+static int canny_thresh[2]{40, 80};
 
 namespace keys {
 static bool skip;
@@ -47,9 +49,20 @@ static inline void keyScan() {
     visualize = slave_switch[1].get();
     binary = slave_switch[0].get();
 
+    if (slave_key[0].pressing()) canny_thresh[0] += 5;
+    if (slave_key[1].pressing()) canny_thresh[0] -= 5;
+    if (slave_key[2].pressing()) canny_thresh[1] += 5;
+    if (slave_key[3].pressing()) canny_thresh[1] -= 5;
+
     ips114_showstr(188, 6, skip ? "SKIP" : "    ");
-    ips114_showstr(188, 5, visualize ? "VIS" : "   ");
-    ips114_showstr(188, 4, binary ? "BIN" : "   ");
+
+    if (state == SlaveGlobalVars::A4 || state == SlaveGlobalVars::A4_PREPARE) {
+        ips114_showuint16(188, 4, (uint16)canny_thresh[0]);
+        ips114_showuint16(188, 5, (uint16)canny_thresh[1]);
+    } else {
+        ips114_showstr(188, 5, visualize ? "VIS" : "   ");
+        ips114_showstr(188, 4, binary ? "BIN" : "   ");
+    }
 }
 
 static inline void Reset() {
@@ -59,9 +72,9 @@ static inline void Reset() {
 
 static inline void A4Prepare() {
     SKIP_CHECK;
-    A4Detect(img, borderWidth, borderHeight, 50, 100);
+    A4Detect(img, borderWidth, borderHeight, canny_thresh[0], canny_thresh[1]);
     show_edge(img);
-    if (slave_key[0].pressing()) {
+    if (slave_key[4].pressing()) {
         slaveGlobalVars.set_state(SlaveGlobalVars::A4);
         A4_pre_cnt = -1;
     }
@@ -71,7 +84,7 @@ static inline void A4Detect() {
     SKIP_CHECK;
     static SerialIO::TxArr<float, target_coords_maxn * 2, true> a4_tx(32, "a4_tx");
 
-    bool res = A4Detect(img, borderWidth, borderHeight, 50, 100);
+    bool res = A4Detect(img, borderWidth, borderHeight, canny_thresh[0], canny_thresh[1]);
     if (!res) A4_pre_cnt = -1;
 
     if (target_coords_cnt == A4_pre_cnt) {
@@ -120,7 +133,7 @@ static void slaveMainLoopEntry() {
     for (;;) {
         img = camera.snapshot();
 
-        auto state = slaveGlobalVars.get_state();
+        state = slaveGlobalVars.get_state();
         ips114_showstr(188, 7, slaveGlobalVars.state_str(state));
         keyScan();
 

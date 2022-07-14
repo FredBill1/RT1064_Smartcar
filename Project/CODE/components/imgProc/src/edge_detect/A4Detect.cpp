@@ -1,5 +1,6 @@
 #include "edge_detect/A4Detect.hpp"
 
+#include <bitset>
 #include <utility>
 
 #include "apriltag/fmath.hpp"
@@ -35,6 +36,24 @@ float_t target_coords_corr[target_coords_maxn][2];
         if (0 <= i && i < N / 4 && 0 <= j && j < M / 4) *(img + ((i * M + j) << 2)) = (color); \
     })
 
+constexpr int dxy8[][2]{{1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}, {1, 1}};
+constexpr int dxy4[][2]{{1, 0}, {0, -1}, {-1, 0}, {0, 1}};
+
+// ÅòÕÍ
+static inline void dilation(uint8_t* img) {
+    static std::bitset<N * M> binim;
+    binim.reset();
+    // ²»ÐèÒª¿¼ÂÇÔÚ±ßÔµµÄµã
+    for (int y = 1; y < N - 1; ++y)
+        for (int x = 1; x < M - 1; ++x)
+            for (auto [dx, dy] : dxy8)
+                if (PIXEL(img, x + dx, y + dy) == 255) {
+                    binim.set(y * M + x);
+                    break;
+                }
+    for (int i = 0; i < N * M; ++i) *img++ = binim.test(i) ? 255 : 0;
+}
+
 // ÕÒµ½±ß¿òÉÏ¾àÀëÖÐÐÄ×îÔ¶µÄµã
 static inline pair<int, int> find_farthest(uint8_t* img, bool visualize = false) {
     constexpr float start_dist = 50;
@@ -65,9 +84,6 @@ static inline pair<int, int> find_farthest(uint8_t* img, bool visualize = false)
     if (visualize) CIRCLE(img, res_j, res_i, 6, 3);
     return {res_i, res_j};
 }
-
-constexpr int dxy8[8][2]{{1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}, {1, 1}};
-constexpr int dxy4[8][2]{{1, 0}, {0, -1}, {-1, 0}, {0, 1}};
 
 // 8ÁÚÓò×·×Ù±ß¿ò
 static inline pair<Coordinate*, int> edgeTrace(uint8_t* img, int X, int Y, bool visualize = false) {
@@ -171,6 +187,8 @@ bool A4Detect(uint8_t* img, apriltag::float_t borderWidth, apriltag::float_t bor
 
     gvec_t* g = canny(img, low_thresh, high_thresh);  // ±ßÔµ¼ì²â
 #define free_g staticBuffer.pop(N* M * sizeof(*g))
+
+    dilation(img);
 
     debug_ips(":1");
 
