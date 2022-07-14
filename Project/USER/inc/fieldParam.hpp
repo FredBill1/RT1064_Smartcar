@@ -28,6 +28,7 @@ constexpr float carrySidePadding = 0.4;    // 角落里向中间
 constexpr float rectPadding = 0.1;
 
 // 车在场地内使rect生效的最小距离
+constexpr bool useRectBasePadding = false;
 constexpr float rectBasePadding = 0.1;
 
 // rect识别坐标的最大偏移距离

@@ -123,10 +123,12 @@ static inline void processRects() {
     masterGlobalVars.get_rects(state, rects[0], cnt, maxDistErrorSquared, timestamp_us);
     if (!cnt) return;
 
-    // 车在场地内使rect生效的最小距离
-    if (!(rectBasePadding <= state[0] && state[0] <= fieldWidth - rectBasePadding && rectBasePadding <= state[1] &&
-          state[1] <= fieldHeight - rectBasePadding))
-        return;
+    if constexpr (useRectBasePadding) {
+        // 车在场地内使rect生效的最小距离
+        if (!(rectBasePadding <= state[0] && state[0] <= fieldWidth - rectBasePadding && rectBasePadding <= state[1] &&
+              state[1] <= fieldHeight - rectBasePadding))
+            return;
+    }
 
     float sy = std::sin(state[2]), cy = std::cos(state[2]);
     float min_dist2 = std::numeric_limits<float>::infinity();
