@@ -21,8 +21,8 @@ void ResultSender::apply_xy() {
     buf[9] = x % 10 + '0', x /= 10;
     buf[8] = x % 10 + '0';
 
-    buf[11] = y % 10 + '0', y /= 10;
-    buf[10] = y % 10 + '0';
+    buf[12] = y % 10 + '0', y /= 10;
+    buf[11] = y % 10 + '0';
 }
 
 bool ResultSender::send_catgory(ResultCatgory::Minor catgory, int32_t timeout_ms) {
