@@ -11,7 +11,7 @@ constexpr pose_kalman::LocalPlanner::Params localPlannerParam{
     .vel_lim_xy = 1.5,
     .vel_lim_yaw = 7,
     .acc_lim_xy = 1.1,
-    .acc_lim_yaw = 11,
+    .acc_lim_yaw = 7,
     .dt_ref = 0.33,
 };
 }
