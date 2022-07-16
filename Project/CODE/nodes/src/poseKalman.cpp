@@ -95,6 +95,7 @@ static void runLocalPlanner(uint64_t timestamp_us, const T state[6]) {
             has_reached = true, last_reached_timestamp_us = timestamp_us;
         } else if (systick.get_diff_us(last_reached_timestamp_us, timestamp_us) > goal.time_tolerance_us) {
             moveBase.set_reached(true);
+            cmd_vel[0] = cmd_vel[1] = cmd_vel[2] = 0;
         }
     } else {
         has_reached = false;

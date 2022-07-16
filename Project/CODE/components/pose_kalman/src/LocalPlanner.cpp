@@ -32,15 +32,13 @@ bool LocalPlanner::getControlCmd(const T pose_[3], const T vel_[3], const MoveBa
 
     T pose_yaw_simulate = pose_yaw + vel_yaw * (params.dt_ref * 0.5);
     T pose_yaw_dif = wrapAngle(target_yaw - pose_yaw_simulate);
-    if (abs(pose_yaw_dif) <= goal.yaw_tolerance) {
-        yaw_goal_reached = true;
-        cmd_vel_yaw = 0;
-    } else {
-        cmd_vel_yaw = std::sqrt(2 * params.acc_lim_yaw * abs(pose_yaw_dif));
-        chkmin(cmd_vel_yaw, params.vel_lim_yaw);
-        // if (T vel_xy_norm = vel_xy.norm(); vel_xy_norm > eps) chkmin(cmd_vel_yaw, params.acc_lim_xy / vel_xy_norm);
-        if (pose_yaw_dif < 0) cmd_vel_yaw = -cmd_vel_yaw;
-    }
+    if (abs(pose_yaw_dif) <= goal.yaw_tolerance) yaw_goal_reached = true;
+
+    cmd_vel_yaw = std::sqrt(2 * params.acc_lim_yaw * abs(pose_yaw_dif));
+    chkmin(cmd_vel_yaw, params.vel_lim_yaw);
+    // if (T vel_xy_norm = vel_xy.norm(); vel_xy_norm > eps) chkmin(cmd_vel_yaw, params.acc_lim_xy / vel_xy_norm);
+    if (pose_yaw_dif < 0) cmd_vel_yaw = -cmd_vel_yaw;
+
     T vel_yaw_dif = cmd_vel_yaw - vel_yaw;
     T vel_yaw_dif_lim = params.acc_lim_yaw * params.dt_ref;
     if (std::abs(vel_yaw_dif) > vel_yaw_dif_lim) {
