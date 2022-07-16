@@ -8,7 +8,7 @@ using pose_kalman::PI, pose_kalman::PI_2;
 
 namespace Param {
 constexpr pose_kalman::LocalPlanner::Params localPlannerParam{
-    .vel_lim_xy = 2.5,
+    .vel_lim_xy = 1.5,
     .vel_lim_yaw = 7,
     .acc_lim_xy = 1.1,
     .acc_lim_yaw = 11,
