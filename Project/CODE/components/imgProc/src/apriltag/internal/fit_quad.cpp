@@ -79,7 +79,8 @@ static void fit_line(line_fit_pt* lfps, int_fast32_t sz, int_fast32_t i0, int_fa
     if (mse) *mse = eig_small;
 }
 
-static inline bool quad_segment_maxima(int_fast32_t sz, line_fit_pt* lfps, int indices[4], int ksz_max = 20) {
+static inline bool quad_segment_maxima(int_fast32_t sz, line_fit_pt* lfps, int indices[4], int ksz_max = 20,
+                                       float_t max_line_fit_mse = imgProc::apriltag::max_line_fit_mse) {
     int_fast32_t ksz = min(ksz_max, sz / 12);
     if (ksz < 2) return false;
 
@@ -338,16 +339,18 @@ bool fit_quad_simple(Coordinate cluster[], int sz, quad& quad, const edge_detect
     sz = std::unique(cluster, cluster + sz, Equal) - cluster;
     line_fit_pt* lfps = compute_lfps_simple(sz, cluster, g);
 
+    constexpr float_t max_line_fit_mse_a4 = 100;
+
     int indices[4];
     bool res = false;
-    if (!quad_segment_maxima(sz, lfps, indices, 20)) goto finish_simple;
+    if (!quad_segment_maxima(sz, lfps, indices, 20, max_line_fit_mse_a4)) goto finish_simple;
 
     float_t lines[4][4];
     rep(i, 0, 4) {
         int_fast32_t i0 = indices[i], i1 = indices[(i + 1) & 3];
         float_t err;
         fit_line(lfps, sz, i0, i1, lines[i], NULL, &err);
-        if (err > max_line_fit_mse) {
+        if (err > max_line_fit_mse_a4) {
             res = false;
             goto finish_simple;
         }
