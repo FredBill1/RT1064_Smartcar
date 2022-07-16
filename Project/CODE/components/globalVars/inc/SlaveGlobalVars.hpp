@@ -8,7 +8,6 @@ class SlaveGlobalVars {
     enum State : uint8_t {
         IDLE,
         RESET,
-        A4_PREPARE,
         A4,
         RECT,
     };

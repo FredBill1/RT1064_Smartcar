@@ -16,7 +16,6 @@ const char* SlaveGlobalVars::state_str(State state) {
     switch (state) {
     case IDLE: return "IDLE";
     case RESET: return "RST ";
-    case A4_PREPARE: return "A4_P";
     case A4: return "A4  ";
     case RECT: return "RECT";
     default: return "NULL";

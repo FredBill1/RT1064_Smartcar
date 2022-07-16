@@ -16,11 +16,17 @@ Task_t Reset() {
 
 Task_t GetCoords() {
     SHOW_STATE("GETC");
-    WAIT_FOR(masterGlobalVars.wait_for_coord_recv(mainloop_timeout));
+    for (;;) {
+        CHECK_RESET_SIGNAL();
+        keyScan();
+        if (key_pressing[3]) break;
+        if (masterGlobalVars.wait_for_coord_recv(100)) {
+            masterGlobalVars.get_coord_recv();
+            draw_corr(coords + 1, coords_cnt, borderWidth, borderHeight);
+        }
+    }
     utils::sendSlaveTask(SlaveGlobalVars::RECT);
-    masterGlobalVars.get_coord_recv();
     utils::sendCoords();
-    draw_corr(coords + 1, coords_cnt, borderWidth, borderHeight);
     return true;
 }
 
@@ -292,7 +298,7 @@ static inline void Idle() {
     for (;;) {
         keyScan();
         if (key_pressing[4]) break;
-        if (key_pressing[1]) utils::sendSlaveTask(SlaveGlobalVars::A4_PREPARE);
+        if (key_pressing[1]) utils::sendSlaveTask(SlaveGlobalVars::A4);
         if (key_pressing[2]) utils::sendSlaveTask(SlaveGlobalVars::RECT);
         if (key_pressing[3]) utils::sendArtSnapshotTask();
     }

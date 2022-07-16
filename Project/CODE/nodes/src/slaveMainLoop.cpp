@@ -29,7 +29,6 @@ using namespace imgProc::edge_detect;
 static int32_t pre_time;
 static uint8_t* img;
 static SlaveGlobalVars::State state;
-static int A4_pre_cnt = -1, A4_cnt_same = 0;
 static int canny_thresh[2]{40, 80};
 
 namespace keys {
@@ -56,7 +55,7 @@ static inline void keyScan() {
 
     ips114_showstr(188, 6, skip ? "SKIP" : "    ");
 
-    if (state == SlaveGlobalVars::A4 || state == SlaveGlobalVars::A4_PREPARE) {
+    if (state == SlaveGlobalVars::A4) {
         ips114_showuint16(188, 4, (uint16)canny_thresh[0]);
         ips114_showuint16(188, 5, (uint16)canny_thresh[1]);
     } else {
@@ -67,17 +66,7 @@ static inline void keyScan() {
 
 static inline void Reset() {
     ips114_clear(WHITE);
-    slaveGlobalVars.set_state(SlaveGlobalVars::A4_PREPARE);
-}
-
-static inline void A4Prepare() {
-    SKIP_CHECK;
-    A4Detect(img, borderWidth, borderHeight, canny_thresh[0], canny_thresh[1]);
-    show_edge(img);
-    if (slave_key[4].pressing()) {
-        slaveGlobalVars.set_state(SlaveGlobalVars::A4);
-        A4_pre_cnt = -1;
-    }
+    slaveGlobalVars.set_state(SlaveGlobalVars::A4);
 }
 
 static inline void A4Detect() {
@@ -85,21 +74,14 @@ static inline void A4Detect() {
     static SerialIO::TxArr<float, target_coords_maxn * 2, true> a4_tx(32, "a4_tx");
 
     bool res = A4Detect(img, borderWidth, borderHeight, canny_thresh[0], canny_thresh[1]);
-    if (!res) A4_pre_cnt = -1;
-
-    if (target_coords_cnt == A4_pre_cnt) {
-        if (++A4_cnt_same >= 3) {
-            A4_cnt_same = 3;
-            if constexpr (squareAlign)
-                for (int i = 0; i < target_coords_cnt; ++i)
-                    for (int j = 0; j < 2; ++j)
-                        target_coords_corr[i][j] = (int(target_coords_corr[i][j] / squareSize) + 0.5f) * squareSize;
-            a4_tx.txFinished(-1);
-            a4_tx.setArr(target_coords_corr[0], target_coords_cnt * 2);
-            master_uart.send(a4_tx);
-        }
-    } else {
-        A4_pre_cnt = target_coords_cnt, A4_cnt_same = 1;
+    if (res) {
+        if constexpr (squareAlign)
+            for (int i = 0; i < target_coords_cnt; ++i)
+                for (int j = 0; j < 2; ++j)
+                    target_coords_corr[i][j] = (int(target_coords_corr[i][j] / squareSize) + 0.5f) * squareSize;
+        a4_tx.txFinished(-1);
+        a4_tx.setArr(target_coords_corr[0], target_coords_cnt * 2);
+        master_uart.send(a4_tx);
     }
 
     show_edge(img);  // ÏÔÊ¾±ßÔµÍ¼Æ¬
@@ -140,7 +122,6 @@ static void slaveMainLoopEntry() {
         switch (state) {
         case SlaveGlobalVars::IDLE: Idle(); break;
         case SlaveGlobalVars::RESET: Reset(); break;
-        case SlaveGlobalVars::A4_PREPARE: A4Prepare(); break;
         case SlaveGlobalVars::A4: A4Detect(); break;
         case SlaveGlobalVars::RECT: FindRect(); break;
         default: show_grayscale(img); break;
