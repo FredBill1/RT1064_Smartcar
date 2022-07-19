@@ -187,7 +187,7 @@ Task_t finalCarry() {
     MoveBase::Goal goal_carry = GOAL_CARRY;
     for (int i = 0; i < target_cnt; ++i) {
         goal_carry.x = targets[i][0], goal_carry.y = targets[i][1];
-        goal_carry.yaw = std::atan2(targets[i][1] - targets[i - 1][1], targets[i][0] - targets[i - 1][0]);
+        goal_carry.yaw = std::atan2(targets[i - 1][1] - targets[i][1], targets[i - 1][0] - targets[i][0]);
         moveBase.send_goal(goal_carry);
         WAIT_MOVE_BASE_GOAL_REACHED;
         utils::dropCatgory(catgory[i]);
