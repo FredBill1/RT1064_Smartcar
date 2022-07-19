@@ -38,6 +38,7 @@ float_t target_coords_corr[target_coords_maxn][2];
 
 constexpr int dxy8[][2]{{1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}, {1, 1}};
 constexpr int dxy4[][2]{{1, 0}, {0, -1}, {-1, 0}, {0, 1}};
+constexpr int dxy9[][2]{{0, 0}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}, {1, 1}};
 
 // 膨胀
 static inline void dilation(uint8_t* img) {
@@ -46,7 +47,7 @@ static inline void dilation(uint8_t* img) {
     // 不需要考虑在边缘的点
     for (int y = 1; y < N - 1; ++y)
         for (int x = 1; x < M - 1; ++x)
-            for (auto [dx, dy] : dxy8)
+            for (auto [dx, dy] : dxy9)
                 if (PIXEL(img, x + dx, y + dy) == 255) {
                     binim.set(y * M + x);
                     break;
@@ -143,7 +144,7 @@ static inline bool dfs_black(uint8_t* img, int x, int y) {
             }
         }
     }
-    if (cnt < 10 || xmax - xmin > 100 || ymax - ymin > 100) return false;
+    if (cnt < 8 || xmax - xmin > 100 || ymax - ymin > 100) return false;
     target_coords[target_coords_cnt].x = (xmax + xmin) >> 1;
     target_coords[target_coords_cnt].y = (ymax + ymin) >> 1;
     ++target_coords_cnt;

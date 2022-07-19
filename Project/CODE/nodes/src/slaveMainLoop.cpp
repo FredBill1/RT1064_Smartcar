@@ -29,7 +29,7 @@ using namespace imgProc::edge_detect;
 static int32_t pre_time;
 static uint8_t* img;
 static SlaveGlobalVars::State state;
-static int canny_thresh[2]{40, 80};
+static int canny_thresh[2]{30, 55};
 
 namespace keys {
 static bool skip;
