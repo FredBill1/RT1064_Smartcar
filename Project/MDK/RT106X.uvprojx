@@ -2904,6 +2904,11 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\test\testRectGrab.cpp</FilePath>
             </File>
+            <File>
+              <FileName>testMagnet.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\test\testMagnet.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -5967,6 +5972,11 @@
               <FileName>testRectGrab.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\nodes\test\testRectGrab.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>testMagnet.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\nodes\test\testMagnet.cpp</FilePath>
             </File>
           </Files>
         </Group>
