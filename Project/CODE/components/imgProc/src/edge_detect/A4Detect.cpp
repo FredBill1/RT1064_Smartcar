@@ -189,7 +189,7 @@ bool A4Detect(uint8_t* img, apriltag::float_t borderWidth, apriltag::float_t bor
     gvec_t* g = canny(img, low_thresh, high_thresh);  // ±ßÔµ¼ì²â
 #define free_g staticBuffer.pop(N* M * sizeof(*g))
 
-    dilation(img);
+    // dilation(img);
 
     debug_ips(":1");
 
