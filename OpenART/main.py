@@ -39,6 +39,7 @@ while True:
     clock.tick()
     do_classify = b"\xA5" in uart.read() or do_classify
     img = sensor.snapshot()
+    img.lens_corr(1.48)
     rects = img.find_rects(threshold=-10, quality=150)  # 代表二值化阈值和四边形最小周长
     if rects:
         rect = rects[0]
@@ -50,7 +51,7 @@ while True:
 
         if do_classify:
             # model = tf.load(net, load_to_fb=True)
-            obj = model.classify(img, roi=(BORDER_WIDTH, BORDER_WIDTH, NET_SIZE, NET_SIZE), scale_mul=0.9)[0]
+            obj = model.classify(img, roi=(BORDER_WIDTH, BORDER_WIDTH, NET_SIZE, NET_SIZE))[0]
             # tf.free_from_fb()
 
             res = obj.output()
