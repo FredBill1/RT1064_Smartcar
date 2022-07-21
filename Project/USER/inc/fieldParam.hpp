@@ -38,7 +38,7 @@ constexpr float rectMaxDistError = 0.5;
 constexpr float initial_position[3]{0.105, -(0.141 + 0.048), PI_2};
 
 // »Îø‚Œª÷√
-constexpr float garage_position1[2]{0.205, 0.4};
-constexpr float garage_position2[2]{0.205, -0.4};
+constexpr float garage_position1[2]{0.155, 0.4};
+constexpr float garage_position2[2]{0.155, -0.4};
 
 #endif  // _fieldParam_hpp
