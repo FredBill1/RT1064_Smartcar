@@ -45,11 +45,12 @@ static inline void keyScan() {
 #define RUN_TASK(entry) { if (masterGlobalVars.reset_requested() || !(entry)) return false; }
 #define GUARD_COND(cond) { if (!(cond)) return false; }
 #define CHECK_RESET_SIGNAL() { if (masterGlobalVars.reset_requested()) return false; }
-#define WAIT_FOR(cond) {        \
-    while (!(cond)) {           \
-        CHECK_RESET_SIGNAL();   \
-        keyScan();              \
-    }                           \
+#define CHECK_KEY_RESET() { keyScan(); if (key_pressing[0]) return false; }
+#define WAIT_FOR(cond) {      \
+    while (!(cond)) {         \
+        CHECK_KEY_RESET();    \
+        CHECK_RESET_SIGNAL(); \
+    }                         \
 }
 #define SHOW_STATE(s) ips114_showstr(188, 4, s);
 // clang-format on
@@ -82,6 +83,7 @@ static inline float calcDist2(const float a[2], const float b[2]) {
 static inline float calcDist(const float a[2], const float b[2]) { return calcDist2(a, b); }
 Task_t moveBaseReachedCheck() {
     for (;;) {
+        CHECK_KEY_RESET();
         CHECK_RESET_SIGNAL();
         switch (moveBase.wait_for_result(mainloop_timeout)) {
         case MoveBase::GoalEventFlag::disabled: return false;
@@ -94,6 +96,7 @@ Task_t moveBaseReachedCheck() {
 Task_t waitArtSnapshot() {
     rt_tick_t start_ms = rt_tick_get_millisecond();
     for (;;) {
+        CHECK_KEY_RESET();
         CHECK_RESET_SIGNAL();
         if (masterGlobalVars.wait_art_snapshot(mainloop_timeout)) break;
         if (rt_tick_get_millisecond() - start_ms > art_snapshot_timeout_ms) {

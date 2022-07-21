@@ -301,6 +301,7 @@ static inline void Idle() {
         if (key_pressing[1]) utils::sendSlaveTask(SlaveGlobalVars::A4);
         if (key_pressing[2]) utils::sendSlaveTask(SlaveGlobalVars::RECT);
         if (key_pressing[3]) utils::sendArtSnapshotTask();
+        rt_thread_mdelay(300);
     }
     masterGlobalVars.reset_requested();  // clear the reset flag
 }
