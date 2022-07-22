@@ -19,6 +19,8 @@ constexpr pose_kalman::LocalPlanner::Params localPlannerParam{
 constexpr MoveBase::Goal GOAL_NAVI{
     .xy_tolerance = 15e-3,
     .yaw_tolerance = 5 * PI / 180,
+    .xy_near = 0,
+    .yaw_near = 0,
     .time_tolerance_us = uint64_t(30e4),
     .reached = false,
 };
@@ -26,6 +28,8 @@ constexpr MoveBase::Goal GOAL_NAVI{
 constexpr MoveBase::Goal GOAL_PICK{
     .xy_tolerance = 10e-3,
     .yaw_tolerance = 4 * PI / 180,
+    .xy_near = 0,
+    .yaw_near = 0,
     .time_tolerance_us = uint64_t(15e4),
     .reached = false,
 };
