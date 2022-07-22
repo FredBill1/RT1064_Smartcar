@@ -34,10 +34,11 @@ static auto& coords = masterGlobalVars.coords;
 static TSP::TSP_Solver tsp;
 
 constexpr int key_cnt = sizeof(master_key) / sizeof(master_key[0]), switch_cnt = sizeof(master_switch) / sizeof(master_switch[0]);
-static bool key_pressing[key_cnt], switch_on[switch_cnt];
+static bool key_pressing[key_cnt];
+// static bool switch_on[switch_cnt];
 static inline void keyScan() {
     for (int i = 0; i < key_cnt; ++i) key_pressing[i] = master_key[i].pressing();
-    for (int i = 0; i < switch_cnt; ++i) switch_on[i] = master_switch[i].get();
+    // for (int i = 0; i < switch_cnt; ++i) switch_on[i] = master_switch[i].get();
 }
 
 // clang-format off

@@ -8,6 +8,19 @@
 
 using namespace pose_kalman;
 
+static inline void quaternion_to_yaw(const float data[4], uint64_t timestamp_us) {
+    T yaw[2];
+    yaw[0] = std::atan2(2 * T(data[0] * data[3] + data[1] * data[2]), 1 - 2 * T(data[2] * data[2] + data[3] * data[3]));
+    static T yaw_offset = 0;
+    if (moveBase.get_yaw(yaw_offset)) {
+        yaw[1] = yaw_offset;
+        yaw_offset = wrapAngle(yaw_offset - yaw[0]);
+    } else {
+        yaw[1] = wrapAngle(yaw[0] + yaw_offset);
+    }
+    kf.enqueMeasurement(MeasurementType::Yaw, yaw + 1, timestamp_us);
+}
+
 #define send_data(name, len, id)                                        \
     {                                                                   \
         static SerialIO::TxUtil<float, len, true> name##_tx(#name, id); \
@@ -32,25 +45,7 @@ static void imu_cb_rpy_orientation(const float data[3], uint64_t timestamp_us) {
 static void imu_cb_6DOF_orientation(const float data[4], uint64_t timestamp_us) { send_data(o6dof, 4, 8); }
 static void imu_cb_9DOF_orientation(const float data[4], uint64_t timestamp_us) {
     send_data(o9dof, 4, 9);
-    static SerialIO::TxUtil<float, 2, true> yaw_tx("yaw", 11);
-    using std::atan2, std::asin;
-    // T r = atan2(2 * (data[0] * data[1] + data[2] * data[3]), 1 - 2 * (data[1] * data[1] + data[2] * data[2]));
-    // T p = asin(2 * (data[0] * data[2] - data[1] * data[3]));
-    T yaw[2];
-    yaw[0] = atan2(2 * (data[0] * data[3] + data[1] * data[2]), 1 - 2 * (data[2] * data[2] + data[3] * data[3]));
-    static T yaw_offset = 0;
-    if (moveBase.get_yaw(yaw_offset)) {
-        yaw[1] = yaw_offset;
-        yaw_offset = wrapAngle(yaw_offset - yaw[0]);
-    } else {
-        yaw[1] = wrapAngle(yaw[0] + yaw_offset);
-    }
-
-    kf.enqueMeasurement(MeasurementType::Yaw, yaw + 1, timestamp_us);
-    if (yaw_tx.txFinished()) {
-        yaw_tx.setArr(yaw);
-        wireless.send(yaw_tx);
-    }
+    if (master_switch[0].get()) quaternion_to_yaw(data, timestamp_us);
 }
 static void imu_cb_mag_orientation(const float data[4], uint64_t timestamp_us) { send_data(omag, 4, 10); }
 

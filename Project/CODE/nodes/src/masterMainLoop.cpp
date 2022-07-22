@@ -315,6 +315,8 @@ static inline void Idle() {
         if (key_pressing[1]) utils::sendSlaveTask(SlaveGlobalVars::A4);
         if (key_pressing[2]) utils::sendSlaveTask(SlaveGlobalVars::RECT);
         if (key_pressing[3]) utils::sendArtSnapshotTask();
+        ips114_showstr(188, 0, master_switch[0].get() ? "9dof" : "    ");
+
         rt_thread_mdelay(300);
     }
     masterGlobalVars.reset_requested();  // clear the reset flag
