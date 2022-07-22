@@ -115,21 +115,27 @@ static inline int find_idle_magnet_index() {
 }
 
 static inline int dropCatgory(ResultCatgory::Major catgory) {
-    srv_l.max(), srv_r.max();
-    for (int i = 0; i < magnet::cnt; ++i)
-        if (masterGlobalVars.art_results[i] == catgory) magnets[i].set(0);
-
-    rt_thread_mdelay(magnet_drop_delay_ms);
-
-    srv_l.min(), srv_r.min();
-    rt_thread_mdelay(magnet_drop_wait_ms);
-
     int res = 0;
     for (int i = 0; i < magnet::cnt; ++i)
-        if (masterGlobalVars.art_results[i] == catgory)
-            ++res, magnets[i].set(1), masterGlobalVars.art_results[i] = ResultCatgory::Major::None;
+        if (masterGlobalVars.art_results[i] == catgory) {
+            magnets[i].set(0);
+            ++res;
+            masterGlobalVars.art_results[i] = ResultCatgory::Major::None;
+        }
+    masterGlobalVars.send_drop_rect();
     return res;
 }
+static void dropCatgoryEntry() {
+    for (;;) {
+        masterGlobalVars.wait_drop_rect();
+        srv_l.max(), srv_r.max();
+        rt_thread_mdelay(magnet_drop_delay_ms);
+        srv_l.min(), srv_r.min();
+        rt_thread_mdelay(magnet_drop_wait_ms);
+        for (auto& mag : magnets) mag.set(1);
+    }
+}
+
 }  // namespace utils
 
 #endif  // _nodes_masterMainLoop_hpp

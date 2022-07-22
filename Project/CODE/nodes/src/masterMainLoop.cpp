@@ -125,7 +125,6 @@ Task_t carryRects_only1(int& carrying_cnt, float* min_dist2_thresh = nullptr, bo
         {X, fieldHeight + carryExtendPadding},  // 上，交通工具
         {fieldWidth + carryExtendPadding, Y},   // 右，水果
     };
-    constexpr pose_kalman::T YAW[3]{0, -PI_2, PI};
     constexpr Major CATGORY[3]{Major::animal, Major::vehicle, Major::fruit};
     float min_dist2 = std::numeric_limits<float>::infinity();
     int idx = 0;
@@ -143,7 +142,7 @@ Task_t carryRects_only1(int& carrying_cnt, float* min_dist2_thresh = nullptr, bo
 
     goal_carry.x = POS[idx][0];
     goal_carry.y = POS[idx][1];
-    goal_carry.yaw = YAW[idx];
+    goal_carry.yaw = std::atan2(CUR_POS[1] - POS[idx][1], CUR_POS[0] - POS[idx][0]);
     moveBase.send_goal(goal_carry);
     // WAIT_MOVE_BASE_GOAL_REACHED;
     WAIT_FOR(moveBase.wait_xy_near(mainloop_timeout));
@@ -342,4 +341,7 @@ static void masterMainLoopEntry() {
     }
 }
 
-bool masterMainLoopNode() { return FuncThread(masterMainLoopEntry, "masterMainLoop", 4096, Thread::lowest_priority); }
+bool masterMainLoopNode() {
+    return FuncThread(utils::dropCatgoryEntry, "dropCatgory", 2048, Thread::lowest_priority - 1) &&
+           FuncThread(masterMainLoopEntry, "masterMainLoop", 4096, Thread::lowest_priority);
+}

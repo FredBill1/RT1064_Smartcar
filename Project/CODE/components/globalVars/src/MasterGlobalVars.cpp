@@ -11,12 +11,14 @@ MasterGlobalVars::MasterGlobalVars() {
     rt_event_init(&coord_recv_event, "coord_recv_event", RT_IPC_FLAG_PRIO);
     rt_event_init(&art_snapshot_event, "art_snapshot_event", RT_IPC_FLAG_PRIO);
     rt_event_init(&art_result_event, "art_result_event", RT_IPC_FLAG_PRIO);
+    rt_event_init(&drop_rect_event, "drop_rect_event", RT_IPC_FLAG_PRIO);
 }
 
 void MasterGlobalVars::reset_states() {
     rt_event_recv(&coord_recv_event, 1, RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR, RT_WAITING_NO, RT_NULL);
     rt_event_recv(&art_snapshot_event, 1, RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR, RT_WAITING_NO, RT_NULL);
     rt_event_recv(&art_result_event, 1, RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR, RT_WAITING_NO, RT_NULL);
+    rt_event_recv(&drop_rect_event, 1, RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR, RT_WAITING_NO, RT_NULL);
     {
         InterruptGuard guard;
         reset_flag = false;
@@ -124,6 +126,12 @@ bool MasterGlobalVars::send_art_result(ResultCatgory::Major result) {
 ResultCatgory::Major MasterGlobalVars::get_art_result() const {
     InterruptGuard guard;
     return art_results[_art_cur_index];
+}
+
+void MasterGlobalVars::send_drop_rect() { rt_event_send(&drop_rect_event, 1); }
+
+bool MasterGlobalVars::wait_drop_rect(rt_int32_t timeout) {
+    return rt_event_recv(&drop_rect_event, 1, RT_EVENT_FLAG_AND | RT_EVENT_FLAG_CLEAR, timeout, RT_NULL) == RT_EOK;
 }
 
 void MasterGlobalVars::send_upload_xy(const uint8_t xy[2]) {

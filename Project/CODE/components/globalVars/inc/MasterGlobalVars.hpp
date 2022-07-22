@@ -62,6 +62,13 @@ class MasterGlobalVars {
     ResultCatgory::Major get_art_result() const;
 
  private:
+    rt_event drop_rect_event;
+
+ public:
+    void send_drop_rect();
+    bool wait_drop_rect(rt_int32_t timeout = RT_WAITING_FOREVER);
+
+ private:
     uint8_t _upload_xy[2]{0};
 
  public:
