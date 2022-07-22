@@ -88,6 +88,7 @@ static void runLocalPlanner(uint64_t timestamp_us, const T state[6]) {
             goal_tx.setAll(goal.x, goal.y, goal.yaw, 0, 0, 0);
             wireless.send(goal_tx);
         }
+        if (goal.params) localPlanner.setParams(*(const pose_kalman::LocalPlanner::Params*)goal.params);
     }
     bool is_near;
     if (localPlanner.getControlCmd(state, state + 3, goal, cmd_vel, &is_near)) {

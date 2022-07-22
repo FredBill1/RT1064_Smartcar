@@ -21,6 +21,7 @@ class MoveBase {
         pose_kalman::T yaw_near;
         uint64_t time_tolerance_us;
         bool reached;
+        const void* params;
         static constexpr Goal getDefault() {
             return {
                 .xy_tolerance = default_xy_tolerance,
@@ -29,6 +30,7 @@ class MoveBase {
                 .yaw_near = default_yaw_near,
                 .time_tolerance_us = default_time_tolerance_us,
                 .reached = false,
+                .params = nullptr,
             };
         }
     };

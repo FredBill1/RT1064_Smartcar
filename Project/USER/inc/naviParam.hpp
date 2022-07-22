@@ -16,6 +16,15 @@ constexpr pose_kalman::LocalPlanner::Params localPlannerParam{
 };
 }
 
+//! ÕÒ¿¨Æ¬
+constexpr pose_kalman::LocalPlanner::Params GOAL_NAVI_PARAM{
+    .vel_lim_xy = 1.8,
+    .vel_lim_yaw = 7,
+    .acc_lim_xy = 1.1,
+    .acc_lim_yaw = 8,
+    .dt_ref = 0.33,
+};
+
 constexpr MoveBase::Goal GOAL_NAVI{
     .xy_tolerance = 15e-3,
     .yaw_tolerance = 5 * PI / 180,
@@ -23,6 +32,16 @@ constexpr MoveBase::Goal GOAL_NAVI{
     .yaw_near = 0,
     .time_tolerance_us = uint64_t(30e4),
     .reached = false,
+    .params = &GOAL_NAVI_PARAM,
+};
+
+//! ×Ô×ªÎü¿¨Æ¬
+constexpr pose_kalman::LocalPlanner::Params GOAL_PICK_PARAM{
+    .vel_lim_xy = 1.5,
+    .vel_lim_yaw = 14,
+    .acc_lim_xy = 0.8,
+    .acc_lim_yaw = 12,
+    .dt_ref = 0.26,
 };
 
 constexpr MoveBase::Goal GOAL_PICK{
@@ -32,6 +51,16 @@ constexpr MoveBase::Goal GOAL_PICK{
     .yaw_near = 0,
     .time_tolerance_us = uint64_t(15e4),
     .reached = false,
+    .params = &GOAL_PICK_PARAM,
+};
+
+//! °áÔË¿¨Æ¬
+constexpr pose_kalman::LocalPlanner::Params GOAL_CARRY_PARAM{
+    .vel_lim_xy = 1.5,
+    .vel_lim_yaw = 7,
+    .acc_lim_xy = 1.1,
+    .acc_lim_yaw = 7,
+    .dt_ref = 0.33,
 };
 
 constexpr MoveBase::Goal GOAL_CARRY{
@@ -41,6 +70,16 @@ constexpr MoveBase::Goal GOAL_CARRY{
     .yaw_near = 1e6,
     .time_tolerance_us = 0,
     .reached = false,
+    .params = &GOAL_CARRY_PARAM,
+};
+
+//! »Ø³µ¿â
+constexpr pose_kalman::LocalPlanner::Params GOAL_GARAGE_PARAM{
+    .vel_lim_xy = 1.8,
+    .vel_lim_yaw = 7,
+    .acc_lim_xy = 1.1,
+    .acc_lim_yaw = 7,
+    .dt_ref = 0.33,
 };
 
 constexpr MoveBase::Goal GOAL_GARAGE{
@@ -50,6 +89,7 @@ constexpr MoveBase::Goal GOAL_GARAGE{
     .yaw_near = 1e6,
     .time_tolerance_us = 0,
     .reached = false,
+    .params = &GOAL_GARAGE_PARAM,
 };
 
 #endif  // _localPlannerParam_hpp
