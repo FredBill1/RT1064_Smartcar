@@ -89,8 +89,8 @@ static void runLocalPlanner(uint64_t timestamp_us, const T state[6]) {
             wireless.send(goal_tx);
         }
     }
-    bool xy_near;
-    if (localPlanner.getControlCmd(state, state + 3, goal, cmd_vel, xy_near)) {
+    bool is_near;
+    if (localPlanner.getControlCmd(state, state + 3, goal, cmd_vel, &is_near)) {
         if (!has_reached) {
             has_reached = true, last_reached_timestamp_us = timestamp_us;
         } else if (systick.get_diff_us(last_reached_timestamp_us, timestamp_us) > goal.time_tolerance_us) {
@@ -100,7 +100,7 @@ static void runLocalPlanner(uint64_t timestamp_us, const T state[6]) {
     } else {
         has_reached = false;
     }
-    if (xy_near) moveBase.send_xy_near();
+    if (is_near) moveBase.send_near();
     if (!moveBase.get_enabled()) return;
     baseDriver.cmd_vel(cmd_vel[0], cmd_vel[1], cmd_vel[2]);
 

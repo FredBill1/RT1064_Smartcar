@@ -10,13 +10,15 @@ class MoveBase {
  public:
     static constexpr pose_kalman::T default_xy_tolerance = 1e-2;
     static constexpr pose_kalman::T default_yaw_tolerance = (5 * 3.14 / 180);
-    static constexpr pose_kalman::T default_xy_near = 10 * 1e-2;
+    static constexpr pose_kalman::T default_xy_near = 0;
+    static constexpr pose_kalman::T default_yaw_near = 0;
     static constexpr uint64_t default_time_tolerance_us = uint64_t(15e4);
     struct Goal {
         pose_kalman::T x, y, yaw;
         pose_kalman::T xy_tolerance;
         pose_kalman::T yaw_tolerance;
         pose_kalman::T xy_near;
+        pose_kalman::T yaw_near;
         uint64_t time_tolerance_us;
         bool reached;
         static constexpr Goal getDefault() {
@@ -24,6 +26,7 @@ class MoveBase {
                 .xy_tolerance = default_xy_tolerance,
                 .yaw_tolerance = default_yaw_tolerance,
                 .xy_near = default_xy_near,
+                .yaw_near = default_yaw_near,
                 .time_tolerance_us = default_time_tolerance_us,
                 .reached = false,
             };
@@ -59,7 +62,7 @@ class MoveBase {
     FakeAtomicLoader<State> _stateLoader;
     FakeAtomicLoader<pose_kalman::T> _yawLoader;
     rt_event _reachedEvent;
-    rt_event _xyNearEvent;
+    rt_event _nearEvent;
     State _state;
 
  public:
@@ -74,12 +77,12 @@ class MoveBase {
     void send_goal(const Goal& goal);
     void send_goal(pose_kalman::T x, pose_kalman::T y, pose_kalman::T yaw, pose_kalman::T xy_tolerance = default_xy_tolerance,
                    pose_kalman::T yaw_tolerance = default_yaw_tolerance, pose_kalman::T xy_near = default_xy_near,
-                   uint64_t time_tolerance_us = default_time_tolerance_us);
+                   pose_kalman::T yaw_near = default_yaw_near, uint64_t time_tolerance_us = default_time_tolerance_us);
     const Goal& get_goal();
     void set_reached(bool reached = true);
     void send_reached(bool reached = true);
-    void send_xy_near();
-    bool wait_xy_near(rt_int32_t timeout = RT_WAITING_FOREVER);
+    void send_near();
+    bool wait_near(rt_int32_t timeout = RT_WAITING_FOREVER);
     void send_set_state(const State& state);
     bool get_set_state(State& new_state);
     void send_state(uint64_t timestamp_us, const pose_kalman::T* state);

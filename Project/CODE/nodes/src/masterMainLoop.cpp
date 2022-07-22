@@ -145,7 +145,7 @@ Task_t carryRects_only1(int& carrying_cnt, float* min_dist2_thresh = nullptr, bo
     goal_carry.yaw = std::atan2(CUR_POS[1] - POS[idx][1], CUR_POS[0] - POS[idx][0]);
     moveBase.send_goal(goal_carry);
     // WAIT_MOVE_BASE_GOAL_REACHED;
-    WAIT_FOR(moveBase.wait_xy_near(mainloop_timeout));
+    WAIT_FOR(moveBase.wait_near(mainloop_timeout));
     carrying_cnt -= utils::dropCatgory(CATGORY[idx]);
 
     return true;
@@ -198,7 +198,7 @@ Task_t finalCarry() {
         goal_carry.yaw = std::atan2(targets[i - 1][1] - targets[i][1], targets[i - 1][0] - targets[i][0]);
         moveBase.send_goal(goal_carry);
         // WAIT_MOVE_BASE_GOAL_REACHED;
-        WAIT_FOR(moveBase.wait_xy_near(mainloop_timeout));
+        WAIT_FOR(moveBase.wait_near(mainloop_timeout));
         utils::dropCatgory(catgory[i]);
     }
     return true;
@@ -295,13 +295,13 @@ Task_t ReturnGarage() {
     MoveBase::Goal goal = GOAL_CARRY;
     goal.x = garage_position1[0];
     goal.y = garage_position1[1];
-    goal.yaw = std::atan2(garage_position1[1] - state.y(), garage_position1[0] - state.x());
+    goal.yaw = std::atan2(state.y() - garage_position1[1], state.x() - garage_position1[0]);
     moveBase.send_goal(goal);
     WAIT_MOVE_BASE_GOAL_REACHED;
 
     goal.x = garage_position2[0];
     goal.y = garage_position2[1];
-    goal.yaw = -PI_2;
+    goal.yaw = PI_2;
     moveBase.send_goal(goal);
     WAIT_MOVE_BASE_GOAL_REACHED;
     return true;

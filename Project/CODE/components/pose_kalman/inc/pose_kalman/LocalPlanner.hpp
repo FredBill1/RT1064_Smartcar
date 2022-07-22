@@ -17,7 +17,7 @@ class LocalPlanner {
     };
     Params params;
     void setParams(const Params& params) { this->params = params; }
-    bool getControlCmd(const T pose[3], const T vel[3], const MoveBase::Goal& goal, T cmd_vel[3], bool& xy_near) const;
+    bool getControlCmd(const T pose[3], const T vel[3], const MoveBase::Goal& goal, T cmd_vel[3], bool* is_near = nullptr) const;
 };
 
 }  // namespace pose_kalman

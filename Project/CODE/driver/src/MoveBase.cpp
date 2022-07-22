@@ -5,7 +5,7 @@
 MoveBase::MoveBase() {
     _goal.reached = true;
     rt_event_init(&_reachedEvent, "GoalReached", RT_IPC_FLAG_PRIO);
-    rt_event_init(&_xyNearEvent, "GoalNear", RT_IPC_FLAG_PRIO);
+    rt_event_init(&_nearEvent, "GoalNear", RT_IPC_FLAG_PRIO);
 }
 
 void MoveBase::set_enabled(bool enabled) {
@@ -13,7 +13,7 @@ void MoveBase::set_enabled(bool enabled) {
     if (enabled) {
         rt_event_recv(&_reachedEvent, (rt_uint32_t)GoalEventFlag::disabled, RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR, RT_WAITING_NO,
                       RT_NULL);
-        rt_event_recv(&_xyNearEvent, 1, RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR, RT_WAITING_NO, RT_NULL);
+        rt_event_recv(&_nearEvent, 1, RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR, RT_WAITING_NO, RT_NULL);
     } else {
         {
             InterruptGuard guard;
@@ -29,12 +29,13 @@ bool MoveBase::get_enabled() {
 }
 
 void MoveBase::send_goal(const Goal& goal) {
-    rt_event_recv(&_xyNearEvent, 1, RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR, RT_WAITING_NO, RT_NULL);
+    rt_event_recv(&_nearEvent, 1, RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR, RT_WAITING_NO, RT_NULL);
     _goalLoader.store(goal);
 }
 
 void MoveBase::send_goal(pose_kalman::T x, pose_kalman::T y, pose_kalman::T yaw, pose_kalman::T xy_tolerance,
-                         pose_kalman::T yaw_tolerance, pose_kalman::T xy_near, uint64_t time_tolerance_us) {
+                         pose_kalman::T yaw_tolerance, pose_kalman::T xy_near, pose_kalman::T yaw_near,
+                         uint64_t time_tolerance_us) {
     send_goal({
         .x = x,
         .y = y,
@@ -42,6 +43,7 @@ void MoveBase::send_goal(pose_kalman::T x, pose_kalman::T y, pose_kalman::T yaw,
         .xy_tolerance = xy_tolerance,
         .yaw_tolerance = yaw_tolerance,
         .xy_near = xy_near,
+        .yaw_near = yaw_near,
         .time_tolerance_us = time_tolerance_us,
         .reached = false,
     });
@@ -68,14 +70,13 @@ void MoveBase::send_reached(bool reached) {
     }
 }
 
-void MoveBase::send_xy_near() {
+void MoveBase::send_near() {
     get_goal();
     if (_new_goal) return;
-    rt_event_send(&_xyNearEvent, 1);
+    rt_event_send(&_nearEvent, 1);
 }
-
-bool MoveBase::wait_xy_near(rt_int32_t timeout) {
-    return rt_event_recv(&_xyNearEvent, 1, RT_EVENT_FLAG_OR, timeout, RT_NULL) == RT_EOK;
+bool MoveBase::wait_near(rt_int32_t timeout) {
+    return rt_event_recv(&_nearEvent, 1, RT_EVENT_FLAG_OR, timeout, RT_NULL) == RT_EOK;
 }
 
 MoveBase::State::State(uint64_t timestamp_us, const pose_kalman::T* state) {

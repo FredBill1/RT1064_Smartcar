@@ -15,7 +15,7 @@ static inline void chkmin(T &a, T b) {
 }
 constexpr T eps = 1e-4;
 bool LocalPlanner::getControlCmd(const T pose_[3], const T vel_[3], const MoveBase::Goal &goal, T cmd_vel_[3],
-                                 bool &xy_near) const {
+                                 bool *is_near) const {
     Map<Vector2> cmd_vel_xy(cmd_vel_);
     T &cmd_vel_yaw = cmd_vel_[2];
 
@@ -33,9 +33,11 @@ bool LocalPlanner::getControlCmd(const T pose_[3], const T vel_[3], const MoveBa
 
     T pose_yaw_simulate = pose_yaw + vel_yaw * (params.dt_ref * 0.5);
     T pose_yaw_dif = wrapAngle(target_yaw - pose_yaw_simulate);
-    if (abs(pose_yaw_dif) <= goal.yaw_tolerance) yaw_goal_reached = true;
+    T pose_yaw_dif_abs = abs(pose_yaw_dif);
+    if (pose_yaw_dif_abs <= goal.yaw_tolerance) yaw_goal_reached = true;
+    bool yaw_near = pose_yaw_dif_abs <= goal.yaw_near;
 
-    cmd_vel_yaw = std::sqrt(2 * params.acc_lim_yaw * abs(pose_yaw_dif));
+    cmd_vel_yaw = std::sqrt(2 * params.acc_lim_yaw * pose_yaw_dif_abs);
     chkmin(cmd_vel_yaw, params.vel_lim_yaw);
     // if (T vel_xy_norm = vel_xy.norm(); vel_xy_norm > eps) chkmin(cmd_vel_yaw, params.acc_lim_xy / vel_xy_norm);
     if (pose_yaw_dif < 0) cmd_vel_yaw = -cmd_vel_yaw;
@@ -59,7 +61,8 @@ bool LocalPlanner::getControlCmd(const T pose_[3], const T vel_[3], const MoveBa
     T pose_xy_dif_norm = pose_xy_dif.norm();
 
     // 离目标点足够近
-    xy_near = pose_xy_dif_norm <= goal.xy_near;
+    bool xy_near = pose_xy_dif_norm <= goal.xy_near;
+    if (is_near) *is_near = xy_near && yaw_near;
 
     // 计算与位置差向量同向的目标速度分量
     Vector2 cmd_vel_xy_parallel;
