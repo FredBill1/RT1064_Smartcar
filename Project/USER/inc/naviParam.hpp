@@ -21,7 +21,7 @@ constexpr pose_kalman::LocalPlanner::Params GOAL_NAVI_PARAM{
     .vel_lim_xy = 1.8,
     .vel_lim_yaw = 7,
     .acc_lim_xy = 1.1,
-    .acc_lim_yaw = 8,
+    .acc_lim_yaw = 7,
     .dt_ref = 0.33,
 };
 
@@ -41,7 +41,7 @@ constexpr pose_kalman::LocalPlanner::Params GOAL_PICK_PARAM{
     .vel_lim_yaw = 14,
     .acc_lim_xy = 0.8,
     .acc_lim_yaw = 12,
-    .dt_ref = 0.26,
+    .dt_ref = 0.25,
 };
 
 constexpr MoveBase::Goal GOAL_PICK{
@@ -73,9 +73,28 @@ constexpr MoveBase::Goal GOAL_CARRY{
     .params = &GOAL_CARRY_PARAM,
 };
 
+//! 最后一轮搬运卡片
+constexpr pose_kalman::LocalPlanner::Params GOAL_FINAL_CARRY_PARAM{
+    .vel_lim_xy = 1.4,
+    .vel_lim_yaw = 7,
+    .acc_lim_xy = 1.1,
+    .acc_lim_yaw = 7,
+    .dt_ref = 0.33,
+};
+
+constexpr MoveBase::Goal GOAL_FINAL_CARRY{
+    .xy_tolerance = 1e-2,
+    .yaw_tolerance = 6 * PI / 180,
+    .xy_near = 1e-1,
+    .yaw_near = 1e6,
+    .time_tolerance_us = 0,
+    .reached = false,
+    .params = &GOAL_FINAL_CARRY_PARAM,
+};
+
 //! 回车库
 constexpr pose_kalman::LocalPlanner::Params GOAL_GARAGE_PARAM{
-    .vel_lim_xy = 1.8,
+    .vel_lim_xy = 1.4,
     .vel_lim_yaw = 7,
     .acc_lim_xy = 1.1,
     .acc_lim_yaw = 7,
