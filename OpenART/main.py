@@ -39,7 +39,7 @@ while True:
     clock.tick()
     do_classify = b"\xA5" in uart.read() or do_classify
     img = sensor.snapshot()
-    img.lens_corr(1.48)
+    # img.lens_corr(1.48)
     rects = img.find_rects(threshold=-10, quality=150)  # 代表二值化阈值和四边形最小周长
     if rects:
         rect = rects[0]
