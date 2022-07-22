@@ -75,9 +75,6 @@ class MoveBase {
     void set_enabled(bool enabled);
     bool get_enabled();
     void send_goal(const Goal& goal);
-    void send_goal(pose_kalman::T x, pose_kalman::T y, pose_kalman::T yaw, pose_kalman::T xy_tolerance = default_xy_tolerance,
-                   pose_kalman::T yaw_tolerance = default_yaw_tolerance, pose_kalman::T xy_near = default_xy_near,
-                   pose_kalman::T yaw_near = default_yaw_near, uint64_t time_tolerance_us = default_time_tolerance_us);
     const Goal& get_goal();
     void set_reached(bool reached = true);
     void send_reached(bool reached = true);

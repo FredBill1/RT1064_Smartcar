@@ -33,22 +33,6 @@ void MoveBase::send_goal(const Goal& goal) {
     _goalLoader.store(goal);
 }
 
-void MoveBase::send_goal(pose_kalman::T x, pose_kalman::T y, pose_kalman::T yaw, pose_kalman::T xy_tolerance,
-                         pose_kalman::T yaw_tolerance, pose_kalman::T xy_near, pose_kalman::T yaw_near,
-                         uint64_t time_tolerance_us) {
-    send_goal({
-        .x = x,
-        .y = y,
-        .yaw = yaw,
-        .xy_tolerance = xy_tolerance,
-        .yaw_tolerance = yaw_tolerance,
-        .xy_near = xy_near,
-        .yaw_near = yaw_near,
-        .time_tolerance_us = time_tolerance_us,
-        .reached = false,
-    });
-}
-
 const MoveBase::Goal& MoveBase::get_goal() {
     if (_goalLoader.load(_goal)) _new_goal = true;
     return _goal;

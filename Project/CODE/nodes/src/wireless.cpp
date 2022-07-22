@@ -130,7 +130,9 @@ static inline void SendGoal() {
     float x, y, yaw;
     if (!(wireless.getData<float>(x, y, yaw))) return;
     beep.set(false);
-    moveBase.send_goal(x, y, yaw);
+    auto goal = MoveBase::Goal::getDefault();
+    goal.x = x, goal.y = y, goal.yaw = yaw;
+    moveBase.send_goal(goal);
 }
 
 static inline void SendState() {

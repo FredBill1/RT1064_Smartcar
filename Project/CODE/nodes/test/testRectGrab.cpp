@@ -7,6 +7,7 @@
 #include "devices.hpp"
 #include "magnetConfig.hpp"
 #include "masterConfig.hpp"
+#include "naviParam.hpp"
 #include "pose_kalman/magnetAlign.hpp"
 
 using namespace pose_kalman;
@@ -24,6 +25,8 @@ static inline void sendSlaveTask(SlaveGlobalVars::State task) {
 void testRectGrabEntry() {
     int magnet_idx = 0;
     for (auto& mag : magnets) mag.set(1);
+    MoveBase::Goal goal_navi = GOAL_NAVI;
+    MoveBase::Goal goal_pick = GOAL_PICK;
     for (;;) {
         if (!master_key[0].pressing()) continue;
         sendSlaveTask(SlaveGlobalVars::RECT);
@@ -38,7 +41,8 @@ void testRectGrabEntry() {
         masterGlobalVars.coords[1][0] = rect_x, masterGlobalVars.coords[1][1] = rect_y;
         masterGlobalVars.coord_valid.set(1, true);
 
-        moveBase.send_goal(target_x, target_y, state.yaw());
+        goal_navi.x = target_x, goal_navi.y = target_y, goal_navi.yaw = state.yaw();
+        moveBase.send_goal(goal_navi);
 
         masterGlobalVars.send_rects_enabled(true, 1e6);
         moveBase.wait_for_result();
@@ -49,7 +53,8 @@ void testRectGrabEntry() {
         T target_pos[3];
         magnetAlign(pose_xy, masterGlobalVars.coords[1], magnet_idx, target_pos);
 
-        moveBase.send_goal(target_pos[0], target_pos[1], target_pos[2]);
+        goal_pick.x = target_pos[0], goal_pick.y = target_pos[1], goal_pick.yaw = target_pos[2];
+        moveBase.send_goal(goal_pick);
         moveBase.wait_for_result();
         auto& srv = (magnet_idx & 1 ? srv_r : srv_l);
         srv.max();
