@@ -103,7 +103,7 @@ Task_t carryRects(int& carrying_cnt) {
     return true;
 }
 
-Task_t carryRects_only1(int& carrying_cnt) {
+Task_t carryRects_only1(int& carrying_cnt, float* min_dist2_thresh = nullptr, bool* dist_result = nullptr) {
     // 动物：左
     // 交通工具：上
     // 水果：右
@@ -132,6 +132,14 @@ Task_t carryRects_only1(int& carrying_cnt) {
     for (int i = 0; i < 3; ++i)
         if (catgory_cnt[int(CATGORY[i])])
             if (float dist2 = utils::calcDist2(CUR_POS, POS[i]); dist2 < min_dist2) min_dist2 = dist2, idx = i;
+
+    if (min_dist2_thresh) {
+        if (min_dist2 >= *min_dist2_thresh) {
+            *dist_result = false;
+            return true;
+        } else
+            *dist_result = true;
+    }
 
     goal_carry.x = POS[idx][0];
     goal_carry.y = POS[idx][1];
@@ -205,14 +213,19 @@ Task_t MainProcess() {
 
     for (int rect_index = 1; rect_index <= coords_cnt; ++rect_index) {
         // 获取距离最近的卡片作为目标点
-        moveBase.get_state(state);
         int cur_target;
-        {
+        for (;;) {
+            moveBase.get_state(state);
             float cur_pos[2]{(float)state.x(), (float)state.y()};
-            float min_dist = std::numeric_limits<float>::infinity();
+            float min_dist2 = std::numeric_limits<float>::infinity();
             for (int i = 1; i <= coords_cnt; ++i)
                 if (masterGlobalVars.coord_valid.test(i))
-                    if (float dist = utils::calcDist(cur_pos, coords[i]); dist < min_dist) min_dist = dist, cur_target = i;
+                    if (float dist2 = utils::calcDist2(cur_pos, coords[i]); dist2 < min_dist2) min_dist2 = dist2, cur_target = i;
+
+            if (carrying_cnt + (coords_cnt - rect_index + 1) < magnet::cnt || carrying_cnt < 3) break;
+            bool carried;
+            RUN_TASK(carryRects_only1(carrying_cnt, &min_dist2, &carried));
+            if (!carried) break;
         }
 
         // 发布目标位置指令
