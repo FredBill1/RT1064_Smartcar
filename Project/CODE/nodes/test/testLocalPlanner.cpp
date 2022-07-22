@@ -32,7 +32,8 @@ static void testLocalPlannerEntry() {
     Vector3 cmd_vel{0, 0, 0};
 
     for (;;) {
-        if (lp.getControlCmd(pose.data(), vel.data(), goal, cmd_vel.data())) {}
+        bool xy_near;
+        if (lp.getControlCmd(pose.data(), vel.data(), goal, cmd_vel.data(), xy_near)) {}
         cmd_vel[0] += xy_noise(), cmd_vel[1] += xy_noise(), cmd_vel[2] += yaw_noise();
         vel += cmd_vel;
         vel *= 0.5;

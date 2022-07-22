@@ -14,7 +14,8 @@ static inline void chkmin(T &a, T b) {
     if (a > b) a = b;
 }
 constexpr T eps = 1e-4;
-bool LocalPlanner::getControlCmd(const T pose_[3], const T vel_[3], const MoveBase::Goal &goal, T cmd_vel_[3]) const {
+bool LocalPlanner::getControlCmd(const T pose_[3], const T vel_[3], const MoveBase::Goal &goal, T cmd_vel_[3],
+                                 bool &xy_near) const {
     Map<Vector2> cmd_vel_xy(cmd_vel_);
     T &cmd_vel_yaw = cmd_vel_[2];
 
@@ -56,6 +57,9 @@ bool LocalPlanner::getControlCmd(const T pose_[3], const T vel_[3], const MoveBa
     rot(0, 1) = sy, rot(1, 0) = -sy;
     Vector2 pose_xy_dif = rot * (target_xy - pose_xy_simulate);
     T pose_xy_dif_norm = pose_xy_dif.norm();
+
+    // 离目标点足够近
+    xy_near = pose_xy_dif_norm <= goal.xy_near;
 
     // 计算与位置差向量同向的目标速度分量
     Vector2 cmd_vel_xy_parallel;

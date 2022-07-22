@@ -33,6 +33,7 @@ constexpr MoveBase::Goal GOAL_PICK{
 constexpr MoveBase::Goal GOAL_CARRY{
     .xy_tolerance = 1e-2,
     .yaw_tolerance = 6 * PI / 180,
+    .xy_near = 1e-1,
     .time_tolerance_us = 0,
     .reached = false,
 };

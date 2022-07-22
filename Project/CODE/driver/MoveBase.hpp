@@ -10,17 +10,20 @@ class MoveBase {
  public:
     static constexpr pose_kalman::T default_xy_tolerance = 1e-2;
     static constexpr pose_kalman::T default_yaw_tolerance = (5 * 3.14 / 180);
+    static constexpr pose_kalman::T default_xy_near = 10 * 1e-2;
     static constexpr uint64_t default_time_tolerance_us = uint64_t(15e4);
     struct Goal {
         pose_kalman::T x, y, yaw;
         pose_kalman::T xy_tolerance;
         pose_kalman::T yaw_tolerance;
+        pose_kalman::T xy_near;
         uint64_t time_tolerance_us;
         bool reached;
         static constexpr Goal getDefault() {
             return {
                 .xy_tolerance = default_xy_tolerance,
                 .yaw_tolerance = default_yaw_tolerance,
+                .xy_near = default_xy_near,
                 .time_tolerance_us = default_time_tolerance_us,
                 .reached = false,
             };
@@ -28,8 +31,8 @@ class MoveBase {
     };
     struct State {
         uint64_t timestamp_us;
-        pose_kalman::T state[6];
         State() = default;
+        pose_kalman::T state[6];
         State(uint64_t timestamp_us, const pose_kalman::T* state);
         State(uint64_t timestamp_us, pose_kalman::T x = 0, pose_kalman::T y = 0, pose_kalman::T yaw = 0, pose_kalman::T vX = 0,
               pose_kalman::T vY = 0, pose_kalman::T vYaw = 0);
@@ -56,6 +59,7 @@ class MoveBase {
     FakeAtomicLoader<State> _stateLoader;
     FakeAtomicLoader<pose_kalman::T> _yawLoader;
     rt_event _reachedEvent;
+    rt_event _xyNearEvent;
     State _state;
 
  public:
@@ -69,10 +73,13 @@ class MoveBase {
     bool get_enabled();
     void send_goal(const Goal& goal);
     void send_goal(pose_kalman::T x, pose_kalman::T y, pose_kalman::T yaw, pose_kalman::T xy_tolerance = default_xy_tolerance,
-                   pose_kalman::T yaw_tolerance = default_yaw_tolerance, uint64_t time_tolerance_us = default_time_tolerance_us);
+                   pose_kalman::T yaw_tolerance = default_yaw_tolerance, pose_kalman::T xy_near = default_xy_near,
+                   uint64_t time_tolerance_us = default_time_tolerance_us);
     const Goal& get_goal();
     void set_reached(bool reached = true);
     void send_reached(bool reached = true);
+    void send_xy_near();
+    bool wait_xy_near(rt_int32_t timeout = RT_WAITING_FOREVER);
     void send_set_state(const State& state);
     bool get_set_state(State& new_state);
     void send_state(uint64_t timestamp_us, const pose_kalman::T* state);

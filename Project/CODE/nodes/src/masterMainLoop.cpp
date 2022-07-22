@@ -145,7 +145,8 @@ Task_t carryRects_only1(int& carrying_cnt, float* min_dist2_thresh = nullptr, bo
     goal_carry.y = POS[idx][1];
     goal_carry.yaw = YAW[idx];
     moveBase.send_goal(goal_carry);
-    WAIT_MOVE_BASE_GOAL_REACHED;
+    // WAIT_MOVE_BASE_GOAL_REACHED;
+    WAIT_FOR(moveBase.wait_xy_near(mainloop_timeout));
     carrying_cnt -= utils::dropCatgory(CATGORY[idx]);
 
     return true;
@@ -197,7 +198,8 @@ Task_t finalCarry() {
         goal_carry.x = targets[i][0], goal_carry.y = targets[i][1];
         goal_carry.yaw = std::atan2(targets[i - 1][1] - targets[i][1], targets[i - 1][0] - targets[i][0]);
         moveBase.send_goal(goal_carry);
-        WAIT_MOVE_BASE_GOAL_REACHED;
+        // WAIT_MOVE_BASE_GOAL_REACHED;
+        WAIT_FOR(moveBase.wait_xy_near(mainloop_timeout));
         utils::dropCatgory(catgory[i]);
     }
     return true;
