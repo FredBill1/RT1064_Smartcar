@@ -39,4 +39,13 @@ constexpr MoveBase::Goal GOAL_CARRY{
     .reached = false,
 };
 
+constexpr MoveBase::Goal GOAL_GARAGE{
+    .xy_tolerance = 1e-2,
+    .yaw_tolerance = 6 * PI / 180,
+    .xy_near = 2e-1,
+    .yaw_near = 1e6,
+    .time_tolerance_us = 0,
+    .reached = false,
+};
+
 #endif  // _localPlannerParam_hpp
