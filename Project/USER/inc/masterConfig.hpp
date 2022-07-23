@@ -4,6 +4,7 @@
 #include <rtthread.h>
 
 constexpr int mainloop_timeout = 500;
+constexpr rt_tick_t art_before_snapshot_delay = 50;
 constexpr rt_tick_t art_snapshot_timeout_ms = 1000;
 constexpr rt_tick_t grab_srv_down_delay_ms = 150;
 constexpr rt_tick_t magnet_drop_delay_ms = 30;

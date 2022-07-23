@@ -242,6 +242,7 @@ Task_t MainProcess() {
         masterGlobalVars.send_rects_enabled(false);
 
         // ·¢ËÍartÅÄÕÕÖ¸Áî
+        rt_thread_mdelay(art_before_snapshot_delay);
         int magnet_index = utils::find_idle_magnet_index();
         masterGlobalVars.send_art_cur_index(magnet_index);
         utils::sendArtSnapshotTask();
