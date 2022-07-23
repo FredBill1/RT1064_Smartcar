@@ -272,8 +272,7 @@ Task_t MainProcess() {
         // 删去当前目标点
         masterGlobalVars.coord_valid.reset(cur_target);
 
-        if (rect_index == coords_cnt) break;
-        if (++carrying_cnt == magnet::cnt) {
+        if (++carrying_cnt == magnet::cnt && rect_index != coords_cnt) {
             if constexpr (!use_art) {
                 carrying_cnt = 0;
                 continue;
