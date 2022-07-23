@@ -22,7 +22,7 @@ constexpr float fieldHeight = 4;
 
 // 搬运时边界外的距离
 constexpr float carryExtendPadding = 0.65;  // 向外
-constexpr float carrySidePadding = 0.5;     // 角落里向中间
+constexpr float carrySidePadding = 0.55;    // 角落里向中间
 
 // 场地内rect距离边界的最小距离
 constexpr float rectPadding = 0.1;
@@ -35,10 +35,10 @@ constexpr float rectBasePadding = 0.1;
 constexpr float rectMaxDistError = 0.5;
 
 // 初始位置
-constexpr float initial_position[3]{0.105, -(0.141 + 0.048), PI_2};
+constexpr float initial_position[3]{0.282 / 2, -(0.210 / 2 + 0.048), 0};
 
 // 入库位置
-constexpr float garage_position1[2]{0.225, 0.4};
-constexpr float garage_position2[2]{0.225, -0.35};
+constexpr float garage_position1[2]{0.215, 0.4};
+constexpr float garage_position2[2]{0.215, -0.35};
 
 #endif  // _fieldParam_hpp
