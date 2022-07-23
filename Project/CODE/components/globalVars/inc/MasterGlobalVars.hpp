@@ -69,6 +69,14 @@ class MasterGlobalVars {
     bool wait_drop_rect(rt_int32_t timeout = RT_WAITING_FOREVER);
 
  private:
+    rt_event art_border_event;
+
+ public:
+    void send_art_border();
+    bool wait_art_border(rt_int32_t timeout = RT_WAITING_FOREVER);
+    void clear_art_border();
+
+ private:
     uint8_t _upload_xy[2]{0};
 
  public:

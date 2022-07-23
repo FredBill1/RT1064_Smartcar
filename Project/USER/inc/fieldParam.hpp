@@ -37,8 +37,4 @@ constexpr float rectMaxDistError = 0.5;
 // 初始位置
 constexpr float initial_position[3]{0.282 / 2, -(0.210 / 2 + 0.048), 0};
 
-// 入库位置
-constexpr float garage_position1[2]{0.215, 0.4};
-constexpr float garage_position2[2]{0.215, -0.35};
-
 #endif  // _fieldParam_hpp

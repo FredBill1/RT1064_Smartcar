@@ -74,7 +74,13 @@ static inline void sendCoords() {
 }
 static inline void sendArtSnapshotTask() {
     static uint8_t cmd_id = 0xA5;
-    static SerialIO::TxXfer art_xfer(&cmd_id, 1, "art_snapshot");
+    static SerialIO::TxXfer art_xfer(&cmd_id, 1, "art_snapshot_tx");
+    art_xfer.txFinished(-1);
+    art_uart.send(art_xfer);
+}
+static inline void sendArtBorderTask() {
+    static uint8_t cmd_id = 0x5A;
+    static SerialIO::TxXfer art_xfer(&cmd_id, 1, "art_border_tx");
     art_xfer.txFinished(-1);
     art_uart.send(art_xfer);
 }

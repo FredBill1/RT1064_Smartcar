@@ -187,7 +187,7 @@ Task_t finalCarry() {
 
     int target_cnt = bool(catgory_cnt[int(Major::vehicle)]) + bool(catgory_cnt[int(Major::fruit)]);
     if (catgory_cnt[int(Major::animal)]) {  // 左
-        targets[target_cnt][0] = -carryExtendPadding, targets[target_cnt][1] = carrySidePadding;
+        targets[target_cnt][0] = -carryExtendPadding, targets[target_cnt][1] = garage_position[1];
         catgory[target_cnt] = Major::animal;
         ++target_cnt;
     }
@@ -294,16 +294,63 @@ Task_t ReturnGarage() {
     MoveBase::State state;
     moveBase.get_state(state);
 
-    MoveBase::Goal goal = GOAL_GARAGE;
-    goal.x = garage_position1[0];
-    goal.y = garage_position1[1];
-    goal.yaw = std::atan2(state.y() - garage_position1[1], state.x() - garage_position1[0]);
+    MoveBase::Goal goal = GOAL_BEFORE_GARAGE;
+    goal.x = garage_position[0];
+    goal.y = garage_position[1];
+    goal.yaw = std::atan2(state.y() - garage_position[1], state.x() - garage_position[0]);
     moveBase.send_goal(goal);
     WAIT_FOR(moveBase.wait_near(mainloop_timeout));
 
-    goal.x = garage_position2[0];
-    goal.y = garage_position2[1];
+    // 通知art开始找边界
+    masterGlobalVars.clear_art_border();
+    utils::sendArtBorderTask();
+
+    // 转向左边
+    goal = GOAL_GARAGE_YAW;
+    goal.x = garage_position[0];
+    goal.y = garage_position[1];
+    goal.yaw = PI;
+    moveBase.send_goal(goal);
+    WAIT_FOR(moveBase.wait_near(mainloop_timeout));
+
+    // 找左边界
+    goal = GOAL_GARAGE_XY;
+    goal.x = -1e6;
+    goal.y = garage_position[1];
+    goal.yaw = PI;
+    moveBase.send_goal(goal);
+    WAIT_FOR(masterGlobalVars.wait_art_border());
+
+    // 平移一点
+    moveBase.get_state(state);
+    goal.x = state.x() + garage_left_padding;
+    moveBase.send_goal(goal);
+    WAIT_FOR(moveBase.wait_near(mainloop_timeout));
+
+    // 转向
+    goal = GOAL_GARAGE_YAW;
+    moveBase.get_state(state);
+    goal.x = state.x();
+    goal.y = state.y();
     goal.yaw = PI_2;
+    moveBase.send_goal(goal);
+    WAIT_FOR(moveBase.wait_near(mainloop_timeout));
+
+    // 找下边界
+    goal = GOAL_GARAGE_XY;
+    moveBase.get_state(state);
+    goal.x = state.x();
+    goal.y = -1e6;
+    goal.yaw = PI_2;
+    moveBase.send_goal(goal);
+    rt_thread_mdelay(garage_down_delay);
+    masterGlobalVars.clear_art_border();
+    WAIT_FOR(masterGlobalVars.wait_art_border());
+    rt_thread_mdelay(garage_stop_delay);
+
+    // 停车
+    moveBase.get_state(state);
+    goal.y = state.y();
     moveBase.send_goal(goal);
     WAIT_MOVE_BASE_GOAL_REACHED;
     return true;
@@ -317,6 +364,7 @@ static inline void Idle() {
         if (key_pressing[1]) utils::sendSlaveTask(SlaveGlobalVars::A4);
         if (key_pressing[2]) utils::sendSlaveTask(SlaveGlobalVars::RECT);
         if (key_pressing[3]) utils::sendArtSnapshotTask();
+        if (key_pressing[0]) utils::sendArtBorderTask();
         ips114_showstr(188, 0, master_switch[0].get() ? "9dof" : "    ");
 
         rt_thread_mdelay(300);
