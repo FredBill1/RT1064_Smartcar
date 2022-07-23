@@ -142,7 +142,7 @@ Task_t carryRects_only1(int& carrying_cnt, float* min_dist2_thresh = nullptr, bo
 
     goal_carry.x = POS[idx][0];
     goal_carry.y = POS[idx][1];
-    goal_carry.yaw = std::atan2(CUR_POS[1] - POS[idx][1], CUR_POS[0] - POS[idx][0]);
+    goal_carry.yaw = utils::wrapAngleNear(std::atan2(CUR_POS[1] - POS[idx][1], CUR_POS[0] - POS[idx][0]), state.yaw());
     moveBase.send_goal(goal_carry);
     // WAIT_MOVE_BASE_GOAL_REACHED;
     WAIT_FOR(moveBase.wait_near(mainloop_timeout));
@@ -194,8 +194,10 @@ Task_t finalCarry() {
 
     MoveBase::Goal goal_final_carry = GOAL_FINAL_CARRY;
     for (int i = 0; i < target_cnt; ++i) {
+        moveBase.get_state(state);
         goal_final_carry.x = targets[i][0], goal_final_carry.y = targets[i][1];
-        goal_final_carry.yaw = std::atan2(targets[i - 1][1] - targets[i][1], targets[i - 1][0] - targets[i][0]);
+        goal_final_carry.yaw =
+            utils::wrapAngleNear(std::atan2(targets[i][1] - state.y(), targets[i][0] - state.x()), state.yaw());
         moveBase.send_goal(goal_final_carry);
         // WAIT_MOVE_BASE_GOAL_REACHED;
         WAIT_FOR(moveBase.wait_near(mainloop_timeout));

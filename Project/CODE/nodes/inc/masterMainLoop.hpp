@@ -18,6 +18,7 @@ extern "C" {
 #include "devices.hpp"
 #include "edge_detect/A4Detect.hpp"
 #include "pose_kalman/magnetAlign.hpp"
+#include "pose_kalman/utils.hpp"
 //
 #include "fieldParam.hpp"
 #include "masterConfig.hpp"
@@ -82,6 +83,13 @@ static inline float calcDist2(const float a[2], const float b[2]) {
     return dx * dx + dy * dy;
 }
 static inline float calcDist(const float a[2], const float b[2]) { return calcDist2(a, b); }
+
+// 假定x是atan2算出来的，在[-pi, pi]之间
+constexpr pose_kalman::T wrapAngleNear(pose_kalman::T x, pose_kalman::T cur) {
+    using pose_kalman::wrapAngle;
+    if (std::abs(wrapAngle(x - cur)) > PI_2) x = wrapAngle(x + PI);
+    return x;
+}
 Task_t moveBaseReachedCheck() {
     for (;;) {
         CHECK_KEY_RESET();
