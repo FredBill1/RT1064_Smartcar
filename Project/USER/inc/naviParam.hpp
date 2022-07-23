@@ -94,7 +94,7 @@ constexpr MoveBase::Goal GOAL_FINAL_CARRY{
 
 //! ªÿ≥µø‚«∞
 constexpr pose_kalman::LocalPlanner::Params GOAL_BEFORE_GARAGE_PARAM{
-    .vel_lim_xy = 1.4,
+    .vel_lim_xy = 1.6,
     .vel_lim_yaw = 7,
     .acc_lim_xy = 1.1,
     .acc_lim_yaw = 7,
