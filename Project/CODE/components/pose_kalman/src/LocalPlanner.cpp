@@ -107,6 +107,9 @@ bool LocalPlanner::getControlCmd(const T pose_[3], const T vel_[3], const MoveBa
 
     cmd_vel_xy = vel_xy_orthogonal + vel_xy_parallel;
 
+    // 如果坐标和偏航角都到达目标，就不再微调偏航角了，防止抖动
+    if (xy_goal_reached && yaw_goal_reached) cmd_vel_yaw = 0;
+
     return xy_goal_reached && yaw_goal_reached;
 }
 
