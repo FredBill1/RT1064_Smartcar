@@ -18,7 +18,7 @@ constexpr pose_kalman::LocalPlanner::Params localPlannerParam{
 
 //! ’“ø®∆¨
 constexpr pose_kalman::LocalPlanner::Params GOAL_NAVI_PARAM{
-    .vel_lim_xy = 1.8,
+    .vel_lim_xy = 1.6,
     .vel_lim_yaw = 7,
     .acc_lim_xy = 1.1,
     .acc_lim_yaw = 7,
@@ -40,8 +40,8 @@ constexpr pose_kalman::LocalPlanner::Params GOAL_PICK_PARAM{
     .vel_lim_xy = 1.5,
     .vel_lim_yaw = 14,
     .acc_lim_xy = 0.8,
-    .acc_lim_yaw = 12,
-    .dt_ref = 0.25,
+    .acc_lim_yaw = 14,
+    .dt_ref = 0.255,
 };
 
 constexpr MoveBase::Goal GOAL_PICK{
