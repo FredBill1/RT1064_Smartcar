@@ -60,11 +60,12 @@ void MasterGlobalVars::get_coord_recv() {
     rt_memcpy(coords + 1, target_coords_corr, sizeof(target_coords_corr[0]) * coords_cnt);
 }
 
-void MasterGlobalVars::send_rects_enabled(bool enabled, float maxDistErrorSquared) {
+void MasterGlobalVars::send_rects_enabled(bool enabled, uint8_t cur_target, float maxDistErrorSquared) {
     InterruptGuard guard;
     _rectEnabled = enabled;
     if (!enabled) return;
     _rectMaxDistErrorSquared = maxDistErrorSquared;
+    _rectCurTarget = cur_target;
     _rectCnt = 0;
 }
 
@@ -77,7 +78,8 @@ void MasterGlobalVars::send_rects(const float state[3], const float* rects, int 
     rt_memcpy(_rectCoords[0], rects, sizeof(_rectCoords[0]) * cnt);
 }
 
-void MasterGlobalVars::get_rects(float state[3], float* rects, int& cnt, float& maxDistErrorSquared, uint64_t& timestamp_us) {
+void MasterGlobalVars::get_rects(float state[3], float* rects, int& cnt, int& cur_target, float& maxDistErrorSquared,
+                                 uint64_t& timestamp_us) {
     InterruptGuard guard;
     if (!_rectEnabled || _rectCnt == 0) {
         cnt = 0;
@@ -86,6 +88,7 @@ void MasterGlobalVars::get_rects(float state[3], float* rects, int& cnt, float& 
     cnt = _rectCnt;
     rt_memcpy(state, _rectRecvingState, sizeof(_rectRecvingState[0]) * 3);
     rt_memcpy(rects, _rectCoords[0], sizeof(_rectCoords[0]) * cnt);
+    cur_target = _rectCurTarget;
     maxDistErrorSquared = _rectMaxDistErrorSquared;
     timestamp_us = _rectTimestamp_us;
     _rectCnt = 0;

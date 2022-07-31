@@ -102,7 +102,7 @@ Task_t MainProcess() {
         goal_navi_refine.y = y;
         goal_navi_refine.yaw = yaw;
         moveBase.send_goal(goal_navi_move);
-        masterGlobalVars.send_rects_enabled(true, rectMaxDistError * rectMaxDistError);
+        masterGlobalVars.send_rects_enabled(true, cur_target, rectMaxDistError * rectMaxDistError);
         WAIT_MOVE_BASE_GOAL_REACHED;
         masterGlobalVars.send_rects_enabled(false);
 
@@ -113,6 +113,9 @@ Task_t MainProcess() {
         GUARD_COND(utils::waitArtSnapshot());
 
         // TODO 机械臂
+
+        // 删除当前点
+        masterGlobalVars.coord_valid.reset(cur_target);
     }
 
     return true;

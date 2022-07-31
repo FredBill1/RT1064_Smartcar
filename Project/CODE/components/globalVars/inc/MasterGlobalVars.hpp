@@ -35,6 +35,7 @@ class MasterGlobalVars {
 
  private:
     bool _rectEnabled = false;
+    uint8_t _rectCurTarget;
     float _rectCoords[imgProc::apriltag::max_rect_cnt][2];
     float _rectRecvingState[3];
     float _rectMaxDistErrorSquared;
@@ -42,9 +43,9 @@ class MasterGlobalVars {
     uint64_t _rectTimestamp_us;
 
  public:
-    void send_rects_enabled(bool enabled, float maxDistErrorSquared = 0);
+    void send_rects_enabled(bool enabled, uint8_t cur_target = 0, float maxDistErrorSquared = 0);
     void send_rects(const float state[3], const float* rects, int cnt, uint64_t timestamp_us);
-    void get_rects(float state[3], float* rects, int& cnt, float& maxDistErrorSquared, uint64_t& timestamp_us);
+    void get_rects(float state[3], float* rects, int& cnt, int& cur_target, float& maxDistErrorSquared, uint64_t& timestamp_us);
 
  private:
     rt_event art_snapshot_event;

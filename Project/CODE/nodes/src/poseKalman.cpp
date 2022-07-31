@@ -120,10 +120,10 @@ static inline void processSetState() {
 static inline void processRects() {
     float state[3];
     float rects[imgProc::apriltag::max_rect_cnt][2];
-    int cnt;
+    int cnt, cur_target;
     float maxDistErrorSquared;
     uint64_t timestamp_us;
-    masterGlobalVars.get_rects(state, rects[0], cnt, maxDistErrorSquared, timestamp_us);
+    masterGlobalVars.get_rects(state, rects[0], cnt, cur_target, maxDistErrorSquared, timestamp_us);
     if (!cnt) return;
 
     if constexpr (useRectBasePadding) {
@@ -136,27 +136,23 @@ static inline void processRects() {
     float sy = std::sin(state[2]), cy = std::cos(state[2]);
     float min_dist2 = std::numeric_limits<float>::infinity();
     float res_x, res_y;
-    for (int i = 1; i <= masterGlobalVars.coords_cnt; ++i) {
-        if (!masterGlobalVars.coord_valid.test(i)) continue;
-        for (int j = 0; j < cnt; ++j) {
-            float rect_dx = rects[j][0] * cy - rects[j][1] * sy;
-            float rect_dy = rects[j][0] * sy + rects[j][1] * cy;
+    for (int j = 0; j < cnt; ++j) {
+        float rect_dx = rects[j][0] * cy - rects[j][1] * sy;
+        float rect_dy = rects[j][0] * sy + rects[j][1] * cy;
 
-            {  // 场地内rect距离边界的最小距离
-                float x_ = state[0] + rect_dx, y_ = state[1] + rect_dy;
-                if (!(rectPadding <= x_ && x_ <= fieldWidth - rectPadding && rectPadding <= y_ &&
-                      y_ <= fieldHeight - rectPadding))
-                    continue;
-            }
+        {  // 场地内rect距离边界的最小距离
+            float x_ = state[0] + rect_dx, y_ = state[1] + rect_dy;
+            if (!(rectPadding <= x_ && x_ <= fieldWidth - rectPadding && rectPadding <= y_ && y_ <= fieldHeight - rectPadding))
+                continue;
+        }
 
-            // 推算出的底盘的坐标
-            float x = masterGlobalVars.coords[i][0] - rect_dx, y = masterGlobalVars.coords[i][1] - rect_dy;
-            float dx = x - state[0], dy = y - state[1];
-            float dist2 = dx * dx + dy * dy;
-            if (dist2 < min_dist2) {
-                min_dist2 = dist2;
-                res_x = x, res_y = y;
-            }
+        // 推算出的底盘的坐标
+        float x = masterGlobalVars.coords[cur_target][0] - rect_dx, y = masterGlobalVars.coords[cur_target][1] - rect_dy;
+        float dx = x - state[0], dy = y - state[1];
+        float dist2 = dx * dx + dy * dy;
+        if (dist2 < min_dist2) {
+            min_dist2 = dist2;
+            res_x = x, res_y = y;
         }
     }
     if (min_dist2 <= maxDistErrorSquared) {
