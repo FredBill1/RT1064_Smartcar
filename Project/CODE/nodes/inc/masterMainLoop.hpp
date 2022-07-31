@@ -108,6 +108,7 @@ Task_t moveBaseReachedCheck() {
     }
 }
 #define WAIT_MOVE_BASE_GOAL_REACHED GUARD_COND(utils::moveBaseReachedCheck());
+#define WAIT_MOVE_BASE_GOAL_NEAR WAIT_FOR(moveBase.wait_near(mainloop_timeout));
 Task_t waitArtSnapshot() {
     rt_tick_t start_ms = rt_tick_get_millisecond();
     for (;;) {
@@ -115,7 +116,7 @@ Task_t waitArtSnapshot() {
         CHECK_RESET_SIGNAL();
         if (masterGlobalVars.wait_art_snapshot(mainloop_timeout)) break;
         if (rt_tick_get_millisecond() - start_ms > art_snapshot_timeout_ms) {
-            // TODO
+            // TODO art≈ƒ’’≥¨ ±
             // masterGlobalVars.send_art_snapshot();
             // masterGlobalVars.send_art_result(ResultCatgory::Major(rand() % 3));
         }
@@ -123,32 +124,29 @@ Task_t waitArtSnapshot() {
     return true;
 }
 
-static inline int find_idle_magnet_index() {
-    for (int i = 0; i < magnet::cnt; ++i)
-        if (masterGlobalVars.art_results[i] == ResultCatgory::Major::None) return i;
-    return -1;
-}
+Task_t dropCatgory(ResultCatgory::Major catgory) { return true; }
 
-static inline int dropCatgory(ResultCatgory::Major catgory) {
-    int res = 0;
-    for (int i = 0; i < magnet::cnt; ++i)
-        if (masterGlobalVars.art_results[i] == catgory) {
-            magnets[i].set(0);
-            ++res;
-            masterGlobalVars.art_results[i] = ResultCatgory::Major::None;
-        }
-    masterGlobalVars.send_drop_rect();
-    return res;
-}
-static void dropCatgoryEntry() {
-    for (;;) {
-        masterGlobalVars.wait_drop_rect();
-        srv_l.max(), srv_r.max();
-        rt_thread_mdelay(magnet_drop_delay_ms);
-        srv_l.min(), srv_r.min();
-        rt_thread_mdelay(magnet_drop_wait_ms);
-        for (auto& mag : magnets) mag.set(1);
-    }
+Task_t gotoTarget(pose_kalman::T target_x, pose_kalman::T target_y) {
+    MoveBase::State state;
+    moveBase.get_state(state);
+
+    pose_kalman::T yaw = std::atan2(target_y - state.y(), target_x - state.x());
+
+    MoveBase::Goal goal = GOAL_NAVI_TURN;
+    goal.x = state.x();
+    goal.y = state.y();
+    goal.yaw = yaw;
+    moveBase.send_goal(goal);
+    WAIT_MOVE_BASE_GOAL_NEAR;
+
+    goal = GOAL_NAVI_MOVE;
+    goal.x = target_x;
+    goal.y = target_y;
+    goal.yaw = yaw;
+    moveBase.send_goal(goal);
+    WAIT_MOVE_BASE_GOAL_REACHED;
+
+    return true;
 }
 
 }  // namespace utils

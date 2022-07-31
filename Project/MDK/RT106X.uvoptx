@@ -6523,18 +6523,6 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CODE\nodes\test\testRectGrab.cpp</PathWithFileName>
-      <FilenameWithoutPath>testRectGrab.cpp</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>34</GroupNumber>
-      <FileNumber>472</FileNumber>
-      <FileType>8</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
       <PathWithFileName>..\CODE\nodes\test\testMagnet.cpp</PathWithFileName>
       <FilenameWithoutPath>testMagnet.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
@@ -6550,7 +6538,7 @@
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>35</GroupNumber>
-      <FileNumber>473</FileNumber>
+      <FileNumber>472</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -6562,7 +6550,7 @@
     </File>
     <File>
       <GroupNumber>35</GroupNumber>
-      <FileNumber>474</FileNumber>
+      <FileNumber>473</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -6582,7 +6570,7 @@
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>36</GroupNumber>
-      <FileNumber>475</FileNumber>
+      <FileNumber>474</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>

@@ -53,20 +53,12 @@ class MasterGlobalVars {
     bool _art_need_result = false;
 
  public:
-    ResultCatgory::Major art_results[magnet::cnt];
+    ResultCatgory::Major art_last_result;
     void send_art_cur_index(int index);
     bool wait_art_snapshot(rt_int32_t timeout = RT_WAITING_FOREVER);
     void send_art_snapshot();
     bool wait_art_result(rt_int32_t timeout = RT_WAITING_FOREVER);
     bool send_art_result(ResultCatgory::Major result);
-    ResultCatgory::Major get_art_result() const;
-
- private:
-    rt_event drop_rect_event;
-
- public:
-    void send_drop_rect();
-    bool wait_drop_rect(rt_int32_t timeout = RT_WAITING_FOREVER);
 
  private:
     rt_event art_border_event;

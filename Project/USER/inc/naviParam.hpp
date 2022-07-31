@@ -16,8 +16,9 @@ constexpr pose_kalman::LocalPlanner::Params localPlannerParam{
 };
 }
 
-//! 找卡片
-constexpr pose_kalman::LocalPlanner::Params GOAL_NAVI_PARAM{
+//! 去目标点
+// 自转
+constexpr pose_kalman::LocalPlanner::Params GOAL_NAVI_TURN_PARAM{
     .vel_lim_xy = 1.6,
     .vel_lim_yaw = 7,
     .acc_lim_xy = 1.1,
@@ -25,75 +26,18 @@ constexpr pose_kalman::LocalPlanner::Params GOAL_NAVI_PARAM{
     .dt_ref = 0.33,
 };
 
-constexpr MoveBase::Goal GOAL_NAVI{
+constexpr MoveBase::Goal GOAL_NAVI_TURN{
     .xy_tolerance = 15e-3,
     .yaw_tolerance = 5 * PI / 180,
     .xy_near = 0,
     .yaw_near = 0,
     .time_tolerance_us = uint64_t(30e4),
     .reached = false,
-    .params = &GOAL_NAVI_PARAM,
+    .params = &GOAL_NAVI_TURN_PARAM,
 };
 
-//! 自转吸卡片
-constexpr pose_kalman::LocalPlanner::Params GOAL_PICK_PARAM{
-    .vel_lim_xy = 1.5,
-    .vel_lim_yaw = 14,
-    .acc_lim_xy = 0.8,
-    .acc_lim_yaw = 14,
-    .dt_ref = 0.255,
-};
-
-constexpr MoveBase::Goal GOAL_PICK{
-    .xy_tolerance = 10e-3,
-    .yaw_tolerance = 4 * PI / 180,
-    .xy_near = 0,
-    .yaw_near = 0,
-    .time_tolerance_us = uint64_t(15e4),
-    .reached = false,
-    .params = &GOAL_PICK_PARAM,
-};
-
-//! 搬运卡片
-constexpr pose_kalman::LocalPlanner::Params GOAL_CARRY_PARAM{
-    .vel_lim_xy = 1.5,
-    .vel_lim_yaw = 7,
-    .acc_lim_xy = 1.1,
-    .acc_lim_yaw = 7,
-    .dt_ref = 0.33,
-};
-
-constexpr MoveBase::Goal GOAL_CARRY{
-    .xy_tolerance = 1e-2,
-    .yaw_tolerance = 6 * PI / 180,
-    .xy_near = 1e-1,
-    .yaw_near = 1e6,
-    .time_tolerance_us = 0,
-    .reached = false,
-    .params = &GOAL_CARRY_PARAM,
-};
-
-//! 最后一轮搬运卡片
-constexpr pose_kalman::LocalPlanner::Params GOAL_FINAL_CARRY_PARAM{
-    .vel_lim_xy = 1.4,
-    .vel_lim_yaw = 7,
-    .acc_lim_xy = 1.1,
-    .acc_lim_yaw = 7,
-    .dt_ref = 0.33,
-};
-
-constexpr MoveBase::Goal GOAL_FINAL_CARRY{
-    .xy_tolerance = 1e-2,
-    .yaw_tolerance = 6 * PI / 180,
-    .xy_near = 1e-1,
-    .yaw_near = 1e6,
-    .time_tolerance_us = 0,
-    .reached = false,
-    .params = &GOAL_FINAL_CARRY_PARAM,
-};
-
-//! 回车库前
-constexpr pose_kalman::LocalPlanner::Params GOAL_BEFORE_GARAGE_PARAM{
+// 平移
+constexpr pose_kalman::LocalPlanner::Params GOAL_NAVI_MOVE_PARAM{
     .vel_lim_xy = 1.6,
     .vel_lim_yaw = 7,
     .acc_lim_xy = 1.1,
@@ -101,53 +45,111 @@ constexpr pose_kalman::LocalPlanner::Params GOAL_BEFORE_GARAGE_PARAM{
     .dt_ref = 0.33,
 };
 
-constexpr MoveBase::Goal GOAL_BEFORE_GARAGE{
-    .xy_tolerance = 1e-2,
-    .yaw_tolerance = 6 * PI / 180,
-    .xy_near = 5e-2,
-    .yaw_near = 6 * PI / 180,
-    .time_tolerance_us = 0,
+constexpr MoveBase::Goal GOAL_NAVI_MOVE{
+    .xy_tolerance = 15e-3,
+    .yaw_tolerance = 5 * PI / 180,
+    .xy_near = 0,
+    .yaw_near = 0,
+    .time_tolerance_us = uint64_t(30e4),
     .reached = false,
-    .params = &GOAL_BEFORE_GARAGE_PARAM,
+    .params = &GOAL_NAVI_MOVE_PARAM,
 };
 
-//! 按边线找车库
-// 直走时的参数
-constexpr pose_kalman::LocalPlanner::Params GOAL_GARAGE_XY_PARAM{
-    .vel_lim_xy = 1.0,
+// 调整
+constexpr pose_kalman::LocalPlanner::Params GOAL_NAVI_REFINE_PARAM{
+    .vel_lim_xy = 1.6,
     .vel_lim_yaw = 7,
-    .acc_lim_xy = 10,
+    .acc_lim_xy = 1.1,
     .acc_lim_yaw = 7,
     .dt_ref = 0.33,
 };
 
-constexpr MoveBase::Goal GOAL_GARAGE_XY{
+constexpr MoveBase::Goal GOAL_NAVI_REFINE{
+    .xy_tolerance = 15e-3,
+    .yaw_tolerance = 5 * PI / 180,
+    .xy_near = 0,
+    .yaw_near = 0,
+    .time_tolerance_us = uint64_t(30e4),
+    .reached = false,
+    .params = &GOAL_NAVI_REFINE_PARAM,
+};
+
+//! 搬运卡片
+// 旋转
+constexpr pose_kalman::LocalPlanner::Params GOAL_CARRY_TURN_PARAM{
+    .vel_lim_xy = 1.5,
+    .vel_lim_yaw = 7,
+    .acc_lim_xy = 1.1,
+    .acc_lim_yaw = 7,
+    .dt_ref = 0.33,
+};
+
+constexpr MoveBase::Goal GOAL_CARRY_TURN{
     .xy_tolerance = 1e-2,
     .yaw_tolerance = 6 * PI / 180,
-    .xy_near = 5e-2,
+    .xy_near = 1e-1,
     .yaw_near = 1e6,
     .time_tolerance_us = 0,
     .reached = false,
-    .params = &GOAL_GARAGE_XY_PARAM,
+    .params = &GOAL_CARRY_TURN_PARAM,
 };
 
-// 旋转时的参数
-constexpr pose_kalman::LocalPlanner::Params GOAL_GARAGE_YAW_PARAM{
-    .vel_lim_xy = 0.0,
-    .vel_lim_yaw = 14,
-    .acc_lim_xy = 10,
-    .acc_lim_yaw = 14,
-    .dt_ref = 0.255,
+// 平移
+constexpr pose_kalman::LocalPlanner::Params GOAL_CARRY_MOVE_PARAM{
+    .vel_lim_xy = 1.5,
+    .vel_lim_yaw = 7,
+    .acc_lim_xy = 1.1,
+    .acc_lim_yaw = 7,
+    .dt_ref = 0.33,
 };
 
-constexpr MoveBase::Goal GOAL_GARAGE_YAW{
+constexpr MoveBase::Goal GOAL_CARRY_MOVE{
     .xy_tolerance = 1e-2,
     .yaw_tolerance = 6 * PI / 180,
-    .xy_near = 1e6,
-    .yaw_near = 6 * PI / 180,
+    .xy_near = 1e-1,
+    .yaw_near = 1e6,
     .time_tolerance_us = 0,
     .reached = false,
-    .params = &GOAL_GARAGE_YAW_PARAM,
+    .params = &GOAL_CARRY_MOVE_PARAM,
+};
+
+//! 车库
+// 旋转
+constexpr pose_kalman::LocalPlanner::Params GOAL_GARAGE_TURN_PARAM{
+    .vel_lim_xy = 1.5,
+    .vel_lim_yaw = 7,
+    .acc_lim_xy = 1.1,
+    .acc_lim_yaw = 7,
+    .dt_ref = 0.33,
+};
+
+constexpr MoveBase::Goal GOAL_GARAGE_TURN{
+    .xy_tolerance = 1e-2,
+    .yaw_tolerance = 6 * PI / 180,
+    .xy_near = 1e-1,
+    .yaw_near = 1e6,
+    .time_tolerance_us = 0,
+    .reached = false,
+    .params = &GOAL_GARAGE_TURN_PARAM,
+};
+
+// 平移
+constexpr pose_kalman::LocalPlanner::Params GOAL_GARAGE_MOVE_PARAM{
+    .vel_lim_xy = 1.5,
+    .vel_lim_yaw = 7,
+    .acc_lim_xy = 1.1,
+    .acc_lim_yaw = 7,
+    .dt_ref = 0.33,
+};
+
+constexpr MoveBase::Goal GOAL_GARAGE_MOVE{
+    .xy_tolerance = 1e-2,
+    .yaw_tolerance = 6 * PI / 180,
+    .xy_near = 1e-1,
+    .yaw_near = 1e6,
+    .time_tolerance_us = 0,
+    .reached = false,
+    .params = &GOAL_GARAGE_MOVE_PARAM,
 };
 
 // 入库位置

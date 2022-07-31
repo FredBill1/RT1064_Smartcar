@@ -21,6 +21,7 @@ Task_t GetCoords() {
         keyScan();
         if (key_pressing[3]) break;
         if (masterGlobalVars.wait_for_coord_recv(100)) {
+            draw_corr(coords + 1, coords_cnt, borderWidth, borderHeight, WHITE);  // 清空上一次画的
             masterGlobalVars.get_coord_recv();
             draw_corr(coords + 1, coords_cnt, borderWidth, borderHeight);
         }
@@ -30,179 +31,39 @@ Task_t GetCoords() {
     return true;
 }
 
+Task_t SolveTSP() {
+    SHOW_STATE("TSP ");
+    tsp.N = coords_cnt + 3;  // 起点、终点、辅助点
+    constexpr float start_coord[2]{0, 0}, end_coord[2]{fieldWidth * 2, fieldHeight * 2};
+
+    tsp.dist[0][coords_cnt + 1] = tsp.dist[coords_cnt + 1][0] = std::numeric_limits<float>::infinity();  // 起点、终点
+    tsp.dist[0][coords_cnt + 2] = tsp.dist[coords_cnt + 2][0] = 0;                                       // 起点、辅助点
+    tsp.dist[coords_cnt + 1][coords_cnt + 2] = tsp.dist[coords_cnt + 2][coords_cnt + 1] = 0;             // 终点、辅助点
+    for (int i = 1; i <= coords_cnt; ++i) {
+        tsp.dist[i][i] = 0;
+        tsp.dist[i][0] = tsp.dist[0][i] = utils::calcDist(coords[i], start_coord);                           // 起点
+        tsp.dist[i][coords_cnt + 1] = tsp.dist[coords_cnt + 1][i] = utils::calcDist(coords[i], end_coord);   // 终点
+        tsp.dist[i][coords_cnt + 2] = tsp.dist[coords_cnt + 2][i] = std::numeric_limits<float>::infinity();  // 辅助点
+        for (int j = i + 1; j <= coords_cnt; ++j) tsp.dist[i][j] = tsp.dist[j][i] = utils::calcDist(coords[i], coords[j]);
+    }
+    tsp.solve();
+
+    // 把辅助点扔到最后
+    if (tsp.hamilton_path[1] == coords_cnt + 2) std::reverse(tsp.hamilton_path + 1, tsp.hamilton_path + coords_cnt + 3);
+
+    constexpr auto plot = [](int x, int y) { ips114_drawpoint(x, N / 4 - y, ips.Red); };
+    drawLine(0, 0, coords[tsp.hamilton_path[1]][0] * tsp_k, coords[tsp.hamilton_path[1]][1] * tsp_k, plot);
+    for (int i = 2; i <= coords_cnt; ++i) {
+        int u = tsp.hamilton_path[i - 1], v = tsp.hamilton_path[i];
+        drawLine(coords[u][0] * tsp_k, coords[u][1] * tsp_k, coords[v][0] * tsp_k, coords[v][1] * tsp_k, plot);
+    }
+
+    return true;
+}
+
 Task_t ResetPos() {
     MoveBase::State state(systick.get_us(), initial_position[0], initial_position[1], initial_position[2], 0, 0, 0);
     moveBase.send_set_state(state);
-    return true;
-}
-
-Task_t carryRects(int& carrying_cnt) {
-    // 动物：左
-    // 交通工具：上
-    // 水果：右
-    using namespace ResultCatgory;
-
-    int catgory_cnt[4]{0};
-    for (int i = 0; i < magnet::cnt; ++i) ++catgory_cnt[int(masterGlobalVars.art_results[i])];
-
-    MoveBase::State state;
-    moveBase.get_state(state);
-    MoveBase::Goal goal_carry = GOAL_CARRY;
-
-    if (catgory_cnt[int(Major::vehicle)]) {                                                     // 有交通工具
-        if (catgory_cnt[int(Major::vehicle)] + catgory_cnt[int(Major::None)] == magnet::cnt) {  // 只有交通工具，上
-            goal_carry.x = state.x();
-            goal_carry.y = fieldHeight + carryExtendPadding;
-            goal_carry.yaw = PI_2;
-            moveBase.send_goal(goal_carry);
-            WAIT_MOVE_BASE_GOAL_REACHED;
-            carrying_cnt -= utils::dropCatgory(Major::vehicle);
-        } else {
-            float cur_pos[2]{float(state.x()), float(state.y())};
-            constexpr float POS[4][2]{
-                // 左上
-                {carrySidePadding, fieldHeight + carryExtendPadding},   // 上，交通工具
-                {-carryExtendPadding, fieldHeight - carrySidePadding},  // 左，动物
-                // 右上
-                {fieldWidth - carrySidePadding, fieldHeight + carryExtendPadding},  // 上，交通工具
-                {fieldWidth + carryExtendPadding, fieldHeight - carrySidePadding},  // 右，水果
-            };
-            constexpr Major CATGORY[4]{Major::vehicle, Major::animal, Major::vehicle, Major::fruit};
-            int idx = int(catgory_cnt[int(Major::animal)] < catgory_cnt[int(Major::fruit)] ||
-                          (catgory_cnt[int(Major::animal)] == catgory_cnt[int(Major::fruit)] && cur_pos[0] > (fieldWidth / 2)))
-                      << 1;
-            idx |= utils::calcDist(cur_pos, POS[idx]) < utils::calcDist(cur_pos, POS[idx | 1]);
-
-            goal_carry.x = POS[idx][0];
-            goal_carry.y = POS[idx][1];
-            goal_carry.yaw = std::atan2(POS[idx][1] - cur_pos[1], POS[idx][0] - cur_pos[0]);
-            moveBase.send_goal(goal_carry);
-            WAIT_MOVE_BASE_GOAL_REACHED;
-            carrying_cnt -= utils::dropCatgory(CATGORY[idx]);
-
-            goal_carry.x = POS[idx ^ 1][0];
-            goal_carry.y = POS[idx ^ 1][1];
-            goal_carry.yaw = std::atan2(POS[idx ^ 1][1] - POS[idx][1], POS[idx ^ 1][0] - POS[idx][0]);
-            moveBase.send_goal(goal_carry);
-
-            WAIT_MOVE_BASE_GOAL_REACHED;
-            carrying_cnt -= utils::dropCatgory(CATGORY[idx ^ 1]);
-        }
-    } else {  // 没有交通工具
-        constexpr float POS[2][2]{{-carryExtendPadding, PI}, {fieldWidth + carryExtendPadding, 0}};
-        constexpr Major CATGORY[2]{Major::animal, Major::fruit};
-        int idx = catgory_cnt[int(Major::animal)] < catgory_cnt[int(Major::fruit)] ||
-                  (catgory_cnt[int(Major::animal)] == catgory_cnt[int(Major::fruit)] && state.x() > (fieldWidth / 2));
-        goal_carry.x = POS[idx][0];
-        goal_carry.y = state.y();
-        goal_carry.yaw = POS[idx][1];
-        moveBase.send_goal(goal_carry);
-        WAIT_MOVE_BASE_GOAL_REACHED;
-        carrying_cnt -= utils::dropCatgory(CATGORY[idx]);
-    }
-    return true;
-}
-
-Task_t carryRects_only1(int& carrying_cnt, float* min_dist2_thresh = nullptr, bool* dist_result = nullptr) {
-    // 动物：左
-    // 交通工具：上
-    // 水果：右
-    using namespace ResultCatgory;
-    using std::max, std::min;
-
-    int catgory_cnt[4]{0};
-    for (int i = 0; i < magnet::cnt; ++i) ++catgory_cnt[int(masterGlobalVars.art_results[i])];
-
-    MoveBase::State state;
-    moveBase.get_state(state);
-    MoveBase::Goal goal_carry = GOAL_CARRY;
-
-    float CUR_POS[2]{float(state.x()), float(state.y())};
-    float X = max(min(CUR_POS[0], fieldWidth - carrySidePadding), carrySidePadding);
-    float Y = max(min(CUR_POS[1], fieldHeight - carrySidePadding), carrySidePadding);
-    float POS[][2]{
-        {-carryExtendPadding, Y},               // 左，动物
-        {X, fieldHeight + carryExtendPadding},  // 上，交通工具
-        {fieldWidth + carryExtendPadding, Y},   // 右，水果
-    };
-    constexpr Major CATGORY[3]{Major::animal, Major::vehicle, Major::fruit};
-    float min_dist2 = std::numeric_limits<float>::infinity();
-    int idx = 0;
-    for (int i = 0; i < 3; ++i)
-        if (catgory_cnt[int(CATGORY[i])])
-            if (float dist2 = utils::calcDist2(CUR_POS, POS[i]); dist2 < min_dist2) min_dist2 = dist2, idx = i;
-
-    if (min_dist2_thresh) {
-        if (min_dist2 >= *min_dist2_thresh) {
-            *dist_result = false;
-            return true;
-        } else
-            *dist_result = true;
-    }
-
-    goal_carry.x = POS[idx][0];
-    goal_carry.y = POS[idx][1];
-    goal_carry.yaw = utils::wrapAngleNear(std::atan2(CUR_POS[1] - POS[idx][1], CUR_POS[0] - POS[idx][0]), state.yaw());
-    moveBase.send_goal(goal_carry);
-    // WAIT_MOVE_BASE_GOAL_REACHED;
-    WAIT_FOR(moveBase.wait_near(mainloop_timeout));
-    carrying_cnt -= utils::dropCatgory(CATGORY[idx]);
-
-    return true;
-}
-
-Task_t finalCarry() {
-    // 动物：左
-    // 交通工具：上
-    // 水果：右
-    using namespace ResultCatgory;
-    float _targets[4][2];
-    float* cur_pos = _targets[0];
-    float(*targets)[2] = _targets + 1;
-    Major catgory[3];
-    MoveBase::State state;
-    moveBase.get_state(state);
-    cur_pos[0] = state.x(), cur_pos[1] = state.y();
-
-    int catgory_cnt[4]{0};
-    for (int i = 0; i < magnet::cnt; ++i) ++catgory_cnt[int(masterGlobalVars.art_results[i])];
-
-    if (catgory_cnt[int(Major::vehicle)] && catgory_cnt[int(Major::fruit)]) {  // 右上
-        float dx = 2 * fieldWidth - cur_pos[0], dy = 2 * fieldHeight - cur_pos[1];
-        float x = cur_pos[0] + dx * (fieldHeight - cur_pos[1]) / dy, y = cur_pos[1] + dy * (fieldWidth - cur_pos[0]) / dx;
-        int idx = x > fieldWidth;
-        idx ? (x = 2 * fieldWidth - x) : (y = 2 * fieldHeight - y);
-        targets[idx][0] = std::min(x, fieldWidth - carryExtendPadding), targets[idx][1] = fieldHeight + carryExtendPadding;
-        targets[idx ^ 1][0] = fieldWidth + carryExtendPadding, targets[idx ^ 1][1] = std::min(y, fieldHeight - carrySidePadding);
-        catgory[idx] = Major::vehicle, catgory[idx ^ 1] = Major::fruit;
-    } else if (catgory_cnt[int(Major::vehicle)]) {  // 上
-        float x = cur_pos[0] - cur_pos[0] * (fieldHeight - cur_pos[1]) / (2 * fieldHeight - cur_pos[1]);
-        targets[0][0] = std::max(x, carrySidePadding), targets[0][1] = fieldHeight + carryExtendPadding;
-        catgory[0] = Major::vehicle;
-    } else if (catgory_cnt[int(Major::fruit)]) {  // 右
-        float y = cur_pos[1] - cur_pos[1] * (fieldWidth - cur_pos[0]) / (2 * fieldWidth - cur_pos[0]);
-        targets[0][0] = fieldWidth + carryExtendPadding, targets[0][1] = std::max(y, carrySidePadding);
-        catgory[0] = Major::fruit;
-    }
-
-    int target_cnt = bool(catgory_cnt[int(Major::vehicle)]) + bool(catgory_cnt[int(Major::fruit)]);
-    if (catgory_cnt[int(Major::animal)]) {  // 左
-        targets[target_cnt][0] = -carryExtendPadding, targets[target_cnt][1] = garage_position[1];
-        catgory[target_cnt] = Major::animal;
-        ++target_cnt;
-    }
-
-    MoveBase::Goal goal_final_carry = GOAL_FINAL_CARRY;
-    for (int i = 0; i < target_cnt; ++i) {
-        moveBase.get_state(state);
-        goal_final_carry.x = targets[i][0], goal_final_carry.y = targets[i][1];
-        goal_final_carry.yaw =
-            utils::wrapAngleNear(std::atan2(targets[i][1] - state.y(), targets[i][0] - state.x()), state.yaw());
-        moveBase.send_goal(goal_final_carry);
-        // WAIT_MOVE_BASE_GOAL_REACHED;
-        WAIT_FOR(moveBase.wait_near(mainloop_timeout));
-        utils::dropCatgory(catgory[i]);
-    }
     return true;
 }
 
@@ -210,149 +71,165 @@ Task_t MainProcess() {
     SHOW_STATE("MAIN");
 
     MoveBase::State state;
-    int carrying_cnt = 0;
-    MoveBase::Goal goal_navi = GOAL_NAVI;
-    MoveBase::Goal goal_pick = GOAL_PICK;
 
-    for (int rect_index = 1; rect_index <= coords_cnt; ++rect_index) {
-        // 获取距离最近的卡片作为目标点
-        int cur_target;
-        for (;;) {
-            moveBase.get_state(state);
-            float cur_pos[2]{(float)state.x(), (float)state.y()};
-            float min_dist2 = std::numeric_limits<float>::infinity();
-            for (int i = 1; i <= coords_cnt; ++i)
-                if (masterGlobalVars.coord_valid.test(i))
-                    if (float dist2 = utils::calcDist2(cur_pos, coords[i]); dist2 < min_dist2) min_dist2 = dist2, cur_target = i;
+    MoveBase::Goal goal_navi_turn = GOAL_NAVI_TURN;
+    MoveBase::Goal goal_navi_move = GOAL_NAVI_MOVE;
+    MoveBase::Goal goal_navi_refine = GOAL_NAVI_REFINE;
 
-            if (carrying_cnt + (coords_cnt - rect_index + 1) < magnet::cnt || carrying_cnt < 3) break;
-            bool carried;
-            RUN_TASK(carryRects_only1(carrying_cnt, &min_dist2, &carried));
-            if (!carried) break;
-        }
+    for (int target_index = 1; target_index <= coords_cnt; ++target_index) {
+        int cur_target = tsp.hamilton_path[target_index];
+        moveBase.get_state(state);
+        pose_kalman::T x = coords[cur_target][0], y = coords[cur_target][1], yaw = std::atan2(y - state.y(), x - state.x());
+        x -= art_cam_dist * std::cos(yaw);
+        y -= art_cam_dist * std::sin(yaw);
 
-        // 发布目标位置指令
-        float x = coords[cur_target][0], y = coords[cur_target][1], yaw = std::atan2(y - state.y(), x - state.x());
-        goal_navi.x = x - art_cam_dist * std::cos(yaw);
-        goal_navi.y = y - art_cam_dist * std::sin(yaw);
-        goal_navi.yaw = yaw;
-        moveBase.send_goal(goal_navi);
+        // 自转
+        goal_navi_turn.x = state.x();
+        goal_navi_turn.y = state.y();
+        goal_navi_turn.yaw = yaw;
+        moveBase.send_goal(goal_navi_turn);
+        WAIT_MOVE_BASE_GOAL_NEAR;
 
-        // 导航到目标位置
+        // 平移
+        goal_navi_move.x = x;
+        goal_navi_move.y = y;
+        goal_navi_move.yaw = yaw;
+        moveBase.send_goal(goal_navi_move);
+        WAIT_MOVE_BASE_GOAL_NEAR;
+
+        // 调整
+        goal_navi_refine.x = x;
+        goal_navi_refine.y = y;
+        goal_navi_refine.yaw = yaw;
+        moveBase.send_goal(goal_navi_move);
         masterGlobalVars.send_rects_enabled(true, rectMaxDistError * rectMaxDistError);
         WAIT_MOVE_BASE_GOAL_REACHED;
         masterGlobalVars.send_rects_enabled(false);
 
         // 发送art拍照指令
         rt_thread_mdelay(art_before_snapshot_delay);
-        int magnet_index = utils::find_idle_magnet_index();
-        masterGlobalVars.send_art_cur_index(magnet_index);
+        masterGlobalVars.send_art_cur_index(cur_target);
         utils::sendArtSnapshotTask();
-        if constexpr (use_art) GUARD_COND(utils::waitArtSnapshot());
+        GUARD_COND(utils::waitArtSnapshot());
 
-        // 计算拾取卡片的位姿
+        // TODO 机械臂
+    }
+
+    return true;
+}
+
+Task_t FinalCarry() {
+    // 动物：左
+    // 交通工具：上
+    // 水果：右
+    using namespace ResultCatgory;
+    using pose_kalman::T;
+
+    MoveBase::State state;
+    moveBase.get_state(state);
+
+    Major catgory[3];
+    T targets[3][2];
+
+    T dx = 2 * fieldWidth - state.x(), dy = 2 * fieldHeight - state.y();
+    float x = state.x() + dx * (fieldHeight - state.y()) / dy, y = state.y() + dy * (fieldWidth - state.x()) / dx;
+    int idx = x > fieldWidth;
+    idx ? (x = 2 * fieldWidth - x) : (y = 2 * fieldHeight - y);
+
+    catgory[idx ^ 1] = Major::fruit;
+    targets[idx ^ 1][0] = fieldWidth + carryExtendPadding;
+    targets[idx ^ 1][1] = std::min(y, fieldHeight - carrySidePadding);
+
+    catgory[idx] = Major::vehicle;
+    targets[idx][0] = std::min(x, fieldWidth - carryExtendPadding);
+    targets[idx][1] = fieldHeight + carryExtendPadding;
+
+    catgory[2] = Major::animal;
+    targets[2][0] = -carryExtendPadding;
+    targets[2][1] = garage_position[1];
+
+    MoveBase::Goal goal_carry_turn = GOAL_CARRY_TURN;
+    MoveBase::Goal goal_carry_move = GOAL_CARRY_MOVE;
+
+    for (int i = 0; i < 3; ++i) {
         moveBase.get_state(state);
-        pose_kalman::T pose_xy[2]{state.x(), state.y()};
-        pose_kalman::T target_pos[3];
-        pose_kalman::magnetAlign(pose_xy, coords[cur_target], magnet_index, target_pos);
+        T yaw = utils::wrapAngleNear(std::atan2(targets[i][1] - state.y(), targets[i][0] - state.x()), state.yaw());
+        goal_carry_turn.x = state.x();
+        goal_carry_turn.y = state.y();
+        goal_carry_turn.yaw = yaw;
+        moveBase.send_goal(goal_carry_turn);
+        WAIT_MOVE_BASE_GOAL_NEAR;
 
-        // 发布拾取卡片位姿的指令
-        goal_pick.x = target_pos[0];
-        goal_pick.y = target_pos[1];
-        goal_pick.yaw = target_pos[2];
-        moveBase.send_goal(goal_pick);
-        WAIT_MOVE_BASE_GOAL_REACHED;
+        goal_carry_move.x = targets[i][0];
+        goal_carry_move.y = targets[i][1];
+        goal_carry_move.yaw = yaw;
+        moveBase.send_goal(goal_carry_move);
+        WAIT_MOVE_BASE_GOAL_NEAR;
 
-        // 拾取卡片
-        auto& srv = (magnet_index & 1 ? srv_r : srv_l);
-        srv.max();
-        rt_thread_mdelay(grab_srv_down_delay_ms);
-        srv.min();
-
-        // 删去当前目标点
-        masterGlobalVars.coord_valid.reset(cur_target);
-
-        if (++carrying_cnt == magnet::cnt && rect_index != coords_cnt) {
-            if constexpr (!use_art) {
-                carrying_cnt = 0;
-                continue;
-            }
-            WAIT_FOR(masterGlobalVars.wait_art_result(mainloop_timeout));
-            // RUN_TASK(carryRects(carrying_cnt));
-            RUN_TASK(carryRects_only1(carrying_cnt));
-        }
+        utils::dropCatgory(catgory[i]);
     }
-    if constexpr (!use_art) return true;
-    if (carrying_cnt) {
-        WAIT_FOR(masterGlobalVars.wait_art_result(mainloop_timeout));
-        RUN_TASK(finalCarry());
-    }
+
     return true;
 }
 
 Task_t ReturnGarage() {
+    MoveBase::Goal goal_garage_turn = GOAL_GARAGE_TURN;
+    MoveBase::Goal goal_garage_move = GOAL_GARAGE_MOVE;
+
     MoveBase::State state;
-    moveBase.get_state(state);
-
-    MoveBase::Goal goal = GOAL_BEFORE_GARAGE;
-    goal.x = garage_position[0];
-    goal.y = garage_position[1];
-    goal.yaw = std::atan2(state.y() - garage_position[1], state.x() - garage_position[0]);
-    moveBase.send_goal(goal);
-    WAIT_FOR(moveBase.wait_near(mainloop_timeout));
-
-    // 通知art开始找边界
-    masterGlobalVars.clear_art_border();
-    utils::sendArtBorderTask();
 
     // 转向左边
-    goal = GOAL_GARAGE_YAW;
-    goal.x = garage_position[0];
-    goal.y = garage_position[1];
-    goal.yaw = PI;
-    moveBase.send_goal(goal);
-    WAIT_FOR(moveBase.wait_near(mainloop_timeout));
-
-    // 找左边界
-    goal = GOAL_GARAGE_XY;
-    goal.x = -1e6;
-    goal.y = garage_position[1];
-    goal.yaw = PI;
-    moveBase.send_goal(goal);
-    WAIT_FOR(masterGlobalVars.wait_art_border());
-
-    // 平移一点
     moveBase.get_state(state);
-    goal.x = state.x() + garage_left_padding;
-    moveBase.send_goal(goal);
-    WAIT_FOR(moveBase.wait_near(mainloop_timeout));
+    goal_garage_turn.x = state.x();
+    goal_garage_turn.y = state.y();
+    goal_garage_turn.yaw = PI;
+    moveBase.send_goal(goal_garage_turn);
+    WAIT_MOVE_BASE_GOAL_NEAR;
 
-    // 转向
-    goal = GOAL_GARAGE_YAW;
-    moveBase.get_state(state);
-    goal.x = state.x();
-    goal.y = state.y();
-    goal.yaw = PI_2;
-    moveBase.send_goal(goal);
-    WAIT_FOR(moveBase.wait_near(mainloop_timeout));
+    // 通知art开始找边界
+    utils::sendArtBorderTask();
 
-    // 找下边界
-    goal = GOAL_GARAGE_XY;
+    // 向右移动
     moveBase.get_state(state);
-    goal.x = state.x();
-    goal.y = -1e6;
-    goal.yaw = PI_2;
-    moveBase.send_goal(goal);
+    goal_garage_move.x = 1e6;
+    goal_garage_move.y = state.y();
+    goal_garage_move.yaw = PI;
+    moveBase.send_goal(goal_garage_move);
+    masterGlobalVars.clear_art_border();
+    WAIT_FOR(masterGlobalVars.wait_art_border(mainloop_timeout));
+
+    // 向右微调
+    goal_garage_move.x = state.x() + garage_left_padding;
+    moveBase.send_goal(goal_garage_move);
+    WAIT_MOVE_BASE_GOAL_NEAR;
+
+    // 转向上边
+    moveBase.get_state(state);
+    goal_garage_turn.x = state.x();
+    goal_garage_turn.y = state.y();
+    goal_garage_turn.yaw = PI_2;
+    moveBase.send_goal(goal_garage_turn);
+    WAIT_MOVE_BASE_GOAL_NEAR;
+
+    // 向下移动
+    moveBase.get_state(state);
+    goal_garage_move.x = state.x();
+    goal_garage_move.y = -1e6;
+    goal_garage_move.yaw = PI_2;
+    moveBase.send_goal(goal_garage_move);
     rt_thread_mdelay(garage_down_delay);
     masterGlobalVars.clear_art_border();
-    WAIT_FOR(masterGlobalVars.wait_art_border());
+    WAIT_FOR(masterGlobalVars.wait_art_border(mainloop_timeout));
     rt_thread_mdelay(garage_stop_delay);
 
     // 停车
     moveBase.get_state(state);
-    goal.y = state.y();
-    moveBase.send_goal(goal);
+    goal_garage_move.x = state.x();
+    goal_garage_move.y = state.y();
+    goal_garage_move.yaw = state.yaw();
+    moveBase.send_goal(goal_garage_move);
     WAIT_MOVE_BASE_GOAL_REACHED;
+
     return true;
 }
 
@@ -375,8 +252,10 @@ static inline void Idle() {
 Task_t LoopIter() {
     RUN_TASK(Reset());
     RUN_TASK(GetCoords());
+    RUN_TASK(SolveTSP());
     RUN_TASK(ResetPos());
     RUN_TASK(MainProcess());
+    RUN_TASK(FinalCarry());
     RUN_TASK(ReturnGarage());
 
     return true;
@@ -393,7 +272,4 @@ static void masterMainLoopEntry() {
     }
 }
 
-bool masterMainLoopNode() {
-    return FuncThread(utils::dropCatgoryEntry, "dropCatgory", 2048, Thread::lowest_priority - 1) &&
-           FuncThread(masterMainLoopEntry, "masterMainLoop", 4096, Thread::lowest_priority);
-}
+bool masterMainLoopNode() { return FuncThread(masterMainLoopEntry, "masterMainLoop", 4096, Thread::lowest_priority); }
