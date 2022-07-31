@@ -58,6 +58,9 @@ Task_t SolveTSP() {
         drawLine(coords[u][0] * tsp_k, coords[u][1] * tsp_k, coords[v][0] * tsp_k, coords[v][1] * tsp_k, plot);
     }
 
+    // 计算搬运顺序
+    CarryOrder::calc();
+
     return true;
 }
 
@@ -126,35 +129,10 @@ Task_t MainProcess() {
 
 Task_t Carry() {
     SHOW_STATE("CARY");
-    // 动物：左
-    // 交通工具：上
-    // 水果：右
-    using namespace ResultCatgory;
+    using CarryOrder::catgory, CarryOrder::targets;
     using pose_kalman::T;
 
     MoveBase::State state;
-    moveBase.get_state(state);
-
-    Major catgory[3];
-    T targets[3][2];
-
-    T dx = 2 * fieldWidth - state.x(), dy = 2 * fieldHeight - state.y();
-    float x = state.x() + dx * (fieldHeight - state.y()) / dy, y = state.y() + dy * (fieldWidth - state.x()) / dx;
-    int idx = x > fieldWidth;
-    idx ? (x = 2 * fieldWidth - x) : (y = 2 * fieldHeight - y);
-
-    catgory[idx ^ 1] = Major::fruit;
-    targets[idx ^ 1][0] = fieldWidth + carryExtendPadding;
-    targets[idx ^ 1][1] = std::min(y, fieldHeight - carrySidePadding);
-
-    catgory[idx] = Major::vehicle;
-    targets[idx][0] = std::min(x, fieldWidth - carryExtendPadding);
-    targets[idx][1] = fieldHeight + carryExtendPadding;
-
-    catgory[2] = Major::animal;
-    targets[2][0] = -carryExtendPadding;
-    targets[2][1] = garage_position[1];
-
     MoveBase::Goal goal_carry_turn = GOAL_CARRY_TURN;
     MoveBase::Goal goal_carry_move = GOAL_CARRY_MOVE;
 
@@ -286,8 +264,7 @@ static void armControlEntry() {
         armDrv.before_place();
         masterGlobalVars.wait_art_result();
         ResultCatgory::Major catgory = masterGlobalVars.art_last_result;
-        // TODO 放哪个框里
-        // armDrv.place(...);
+        armDrv.place(CarryOrder::catgory_to_index[(int)catgory]);
         armDrv.initial_pose();
         masterGlobalVars.send_arm_initial_pose();
     }

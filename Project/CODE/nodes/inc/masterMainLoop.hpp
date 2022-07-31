@@ -149,4 +149,37 @@ Task_t gotoTarget(pose_kalman::T target_x, pose_kalman::T target_y) {
 
 }  // namespace utils
 
+namespace CarryOrder {
+
+static ResultCatgory::Major catgory[3];
+static pose_kalman::T targets[3][2];
+static uint8_t catgory_to_index[3];
+
+static inline void calc() {
+    using namespace ResultCatgory;
+
+    int last_target = tsp.hamilton_path[coords_cnt];
+    float last_x = coords[last_target][0], last_y = coords[last_target][1];
+    float dx = 2 * fieldWidth - last_x, dy = 2 * fieldHeight - last_y;
+    float x = last_x + dx * (fieldHeight - last_y) / dy, y = last_y + dy * (fieldWidth - last_x) / dx;
+    int idx = x > fieldWidth;
+    idx ? (x = 2 * fieldWidth - x) : (y = 2 * fieldHeight - y);
+
+    catgory[idx ^ 1] = Major::fruit;  // ср
+    targets[idx ^ 1][0] = fieldWidth + carryExtendPadding;
+    targets[idx ^ 1][1] = std::min(y, fieldHeight - carrySidePadding);
+
+    catgory[idx] = Major::vehicle;  // ио
+    targets[idx][0] = std::min(x, fieldWidth - carryExtendPadding);
+    targets[idx][1] = fieldHeight + carryExtendPadding;
+
+    catgory[2] = Major::animal;  // вС
+    targets[2][0] = -carryExtendPadding;
+    targets[2][1] = garage_position[1];
+
+    for (int i = 0; i < 2; ++i) catgory_to_index[(int)catgory[i]] = i;
+}
+
+}  // namespace CarryOrder
+
 #endif  // _nodes_masterMainLoop_hpp
