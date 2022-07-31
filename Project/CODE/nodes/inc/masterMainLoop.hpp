@@ -124,8 +124,6 @@ Task_t waitArtSnapshot() {
     return true;
 }
 
-Task_t dropCatgory(ResultCatgory::Major catgory) { return true; }
-
 Task_t gotoTarget(pose_kalman::T target_x, pose_kalman::T target_y) {
     MoveBase::State state;
     moveBase.get_state(state);

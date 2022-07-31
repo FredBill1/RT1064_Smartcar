@@ -1,6 +1,7 @@
 #ifndef _devices_hpp
 #define _devices_hpp
 
+#include "ArmDrv.hpp"
 #include "BaseDriver.hpp"
 #include "Beep.hpp"
 #include "Camera.hpp"
@@ -77,6 +78,8 @@ extern LocalPlanner localPlanner;
 }  // namespace pose_kalman
 
 extern MoveBase moveBase;
+
+extern const ArmDrv armDrv;
 
 void initDevices();
 

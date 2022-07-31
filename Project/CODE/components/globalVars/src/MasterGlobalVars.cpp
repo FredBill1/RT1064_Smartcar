@@ -12,6 +12,8 @@ MasterGlobalVars::MasterGlobalVars() {
     rt_event_init(&art_snapshot_event, "art_snapshot", RT_IPC_FLAG_PRIO);
     rt_event_init(&art_result_event, "art_result", RT_IPC_FLAG_PRIO);
     rt_event_init(&art_border_event, "art_border", RT_IPC_FLAG_PRIO);
+    rt_event_init(&arm_initial_pose_event, "arm_initial_pose", RT_IPC_FLAG_PRIO);
+    rt_event_init(&arm_picked_event, "arm_picked", RT_IPC_FLAG_PRIO);
 }
 
 void MasterGlobalVars::reset_states() {
@@ -19,6 +21,8 @@ void MasterGlobalVars::reset_states() {
     rt_event_recv(&art_snapshot_event, 1, RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR, RT_WAITING_NO, RT_NULL);
     rt_event_recv(&art_result_event, 1, RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR, RT_WAITING_NO, RT_NULL);
     rt_event_recv(&art_border_event, 1, RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR, RT_WAITING_NO, RT_NULL);
+    rt_event_send(&arm_initial_pose_event, 1);
+    rt_event_recv(&arm_picked_event, 1, RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR, RT_WAITING_NO, RT_NULL);
     {
         InterruptGuard guard;
         reset_flag = false;
@@ -143,6 +147,18 @@ void MasterGlobalVars::send_upload_xy(const uint8_t xy[2]) {
 void MasterGlobalVars::get_upload_xy(uint8_t xy[2]) const {
     InterruptGuard guard;
     xy[0] = _upload_xy[0], xy[1] = _upload_xy[1];
+}
+
+void MasterGlobalVars::send_arm_initial_pose() { rt_event_send(&arm_initial_pose_event, 1); }
+
+bool MasterGlobalVars::wait_arm_initial_pose(rt_int32_t timeout) {
+    return rt_event_recv(&arm_initial_pose_event, 1, RT_EVENT_FLAG_AND | RT_EVENT_FLAG_CLEAR, timeout, RT_NULL) == RT_EOK;
+}
+
+void MasterGlobalVars::send_arm_picked() { rt_event_send(&arm_picked_event, 1); }
+
+bool MasterGlobalVars::wait_arm_picked(rt_int32_t timeout) {
+    return rt_event_recv(&arm_picked_event, 1, RT_EVENT_FLAG_AND | RT_EVENT_FLAG_CLEAR, timeout, RT_NULL) == RT_EOK;
 }
 
 MasterGlobalVars masterGlobalVars;

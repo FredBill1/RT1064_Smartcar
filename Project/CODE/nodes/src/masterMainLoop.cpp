@@ -112,7 +112,10 @@ Task_t MainProcess() {
         utils::sendArtSnapshotTask();
         GUARD_COND(utils::waitArtSnapshot());
 
-        // TODO 机械臂
+        // 机械臂抓取
+        masterGlobalVars.wait_arm_initial_pose();
+        armDrv.pick();
+        masterGlobalVars.send_arm_picked();
 
         // 删除当前点
         masterGlobalVars.coord_valid.reset(cur_target);
@@ -121,7 +124,8 @@ Task_t MainProcess() {
     return true;
 }
 
-Task_t FinalCarry() {
+Task_t Carry() {
+    SHOW_STATE("CARY");
     // 动物：左
     // 交通工具：上
     // 水果：右
@@ -169,13 +173,14 @@ Task_t FinalCarry() {
         moveBase.send_goal(goal_carry_move);
         WAIT_MOVE_BASE_GOAL_NEAR;
 
-        utils::dropCatgory(catgory[i]);
+        armDrv.drop(i);
     }
 
     return true;
 }
 
 Task_t ReturnGarage() {
+    SHOW_STATE("GARA");
     MoveBase::Goal goal_garage_turn = GOAL_GARAGE_TURN;
     MoveBase::Goal goal_garage_move = GOAL_GARAGE_MOVE;
 
@@ -258,7 +263,7 @@ Task_t LoopIter() {
     RUN_TASK(SolveTSP());
     RUN_TASK(ResetPos());
     RUN_TASK(MainProcess());
-    RUN_TASK(FinalCarry());
+    RUN_TASK(Carry());
     RUN_TASK(ReturnGarage());
 
     return true;
@@ -275,4 +280,20 @@ static void masterMainLoopEntry() {
     }
 }
 
-bool masterMainLoopNode() { return FuncThread(masterMainLoopEntry, "masterMainLoop", 4096, Thread::lowest_priority); }
+static void armControlEntry() {
+    for (;;) {
+        masterGlobalVars.wait_arm_picked();
+        armDrv.before_place();
+        masterGlobalVars.wait_art_result();
+        ResultCatgory::Major catgory = masterGlobalVars.art_last_result;
+        // TODO 放哪个框里
+        // armDrv.place(...);
+        armDrv.initial_pose();
+        masterGlobalVars.send_arm_initial_pose();
+    }
+}
+
+bool masterMainLoopNode() {
+    return FuncThread(armControlEntry, "armControl", 2048, Thread::lowest_priority - 1) &&
+           FuncThread(masterMainLoopEntry, "masterMainLoop", 4096, Thread::lowest_priority);
+}

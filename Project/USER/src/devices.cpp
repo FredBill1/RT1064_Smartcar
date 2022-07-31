@@ -40,6 +40,8 @@ MotorCtrl motorCtrlL2(motorDrvL2, encoderL2, controllerL2);
 MotorCtrl motorCtrlR1(motorDrvR1, encoderR1, controllerR1);
 MotorCtrl motorCtrlR2(motorDrvR2, encoderR2, controllerR2);
 
+extern const ArmDrv armDrv{};
+
 BaseDriver baseDriver;
 namespace pose_kalman {
 PoseKalman kf;
@@ -106,6 +108,9 @@ void initDevices() {
     // servo
     srv_l.init_min();
     srv_r.init_min();
+
+    // arm
+    armDrv.initial_pose();
 
     // qtimer
     MCU_MASTER {

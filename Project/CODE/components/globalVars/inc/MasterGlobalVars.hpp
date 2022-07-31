@@ -75,6 +75,16 @@ class MasterGlobalVars {
  public:
     void send_upload_xy(const uint8_t xy[2]);
     void get_upload_xy(uint8_t xy[2]) const;
+
+ private:
+    rt_event arm_initial_pose_event;
+    rt_event arm_picked_event;
+
+ public:
+    void send_arm_initial_pose();
+    bool wait_arm_initial_pose(rt_int32_t timeout = RT_WAITING_FOREVER);
+    void send_arm_picked();
+    bool wait_arm_picked(rt_int32_t timeout = RT_WAITING_FOREVER);
 };
 
 extern MasterGlobalVars masterGlobalVars;

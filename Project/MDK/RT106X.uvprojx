@@ -2429,6 +2429,11 @@
               <FileType>8</FileType>
               <FilePath>..\CODE\driver\src\Beep.cpp</FilePath>
             </File>
+            <File>
+              <FileName>ArmDrv.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\driver\src\ArmDrv.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -5354,6 +5359,11 @@
               <FileName>Beep.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\CODE\driver\src\Beep.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>ArmDrv.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\CODE\driver\src\ArmDrv.cpp</FilePath>
             </File>
           </Files>
         </Group>
