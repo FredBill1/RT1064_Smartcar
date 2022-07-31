@@ -37,6 +37,9 @@ bool sendTraverseNode();
 // ^^^  src  ^^^
 // vvv tests vvv
 
+// ²âÊÔ»úĞµ±Û
+bool testArmDrvNode();
+
 // ²âÊÔµç´ÅÌú
 bool testMagnetNode();
 
