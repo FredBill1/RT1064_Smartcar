@@ -9,11 +9,11 @@ class ResultSender {
     SerialIO::TxXfer xfer;
     SerialIO& serial;
     void apply_time();
-    void apply_xy();
+    void apply_xy(int x, int y);
 
  public:
     ResultSender(SerialIO& serial, const char* name);
-    bool send_catgory(ResultCatgory::Minor catgory, int32_t timeout_ms = RT_WAITING_FOREVER);
+    bool send_catgory(ResultCatgory::Minor catgory, int index, int32_t timeout_ms = RT_WAITING_FOREVER);
     bool send_traverse(bool carrying, int32_t timeout_ms = RT_WAITING_FOREVER);
 };
 

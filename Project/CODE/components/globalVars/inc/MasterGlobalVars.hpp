@@ -59,7 +59,7 @@ class MasterGlobalVars {
     bool wait_art_snapshot(rt_int32_t timeout = RT_WAITING_FOREVER);
     void send_art_snapshot();
     bool wait_art_result(rt_int32_t timeout = RT_WAITING_FOREVER);
-    bool send_art_result(ResultCatgory::Major result);
+    bool send_art_result(ResultCatgory::Major result, int& index);
 
  private:
     rt_event art_border_event;

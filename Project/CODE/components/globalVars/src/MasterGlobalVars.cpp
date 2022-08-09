@@ -117,7 +117,7 @@ bool MasterGlobalVars::wait_art_result(rt_int32_t timeout) {
     return rt_event_recv(&art_result_event, 1, RT_EVENT_FLAG_AND | RT_EVENT_FLAG_CLEAR, timeout, RT_NULL) == RT_EOK;
 }
 
-bool MasterGlobalVars::send_art_result(ResultCatgory::Major result) {
+bool MasterGlobalVars::send_art_result(ResultCatgory::Major result, int& index) {
     bool need_result;
     {
         InterruptGuard guard;
@@ -125,6 +125,7 @@ bool MasterGlobalVars::send_art_result(ResultCatgory::Major result) {
         if (need_result) {
             art_last_result = result;
             _art_need_result = false;
+            index = _art_cur_index;
         }
     }
     if (need_result) rt_event_send(&art_result_event, 1);

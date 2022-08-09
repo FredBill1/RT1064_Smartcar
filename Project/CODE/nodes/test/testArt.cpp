@@ -20,9 +20,10 @@ static void testArtRecvEntry() {
 
         if (id == 0xFF) masterGlobalVars.send_art_snapshot();
         else {
+            int index;
             auto minor = ResultCatgory::id_to_minor(id);
             auto major = ResultCatgory::minor_to_major(minor);
-            masterGlobalVars.send_art_result(major);
+            masterGlobalVars.send_art_result(major, index);
         }
     }
 }

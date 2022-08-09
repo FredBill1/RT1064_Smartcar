@@ -17,7 +17,8 @@ static inline void Classify() {
     } else if (id < 15) {
         auto minor = ResultCatgory::id_to_minor(id);
         auto major = ResultCatgory::minor_to_major(minor);
-        if (masterGlobalVars.send_art_result(major)) resultSender.send_catgory(minor, RT_WAITING_FOREVER);
+        int index;
+        if (masterGlobalVars.send_art_result(major, index)) resultSender.send_catgory(minor, index, RT_WAITING_FOREVER);
     } else
         return;
     beep.set(0);
