@@ -131,16 +131,18 @@ void PoseKalman::update(uint64_t timestamp_us) {
     for (;;) {
         int64_t max_dt = 0;
         MeasurementType res = MeasurementType::NUM_TYPES;
-#define update_max_dt_util(type)                                                   \
-    {                                                                              \
-        auto& queue = pimpl->measurementQueue[(int)MeasurementType::type];         \
-        auto& m_time = ((Stamped<T[type::SIZE]>*)queue.front())->timestamp_us;     \
-        while (queue.peek()) {                                                     \
-            dt = systick.get_diff_us(m_time, timestamp_us);                        \
-            if (dt < timeout_us) break;                                            \
-            queue.pop();                                                           \
-        }                                                                          \
-        if (queue.peek() && dt > max_dt) max_dt = dt, res = MeasurementType::type; \
+#define update_max_dt_util(type)                                               \
+    {                                                                          \
+        auto& queue = pimpl->measurementQueue[(int)MeasurementType::type];     \
+        auto& m_time = ((Stamped<T[type::SIZE]>*)queue.front())->timestamp_us; \
+        while (queue.peek()) {                                                 \
+            dt = systick.get_diff_us(m_time, timestamp_us);                    \
+            if (dt < timeout_us) {                                             \
+                if (dt > max_dt) max_dt = dt, res = MeasurementType::type;     \
+                break;                                                         \
+            }                                                                  \
+            queue.pop();                                                       \
+        }                                                                      \
     }
         MAP(update_max_dt_util, MeasurementModelTypes)
 #undef update_max_dt_util
