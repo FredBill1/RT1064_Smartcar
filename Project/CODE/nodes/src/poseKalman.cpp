@@ -140,7 +140,8 @@ static inline void processRects() {
         float rect_dx = rects[j][0] * cy - rects[j][1] * sy;
         float rect_dy = rects[j][0] * sy + rects[j][1] * cy;
 
-        {  // 场地内rect距离边界的最小距离
+        if constexpr (useRectPadding) {
+            // 场地内rect距离边界的最小距离
             float x_ = state[0] + rect_dx, y_ = state[1] + rect_dy;
             if (!(rectPadding <= x_ && x_ <= fieldWidth - rectPadding && rectPadding <= y_ && y_ <= fieldHeight - rectPadding))
                 continue;
