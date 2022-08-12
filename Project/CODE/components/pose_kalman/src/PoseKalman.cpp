@@ -161,11 +161,13 @@ void PoseKalman::update(uint64_t timestamp_us) {
         }                                                                      \
         type::Data data;                                                       \
         for (int i = 0; i < type::SIZE; ++i) data[i] = m_data[i];              \
+        T& x_yaw = const_cast<State&>(pimpl->kf.getState()).yaw();             \
         if constexpr (type::YAW) {                                             \
-            T x_yaw = pimpl->kf.getState().yaw(), &m_yaw = data.yaw();         \
+            T& m_yaw = data.yaw();                                             \
             m_yaw = x_yaw + wrapAngle(m_yaw - x_yaw);                          \
         }                                                                      \
         pimpl->kf.update(pimpl->MeasurementMemberName(type), data);            \
+        x_yaw = wrapAngle(x_yaw);                                              \
         queue.pop();                                                           \
     } break;
             MAP(update_predict_update_util, MeasurementModelTypes)
