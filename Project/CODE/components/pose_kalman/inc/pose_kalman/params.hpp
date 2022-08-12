@@ -6,7 +6,7 @@
 #include "pose_kalman/config.hpp"
 namespace pose_kalman {
 
-constexpr uint64_t predict_period_us = 10000;
+constexpr uint64_t predict_period_us = 5000;
 constexpr T predict_period_ms = predict_period_us * 1e-3;
 constexpr T predict_period_s = predict_period_us * 1e-6;
 constexpr T predict_freq = 1. / predict_period_s;
