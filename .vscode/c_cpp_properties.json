@@ -60,7 +60,7 @@
                 "${workspaceFolder}\\Project\\CODE\\components\\artResult\\inc"
             ],
             "defines": [
-                "TSP_MAX_POINT_NUM=23",
+                "TSP_MAX_POINT_NUM=27",
                 "CPU_MIMXRT1064DVL6A",
                 "SKIP_SYSCLK_INIT",
                 "XIP_EXTERNAL_FLASH=1",

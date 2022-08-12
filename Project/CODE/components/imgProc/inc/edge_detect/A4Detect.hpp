@@ -9,7 +9,7 @@
 namespace imgProc {
 namespace edge_detect {
 
-constexpr int target_coords_maxn = 20;
+constexpr int target_coords_maxn = 24;
 extern apriltag::quad target_quad;
 extern Coordinate target_coords[target_coords_maxn];
 extern int target_coords_cnt;
