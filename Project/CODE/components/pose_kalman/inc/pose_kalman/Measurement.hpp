@@ -1,10 +1,7 @@
 #ifndef _pose_kalman_Measurement_hpp
 #define _pose_kalman_Measurement_hpp
 
-#include "kalman/LinearizedMeasurementModel.hpp"
-#include "kalman/SquareRootBase.hpp"
-
-//
+#include "pose_kalman/KFType.hpp"
 #include "pose_kalman/State.hpp"
 #include "pose_kalman/config.hpp"
 
@@ -95,7 +92,7 @@ struct Measurement {
 
     using NoiseJacobian = Kalman::Jacobian<Data, Data>;
 
-    class Model : public Kalman::LinearizedMeasurementModel<State, Data, Kalman::SquareRootBase> {
+    class Model : public Kalman::LinearizedMeasurementModel<State, Data, pose_kalman_COVBASE> {
      public:
         //! State type shortcut definition
         typedef State S;

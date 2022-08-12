@@ -9,7 +9,7 @@
 #include <rtthread.h>
 //
 #include "Systick.hpp"
-#include "kalman/SquareRootExtendedKalmanFilter.hpp"
+#include "pose_kalman/KFType.hpp"
 #include "pose_kalman/SystemModel.hpp"
 #include "pose_kalman/measurementTypes.hpp"
 #include "utils/FakeAtomic.hpp"
@@ -35,7 +35,7 @@ struct PoseKalman::Impl {
     MAP(MeasurementMemberUtil, MeasurementModelTypes);
 #undef MeasurementMemberUtil
 
-    Kalman::SquareRootExtendedKalmanFilter<State> kf;
+    pose_kalman_KF<State> kf;
     PeekQueue measurementQueue[(int)MeasurementType::NUM_TYPES];
     void initQueue();
 };

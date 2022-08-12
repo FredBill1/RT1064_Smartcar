@@ -5,16 +5,16 @@
 // #include <Eigen/Geometry>
 
 #include "kalman/LinearizedSystemModel.hpp"
-#include "kalman/SquareRootBase.hpp"
 
 //
 #include "pose_kalman/Control.hpp"
+#include "pose_kalman/KFType.hpp"
 #include "pose_kalman/State.hpp"
 #include "pose_kalman/config.hpp"
 #include "pose_kalman/utils.hpp"
 namespace pose_kalman {
 
-class SystemModel : public Kalman::LinearizedSystemModel<State, Control, Kalman::SquareRootBase> {
+class SystemModel : public Kalman::LinearizedSystemModel<State, Control, pose_kalman_COVBASE> {
  public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     typedef pose_kalman::State S;

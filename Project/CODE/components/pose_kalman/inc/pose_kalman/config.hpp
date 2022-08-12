@@ -4,6 +4,9 @@
 #include <cstdint>
 
 namespace pose_kalman {
+
+#define pose_kalman_use_squareroot false
+
 using T = double;
 constexpr bool useDynamicProcessNoiseCovariance = true;
 constexpr int64_t timeout_us = 1000000;
