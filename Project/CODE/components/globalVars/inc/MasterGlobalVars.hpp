@@ -12,6 +12,9 @@
 
 class MasterGlobalVars {
  public:
+    bool use_9dof = false;
+
+ public:
     MasterGlobalVars();
     void reset_states();
 

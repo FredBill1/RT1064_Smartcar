@@ -3,6 +3,7 @@
 //
 #include <cmath>
 
+#include "MasterGlobalVars.hpp"
 #include "devices.hpp"
 #include "pose_kalman/utils.hpp"
 
@@ -45,7 +46,7 @@ static void imu_cb_rpy_orientation(const float data[3], uint64_t timestamp_us) {
 static void imu_cb_6DOF_orientation(const float data[4], uint64_t timestamp_us) { send_data(o6dof, 4, 8); }
 static void imu_cb_9DOF_orientation(const float data[4], uint64_t timestamp_us) {
     send_data(o9dof, 4, 9);
-    if (master_switch[0].get()) quaternion_to_yaw(data, timestamp_us);
+    if (masterGlobalVars.use_9dof) quaternion_to_yaw(data, timestamp_us);
 }
 static void imu_cb_mag_orientation(const float data[4], uint64_t timestamp_us) { send_data(omag, 4, 10); }
 

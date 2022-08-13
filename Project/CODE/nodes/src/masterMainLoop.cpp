@@ -241,6 +241,7 @@ static inline void Idle() {
         if (key_pressing[3]) utils::sendArtSnapshotTask();
         if (key_pressing[0]) utils::sendArtBorderTask();
         ips114_showstr(188, 0, master_switch[0].get() ? "9dof" : "    ");
+        ips114_showstr(188, 1, master_switch[0].get() ? "!imu" : "    ");
 
         rt_thread_mdelay(300);
     }

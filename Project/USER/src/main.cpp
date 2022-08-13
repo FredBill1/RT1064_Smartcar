@@ -4,12 +4,14 @@ int main(void);
 }
 
 #include "MCU_ID.hpp"
+#include "MasterGlobalVars.hpp"
 #include "devices.hpp"
 #include "nodes/nodes.hpp"
 #include "show_image.hpp"
 
 int main(void) {
     initDevices();
+    MCU_MASTER masterGlobalVars.use_9dof = master_switch[0].get();
     MCU_MASTER if (!master_switch[1].get()) imu.init();
     MCU_SLAVE camera.init();
     MCU_SLAVE usb_cdc_init();
