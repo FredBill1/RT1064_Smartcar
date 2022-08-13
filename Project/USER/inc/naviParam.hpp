@@ -20,6 +20,26 @@ constexpr pose_kalman::LocalPlanner::Params localPlannerParam{
 };
 }
 
+//! 出库
+// 平移
+constexpr pose_kalman::LocalPlanner::Params GOAL_OUT_GARAGE_PARAM{
+    .vel_lim_xy = 2.5,
+    .vel_lim_yaw = 1 * RPS,
+    .acc_lim_xy = 10,
+    .acc_lim_yaw = 1 * RPS,
+    .dt_ref = 0.33,
+};
+
+constexpr MoveBase::Goal GOAL_OUT_GARAGE{
+    .xy_tolerance = PARAM_DISABLE,
+    .yaw_tolerance = PARAM_DISABLE,
+    .xy_near = 5e-2,
+    .yaw_near = PARAM_DONT_CARE,
+    .time_tolerance_us = PARAM_DISABLE,
+    .reached = false,
+    .params = &GOAL_OUT_GARAGE_PARAM,
+};
+
 //! 去目标点
 // 自转
 constexpr pose_kalman::LocalPlanner::Params GOAL_NAVI_TURN_PARAM{

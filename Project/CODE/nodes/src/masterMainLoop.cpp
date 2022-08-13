@@ -70,6 +70,18 @@ Task_t ResetPos() {
     return true;
 }
 
+Task_t OutGarage() {
+    MoveBase::Goal goal_out_garage = GOAL_OUT_GARAGE;
+
+    goal_out_garage.x = initial_position[0];
+    goal_out_garage.y = out_garage_y;
+    goal_out_garage.yaw = initial_position[2];
+    moveBase.send_goal(goal_out_garage);
+    WAIT_MOVE_BASE_GOAL_NEAR;
+
+    return true;
+}
+
 Task_t MainProcess() {
     SHOW_STATE("MAIN");
 
@@ -240,6 +252,7 @@ Task_t LoopIter() {
     RUN_TASK(GetCoords());
     RUN_TASK(SolveTSP());
     RUN_TASK(ResetPos());
+    RUN_TASK(OutGarage());
     RUN_TASK(MainProcess());
     RUN_TASK(Carry());
     RUN_TASK(ReturnGarage());

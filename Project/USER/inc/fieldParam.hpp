@@ -36,6 +36,7 @@ constexpr float rectBasePadding = 0.1;
 constexpr float rectMaxDistError = 0.5;
 
 // ≥ı ºŒª÷√
-constexpr float initial_position[3]{0.282 / 2, -(0.210 / 2 + 0.048), 0};
+constexpr double initial_position[3]{0.210 / 2, -(0.282 / 2 + 20e-2), -PI_2};
+constexpr double out_garage_y = 0.282 / 2 + 5e-2;
 
 #endif  // _fieldParam_hpp
