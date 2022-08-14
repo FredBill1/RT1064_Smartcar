@@ -152,6 +152,15 @@ static inline void SetLocalPlannerParam() {
     localPlanner.setParams(params);
 }
 
+static inline void SetServo() {
+    if (!wireless.getchar(id)) return;
+    auto& srv = id == 0 ? srv_l : srv_r;
+    float degree;
+    if (!wireless.getData<float>(degree) || degree < 0 || degree > srv.max_angle) return;
+    beep.set(false);
+    srv.set(degree);
+}
+
 void recvCoords(SerialIO& uart, Beep& beep);
 
 static inline void SendMasterStop() {
@@ -180,6 +189,7 @@ static void wirelessEntry() {
         case 8: SendGoal(); break;
         case 9: SetLocalPlannerParam(); break;
         case 10: SendState(); break;
+        case 11: SetServo(); break;
 
         case 32: recvCoords(wireless, beep); break;
         case 253: SendMasterStop(); break;
