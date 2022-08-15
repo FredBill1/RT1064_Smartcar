@@ -1,0 +1,1265 @@
+{
+    "geometry": "636x410+935+580",
+    "canvases": [
+        {
+            "name": "goal",
+            "cmds": [
+                [
+                    "HEAD",
+                    "%b",
+                    "(\"0x00FF807F\")",
+                    ""
+                ],
+                [
+                    "goal_id",
+                    "%b",
+                    "(8)",
+                    ""
+                ],
+                [
+                    "send_goal",
+                    "#HEAD;#goal_id;%f%f%f",
+                    "x.text;y.text;yaw.text",
+                    "upload.click"
+                ]
+            ],
+            "widgets": [
+                {
+                    "name": "x",
+                    "type": "FBScaleEntry",
+                    "pos": [
+                        16.0,
+                        16.0
+                    ],
+                    "data": {
+                        "text": "0"
+                    },
+                    "config": {
+                        "\u5bbd\u5ea6": "20",
+                        "\u6700\u5c0f\u503c": "-2",
+                        "\u6700\u5927\u503c": "2",
+                        "\u663e\u793a\u7cbe\u5ea6": "2",
+                        "\u6eda\u8f6e\u589e\u91cf": "0.01"
+                    }
+                },
+                {
+                    "name": "y",
+                    "type": "FBScaleEntry",
+                    "pos": [
+                        192.0,
+                        16.0
+                    ],
+                    "data": {
+                        "text": "0"
+                    },
+                    "config": {
+                        "\u5bbd\u5ea6": "20",
+                        "\u6700\u5c0f\u503c": "-2",
+                        "\u6700\u5927\u503c": "2",
+                        "\u663e\u793a\u7cbe\u5ea6": "2",
+                        "\u6eda\u8f6e\u589e\u91cf": "0.01"
+                    }
+                },
+                {
+                    "name": "yaw",
+                    "type": "FBScaleEntry",
+                    "pos": [
+                        16.0,
+                        96.0
+                    ],
+                    "data": {
+                        "text": "0"
+                    },
+                    "config": {
+                        "\u5bbd\u5ea6": "20",
+                        "\u6700\u5c0f\u503c": "-4",
+                        "\u6700\u5927\u503c": "6.28",
+                        "\u663e\u793a\u7cbe\u5ea6": "2",
+                        "\u6eda\u8f6e\u589e\u91cf": "0.1"
+                    }
+                },
+                {
+                    "name": "upload",
+                    "type": "FBButton",
+                    "pos": [
+                        24.0,
+                        176.0
+                    ],
+                    "data": {},
+                    "config": {
+                        "\u5bbd\u5ea6": "100",
+                        "\u9ad8\u5ea6": "60"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "pwm",
+            "cmds": [
+                [
+                    "HEAD",
+                    "%b",
+                    "(\"0x00FF807F\")",
+                    ""
+                ],
+                [
+                    "pwmid",
+                    "%b",
+                    "(1)",
+                    ""
+                ],
+                [
+                    "Reset",
+                    "#HEAD;%b",
+                    "(0)",
+                    "<r>.press"
+                ],
+                [
+                    "Zero",
+                    "#HEAD;#pwmid;%b",
+                    "(4)",
+                    "<space>.press"
+                ],
+                [
+                    "L1PWM",
+                    "#HEAD;#pwmid;%b%f",
+                    "(0);L1.text",
+                    "L1.change"
+                ],
+                [
+                    "L2PWM",
+                    "#HEAD;#pwmid;%b%f",
+                    "(1);L2.text",
+                    "L2.change"
+                ],
+                [
+                    "R1PWM",
+                    "#HEAD;#pwmid;%b%f",
+                    "(2);R1.text",
+                    "R1.change"
+                ],
+                [
+                    "R2PWM",
+                    "#HEAD;#pwmid;%b%f",
+                    "(3);R2.text",
+                    "R2.change"
+                ]
+            ],
+            "widgets": [
+                {
+                    "name": "L1",
+                    "type": "FBScaleEntry",
+                    "pos": [
+                        8.0,
+                        16.0
+                    ],
+                    "data": {
+                        "text": "-859.86"
+                    },
+                    "config": {
+                        "\u5bbd\u5ea6": "20",
+                        "\u6700\u5c0f\u503c": "-15000",
+                        "\u6700\u5927\u503c": "15000",
+                        "\u663e\u793a\u7cbe\u5ea6": "2",
+                        "\u6eda\u8f6e\u589e\u91cf": "100"
+                    }
+                },
+                {
+                    "name": "R1",
+                    "type": "FBScaleEntry",
+                    "pos": [
+                        208.0,
+                        16.0
+                    ],
+                    "data": {
+                        "text": "660.39"
+                    },
+                    "config": {
+                        "\u5bbd\u5ea6": "20",
+                        "\u6700\u5c0f\u503c": "-15000",
+                        "\u6700\u5927\u503c": "15000",
+                        "\u663e\u793a\u7cbe\u5ea6": "2",
+                        "\u6eda\u8f6e\u589e\u91cf": "100"
+                    }
+                },
+                {
+                    "name": "R2",
+                    "type": "FBScaleEntry",
+                    "pos": [
+                        208.0,
+                        104.0
+                    ],
+                    "data": {
+                        "text": "-1037.73"
+                    },
+                    "config": {
+                        "\u5bbd\u5ea6": "20",
+                        "\u6700\u5c0f\u503c": "-15000",
+                        "\u6700\u5927\u503c": "15000",
+                        "\u663e\u793a\u7cbe\u5ea6": "2",
+                        "\u6eda\u8f6e\u589e\u91cf": "100"
+                    }
+                },
+                {
+                    "name": "L2",
+                    "type": "FBScaleEntry",
+                    "pos": [
+                        8.0,
+                        104.0
+                    ],
+                    "data": {
+                        "text": "95.55"
+                    },
+                    "config": {
+                        "\u5bbd\u5ea6": "20",
+                        "\u6700\u5c0f\u503c": "-15000",
+                        "\u6700\u5927\u503c": "15000",
+                        "\u663e\u793a\u7cbe\u5ea6": "2",
+                        "\u6eda\u8f6e\u589e\u91cf": "100"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "remote",
+            "cmds": [
+                [
+                    "HEAD",
+                    "%b",
+                    "(\"0x00FF807F\")",
+                    ""
+                ],
+                [
+                    "id",
+                    "%b",
+                    "(7)",
+                    ""
+                ],
+                [
+                    "wasd",
+                    "#HEAD;#id;!two_key(2);!two_key(2);!two_key(2)",
+                    "<w>.pressed;<s>.pressed;<a>.pressed;<d>.pressed;<j>.pressed;<l>.pressed",
+                    "<w>.both;<s>.both;<a>.both;<d>.both;<j>.both;<l>.both;"
+                ],
+                [
+                    "enable_id",
+                    "%b",
+                    "(3)",
+                    ""
+                ],
+                [
+                    "enable",
+                    "#HEAD;#enable_id;%b",
+                    "(15)",
+                    "enable.click"
+                ],
+                [
+                    "disable",
+                    "#HEAD;#enable_id;%b",
+                    "(0)",
+                    "disable.click"
+                ]
+            ],
+            "widgets": [
+                {
+                    "name": "enable",
+                    "type": "FBButton",
+                    "pos": [
+                        24.0,
+                        32.0
+                    ],
+                    "data": {},
+                    "config": {
+                        "\u5bbd\u5ea6": "100",
+                        "\u9ad8\u5ea6": "60"
+                    }
+                },
+                {
+                    "name": "disable",
+                    "type": "FBButton",
+                    "pos": [
+                        144.0,
+                        32.0
+                    ],
+                    "data": {},
+                    "config": {
+                        "\u5bbd\u5ea6": "100",
+                        "\u9ad8\u5ea6": "60"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "state",
+            "cmds": [
+                [
+                    "HEAD",
+                    "%b",
+                    "(\"0x00FF807F\")",
+                    ""
+                ],
+                [
+                    "id",
+                    "%b",
+                    "(3)",
+                    ""
+                ],
+                [
+                    "Reset",
+                    "#HEAD;%b",
+                    "(0)",
+                    "<r>.press"
+                ],
+                [
+                    "state",
+                    "#HEAD;#id;!to_bitset(4)",
+                    "L1.state;L2.state;R1.state;R2.state",
+                    "apply.click"
+                ]
+            ],
+            "widgets": [
+                {
+                    "name": "L1",
+                    "type": "FBToggle",
+                    "pos": [
+                        8.0,
+                        8.0
+                    ],
+                    "data": {
+                        "state": 1
+                    },
+                    "config": {
+                        "\u5bbd\u5ea6": "50",
+                        "\u9ad8\u5ea6": "40"
+                    }
+                },
+                {
+                    "name": "R1",
+                    "type": "FBToggle",
+                    "pos": [
+                        64.0,
+                        8.0
+                    ],
+                    "data": {
+                        "state": 1
+                    },
+                    "config": {
+                        "\u5bbd\u5ea6": "50",
+                        "\u9ad8\u5ea6": "40"
+                    }
+                },
+                {
+                    "name": "L2",
+                    "type": "FBToggle",
+                    "pos": [
+                        8.0,
+                        56.0
+                    ],
+                    "data": {
+                        "state": 1
+                    },
+                    "config": {
+                        "\u5bbd\u5ea6": "50",
+                        "\u9ad8\u5ea6": "40"
+                    }
+                },
+                {
+                    "name": "R2",
+                    "type": "FBToggle",
+                    "pos": [
+                        64.0,
+                        56.0
+                    ],
+                    "data": {
+                        "state": 1
+                    },
+                    "config": {
+                        "\u5bbd\u5ea6": "50",
+                        "\u9ad8\u5ea6": "40"
+                    }
+                },
+                {
+                    "name": "apply",
+                    "type": "FBButton",
+                    "pos": [
+                        120.0,
+                        8.0
+                    ],
+                    "data": {},
+                    "config": {
+                        "\u5bbd\u5ea6": "100",
+                        "\u9ad8\u5ea6": "60"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "pwm2",
+            "cmds": [
+                [
+                    "HEAD",
+                    "%b",
+                    "(\"0x00FF807F\")",
+                    ""
+                ],
+                [
+                    "pwmid",
+                    "%b",
+                    "(2)",
+                    ""
+                ],
+                [
+                    "Reset",
+                    "#HEAD;%b",
+                    "(0)",
+                    "<r>.press"
+                ],
+                [
+                    "Zero",
+                    "#HEAD;#pwmid;%b",
+                    "(4)",
+                    "<space>.press"
+                ],
+                [
+                    "L1PWM",
+                    "#HEAD;#pwmid;%b%f",
+                    "(0);L1.text",
+                    "L1.change"
+                ],
+                [
+                    "L2PWM",
+                    "#HEAD;#pwmid;%b%f",
+                    "(1);L2.text",
+                    "L2.change"
+                ],
+                [
+                    "R1PWM",
+                    "#HEAD;#pwmid;%b%f",
+                    "(2);R1.text",
+                    "R1.change"
+                ],
+                [
+                    "R2PWM",
+                    "#HEAD;#pwmid;%b%f",
+                    "(3);R2.text",
+                    "R2.change"
+                ]
+            ],
+            "widgets": [
+                {
+                    "name": "L1",
+                    "type": "FBScaleEntry",
+                    "pos": [
+                        8.0,
+                        16.0
+                    ],
+                    "data": {
+                        "text": "0.000000"
+                    },
+                    "config": {
+                        "\u5bbd\u5ea6": "20",
+                        "\u6700\u5c0f\u503c": "0",
+                        "\u6700\u5927\u503c": "10000",
+                        "\u663e\u793a\u7cbe\u5ea6": "6",
+                        "\u6eda\u8f6e\u589e\u91cf": "100"
+                    }
+                },
+                {
+                    "name": "R1",
+                    "type": "FBScaleEntry",
+                    "pos": [
+                        192.0,
+                        16.0
+                    ],
+                    "data": {
+                        "text": "0.000000"
+                    },
+                    "config": {
+                        "\u5bbd\u5ea6": "20",
+                        "\u6700\u5c0f\u503c": "0",
+                        "\u6700\u5927\u503c": "10000",
+                        "\u663e\u793a\u7cbe\u5ea6": "6",
+                        "\u6eda\u8f6e\u589e\u91cf": "100"
+                    }
+                },
+                {
+                    "name": "R2",
+                    "type": "FBScaleEntry",
+                    "pos": [
+                        192.0,
+                        96.0
+                    ],
+                    "data": {
+                        "text": "0.000000"
+                    },
+                    "config": {
+                        "\u5bbd\u5ea6": "20",
+                        "\u6700\u5c0f\u503c": "0",
+                        "\u6700\u5927\u503c": "10000",
+                        "\u663e\u793a\u7cbe\u5ea6": "6",
+                        "\u6eda\u8f6e\u589e\u91cf": "100"
+                    }
+                },
+                {
+                    "name": "L2",
+                    "type": "FBScaleEntry",
+                    "pos": [
+                        8.0,
+                        96.0
+                    ],
+                    "data": {
+                        "text": "0.000000"
+                    },
+                    "config": {
+                        "\u5bbd\u5ea6": "20",
+                        "\u6700\u5c0f\u503c": "0",
+                        "\u6700\u5927\u503c": "10000",
+                        "\u663e\u793a\u7cbe\u5ea6": "6",
+                        "\u6eda\u8f6e\u589e\u91cf": "100"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "localp",
+            "cmds": [
+                [
+                    "HEAD",
+                    "%b",
+                    "(\"0x00ff807f\")",
+                    ""
+                ],
+                [
+                    "param_id",
+                    "%b",
+                    "(9)",
+                    ""
+                ],
+                [
+                    "upload",
+                    "#HEAD;#param_id;%f%f%f%f%f",
+                    "vel_xy.text;vel_yaw.text;acc_xy.text;acc_yaw.text;dt_ref.text",
+                    "upload.click"
+                ]
+            ],
+            "widgets": [
+                {
+                    "name": "vel_xy",
+                    "type": "FBScaleEntry",
+                    "pos": [
+                        8.0,
+                        16.0
+                    ],
+                    "data": {
+                        "text": "2"
+                    },
+                    "config": {
+                        "\u5bbd\u5ea6": "20",
+                        "\u6700\u5c0f\u503c": "0.0",
+                        "\u6700\u5927\u503c": "3",
+                        "\u663e\u793a\u7cbe\u5ea6": "2",
+                        "\u6eda\u8f6e\u589e\u91cf": "0.1"
+                    }
+                },
+                {
+                    "name": "vel_yaw",
+                    "type": "FBScaleEntry",
+                    "pos": [
+                        216.0,
+                        16.0
+                    ],
+                    "data": {
+                        "text": "6"
+                    },
+                    "config": {
+                        "\u5bbd\u5ea6": "20",
+                        "\u6700\u5c0f\u503c": "0.0",
+                        "\u6700\u5927\u503c": "9",
+                        "\u663e\u793a\u7cbe\u5ea6": "2",
+                        "\u6eda\u8f6e\u589e\u91cf": "0.3"
+                    }
+                },
+                {
+                    "name": "acc_yaw",
+                    "type": "FBScaleEntry",
+                    "pos": [
+                        216.0,
+                        96.0
+                    ],
+                    "data": {
+                        "text": "6"
+                    },
+                    "config": {
+                        "\u5bbd\u5ea6": "20",
+                        "\u6700\u5c0f\u503c": "0.0",
+                        "\u6700\u5927\u503c": "6",
+                        "\u663e\u793a\u7cbe\u5ea6": "2",
+                        "\u6eda\u8f6e\u589e\u91cf": "0.1"
+                    }
+                },
+                {
+                    "name": "acc_xy",
+                    "type": "FBScaleEntry",
+                    "pos": [
+                        8.0,
+                        96.0
+                    ],
+                    "data": {
+                        "text": "0.80"
+                    },
+                    "config": {
+                        "\u5bbd\u5ea6": "20",
+                        "\u6700\u5c0f\u503c": "0.0",
+                        "\u6700\u5927\u503c": "3",
+                        "\u663e\u793a\u7cbe\u5ea6": "2",
+                        "\u6eda\u8f6e\u589e\u91cf": "0.1"
+                    }
+                },
+                {
+                    "name": "upload",
+                    "type": "FBButton",
+                    "pos": [
+                        8.0,
+                        176.0
+                    ],
+                    "data": {},
+                    "config": {
+                        "\u5bbd\u5ea6": "100",
+                        "\u9ad8\u5ea6": "60"
+                    }
+                },
+                {
+                    "name": "dt_ref",
+                    "type": "FBScaleEntry",
+                    "pos": [
+                        192.0,
+                        184.0
+                    ],
+                    "data": {
+                        "text": "0.4"
+                    },
+                    "config": {
+                        "\u5bbd\u5ea6": "20",
+                        "\u6700\u5c0f\u503c": "0.0",
+                        "\u6700\u5927\u503c": "1",
+                        "\u663e\u793a\u7cbe\u5ea6": "2",
+                        "\u6eda\u8f6e\u589e\u91cf": "0.01"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "test",
+            "cmds": [
+                [
+                    "HEAD",
+                    "%b",
+                    "(\"0x00FF807F\")",
+                    ""
+                ],
+                [
+                    "id",
+                    "%b",
+                    "(30)",
+                    ""
+                ],
+                [
+                    "send",
+                    "#HEAD;#id;%f%f%f",
+                    "x.text;y.text;theta.text",
+                    "x.change;y.change;theta.change"
+                ]
+            ],
+            "widgets": [
+                {
+                    "name": "x",
+                    "type": "FBScaleEntry",
+                    "pos": [
+                        16.0,
+                        16.0
+                    ],
+                    "data": {
+                        "text": "0.00"
+                    },
+                    "config": {
+                        "\u5bbd\u5ea6": "20",
+                        "\u6700\u5c0f\u503c": "0.0",
+                        "\u6700\u5927\u503c": "10",
+                        "\u663e\u793a\u7cbe\u5ea6": "2",
+                        "\u6eda\u8f6e\u589e\u91cf": "0.1"
+                    }
+                },
+                {
+                    "name": "y",
+                    "type": "FBScaleEntry",
+                    "pos": [
+                        208.0,
+                        16.0
+                    ],
+                    "data": {
+                        "text": "0.00"
+                    },
+                    "config": {
+                        "\u5bbd\u5ea6": "20",
+                        "\u6700\u5c0f\u503c": "0.0",
+                        "\u6700\u5927\u503c": "10",
+                        "\u663e\u793a\u7cbe\u5ea6": "2",
+                        "\u6eda\u8f6e\u589e\u91cf": "0.1"
+                    }
+                },
+                {
+                    "name": "theta",
+                    "type": "FBScaleEntry",
+                    "pos": [
+                        400.0,
+                        16.0
+                    ],
+                    "data": {
+                        "text": "0.00"
+                    },
+                    "config": {
+                        "\u5bbd\u5ea6": "20",
+                        "\u6700\u5c0f\u503c": "0.0",
+                        "\u6700\u5927\u503c": "10",
+                        "\u663e\u793a\u7cbe\u5ea6": "2",
+                        "\u6eda\u8f6e\u589e\u91cf": "0.1"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "speed",
+            "cmds": [
+                [
+                    "HEAD",
+                    "%b",
+                    "(\"0x00FF807F\")",
+                    ""
+                ],
+                [
+                    "pwmid",
+                    "%b",
+                    "(6)",
+                    ""
+                ],
+                [
+                    "Reset",
+                    "#HEAD;%b",
+                    "(0)",
+                    "<r>.press"
+                ],
+                [
+                    "Zero",
+                    "#HEAD;#pwmid;%b",
+                    "(4)",
+                    "<space>.press"
+                ],
+                [
+                    "L1PWM",
+                    "#HEAD;#pwmid;%b%f",
+                    "(0);L1.text",
+                    "L1.change"
+                ],
+                [
+                    "L2PWM",
+                    "#HEAD;#pwmid;%b%f",
+                    "(1);L2.text",
+                    "L2.change"
+                ],
+                [
+                    "R1PWM",
+                    "#HEAD;#pwmid;%b%f",
+                    "(2);R1.text",
+                    "R1.change"
+                ],
+                [
+                    "R2PWM",
+                    "#HEAD;#pwmid;%b%f",
+                    "(3);R2.text",
+                    "R2.change"
+                ]
+            ],
+            "widgets": [
+                {
+                    "name": "L1",
+                    "type": "FBScaleEntry",
+                    "pos": [
+                        8.0,
+                        16.0
+                    ],
+                    "data": {
+                        "text": "0.000000"
+                    },
+                    "config": {
+                        "\u5bbd\u5ea6": "20",
+                        "\u6700\u5c0f\u503c": "0",
+                        "\u6700\u5927\u503c": "3",
+                        "\u663e\u793a\u7cbe\u5ea6": "6",
+                        "\u6eda\u8f6e\u589e\u91cf": "0.1"
+                    }
+                },
+                {
+                    "name": "R1",
+                    "type": "FBScaleEntry",
+                    "pos": [
+                        192.0,
+                        16.0
+                    ],
+                    "data": {
+                        "text": "0.000000"
+                    },
+                    "config": {
+                        "\u5bbd\u5ea6": "20",
+                        "\u6700\u5c0f\u503c": "0",
+                        "\u6700\u5927\u503c": "3",
+                        "\u663e\u793a\u7cbe\u5ea6": "6",
+                        "\u6eda\u8f6e\u589e\u91cf": "0.1"
+                    }
+                },
+                {
+                    "name": "R2",
+                    "type": "FBScaleEntry",
+                    "pos": [
+                        192.0,
+                        96.0
+                    ],
+                    "data": {
+                        "text": "0.000000"
+                    },
+                    "config": {
+                        "\u5bbd\u5ea6": "20",
+                        "\u6700\u5c0f\u503c": "0",
+                        "\u6700\u5927\u503c": "3",
+                        "\u663e\u793a\u7cbe\u5ea6": "6",
+                        "\u6eda\u8f6e\u589e\u91cf": "0.1"
+                    }
+                },
+                {
+                    "name": "L2",
+                    "type": "FBScaleEntry",
+                    "pos": [
+                        8.0,
+                        96.0
+                    ],
+                    "data": {
+                        "text": "0.000000"
+                    },
+                    "config": {
+                        "\u5bbd\u5ea6": "20",
+                        "\u6700\u5c0f\u503c": "0",
+                        "\u6700\u5927\u503c": "3",
+                        "\u663e\u793a\u7cbe\u5ea6": "6",
+                        "\u6eda\u8f6e\u589e\u91cf": "0.1"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "adrc-wc",
+            "cmds": [
+                [
+                    "motorid",
+                    "%b",
+                    "(0)",
+                    ""
+                ],
+                [
+                    "HEAD",
+                    "%b",
+                    "(\"0x00FF807F\")",
+                    ""
+                ],
+                [
+                    "stateid",
+                    "%b",
+                    "(3)",
+                    ""
+                ],
+                [
+                    "paramid",
+                    "%b",
+                    "(4)",
+                    ""
+                ],
+                [
+                    "speedid",
+                    "%b",
+                    "(6)",
+                    ""
+                ],
+                [
+                    "Reset",
+                    "#HEAD;%b",
+                    "(0)",
+                    "<r>.press"
+                ],
+                [
+                    "upload",
+                    "#HEAD;#paramid;#motorid;%f%f%f",
+                    "wc.text;wo.text;b0.text",
+                    "upload.click"
+                ],
+                [
+                    "uploadSpeed",
+                    "#HEAD;#speedid;#motorid;%f",
+                    "speed.text",
+                    "uploadSpeed.click"
+                ],
+                [
+                    "enable",
+                    "#HEAD;#stateid;%b",
+                    "(1)",
+                    "enable.click"
+                ],
+                [
+                    "disable",
+                    "#HEAD;#stateid;%b",
+                    "(0)",
+                    "disable.click"
+                ]
+            ],
+            "widgets": [
+                {
+                    "name": "wo",
+                    "type": "FBScaleEntry",
+                    "pos": [
+                        200.0,
+                        16.0
+                    ],
+                    "data": {
+                        "text": "40.000000"
+                    },
+                    "config": {
+                        "\u5bbd\u5ea6": "20",
+                        "\u6700\u5c0f\u503c": "0",
+                        "\u6700\u5927\u503c": "500",
+                        "\u663e\u793a\u7cbe\u5ea6": "6",
+                        "\u6eda\u8f6e\u589e\u91cf": "1"
+                    }
+                },
+                {
+                    "name": "b0",
+                    "type": "FBScaleEntry",
+                    "pos": [
+                        8.0,
+                        96.0
+                    ],
+                    "data": {
+                        "text": "0.00300"
+                    },
+                    "config": {
+                        "\u5bbd\u5ea6": "20",
+                        "\u6700\u5c0f\u503c": "0",
+                        "\u6700\u5927\u503c": "1",
+                        "\u663e\u793a\u7cbe\u5ea6": "6",
+                        "\u6eda\u8f6e\u589e\u91cf": "0.001"
+                    }
+                },
+                {
+                    "name": "upload",
+                    "type": "FBButton",
+                    "pos": [
+                        8.0,
+                        176.0
+                    ],
+                    "data": {},
+                    "config": {
+                        "\u5bbd\u5ea6": "100",
+                        "\u9ad8\u5ea6": "60"
+                    }
+                },
+                {
+                    "name": "speed",
+                    "type": "FBScaleEntry",
+                    "pos": [
+                        200.0,
+                        176.0
+                    ],
+                    "data": {
+                        "text": "2.349999"
+                    },
+                    "config": {
+                        "\u5bbd\u5ea6": "20",
+                        "\u6700\u5c0f\u503c": "0",
+                        "\u6700\u5927\u503c": "3",
+                        "\u663e\u793a\u7cbe\u5ea6": "6",
+                        "\u6eda\u8f6e\u589e\u91cf": "0.1"
+                    }
+                },
+                {
+                    "name": "uploadSpeed",
+                    "type": "FBButton",
+                    "pos": [
+                        288.0,
+                        256.0
+                    ],
+                    "data": {},
+                    "config": {
+                        "\u5bbd\u5ea6": "120",
+                        "\u9ad8\u5ea6": "60"
+                    }
+                },
+                {
+                    "name": "enable",
+                    "type": "FBButton",
+                    "pos": [
+                        8.0,
+                        256.0
+                    ],
+                    "data": {},
+                    "config": {
+                        "\u5bbd\u5ea6": "100",
+                        "\u9ad8\u5ea6": "60"
+                    }
+                },
+                {
+                    "name": "disable",
+                    "type": "FBButton",
+                    "pos": [
+                        112.0,
+                        256.0
+                    ],
+                    "data": {},
+                    "config": {
+                        "\u5bbd\u5ea6": "100",
+                        "\u9ad8\u5ea6": "60"
+                    }
+                },
+                {
+                    "name": "wc",
+                    "type": "FBScaleEntry",
+                    "pos": [
+                        8.0,
+                        16.0
+                    ],
+                    "data": {
+                        "text": "19.999950"
+                    },
+                    "config": {
+                        "\u5bbd\u5ea6": "20",
+                        "\u6700\u5c0f\u503c": "0",
+                        "\u6700\u5927\u503c": "150",
+                        "\u663e\u793a\u7cbe\u5ea6": "6",
+                        "\u6eda\u8f6e\u589e\u91cf": "1"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "camera",
+            "cmds": [
+                [
+                    "HEAD",
+                    "%b",
+                    "(\"0x00FF807F\")",
+                    ""
+                ],
+                [
+                    "id",
+                    "%b",
+                    "(11)",
+                    ""
+                ],
+                [
+                    "auto_exp",
+                    "#HEAD;#id;%b%f",
+                    "(0);auto_exp.text",
+                    "auto_exp_b.click"
+                ],
+                [
+                    "exp_time",
+                    "#HEAD;#id;%b%f",
+                    "(1);exp_time.text",
+                    "exp_time_b.click"
+                ],
+                [
+                    "gain",
+                    "#HEAD;#id;%b%f",
+                    "(2);gain.text",
+                    "gain_b.click"
+                ],
+                [
+                    "all",
+                    "#auto_exp;#exp_time;#gain",
+                    "",
+                    "all_b.click"
+                ]
+            ],
+            "widgets": [
+                {
+                    "name": "auto_exp",
+                    "type": "FBScaleEntry",
+                    "pos": [
+                        16.0,
+                        32.0
+                    ],
+                    "data": {
+                        "text": "16"
+                    },
+                    "config": {
+                        "\u5bbd\u5ea6": "20",
+                        "\u6700\u5c0f\u503c": "16",
+                        "\u6700\u5927\u503c": "64",
+                        "\u663e\u793a\u7cbe\u5ea6": "0",
+                        "\u6eda\u8f6e\u589e\u91cf": "1.0"
+                    }
+                },
+                {
+                    "name": "exp_time",
+                    "type": "FBScaleEntry",
+                    "pos": [
+                        16.0,
+                        120.0
+                    ],
+                    "data": {
+                        "text": "18"
+                    },
+                    "config": {
+                        "\u5bbd\u5ea6": "20",
+                        "\u6700\u5c0f\u503c": "16",
+                        "\u6700\u5927\u503c": "64",
+                        "\u663e\u793a\u7cbe\u5ea6": "0",
+                        "\u6eda\u8f6e\u589e\u91cf": "1.0"
+                    }
+                },
+                {
+                    "name": "gain",
+                    "type": "FBScaleEntry",
+                    "pos": [
+                        16.0,
+                        200.0
+                    ],
+                    "data": {
+                        "text": "21"
+                    },
+                    "config": {
+                        "\u5bbd\u5ea6": "20",
+                        "\u6700\u5c0f\u503c": "16",
+                        "\u6700\u5927\u503c": "64",
+                        "\u663e\u793a\u7cbe\u5ea6": "0",
+                        "\u6eda\u8f6e\u589e\u91cf": "1.0"
+                    }
+                },
+                {
+                    "name": "auto_exp_b",
+                    "type": "FBButton",
+                    "pos": [
+                        264.0,
+                        48.0
+                    ],
+                    "data": {},
+                    "config": {
+                        "\u5bbd\u5ea6": "100",
+                        "\u9ad8\u5ea6": "60"
+                    }
+                },
+                {
+                    "name": "exp_time_b",
+                    "type": "FBButton",
+                    "pos": [
+                        264.0,
+                        128.0
+                    ],
+                    "data": {},
+                    "config": {
+                        "\u5bbd\u5ea6": "100",
+                        "\u9ad8\u5ea6": "60"
+                    }
+                },
+                {
+                    "name": "gain_b",
+                    "type": "FBButton",
+                    "pos": [
+                        264.0,
+                        208.0
+                    ],
+                    "data": {},
+                    "config": {
+                        "\u5bbd\u5ea6": "100",
+                        "\u9ad8\u5ea6": "60"
+                    }
+                },
+                {
+                    "name": "all_b",
+                    "type": "FBButton",
+                    "pos": [
+                        392.0,
+                        128.0
+                    ],
+                    "data": {},
+                    "config": {
+                        "\u5bbd\u5ea6": "100",
+                        "\u9ad8\u5ea6": "60"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "servo",
+            "cmds": [
+                [
+                    "HEAD",
+                    "%b",
+                    "(\"0x00FF807F\")",
+                    ""
+                ],
+                [
+                    "id",
+                    "%b",
+                    "(11)",
+                    ""
+                ],
+                [
+                    "srv0",
+                    "#HEAD;#id;%b%f",
+                    "(0);srv0.text",
+                    "srv0.change"
+                ],
+                [
+                    "srv1",
+                    "#HEAD;#id;%b%f",
+                    "(1);srv1.text",
+                    "srv1.change"
+                ]
+            ],
+            "widgets": [
+                {
+                    "name": "srv0",
+                    "type": "FBScaleEntry",
+                    "pos": [
+                        16.0,
+                        32.0
+                    ],
+                    "data": {
+                        "text": "3"
+                    },
+                    "config": {
+                        "\u5bbd\u5ea6": "20",
+                        "\u6700\u5c0f\u503c": "16",
+                        "\u6700\u5927\u503c": "64",
+                        "\u663e\u793a\u7cbe\u5ea6": "0",
+                        "\u6eda\u8f6e\u589e\u91cf": "1.0"
+                    }
+                },
+                {
+                    "name": "srv1",
+                    "type": "FBScaleEntry",
+                    "pos": [
+                        216.0,
+                        32.0
+                    ],
+                    "data": {
+                        "text": "2"
+                    },
+                    "config": {
+                        "\u5bbd\u5ea6": "20",
+                        "\u6700\u5c0f\u503c": "0.0",
+                        "\u6700\u5927\u503c": "270.0",
+                        "\u663e\u793a\u7cbe\u5ea6": "0",
+                        "\u6eda\u8f6e\u589e\u91cf": "1.0"
+                    }
+                }
+            ]
+        }
+    ]
+}
