@@ -6,6 +6,17 @@
 
 static uint8_t id;
 
+static inline void ConfigCamera() {
+    if (!master_uart.getchar(id)) return;
+    float data;
+    if (!master_uart.getData<float>(data)) return;
+    switch (id) {
+    case 0: camera.set_auto_exposure(data), camera.write_config(); break;
+    case 1: camera.set_exposure_time(data), camera.write_config(); break;
+    case 2: camera.set_gain(data), camera.write_config(); break;
+    }
+}
+
 static inline void RecvTask() {
     if (!master_uart.getchar(id)) return;
     slaveGlobalVars.set_state((SlaveGlobalVars::State)id);

@@ -4,6 +4,7 @@
 
 #include "MasterGlobalVars.hpp"
 #include "devices.hpp"
+#include "masterConfig.hpp"
 #include "pose_kalman/params.hpp"
 
 static uint8_t id;
@@ -161,6 +162,18 @@ static inline void SetServo() {
     srv.set(degree);
 }
 
+static inline void ConfigCamera() {
+    if (!wireless.getchar(id)) return;
+    float data;
+    if (!wireless.getData<float>(data)) return;
+    beep.set(false);
+    static SerialIO::TxUtil<float, 1, true> cam_tx("cam_tx", 0);
+    cam_tx.set_id(id);
+    cam_tx.setAll(data);
+    cam_tx.txFinished(-1);
+    slave_uart.send(cam_tx);
+}
+
 void recvCoords(SerialIO& uart, Beep& beep);
 
 static inline void SendMasterStop() {
@@ -190,6 +203,7 @@ static void wirelessEntry() {
         case 9: SetLocalPlannerParam(); break;
         case 10: SendState(); break;
         case 11: SetServo(); break;
+        case 12: ConfigCamera(); break;
 
         case 32: recvCoords(wireless, beep); break;
         case 253: SendMasterStop(); break;

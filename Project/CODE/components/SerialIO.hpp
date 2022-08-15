@@ -107,8 +107,12 @@ class SerialIO {
             static_assert(
                 withID,
                 "if `withID` is set `false`, you should not specify the `id` using this ctor, use the other ctor instead");
-            _data[HeaderSize] = id;
+            set_id(id);
             applyHeader(_data);
+        }
+        void set_id(uint8_t id) {
+            static_assert(withID, "you should not set `id` when `withID` is `false`");
+            _data[HeaderSize] = id;
         }
         void set(int i, T val) {
             uint8_t *buf = (uint8_t *)&val;
