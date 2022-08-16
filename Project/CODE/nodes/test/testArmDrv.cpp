@@ -15,6 +15,7 @@ static void testArmDrvEntry() {
             ips.printf("place\n");
             armDrv.place(i);
             ips.printf("initial_pose\n");
+            armDrv.initial_pose();
         }
         for (int i = 0; i < 3; ++i) {
             ips.printf("drop %d\n", i);

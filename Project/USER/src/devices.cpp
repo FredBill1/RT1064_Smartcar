@@ -108,6 +108,7 @@ void initDevices() {
     // servo
     srv_l.init_min();
     srv_r.init_min();
+    armDrv.initial_pose();
 
     // arm
     armDrv.initial_pose();
