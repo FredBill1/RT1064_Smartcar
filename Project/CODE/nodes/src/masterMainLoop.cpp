@@ -116,7 +116,7 @@ Task_t MainProcess() {
         goal_navi_refine.x = x;
         goal_navi_refine.y = y;
         goal_navi_refine.yaw = yaw;
-        moveBase.send_goal(goal_navi_move);
+        moveBase.send_goal(goal_navi_refine);
         masterGlobalVars.send_rects_enabled(true, cur_target, rectMaxDistError * rectMaxDistError);
         WAIT_MOVE_BASE_GOAL_REACHED;
         masterGlobalVars.send_rects_enabled(false);
