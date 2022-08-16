@@ -82,12 +82,15 @@ class MasterGlobalVars {
  private:
     rt_event arm_initial_pose_event;
     rt_event arm_picked_event;
+    rt_event arm_placed_event;
 
  public:
     void send_arm_initial_pose();
     bool wait_arm_initial_pose(rt_int32_t timeout = RT_WAITING_FOREVER);
     void send_arm_picked();
     bool wait_arm_picked(rt_int32_t timeout = RT_WAITING_FOREVER);
+    void send_arm_placed();
+    bool wait_arm_placed(rt_int32_t timeout = RT_WAITING_FOREVER);
 };
 
 extern MasterGlobalVars masterGlobalVars;

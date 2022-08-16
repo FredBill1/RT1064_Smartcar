@@ -177,7 +177,7 @@ static inline void calc() {
     targets[2][0] = -carryExtendPadding;
     targets[2][1] = garage_position[1];
 
-    for (int i = 0; i < 2; ++i) catgory_to_index[(int)catgory[i]] = i;
+    for (int i = 0; i < 3; ++i) catgory_to_index[(int)catgory[i]] = i;
 }
 
 }  // namespace CarryOrder

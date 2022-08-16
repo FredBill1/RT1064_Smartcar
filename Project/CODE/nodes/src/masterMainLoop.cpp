@@ -125,7 +125,10 @@ Task_t MainProcess() {
         rt_thread_mdelay(art_before_snapshot_delay);
         masterGlobalVars.send_art_cur_index(cur_target);
         utils::sendArtSnapshotTask();
-        GUARD_COND(utils::waitArtSnapshot());
+        if constexpr (use_art) {
+            GUARD_COND(utils::waitArtSnapshot());
+        } else
+            rt_thread_mdelay(500);
 
         // »úÐµ±Û×¥È¡
         masterGlobalVars.wait_arm_initial_pose();
@@ -162,6 +165,8 @@ Task_t Carry() {
         goal_carry_move.yaw = yaw;
         moveBase.send_goal(goal_carry_move);
         WAIT_MOVE_BASE_GOAL_NEAR;
+
+        if (i == 0) WAIT_FOR(masterGlobalVars.wait_arm_placed(mainloop_timeout));
 
         armDrv.drop(i);
     }
@@ -276,10 +281,18 @@ static void armControlEntry() {
     for (;;) {
         masterGlobalVars.wait_arm_picked();
         armDrv.before_place();
-        masterGlobalVars.wait_art_result();
-        ResultCatgory::Major catgory = masterGlobalVars.art_last_result;
+        ResultCatgory::Major catgory;
+        if constexpr (use_art) {
+            masterGlobalVars.wait_art_result();
+            catgory = masterGlobalVars.art_last_result;
+        } else {
+            rt_thread_mdelay(800);
+            catgory = ResultCatgory::Major(systick.get_us() % 3);
+        }
         armDrv.place(CarryOrder::catgory_to_index[(int)catgory]);
+        masterGlobalVars.send_arm_placed();
         armDrv.initial_pose();
+        rt_thread_mdelay(arm_initial_pose_delay);
         masterGlobalVars.send_arm_initial_pose();
     }
 }
