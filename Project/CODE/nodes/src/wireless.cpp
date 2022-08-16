@@ -6,6 +6,7 @@
 #include "devices.hpp"
 #include "masterConfig.hpp"
 #include "pose_kalman/params.hpp"
+#include "utils/excuteOnce.hpp"
 
 static uint8_t id;
 static Beep beep;
@@ -167,10 +168,15 @@ static inline void ConfigCamera() {
     float data;
     if (!wireless.getData<float>(data)) return;
     beep.set(false);
-    static SerialIO::TxUtil<float, 1, true> cam_tx("cam_tx", 0);
-    cam_tx.set_id(id);
-    cam_tx.setAll(data);
+    static uint8_t buf[SerialIO::HeaderSize + 2 + SerialIO::TxWirter<float>::getSize()];
+    excuteOnce({
+        SerialIO::applyHeader(buf);
+        buf[SerialIO::HeaderSize] = 12;
+    });
+    static SerialIO::TxXfer cam_tx(buf, sizeof(buf), "cam_tx");
     cam_tx.txFinished(-1);
+    buf[SerialIO::HeaderSize + 1] = id;
+    SerialIO::TxWirter<float>(buf + SerialIO::HeaderSize + 2).setAll(data);
     slave_uart.send(cam_tx);
 }
 

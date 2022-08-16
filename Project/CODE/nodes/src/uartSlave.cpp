@@ -12,7 +12,7 @@ static inline void ConfigCamera() {
     if (!master_uart.getData<float>(data)) return;
     switch (id) {
     case 0: camera.set_auto_exposure(data), camera.write_config(); break;
-    case 1: camera.set_exposure_time(data), camera.write_config(); break;
+    case 1: camera.set_exposure_time_fast(data); break;
     case 2: camera.set_gain(data), camera.write_config(); break;
     }
 }
@@ -27,6 +27,7 @@ static void uartSlaveEntry() {
         master_uart.waitHeader();
         if (!master_uart.getchar(id)) continue;
         switch (id) {
+        case 12: ConfigCamera(); break;
         case 255: RecvTask(); break;
         }
     }
