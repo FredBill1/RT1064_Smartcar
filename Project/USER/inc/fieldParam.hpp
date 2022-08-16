@@ -17,8 +17,8 @@ constexpr bool squareAlign = true;  // 是否对A4识别结果进行对齐
 constexpr float squareSize = 0.2;
 
 // 实际赛场的宽高
-constexpr float fieldWidth = 5;
-constexpr float fieldHeight = 4;
+constexpr float fieldWidth = 7;
+constexpr float fieldHeight = 5;
 
 // 搬运时边界外的距离
 constexpr float carryExtendPadding = 0.65;  // 向外
