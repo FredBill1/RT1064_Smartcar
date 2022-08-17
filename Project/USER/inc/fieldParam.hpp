@@ -21,8 +21,8 @@ constexpr float fieldWidth = 7;
 constexpr float fieldHeight = 5;
 
 // 搬运时边界外的距离
-constexpr float carryExtendPadding = 0.65;  // 向外
-constexpr float carrySidePadding = 0.55;    // 角落里向中间
+constexpr float carryExtendPadding = 0.0;  // 向外
+constexpr float carrySidePadding = 0.55;   // 角落里向中间
 
 // 场地内rect距离边界的最小距离
 constexpr bool useRectPadding = false;

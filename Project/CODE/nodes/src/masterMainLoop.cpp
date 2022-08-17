@@ -166,7 +166,20 @@ Task_t Carry() {
         moveBase.send_goal(goal_carry_move);
         WAIT_MOVE_BASE_GOAL_NEAR;
 
-        if (i == 0) WAIT_FOR(masterGlobalVars.wait_arm_placed(mainloop_timeout));
+        if (i == 0) {
+            WAIT_FOR(masterGlobalVars.wait_arm_placed(mainloop_timeout));
+        } else if (i == 2)
+            break;
+
+        moveBase.get_state(state);
+        goal_carry_turn.x = state.x();
+        goal_carry_turn.y = state.y();
+        if (catgory[i] == ResultCatgory::Major::fruit)  // 右
+            goal_carry_turn.yaw = -PI_2;
+        else  // 上
+            goal_carry_turn.yaw = 0;
+        moveBase.send_goal(goal_carry_turn);
+        WAIT_MOVE_BASE_GOAL_NEAR;
 
         armDrv.drop(i);
     }
@@ -192,9 +205,9 @@ Task_t ReturnGarage() {
     // 通知art开始找边界
     utils::sendArtBorderTask();
 
-    // 向右移动
+    // 向左移动
     moveBase.get_state(state);
-    goal_garage_move.x = 1e6;
+    goal_garage_move.x = -1e6;
     goal_garage_move.y = state.y();
     goal_garage_move.yaw = PI;
     moveBase.send_goal(goal_garage_move);
@@ -213,6 +226,9 @@ Task_t ReturnGarage() {
     goal_garage_turn.yaw = PI_2;
     moveBase.send_goal(goal_garage_turn);
     WAIT_MOVE_BASE_GOAL_NEAR;
+
+    // 扔最后一组卡片
+    armDrv.drop(2);
 
     // 向下移动
     moveBase.get_state(state);

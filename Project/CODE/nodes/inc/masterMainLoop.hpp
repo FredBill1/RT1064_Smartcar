@@ -174,7 +174,7 @@ static inline void calc() {
     targets[idx][1] = fieldHeight + carryExtendPadding;
 
     catgory[2] = Major::animal;  // ×ó
-    targets[2][0] = -carryExtendPadding;
+    targets[2][0] = garage_position[0];
     targets[2][1] = garage_position[1];
 
     for (int i = 0; i < 3; ++i) catgory_to_index[(int)catgory[i]] = i;
