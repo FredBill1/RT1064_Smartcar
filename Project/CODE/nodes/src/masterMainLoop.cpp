@@ -238,6 +238,7 @@ Task_t ReturnGarage() {
 
 static inline void Idle() {
     SHOW_STATE("IDLE");
+    armDrv.reset();
     for (;;) {
         keyScan();
         if (key_pressing[4]) break;

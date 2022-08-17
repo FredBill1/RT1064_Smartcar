@@ -10,7 +10,7 @@ constexpr rt_tick_t arm_initial_pose_delay = 300;
 constexpr rt_tick_t grab_srv_down_delay_ms = 150;
 constexpr rt_tick_t magnet_drop_delay_ms = 30;
 constexpr rt_tick_t magnet_drop_wait_ms = 350;
-constexpr float art_cam_dist = 0.35;
+constexpr float art_cam_dist = 0.25;
 constexpr bool use_art = true;
 
 #define slave_uart uart2

@@ -3,6 +3,7 @@
 
 class ArmDrv {
  public:
+    void reset() const;
     void initial_pose() const;
     void pick() const;
     void before_place() const;

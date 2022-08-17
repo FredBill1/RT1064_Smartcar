@@ -17,12 +17,12 @@ static void testArmDrvEntry() {
             ips.printf("initial_pose\n");
             armDrv.initial_pose();
         }
-        for (int i = 0; i < 3; ++i) {
-            ips.printf("drop %d\n", i);
-            while (!master_key[0].pressing()) rt_thread_mdelay(100);
-            ips.printf("drop\n");
-            armDrv.drop(i);
-        }
+        // for (int i = 0; i < 3; ++i) {
+        //     ips.printf("drop %d\n", i);
+        //     while (!master_key[0].pressing()) rt_thread_mdelay(100);
+        //     ips.printf("drop\n");
+        //     armDrv.drop(i);
+        // }
     }
 }
 
