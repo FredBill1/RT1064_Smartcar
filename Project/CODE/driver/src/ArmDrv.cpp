@@ -21,16 +21,39 @@ void ArmDrv::pick() const {
 }
 void ArmDrv::before_place() const {
     srv_l.set(120);
-    srv_r.set(189);
+    srv_r.set(172);
     rt_thread_mdelay(700);
 }
 void ArmDrv::place(int index) const {
     switch (index) {
-    case 0: srv_l.set(104), srv_r.set(223); break;
-    case 1: srv_l.set(122), srv_r.set(211); break;
-    case 2: srv_l.set(142), srv_r.set(191); break;
+    case 0: {
+        srv_l.set(110);
+        srv_r.set(195);
+        rt_thread_mdelay(200);
+        srv_l.set(106);
+        srv_r.set(224);
+        rt_thread_mdelay(200);
+    } break;
+    case 1: {
+        srv_l.set(115);
+        srv_r.set(202);
+        rt_thread_mdelay(200);
+        srv_l.set(129);
+        srv_r.set(215);
+        rt_thread_mdelay(200);
+    } break;
+    case 2: {
+        srv_l.set(130);
+        srv_r.set(175);
+        rt_thread_mdelay(180);
+        srv_l.set(130);
+        srv_r.set(190);
+        rt_thread_mdelay(100);
+        srv_l.set(140);
+        srv_r.set(200);
+        rt_thread_mdelay(120);
+    } break;
     }
-    rt_thread_mdelay(400);
     magnets[3].set(false);
     rt_thread_mdelay(300);
 }
