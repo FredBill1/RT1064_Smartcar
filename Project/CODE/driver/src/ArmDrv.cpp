@@ -54,12 +54,12 @@ void ArmDrv::place(int index) const {
         {
             InterruptGuard guard;
             srv_l.set(110);
-            srv_r.set(205);
+            srv_r.set(200);
         }
         rt_thread_mdelay(200);
         {
             InterruptGuard guard;
-            srv_l.set(135);
+            srv_l.set(130);
             srv_r.set(205);
         }
         rt_thread_mdelay(200);
@@ -71,17 +71,9 @@ void ArmDrv::place(int index) const {
             srv_r.set(175);
         }
         rt_thread_mdelay(150);
-        {
-            InterruptGuard guard;
-            srv_l.set(132);
-            srv_r.set(195);
-        }
+        srv_r.set(194);
         rt_thread_mdelay(100);
-        {
-            InterruptGuard guard;
-            srv_l.set(146);
-            srv_r.set(200);
-        }
+        srv_l.set(142);
         rt_thread_mdelay(200);
     } break;
     }

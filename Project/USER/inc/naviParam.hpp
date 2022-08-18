@@ -177,7 +177,7 @@ constexpr MoveBase::Goal GOAL_GARAGE_MOVE{
 };
 
 // »Îø‚Œª÷√
-constexpr float garage_position[2]{0.70, 0.60};
+constexpr float garage_position[2]{0.70, 0.70};
 constexpr float garage_left_move = 5e-2;
 constexpr int garage_down_delay = 300;
 constexpr int garage_stop_delay = 50;
