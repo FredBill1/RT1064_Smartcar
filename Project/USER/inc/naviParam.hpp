@@ -25,7 +25,7 @@ constexpr pose_kalman::LocalPlanner::Params localPlannerParam{
 constexpr pose_kalman::LocalPlanner::Params GOAL_OUT_GARAGE_PARAM{
     .vel_lim_xy = 1.5,
     .vel_lim_yaw = 1 * RPS,
-    .acc_lim_xy = 2,
+    .acc_lim_xy = 1.4,
     .acc_lim_yaw = 1 * RPS,
     .dt_ref = 0.33,
 };
@@ -43,9 +43,9 @@ constexpr MoveBase::Goal GOAL_OUT_GARAGE{
 //! 去目标点
 // 自转
 constexpr pose_kalman::LocalPlanner::Params GOAL_NAVI_TURN_PARAM{
-    .vel_lim_xy = PARAM_DISABLE,
+    .vel_lim_xy = 1.6,
     .vel_lim_yaw = 2 * RPS,
-    .acc_lim_xy = 2,
+    .acc_lim_xy = 1.4,
     .acc_lim_yaw = 2 * RPS,
     .dt_ref = 0.255,
 };
@@ -64,7 +64,7 @@ constexpr MoveBase::Goal GOAL_NAVI_TURN{
 constexpr pose_kalman::LocalPlanner::Params GOAL_NAVI_MOVE_PARAM{
     .vel_lim_xy = 2.5,
     .vel_lim_yaw = 1 * RPS,
-    .acc_lim_xy = 2,
+    .acc_lim_xy = 1.4,
     .acc_lim_yaw = 2 * RPS,
     .dt_ref = 0.33,
 };
@@ -83,7 +83,7 @@ constexpr MoveBase::Goal GOAL_NAVI_MOVE{
 constexpr pose_kalman::LocalPlanner::Params GOAL_NAVI_REFINE_PARAM{
     .vel_lim_xy = 1.6,
     .vel_lim_yaw = 1 * RPS,
-    .acc_lim_xy = 2,
+    .acc_lim_xy = 1.4,
     .acc_lim_yaw = 2 * RPS,
     .dt_ref = 0.33,
 };
@@ -93,7 +93,7 @@ constexpr MoveBase::Goal GOAL_NAVI_REFINE{
     .yaw_tolerance = 6 * DEG,
     .xy_near = PARAM_DISABLE,
     .yaw_near = PARAM_DISABLE,
-    .time_tolerance_us = uint64_t(25e4),
+    .time_tolerance_us = uint64_t(31e4),
     .reached = false,
     .params = &GOAL_NAVI_REFINE_PARAM,
 };
@@ -101,7 +101,7 @@ constexpr MoveBase::Goal GOAL_NAVI_REFINE{
 //! 搬运卡片
 // 旋转
 constexpr pose_kalman::LocalPlanner::Params GOAL_CARRY_TURN_PARAM{
-    .vel_lim_xy = PARAM_DISABLE,
+    .vel_lim_xy = 2.5,
     .vel_lim_yaw = 1.5 * RPS,
     .acc_lim_xy = 2,
     .acc_lim_yaw = 1.5 * RPS,
@@ -140,7 +140,7 @@ constexpr MoveBase::Goal GOAL_CARRY_MOVE{
 //! 车库
 // 旋转
 constexpr pose_kalman::LocalPlanner::Params GOAL_GARAGE_TURN_PARAM{
-    .vel_lim_xy = PARAM_DISABLE,
+    .vel_lim_xy = 2.5,
     .vel_lim_yaw = 2 * RPS,
     .acc_lim_xy = 10,
     .acc_lim_yaw = 2 * RPS,

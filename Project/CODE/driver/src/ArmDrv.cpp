@@ -45,13 +45,13 @@ void ArmDrv::place(int index) const {
     case 2: {
         srv_l.set(130);
         srv_r.set(175);
-        rt_thread_mdelay(180);
-        srv_l.set(130);
+        rt_thread_mdelay(150);
+        srv_l.set(135);
         srv_r.set(190);
         rt_thread_mdelay(100);
-        srv_l.set(140);
+        srv_l.set(146);
         srv_r.set(200);
-        rt_thread_mdelay(120);
+        rt_thread_mdelay(200);
     } break;
     }
     magnets[3].set(false);
