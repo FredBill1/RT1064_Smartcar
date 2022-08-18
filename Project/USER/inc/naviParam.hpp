@@ -23,9 +23,9 @@ constexpr pose_kalman::LocalPlanner::Params localPlannerParam{
 //! 出库
 // 平移
 constexpr pose_kalman::LocalPlanner::Params GOAL_OUT_GARAGE_PARAM{
-    .vel_lim_xy = 2.5,
+    .vel_lim_xy = 1.5,
     .vel_lim_yaw = 1 * RPS,
-    .acc_lim_xy = 10,
+    .acc_lim_xy = 2,
     .acc_lim_yaw = 1 * RPS,
     .dt_ref = 0.33,
 };
@@ -45,7 +45,7 @@ constexpr MoveBase::Goal GOAL_OUT_GARAGE{
 constexpr pose_kalman::LocalPlanner::Params GOAL_NAVI_TURN_PARAM{
     .vel_lim_xy = PARAM_DISABLE,
     .vel_lim_yaw = 2 * RPS,
-    .acc_lim_xy = 10,
+    .acc_lim_xy = 2,
     .acc_lim_yaw = 2 * RPS,
     .dt_ref = 0.255,
 };
@@ -54,7 +54,7 @@ constexpr MoveBase::Goal GOAL_NAVI_TURN{
     .xy_tolerance = PARAM_DISABLE,
     .yaw_tolerance = PARAM_DISABLE,
     .xy_near = PARAM_DONT_CARE,
-    .yaw_near = 6 * DEG,
+    .yaw_near = 3 * DEG,
     .time_tolerance_us = PARAM_DISABLE,
     .reached = false,
     .params = &GOAL_NAVI_TURN_PARAM,
@@ -64,8 +64,8 @@ constexpr MoveBase::Goal GOAL_NAVI_TURN{
 constexpr pose_kalman::LocalPlanner::Params GOAL_NAVI_MOVE_PARAM{
     .vel_lim_xy = 2.5,
     .vel_lim_yaw = 1 * RPS,
-    .acc_lim_xy = 10,
-    .acc_lim_yaw = 1 * RPS,
+    .acc_lim_xy = 2,
+    .acc_lim_yaw = 2 * RPS,
     .dt_ref = 0.33,
 };
 
@@ -83,8 +83,8 @@ constexpr MoveBase::Goal GOAL_NAVI_MOVE{
 constexpr pose_kalman::LocalPlanner::Params GOAL_NAVI_REFINE_PARAM{
     .vel_lim_xy = 1.6,
     .vel_lim_yaw = 1 * RPS,
-    .acc_lim_xy = 1.5,
-    .acc_lim_yaw = 1 * RPS,
+    .acc_lim_xy = 2,
+    .acc_lim_yaw = 2 * RPS,
     .dt_ref = 0.33,
 };
 
@@ -103,7 +103,7 @@ constexpr MoveBase::Goal GOAL_NAVI_REFINE{
 constexpr pose_kalman::LocalPlanner::Params GOAL_CARRY_TURN_PARAM{
     .vel_lim_xy = PARAM_DISABLE,
     .vel_lim_yaw = 1.5 * RPS,
-    .acc_lim_xy = 10,
+    .acc_lim_xy = 2,
     .acc_lim_yaw = 1.5 * RPS,
     .dt_ref = 0.255,
 };
@@ -120,9 +120,9 @@ constexpr MoveBase::Goal GOAL_CARRY_TURN{
 
 // 平移
 constexpr pose_kalman::LocalPlanner::Params GOAL_CARRY_MOVE_PARAM{
-    .vel_lim_xy = 2.0,
+    .vel_lim_xy = 2.5,
     .vel_lim_yaw = 1 * RPS,
-    .acc_lim_xy = 1.5,
+    .acc_lim_xy = 2,
     .acc_lim_yaw = 1 * RPS,
     .dt_ref = 0.33,
 };
@@ -177,8 +177,8 @@ constexpr MoveBase::Goal GOAL_GARAGE_MOVE{
 };
 
 // 入库位置
-constexpr float garage_position[2]{0.55, 0.55};
-constexpr float garage_left_padding = -5e-2;
+constexpr float garage_position[2]{0.70, 0.55};
+constexpr float garage_left_move = 5e-2;
 constexpr int garage_down_delay = 300;
 constexpr int garage_stop_delay = 50;
 

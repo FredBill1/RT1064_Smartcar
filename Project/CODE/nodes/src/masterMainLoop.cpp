@@ -214,8 +214,9 @@ Task_t ReturnGarage() {
     masterGlobalVars.clear_art_border();
     WAIT_FOR(masterGlobalVars.wait_art_border(mainloop_timeout));
 
-    // 向右微调
-    goal_garage_move.x = state.x() + garage_left_padding;
+    // 向左微调
+    moveBase.get_state(state);
+    goal_garage_move.x = state.x() - (garage_left_move + goal_garage_move.xy_near);
     moveBase.send_goal(goal_garage_move);
     WAIT_MOVE_BASE_GOAL_NEAR;
 
