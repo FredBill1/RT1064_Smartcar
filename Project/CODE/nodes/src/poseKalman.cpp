@@ -49,9 +49,10 @@ static inline void setupYawCovariance() {
 }
 
 static inline void setupRectCovariance() {
-    T rectCov[2][2]{0};
+    T rectCov[3][3]{0};
     rectCov[0][0] = rect_xy_sigma2;
     rectCov[1][1] = rect_xy_sigma2;
+    rectCov[2][2] = 1e-6;
     kf.setMeasurementCovariance(MeasurementType::Rect, rectCov[0]);
 }
 

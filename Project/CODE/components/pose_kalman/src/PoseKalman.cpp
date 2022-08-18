@@ -168,7 +168,10 @@ void PoseKalman::update(uint64_t timestamp_us) {
             T& m_yaw = data.yaw();                                             \
             m_yaw = x_yaw + wrapAngle(m_yaw - x_yaw);                          \
         }                                                                      \
+        /* 对矩形矫正的特殊判断 */                                   \
+        if constexpr (std::is_same<type, Rect>::value) data.yaw() = x_yaw;     \
         pimpl->kf.update(pimpl->MeasurementMemberName(type), data);            \
+        if constexpr (std::is_same<type, Rect>::value) x_yaw = data.yaw();     \
         x_yaw = wrapAngle(x_yaw);                                              \
         queue.pop();                                                           \
     } break;
