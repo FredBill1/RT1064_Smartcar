@@ -31,10 +31,10 @@ constexpr pose_kalman::LocalPlanner::Params GOAL_OUT_GARAGE_PARAM{
 };
 
 constexpr MoveBase::Goal GOAL_OUT_GARAGE{
-    .xy_tolerance = PARAM_DISABLE,
-    .yaw_tolerance = PARAM_DISABLE,
-    .xy_near = 5e-2,
-    .yaw_near = PARAM_DONT_CARE,
+    .xy_tolerance = 5e-2,
+    .yaw_tolerance = 6 * DEG,
+    .xy_near = PARAM_DISABLE,
+    .yaw_near = PARAM_DISABLE,
     .time_tolerance_us = PARAM_DISABLE,
     .reached = false,
     .params = &GOAL_OUT_GARAGE_PARAM,
@@ -62,7 +62,7 @@ constexpr MoveBase::Goal GOAL_NAVI_TURN{
 
 // 平移
 constexpr pose_kalman::LocalPlanner::Params GOAL_NAVI_MOVE_PARAM{
-    .vel_lim_xy = 2.5,
+    .vel_lim_xy = 2.0,
     .vel_lim_yaw = 1 * RPS,
     .acc_lim_xy = 1.4,
     .acc_lim_yaw = 2 * RPS,
@@ -85,7 +85,7 @@ constexpr pose_kalman::LocalPlanner::Params GOAL_NAVI_REFINE_PARAM{
     .vel_lim_yaw = 1 * RPS,
     .acc_lim_xy = 1.4,
     .acc_lim_yaw = 2 * RPS,
-    .dt_ref = 0.33,
+    .dt_ref = 0.35,
 };
 
 constexpr MoveBase::Goal GOAL_NAVI_REFINE{
@@ -101,7 +101,7 @@ constexpr MoveBase::Goal GOAL_NAVI_REFINE{
 //! 搬运卡片
 // 旋转
 constexpr pose_kalman::LocalPlanner::Params GOAL_CARRY_TURN_PARAM{
-    .vel_lim_xy = 2.5,
+    .vel_lim_xy = 2,
     .vel_lim_yaw = 1.5 * RPS,
     .acc_lim_xy = 2,
     .acc_lim_yaw = 1.5 * RPS,
@@ -177,7 +177,7 @@ constexpr MoveBase::Goal GOAL_GARAGE_MOVE{
 };
 
 // 入库位置
-constexpr float garage_position[2]{0.70, 0.55};
+constexpr float garage_position[2]{0.70, 0.60};
 constexpr float garage_left_move = 5e-2;
 constexpr int garage_down_delay = 300;
 constexpr int garage_stop_delay = 50;

@@ -77,7 +77,7 @@ Task_t OutGarage() {
     goal_out_garage.y = out_garage_y;
     goal_out_garage.yaw = initial_position[2];
     moveBase.send_goal(goal_out_garage);
-    WAIT_MOVE_BASE_GOAL_NEAR;
+    WAIT_MOVE_BASE_GOAL_REACHED;
 
     return true;
 }
