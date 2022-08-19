@@ -83,9 +83,9 @@ constexpr MoveBase::Goal GOAL_NAVI_MOVE{
 constexpr pose_kalman::LocalPlanner::Params GOAL_NAVI_REFINE_PARAM{
     .vel_lim_xy = 1.6,
     .vel_lim_yaw = 1 * RPS,
-    .acc_lim_xy = 1.2,
+    .acc_lim_xy = 1.3,
     .acc_lim_yaw = 2 * RPS,
-    .dt_ref = 0.37,
+    .dt_ref = 0.36,
 };
 
 constexpr MoveBase::Goal GOAL_NAVI_REFINE{
@@ -120,7 +120,7 @@ constexpr MoveBase::Goal GOAL_CARRY_TURN{
 
 // Æ½ÒÆ
 constexpr pose_kalman::LocalPlanner::Params GOAL_CARRY_MOVE_PARAM{
-    .vel_lim_xy = 2.5,
+    .vel_lim_xy = 2.0,
     .vel_lim_yaw = 1 * RPS,
     .acc_lim_xy = 2,
     .acc_lim_yaw = 1 * RPS,
