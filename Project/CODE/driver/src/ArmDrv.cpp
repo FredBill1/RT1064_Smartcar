@@ -21,8 +21,8 @@ void ArmDrv::initial_pose() const {
 void ArmDrv::pick() const {
     {
         InterruptGuard guard;
-        srv_l.set(53);
-        srv_r.set(40);
+        srv_l.set(51);
+        srv_r.set(38);
     }
     rt_thread_mdelay(550);
 }
@@ -39,12 +39,18 @@ void ArmDrv::place(int index) const {
     case 0: {
         {
             InterruptGuard guard;
-            srv_l.set(97);
+            srv_l.set(86);
             srv_r.set(210);
         }
-        rt_thread_mdelay(200);
-        srv_r.set(241);
-        rt_thread_mdelay(200);
+        rt_thread_mdelay(150);
+        {
+            InterruptGuard guard;
+            srv_l.set(92);
+            srv_r.set(241);
+        }
+        rt_thread_mdelay(150);
+        srv_l.set(103);
+        rt_thread_mdelay(150);
     } break;
     case 1: {
         srv_r.set(219);
