@@ -29,8 +29,8 @@ void ArmDrv::pick() const {
 void ArmDrv::before_place() const {
     {
         InterruptGuard guard;
-        srv_l.set(120);
-        srv_r.set(172);
+        srv_l.set(105);
+        srv_r.set(195);
     }
     rt_thread_mdelay(700);
 }
@@ -39,41 +39,35 @@ void ArmDrv::place(int index) const {
     case 0: {
         {
             InterruptGuard guard;
-            srv_l.set(110);
-            srv_r.set(208);
+            srv_l.set(97);
+            srv_r.set(210);
         }
         rt_thread_mdelay(200);
-        {
-            InterruptGuard guard;
-            srv_l.set(106);
-            srv_r.set(224);
-        }
+        srv_r.set(241);
         rt_thread_mdelay(200);
     } break;
     case 1: {
-        {
-            InterruptGuard guard;
-            srv_l.set(110);
-            srv_r.set(200);
-        }
-        rt_thread_mdelay(200);
-        {
-            InterruptGuard guard;
-            srv_l.set(130);
-            srv_r.set(205);
-        }
-        rt_thread_mdelay(200);
+        srv_r.set(219);
+        rt_thread_mdelay(135);
+        srv_l.set(123);
+        rt_thread_mdelay(135);
+        srv_l.set(115);
+        rt_thread_mdelay(135);
     } break;
     case 2: {
+        srv_l.set(127);
+        rt_thread_mdelay(150);
         {
             InterruptGuard guard;
-            srv_l.set(130);
-            srv_r.set(175);
+            srv_l.set(132);
+            srv_r.set(211);
         }
-        rt_thread_mdelay(150);
-        srv_r.set(194);
         rt_thread_mdelay(100);
-        srv_l.set(142);
+        {
+            InterruptGuard guard;
+            srv_l.set(138);
+            srv_r.set(203);
+        }
         rt_thread_mdelay(200);
     } break;
     }
