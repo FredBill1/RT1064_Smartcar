@@ -66,18 +66,29 @@ void MasterGlobalVars::get_coord_recv() {
     rt_memcpy(coords + 1, target_coords_corr, sizeof(target_coords_corr[0]) * coords_cnt);
 }
 
-void MasterGlobalVars::send_rects_enabled(bool enabled, uint8_t cur_target, float maxDistErrorSquared) {
+void MasterGlobalVars::send_rects_enabled(bool enabled, uint8_t cur_target, float maxDistErrorSquared, int64_t wait_time_us) {
     InterruptGuard guard;
     _rectEnabled = enabled;
     if (!enabled) return;
     _rectMaxDistErrorSquared = maxDistErrorSquared;
     _rectCurTarget = cur_target;
     _rectCnt = 0;
+    if (wait_time_us) {
+        _rectWaiting = true;
+        _rectStartTimestamp_us = systick.get_us();
+        _rectWaitTime_us = wait_time_us;
+    } else {
+        _rectWaiting = false;
+    }
 }
 
 void MasterGlobalVars::send_rects(const float state[3], const float* rects, int cnt, uint64_t timestamp_us) {
     InterruptGuard guard;
     if (!_rectEnabled) return;
+    if (_rectWaiting) {
+        if (systick.get_diff_us(_rectStartTimestamp_us, timestamp_us) < _rectWaitTime_us) return;
+        _rectWaiting = false;
+    }
     _rectCnt = cnt;
     _rectTimestamp_us = timestamp_us;
     rt_memcpy(_rectRecvingState, state, sizeof(_rectRecvingState[0]) * 3);

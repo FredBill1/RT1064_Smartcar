@@ -44,9 +44,12 @@ class MasterGlobalVars {
     float _rectMaxDistErrorSquared;
     uint8_t _rectCnt = 0;
     uint64_t _rectTimestamp_us;
+    uint64_t _rectStartTimestamp_us;
+    int64_t _rectWaitTime_us;
+    bool _rectWaiting;
 
  public:
-    void send_rects_enabled(bool enabled, uint8_t cur_target = 0, float maxDistErrorSquared = 0);
+    void send_rects_enabled(bool enabled, uint8_t cur_target = 0, float maxDistErrorSquared = 0, int64_t wait_time_us = 0);
     void send_rects(const float state[3], const float* rects, int cnt, uint64_t timestamp_us);
     void get_rects(float state[3], float* rects, int& cnt, int& cur_target, float& maxDistErrorSquared, uint64_t& timestamp_us);
 
