@@ -170,7 +170,7 @@ static inline void calc() {
     targets[idx ^ 1][1] = std::min(y, fieldHeight - carrySidePadding);
 
     catgory[idx] = Major::vehicle;  // ÉÏ
-    targets[idx][0] = std::min(x, fieldWidth - carryExtendPadding);
+    targets[idx][0] = std::min(x, fieldWidth - carrySidePadding);
     targets[idx][1] = fieldHeight + carryExtendPadding;
 
     catgory[2] = Major::animal;  // ×ó
