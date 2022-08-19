@@ -83,9 +83,9 @@ constexpr MoveBase::Goal GOAL_NAVI_MOVE{
 constexpr pose_kalman::LocalPlanner::Params GOAL_NAVI_REFINE_PARAM{
     .vel_lim_xy = 1.6,
     .vel_lim_yaw = 1 * RPS,
-    .acc_lim_xy = 1.4,
+    .acc_lim_xy = 1.2,
     .acc_lim_yaw = 2 * RPS,
-    .dt_ref = 0.35,
+    .dt_ref = 0.37,
 };
 
 constexpr MoveBase::Goal GOAL_NAVI_REFINE{
