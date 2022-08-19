@@ -93,12 +93,16 @@ Task_t MainProcess() {
 
     for (int target_index = 1; target_index <= coords_cnt; ++target_index) {
         int cur_target = tsp.hamilton_path[target_index];
-        moveBase.get_state(state);
-        pose_kalman::T x = coords[cur_target][0], y = coords[cur_target][1], yaw = std::atan2(y - state.y(), x - state.x());
-        x -= art_cam_dist * std::cos(yaw);
-        y -= art_cam_dist * std::sin(yaw);
+        pose_kalman::T x, y, yaw;
+
+#define MainSolveTarget                                                                                   \
+    moveBase.get_state(state);                                                                            \
+    x = coords[cur_target][0], y = coords[cur_target][1], yaw = std::atan2(y - state.y(), x - state.x()); \
+    x -= art_cam_dist * std::cos(yaw);                                                                    \
+    y -= art_cam_dist * std::sin(yaw);
 
         // 自转
+        MainSolveTarget;
         goal_navi_turn.x = state.x();
         goal_navi_turn.y = state.y();
         goal_navi_turn.yaw = yaw;
@@ -106,6 +110,7 @@ Task_t MainProcess() {
         WAIT_MOVE_BASE_GOAL_NEAR;
 
         // 平移
+        MainSolveTarget;
         goal_navi_move.x = x;
         goal_navi_move.y = y;
         goal_navi_move.yaw = yaw;
@@ -113,6 +118,7 @@ Task_t MainProcess() {
         WAIT_MOVE_BASE_GOAL_NEAR;
 
         // 调整
+        MainSolveTarget;
         goal_navi_refine.x = x;
         goal_navi_refine.y = y;
         goal_navi_refine.yaw = yaw;
@@ -120,6 +126,8 @@ Task_t MainProcess() {
         masterGlobalVars.send_rects_enabled(true, cur_target, rectMaxDistError * rectMaxDistError);
         WAIT_MOVE_BASE_GOAL_REACHED;
         masterGlobalVars.send_rects_enabled(false);
+
+#undef MainSolveTarget
 
         // 发送art拍照指令
         rt_thread_mdelay(art_before_snapshot_delay);
