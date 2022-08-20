@@ -168,6 +168,8 @@ Task_t Carry() {
         moveBase.send_goal(goal_carry_turn);
         WAIT_MOVE_BASE_GOAL_NEAR;
 
+        moveBase.get_state(state);
+        yaw = utils::wrapAngleNear(std::atan2(targets[i][1] - state.y(), targets[i][0] - state.x()), state.yaw());
         goal_carry_move.x = targets[i][0];
         goal_carry_move.y = targets[i][1];
         goal_carry_move.yaw = yaw;
