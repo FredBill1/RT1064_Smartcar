@@ -4,7 +4,7 @@
 #include <rtthread.h>
 
 constexpr int mainloop_timeout = 500;
-constexpr int64_t rect_wait_time_us = 100 * 1e3;
+constexpr int64_t rect_wait_time_us = 80 * 1e3;
 constexpr rt_tick_t art_before_snapshot_delay = 50;
 constexpr rt_tick_t art_snapshot_timeout_ms = 1000;
 constexpr rt_tick_t arm_initial_pose_delay = 300;
