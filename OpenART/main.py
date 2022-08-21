@@ -10,6 +10,7 @@ from pyb import LED
 sensor.reset()
 sensor.set_pixformat(sensor.RGB565)
 sensor.set_framesize(sensor.QVGA)
+sensor.set_brightness(2000)
 sensor.skip_frames(time=2000)
 
 ips114.ips_init()
