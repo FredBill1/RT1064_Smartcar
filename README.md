@@ -1,5 +1,7 @@
 # 第十七届全国大学生智能汽车竞赛智能视觉组源代码
 
+比赛录像可以从[这里](https://www.bilibili.com/video/BV1eB4y1x76N)观看。
+
 工程基于[逐飞RT1064_RTThread开源库](https://gitee.com/seekfree/RT1064_RTThread_Library.git)开发，使用`μVision V5.36.0.0 MDK-ARM 5.36.0.0`编译(IAR的文件夹懒得删了)。
 
 使用或参考到的开源库包括：
