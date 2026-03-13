@@ -1,3 +1,4 @@
+//! 这段代码可能有点问题，如果要用的话建议让AI重写一下
 #ifndef _controller_LADRC_Impl_hpp
 #define _controller_LADRC_Impl_hpp
 
